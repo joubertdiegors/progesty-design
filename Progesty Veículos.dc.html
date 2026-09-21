@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button>
+      </sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="{{ dashItemStyle }}">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto">
+          <span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span>
+          <span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span>
+        </span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="6">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}">
+                  <span style="{{ it.dotStyle }}"></span>
+                  <span style="flex:1;text-align:left">{{ it.name }}</span>
+                  <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ it.badgeStyle }}">{{ it.badge }}</span>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column">
+        <span style="font-size:13px;font-weight:700;color:#E2E8F0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Carlos Mendes</span>
+        <span style="font-size:11px;color:#94A3B8">Super Usuário</span>
+      </div>
+    </div>
+  </aside>
+</sc-if>
+
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div>
+</sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto">
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+          </button>
+        </sc-if>
+        <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Veículos</h1>
+          <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Frota própria, alugada e de terceiros, com responsáveis, documentação e manutenção.</p>
+        </div>
+        <button onClick="{{ goNew }}" style="flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:13px 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s,box-shadow .18s" style-hover="transform:translateY(-1px);box-shadow:0 20px 34px -14px rgba(109,93,251,1)">
+          <span style="font-size:17px;line-height:1">+</span>Novo veículo
+        </button>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="{{ kpiGrid }}">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <button onClick="{{ k.go }}" style="{{ k.style }}">
+              <span style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span>
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">{{ k.label }}</span>
+              </span>
+              <span style="font-size:clamp(21px,2.3vw,28px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ k.value }}</span>
+              <span style="font-size:11.5px;font-weight:600;color:{{ k.hintColor }}">{{ k.hint }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ hasAlerts }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ alerts }}" as="al" hint-placeholder-count="2">
+              <button onClick="{{ al.go }}" style="{{ al.style }}">
+                <span style="width:4px;align-self:stretch;min-height:30px;border-radius:99px;background:{{ al.color }};flex:0 0 auto"></span>
+                <span style="min-width:0;flex:1;font-size:13.5px;font-weight:600;line-height:1.4;text-align:left">{{ al.t }}</span>
+                <span style="font-size:12.5px;font-weight:700;color:{{ al.color }};white-space:nowrap">Ver</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;transition:border-color .18s" style-hover="border-color:#C7C3FB">
+            <span style="width:14px;height:14px;border-radius:50%;border:2px solid #64748B;flex:0 0 auto"></span>
+            <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Pesquisar por matrícula, marca, modelo ou responsável..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clearQuery }}" aria-label="Limpar" style="width:22px;height:22px;border-radius:7px;background:#F1F5F9;color:#64748B;font-size:12px;line-height:1">✕</button>
+            </sc-if>
+          </div>
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+            <div style="position:relative;flex:0 0 auto">
+              <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}">
+                <span style="color:#64748B;font-weight:600">{{ f.label }}</span>{{ f.value }}<span style="font-size:9px;color:#64748B">▼</span>
+              </button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div class="pg-scroll" style="position:absolute;top:calc(100% + 8px);left:0;min-width:210px;max-height:290px;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                  <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4">
+                    <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Filtros ativos:</span>
+            <sc-for list="{{ activeChips }}" as="c" hint-placeholder-count="2">
+              <button onClick="{{ c.clear }}" style="display:flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:12.5px;font-weight:700">{{ c.t }}<span style="font-size:11px;opacity:.7">✕</span></button>
+            </sc-for>
+            <button onClick="{{ clearAll }}" style="font-size:12.5px;font-weight:700;color:#64748B">Limpar tudo</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:14px;padding:12px 6px">
+                <div class="pg-sk" style="width:44px;height:36px;border-radius:9px;flex:0 0 auto"></div>
+                <div style="flex:1 1 170px;display:flex;flex-direction:column;gap:7px"><div class="pg-sk" style="height:12px;width:48%"></div><div class="pg-sk" style="height:10px;width:30%"></div></div>
+                <div class="pg-sk" style="width:110px;height:11px;flex:0 0 auto"></div>
+                <div class="pg-sk" style="width:90px;height:24px;border-radius:999px;flex:0 0 auto"></div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stError }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #FECACA;border-radius:20px;padding:clamp(28px,4vw,52px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:52px;height:52px;border-radius:16px;background:#FEF2F2;border:1px solid #FECACA;display:flex;align-items:center;justify-content:center;color:#B91C1C;font-size:24px;font-weight:800">!</span>
+            <span style="font-size:19px;font-weight:800;letter-spacing:-.02em">Não foi possível carregar a frota</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:44ch;text-wrap:pretty">Verifique a sua conexão e tente novamente. Se o problema continuar, entre em contato com o suporte.</span>
+            <button onClick="{{ retry }}" style="margin-top:4px;padding:13px 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700">Tentar novamente</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#3B82F6,#06B6D4)"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Você ainda não possui veículos</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Cadastre o primeiro veículo para controlar responsáveis, documentação, manutenção e custos.</span>
+            <button onClick="{{ goNew }}" style="margin-top:4px;display:flex;align-items:center;gap:9px;padding:13px 21px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)"><span style="font-size:17px;line-height:1">+</span>Novo veículo</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stNoResults }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:50%;border:3px solid #64748B"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhum veículo encontrado</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Tente alterar os filtros ou realizar uma nova busca.</span>
+            <button onClick="{{ clearAll }}" style="margin-top:4px;padding:13px 21px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Limpar filtros</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px">
+              <div style="{{ headRowStyle }}">
+                <span style="{{ thStyle }}">Veículo</span>
+                <span style="{{ thStyle }}">Tipo</span>
+                <sc-if value="{{ colYear }}" hint-placeholder-val="{{ true }}"><span style="{{ thStyle }}">Ano</span></sc-if>
+                <span style="{{ thStyle }}">Responsável atual</span>
+                <sc-if value="{{ colOwner }}" hint-placeholder-val="{{ true }}"><span style="{{ thStyle }}">Propriedade</span></sc-if>
+                <span style="{{ thStyle }}">Status</span>
+                <span style="{{ thStyle }}">Próxima revisão</span>
+                <span style="{{ thStyle }}"></span>
+              </div>
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+                <div style="{{ r.rowStyle }}">
+                  <button onClick="{{ r.open }}" style="display:flex;align-items:center;gap:12px;min-width:0;text-align:left">
+                    <span style="{{ r.plateStyle }}">{{ r.plate }}</span>
+                    <span style="min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.model }}</span>
+                      <span style="font-size:11.5px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.firm }}</span>
+                    </span>
+                  </button>
+                  <span style="{{ r.kindStyle }}">{{ r.kind }}</span>
+                  <sc-if value="{{ colYear }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#475569">{{ r.year }}</span>
+                  </sc-if>
+                  <span style="{{ r.driverStyle }}">{{ r.driver }}</span>
+                  <sc-if value="{{ colOwner }}" hint-placeholder-val="{{ true }}">
+                    <span style="{{ r.ownStyle }}">{{ r.own }}</span>
+                  </sc-if>
+                  <span style="{{ r.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.statusDot }};flex:0 0 auto"></span>{{ r.status }}</span>
+                  <span style="{{ r.reviewStyle }}">{{ r.review }}</span>
+                  <div style="position:relative;display:flex;justify-content:flex-end">
+                    <button onClick="{{ r.toggleMenu }}" aria-label="Ações" style="{{ r.menuBtnStyle }}">⋯</button>
+                    <sc-if value="{{ r.menuOpen }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;top:calc(100% + 6px);right:0;min-width:210px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                        <sc-for list="{{ r.actions }}" as="a" hint-placeholder-count="5">
+                          <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isCards }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+                <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px">
+                  <div style="display:flex;align-items:flex-start;gap:12px">
+                    <button onClick="{{ r.open }}" style="display:flex;align-items:flex-start;gap:12px;min-width:0;flex:1;text-align:left">
+                      <span style="{{ r.plateStyle }}">{{ r.plate }}</span>
+                      <span style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ r.model }}</span>
+                        <span style="font-size:12.5px;color:#64748B">{{ r.kind }} · {{ r.year }}</span>
+                        <span style="font-size:12.5px;color:#475569">{{ r.firm }}</span>
+                      </span>
+                    </button>
+                    <div style="position:relative;flex:0 0 auto">
+                      <button onClick="{{ r.toggleMenu }}" aria-label="Ações" style="{{ r.menuBtnStyle }}">⋯</button>
+                      <sc-if value="{{ r.menuOpen }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:absolute;top:calc(100% + 6px);right:0;min-width:210px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                          <sc-for list="{{ r.actions }}" as="a" hint-placeholder-count="5">
+                            <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px">
+                    <span style="{{ r.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.statusDot }};flex:0 0 auto"></span>{{ r.status }}</span>
+                    <span style="{{ r.ownStyle }}">{{ r.own }}</span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding-top:12px;border-top:1px solid #F1F5F9">
+                    <span style="font-size:11.5px;font-weight:600;color:#64748B">{{ r.driver }}</span>
+                    <div style="flex:1;min-width:10px"></div>
+                    <span style="{{ r.reviewStyle }}">Revisão {{ r.review }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <span style="font-size:12.5px;color:#64748B">{{ countLabel }}</span>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+        <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,34px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+          <button onClick="{{ goList }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+          <span style="{{ cur.plateStyle }}">{{ cur.plate }}</span>
+          <div style="min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:5px">
+            <h1 style="margin:0;font-size:clamp(19px,2.1vw,26px);font-weight:800;letter-spacing:-.03em">{{ cur.model }}</h1>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+              <span style="{{ cur.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ cur.statusDot }};flex:0 0 auto"></span>{{ cur.status }}</span>
+              <span style="{{ cur.kindStyle }}">{{ cur.kind }}</span>
+              <span style="{{ cur.ownStyle }}">{{ cur.own }}</span>
+              <span style="font-size:13px;color:#64748B">{{ cur.firm }}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:9px;flex:0 0 auto">
+            <button onClick="{{ goEdit }}" style="padding:12px 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700">Editar</button>
+            <div style="position:relative">
+              <button onClick="{{ toggleDetailMenu }}" style="display:flex;align-items:center;gap:8px;padding:12px 17px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14px;font-weight:700;box-shadow:0 14px 26px -14px rgba(109,93,251,1)">Ações<span style="font-size:9px;opacity:.85">▼</span></button>
+              <sc-if value="{{ detailMenuOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 8px);right:0;min-width:222px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                  <sc-for list="{{ cur.actions }}" as="a" hint-placeholder-count="6">
+                    <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+        <div class="pg-scroll" style="padding:14px clamp(16px,2.4vw,34px) 0;display:flex;gap:4px;overflow-x:auto">
+          <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="7">
+            <button onClick="{{ tb.pick }}" style="{{ tb.style }}">
+              {{ tb.name }}
+              <sc-if value="{{ tb.badge }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ tb.badgeStyle }}">{{ tb.badge }}</span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="{{ summaryGrid }}">
+          <sc-for list="{{ cur.summary }}" as="k" hint-placeholder-count="5">
+            <div style="{{ k.boxStyle }}">
+              <span style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span>
+                <span style="font-size:12px;font-weight:600;color:#64748B">{{ k.label }}</span>
+              </span>
+              <span style="{{ k.valueStyle }}">{{ k.value }}</span>
+              <span style="font-size:11.5px;font-weight:600;color:{{ k.hintColor }}">{{ k.hint }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ tabGeral }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.5vw,16px);align-items:flex-start">
+            <div style="flex:1 1 380px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Dados do veículo</span>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ cur.specs }}" as="i" hint-placeholder-count="8">
+                  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9">
+                    <span style="flex:0 0 140px;font-size:12.5px;font-weight:600;color:#64748B">{{ i.k }}</span>
+                    <span style="{{ i.style }}">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="flex:1 1 320px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Propriedade</span>
+                <span style="{{ cur.ownStyle }}">{{ cur.own }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ cur.ownership }}" as="i" hint-placeholder-count="5">
+                  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9">
+                    <span style="flex:0 0 140px;font-size:12.5px;font-weight:600;color:#64748B">{{ i.k }}</span>
+                    <span style="{{ i.style }}">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ cur.isLease }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:12px;padding-top:16px;border-top:1px solid #F1F5F9">
+                  <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
+                    <span style="font-size:13.5px;font-weight:700;color:#334155">Parcelas do leasing</span>
+                    <div style="flex:1"></div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">{{ cur.leaseProgress }}</span>
+                  </div>
+                  <div style="height:10px;border-radius:999px;background:#F1F5F9;overflow:hidden">
+                    <div style="{{ cur.leaseBar }}"></div>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:10px">
+                    <div style="flex:1 1 120px;display:flex;flex-direction:column;gap:3px;padding:11px 12px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0">
+                      <span style="font-size:11.5px;font-weight:600;color:#64748B">Parcela</span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600">{{ cur.leaseValue }}</span>
+                    </div>
+                    <div style="flex:1 1 120px;display:flex;flex-direction:column;gap:3px;padding:11px 12px;border-radius:12px;background:#FFFBEB;border:1px solid #FDE68A">
+                      <span style="font-size:11.5px;font-weight:600;color:#B45309">Próximo vencimento</span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:#92400E">{{ cur.leaseDue }}</span>
+                    </div>
+                  </div>
+                  <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">Os lançamentos financeiros do leasing serão tratados no módulo Financeiro.</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabResp }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+            <div style="display:flex;align-items:flex-start;gap:13px;padding:15px;border-radius:16px;background:#EEF0FE;border:1px solid #DDD9FD">
+              <span style="width:30px;height:30px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:11px;height:11px;border-radius:3px;background:#6D5DFB"></span></span>
+              <div style="min-width:0;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:13.5px;font-weight:700;color:#312E81">A responsabilidade tem histórico</span>
+                <span style="font-size:12.5px;color:#4338CA;line-height:1.45;text-wrap:pretty">Um veículo não pertence permanentemente a uma pessoa. Ao trocar o responsável, o período anterior é encerrado e preservado — nada é sobrescrito.</span>
+              </div>
+            </div>
+
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Responsáveis</span>
+                <span style="padding:3px 9px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ cur.driverCount }}</span>
+                <div style="flex:1;min-width:10px"></div>
+                <button onClick="{{ openDriver }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 12px 24px -14px rgba(109,93,251,1)">Alterar responsável</button>
+              </div>
+
+              <sc-if value="{{ cur.hasDrivers }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ cur.drivers }}" as="dv" hint-placeholder-count="3">
+                    <div style="display:flex;gap:16px">
+                      <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto">
+                        <span style="{{ dv.dotStyle }}"></span>
+                        <span style="flex:1;width:2px;border-radius:99px;background:#F1F5F9;min-height:14px"></span>
+                      </div>
+                      <div style="min-width:0;flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-bottom:20px">
+                        <span style="{{ dv.avatarStyle }}">{{ dv.initials }}</span>
+                        <div style="min-width:0;flex:1 1 160px;display:flex;flex-direction:column;gap:3px">
+                          <span style="font-size:14.5px;font-weight:700;letter-spacing:-.015em">{{ dv.name }}</span>
+                          <span style="font-size:12px;color:#64748B">{{ dv.type }}</span>
+                        </div>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#475569;white-space:nowrap">{{ dv.period }}</span>
+                        <span style="{{ dv.tagStyle }}">{{ dv.tag }}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ cur.noDrivers }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:30px 20px;border-radius:15px;background:#F8FAFC;border:1px dashed #CBD5E1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px">
+                  <span style="font-size:15px;font-weight:700">Nenhum responsável atribuído</span>
+                  <span style="font-size:13px;color:#64748B;line-height:1.45;max-width:42ch;text-wrap:pretty">Este veículo não tem condutor ou operador designado. Reboques e equipamentos podem operar assim.</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabDocs }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ docGrid }}">
+            <sc-for list="{{ cur.docs }}" as="dc" hint-placeholder-count="4">
+              <div style="{{ dc.cardStyle }}">
+                <div style="display:flex;align-items:center;gap:11px">
+                  <span style="{{ dc.iconStyle }}"><span style="width:11px;height:11px;border-radius:3px;background:{{ dc.color }}"></span></span>
+                  <span style="flex:1;min-width:0;font-size:14px;font-weight:700">{{ dc.label }}</span>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(17px,1.9vw,21px);font-weight:600;letter-spacing:-.02em">{{ dc.date }}</span>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+                  <span style="{{ dc.tagStyle }}">{{ dc.tag }}</span>
+                  <sc-if value="{{ dc.extra }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12px;color:#64748B">{{ dc.extra }}</span>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabManut }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;display:flex;flex-direction:column">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px;padding:clamp(16px,1.8vw,20px)">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Manutenção</span>
+              <span style="padding:3px 9px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ cur.maintCount }}</span>
+              <div style="flex:1;min-width:10px"></div>
+              <span style="font-size:12.5px;color:#64748B">Próxima revisão {{ cur.nextReview }}</span>
+              <button onClick="{{ openMaint }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 12px 24px -14px rgba(109,93,251,1)"><span style="font-size:15px;line-height:1">+</span>Registrar manutenção</button>
+            </div>
+            <sc-if value="{{ cur.hasMaint }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+                <div style="{{ maintHeadStyle }}">
+                  <span style="{{ thStyle }}">Data</span>
+                  <span style="{{ thStyle }}">Tipo</span>
+                  <span style="{{ thStyle }}">Descrição</span>
+                  <span style="{{ thStyle }}">Quilometragem</span>
+                  <span style="{{ thStyle }}">Oficina</span>
+                  <span style="{{ thStyle }}">Valor</span>
+                </div>
+              </sc-if>
+              <sc-for list="{{ cur.maint }}" as="m" hint-placeholder-count="3">
+                <div style="{{ m.rowStyle }}">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#475569;white-space:nowrap">{{ m.date }}</span>
+                  <span style="{{ m.kindStyle }}">{{ m.kind }}</span>
+                  <span style="font-size:13.5px;font-weight:600;min-width:0">{{ m.desc }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ m.km }}</span>
+                  <span style="font-size:12.5px;color:#64748B;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.shop }}</span>
+                  <span style="{{ m.valueStyle }}">{{ m.value }}</span>
+                </div>
+              </sc-for>
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px clamp(16px,1.8vw,20px);background:#F8FAFC;border-top:1px solid #E2E8F0;border-radius:0 0 20px 20px">
+                <span style="font-size:13px;font-weight:700;color:#475569">{{ cur.maintCountLabel }}</span>
+                <div style="flex:1"></div>
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">Total registrado</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">{{ cur.maintTotal }}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ cur.noMaint }}" hint-placeholder-val="{{ false }}">
+              <div style="margin:0 clamp(16px,1.8vw,20px) clamp(16px,1.8vw,20px);padding:30px 20px;border-radius:15px;background:#F8FAFC;border:1px dashed #CBD5E1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px">
+                <span style="font-size:15px;font-weight:700">Nenhuma manutenção registrada</span>
+                <span style="font-size:13px;color:#64748B;line-height:1.45;max-width:42ch;text-wrap:pretty">Registre a primeira intervenção para acompanhar o histórico e os custos deste veículo.</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabAbast }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+            <sc-if value="{{ cur.hasFuel }}" hint-placeholder-val="{{ true }}">
+              <div style="{{ fuelKpiGrid }}">
+                <sc-for list="{{ cur.fuelKpis }}" as="k" hint-placeholder-count="3">
+                  <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:7px">
+                    <span style="font-size:12px;font-weight:600;color:#64748B">{{ k.label }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(17px,1.9vw,21px);font-weight:600;letter-spacing:-.02em">{{ k.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;display:flex;flex-direction:column">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px;padding:clamp(16px,1.8vw,20px)">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Abastecimentos</span>
+                <span style="padding:3px 9px;border-radius:999px;background:#ECFEFF;color:#0E7490;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ cur.fuelCount }}</span>
+                <div style="flex:1;min-width:10px"></div>
+                <button onClick="{{ openFuel }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 12px 24px -14px rgba(109,93,251,1)"><span style="font-size:15px;line-height:1">+</span>Registrar abastecimento</button>
+              </div>
+              <sc-if value="{{ cur.hasFuel }}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+                  <div style="{{ fuelHeadStyle }}">
+                    <span style="{{ thStyle }}">Data</span>
+                    <span style="{{ thStyle }}">Quilometragem</span>
+                    <span style="{{ thStyle }}">Litros</span>
+                    <span style="{{ thStyle }}">Combustível</span>
+                    <span style="{{ thStyle }}">Custo/litro</span>
+                    <span style="{{ thStyle }}">Posto</span>
+                    <span style="{{ thStyle }}">Valor</span>
+                  </div>
+                </sc-if>
+                <sc-for list="{{ cur.fuelLogs }}" as="fl" hint-placeholder-count="3">
+                  <div style="{{ fl.rowStyle }}">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#475569;white-space:nowrap">{{ fl.date }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ fl.km }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;white-space:nowrap">{{ fl.liters }}</span>
+                    <span style="font-size:12.5px;color:#64748B;white-space:nowrap">{{ fl.fuel }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ fl.perLiter }}</span>
+                    <span style="font-size:12.5px;color:#64748B;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ fl.station }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;white-space:nowrap">{{ fl.value }}</span>
+                  </div>
+                </sc-for>
+              </sc-if>
+              <sc-if value="{{ cur.noFuel }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 clamp(16px,1.8vw,20px) clamp(16px,1.8vw,20px);padding:30px 20px;border-radius:15px;background:#F8FAFC;border:1px dashed #CBD5E1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px">
+                  <span style="font-size:15px;font-weight:700">Nenhum abastecimento registrado</span>
+                  <span style="font-size:13px;color:#64748B;line-height:1.45;max-width:42ch;text-wrap:pretty">Registre os abastecimentos para acompanhar consumo e custo por quilómetro.</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabMultas }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Multas</span>
+              <span style="{{ cur.fineBadgeStyle }}">{{ cur.fineCount }}</span>
+              <div style="flex:1;min-width:10px"></div>
+              <sc-if value="{{ cur.hasFines }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">Total {{ cur.fineTotal }}</span>
+              </sc-if>
+            </div>
+            <sc-if value="{{ cur.hasFines }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ cur.fines }}" as="fn" hint-placeholder-count="2">
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;padding:14px 15px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+                    <span style="width:4px;align-self:stretch;min-height:34px;border-radius:99px;background:{{ fn.color }};flex:0 0 auto"></span>
+                    <div style="min-width:0;flex:1 1 200px;display:flex;flex-direction:column;gap:3px">
+                      <span style="font-size:14px;font-weight:700;line-height:1.35">{{ fn.kind }}</span>
+                      <span style="font-size:12px;color:#64748B">{{ fn.date }} · {{ fn.who }}</span>
+                    </div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;white-space:nowrap">{{ fn.value }}</span>
+                    <span style="{{ fn.statusStyle }}">{{ fn.status }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">O pagamento e o repasse ao condutor serão tratados no módulo Financeiro.</span>
+            </sc-if>
+            <sc-if value="{{ cur.noFines }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:30px 20px;border-radius:15px;background:#ECFDF5;border:1px solid #A7F3D0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px">
+                <span style="width:44px;height:44px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;color:#047857;font-size:20px;font-weight:800">✓</span>
+                <span style="font-size:15px;font-weight:700;color:#065F46">Nenhuma multa registrada</span>
+                <span style="font-size:13px;color:#047857;line-height:1.45;max-width:38ch;text-wrap:pretty">Este veículo não tem infrações no histórico.</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isForm }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <button onClick="{{ tryCancel }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(19px,2vw,25px);font-weight:800;letter-spacing:-.03em">{{ formTitle }}</h1>
+          <p style="margin:0;font-size:13.5px;color:#64748B;text-wrap:pretty">{{ formSub }}</p>
+        </div>
+        <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}">
+          <span style="display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:#FFFBEB;border:1px solid #FDE68A;color:#B45309;font-size:12.5px;font-weight:700;flex:0 0 auto">
+            <span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span>Alterações não salvas
+          </span>
+        </sc-if>
+        <div style="display:flex;gap:10px;flex:0 0 auto">
+          <button onClick="{{ tryCancel }}" style="padding:13px 19px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+          <button onClick="{{ save }}" style="{{ saveBtnStyle }}">
+            <sc-if value="{{ isSaving }}" hint-placeholder-val="{{ false }}">
+              <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+            </sc-if>
+            {{ saveLabel }}
+          </button>
+        </div>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px)">
+        <div style="max-width:960px;display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+          <sc-if value="{{ formBanner }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ formBannerStyle }}">
+              <span style="{{ formBannerIconStyle }}">!</span>
+              <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                <span style="font-size:13.5px;font-weight:700;line-height:1.35;color:{{ formBannerTitleColor }}">{{ formBannerTitle }}</span>
+                <span style="font-size:12.5px;line-height:1.45;color:{{ formBannerTextColor }};text-wrap:pretty">{{ formBannerText }}</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-for list="{{ formSections }}" as="sec" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px">
+                <span style="{{ sec.numStyle }}">{{ sec.num }}</span>
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">{{ sec.title }}</span>
+                <sc-if value="{{ sec.note }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:12.5px;color:#64748B">{{ sec.note }}</span>
+                </sc-if>
+              </div>
+              <sc-if value="{{ sec.hasOwnPicker }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-wrap:wrap;gap:9px">
+                  <sc-for list="{{ ownOptions }}" as="o" hint-placeholder-count="4">
+                    <button onClick="{{ o.pick }}" style="{{ o.style }}"><span style="{{ o.dotStyle }}"></span>{{ o.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="{{ fieldGrid }}">
+                <sc-for list="{{ sec.fields }}" as="f" hint-placeholder-count="6">
+                  <div style="{{ f.wrapStyle }}">
+                    <span style="font-size:12.5px;font-weight:600;color:#475569">{{ f.label }}<sc-if value="{{ f.req }}" hint-placeholder-val="{{ false }}"><span style="color:#EF4444"> *</span></sc-if></span>
+                    <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                      <input value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+                    </sc-if>
+                    <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                      <select value="{{ f.value }}" onChange="{{ f.onInput }}" style="{{ f.selectStyle }}">
+                        <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for>
+                      </select>
+                    </sc-if>
+                    <sc-if value="{{ f.error }}" hint-placeholder-val="{{ false }}">
+                      <span style="{{ errTextStyle }}"><span style="{{ errDotStyle }}"></span>{{ f.error }}</span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+            <button onClick="{{ tryCancel }}" style="padding:14px 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Cancelar</button>
+            <button onClick="{{ save }}" style="{{ saveBtnStyle }}">
+              <sc-if value="{{ isSaving }}" hint-placeholder-val="{{ false }}">
+                <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+              </sc-if>
+              {{ saveLabel }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="padding:0 clamp(16px,2.4vw,34px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="8">
+      <button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button>
+    </sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:91;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(560px,100%);max-height:88vh;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">{{ sheetTitle }}</span>
+          <span style="font-size:13px;color:#64748B">{{ cur.plate }} · {{ cur.model }}</span>
+        </div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeSheet }}" aria-label="Fechar" style="width:38px;height:38px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B">✕</button>
+      </div>
+
+      <sc-if value="{{ sheetNote }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:#EEF0FE;border:1px solid #DDD9FD">
+          <span style="width:26px;height:26px;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:10px;height:10px;border-radius:3px;background:#6D5DFB"></span></span>
+          <span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.45;text-wrap:pretty">{{ sheetNote }}</span>
+        </div>
+      </sc-if>
+
+      <div style="{{ sheetGrid }}">
+        <sc-for list="{{ sheetFields }}" as="f" hint-placeholder-count="6">
+          <div style="{{ f.wrapStyle }}">
+            <span style="font-size:12.5px;font-weight:600;color:#475569">{{ f.label }}<sc-if value="{{ f.req }}" hint-placeholder-val="{{ false }}"><span style="color:#EF4444"> *</span></sc-if></span>
+            <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+              <input value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+            </sc-if>
+            <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+              <select value="{{ f.value }}" onChange="{{ f.onInput }}" style="{{ f.selectStyle }}">
+                <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for>
+              </select>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ sheetTotal }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:15px;border-radius:15px;background:#F8FAFC;border:1px solid #E2E8F0">
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <span style="font-size:12.5px;font-weight:600;color:#475569">{{ sheetTotalLabel }}</span>
+            <span style="font-size:11.5px;color:#64748B">{{ sheetTotalHint }}</span>
+          </div>
+          <div style="flex:1"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(19px,2.1vw,24px);font-weight:600;letter-spacing:-.02em">{{ sheetTotal }}</span>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeSheet }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+        <button onClick="{{ saveSheet }}" style="{{ sheetSaveStyle }}">
+          <sc-if value="{{ sheetSaving }}" hint-placeholder-val="{{ false }}">
+            <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+          </sc-if>
+          {{ sheetSaveLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ confirm }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:92;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeConfirm }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(470px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <span style="{{ confirmIconStyle }}">{{ confirmIcon }}</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ confirmTitle }}</span>
+          <span style="font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">{{ confirmText }}</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+        <span style="{{ confirmPlateStyle }}">{{ confirmPlate }}</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ confirmName }}</span>
+          <span style="font-size:12px;color:#64748B">{{ confirmMeta }}</span>
+        </div>
+      </div>
+      <sc-if value="{{ confirmError }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:flex-start;gap:11px;padding:13px;border-radius:13px;background:#FEF2F2;border:1px solid #FECACA">
+          <span style="width:24px;height:24px;border-radius:8px;background:#FEE2E2;color:#B91C1C;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 auto">!</span>
+          <span style="font-size:12.5px;font-weight:600;color:#B91C1C;line-height:1.45;text-wrap:pretty">Não foi possível concluir a ação. Verifique a conexão e tente novamente.</span>
+        </div>
+      </sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeConfirm }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+        <button onClick="{{ runConfirm }}" style="{{ confirmBtnStyle }}">
+          <sc-if value="{{ confirmBusy }}" hint-placeholder-val="{{ false }}">
+            <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+          </sc-if>
+          {{ confirmCta }}
+        </button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ confirmLeave }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:93;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ keepEditing }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(450px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <span style="width:44px;height:44px;border-radius:14px;background:#FFFBEB;border:1px solid #FDE68A;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex:0 0 auto">!</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em;line-height:1.25">Alterações não salvas</span>
+          <span style="font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">Você possui alterações que ainda não foram salvas. Deseja sair sem salvar?</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ keepEditing }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Continuar editando</button>
+        <button onClick="{{ discard }}" style="display:flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:linear-gradient(135deg,#EF4444,#DC2626);box-shadow:0 14px 28px -14px rgba(239,68,68,.9)">Sair sem salvar</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>
+    {{ toast }}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;list&quot;,&quot;detail&quot;,&quot;new&quot;,&quot;edit&quot;],&quot;default&quot;:&quot;list&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;listState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;empty&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;failConfirm&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'list', viewSet: false, w: 1400, navOpen: false, active: 'Veículos',
+    open: { Comercial: false, Clientes: false, Projetos: false, Pessoas: true, Financeiro: false, 'Configurações': false },
+    query: '', filters: { Status: 'Todos', Tipo: 'Todos', Propriedade: 'Todas', Responsável: 'Todos' }, openFilter: '',
+    dataState: 'ready', stateSet: false,
+    curId: 0, rowMenu: -1, detailMenu: false, tab: 'geral',
+    form: null, dirty: false, formStatus: 'idle', saving: false,
+    confirm: null, confirmBusy: false, confirmError: false, confirmLeave: false,
+    sheet: '', sheetSaving: false, sheetForm: {},
+    data: null, toast: ''
+  };
+
+  NAV = [
+    { name: 'Comercial', dot: '#EC4899', items: [{ name: 'CRM' }, { name: 'Leads' }, { name: 'Oportunidades' }] },
+    { name: 'Clientes', dot: '#3B82F6', items: [{ name: 'Clientes' }, { name: 'Contatos' }] },
+    { name: 'Projetos', dot: '#F97316', items: [{ name: 'Projetos / Obras' }, { name: 'Tarefas' }, { name: 'Documentos' }] },
+    { name: 'Pessoas', dot: '#06B6D4', items: [{ name: 'Funcionários' }, { name: 'Terceirizados' }, { name: 'Veículos', count: true }] },
+    { name: 'Financeiro', dot: '#10B981', items: [{ name: 'Contas a Receber' }, { name: 'Contas a Pagar' }, { name: 'Faturas' }, { name: 'Fluxo de Caixa' }] },
+    { name: 'Configurações', dot: '#64748B', items: [{ name: 'Empresa' }, { name: 'Usuários' }, { name: 'Gestão de Acessos' }] }
+  ];
+
+  KINDS = ['Automóvel', 'Van', 'Carrinha', 'Caminhão', 'Máquina', 'Equipamento', 'Reboque', 'Outro'];
+  OWNS = ['Próprio', 'Alugado', 'Leasing', 'Terceirizado'];
+  FUELS = ['Gasóleo', 'Gasolina', 'Elétrico', 'Híbrido', 'GPL'];
+  DRIVERS = ['Carlos Mendes', 'Ana Duarte', 'Rafael Lima', 'Bruno Alves', 'João Silva', 'Tiago Nunes', 'Sérgio Matos', 'Marta Antunes'];
+
+  seed() {
+    return [
+      {
+        id: 'v1', plate: '1-ABC-234', brand: 'Ford', model: 'Transit Custom', version: '2.0 EcoBlue 130', year: '2024',
+        color: 'Branco', vin: 'WF0YXXTTGYMA12345', kind: 'Van', fuel: 'Gasóleo', km: 48260, status: 'Ativo',
+        own: 'Próprio', firm: 'Construtora Horizonte', supplier: '', contract: '', ownStart: '18/03/2024', ownEnd: '', monthly: 0,
+        leaseNo: '', installment: 0, total: 0, paid: 0, nextDue: '',
+        drivers: [
+          { name: 'Tiago Nunes', from: '01/06/2026', to: '', type: 'Condutor principal' },
+          { name: 'João Silva', from: '01/01/2026', to: '31/05/2026', type: 'Condutor principal' },
+          { name: 'Rafael Lima', from: '18/03/2024', to: '31/12/2025', type: 'Condutor principal' }
+        ],
+        docValid: '31/03/2027', inspection: '14/02/2026', nextInspection: '14/02/2027', insurance: 'AXA Frota BE', insValid: '10/01/2027',
+        nextReview: '12/12/2026',
+        maint: [
+          { date: '14/02/2026', kind: 'Inspeção', desc: 'Inspeção periódica obrigatória', km: 41200, value: 62, shop: 'Centro Técnico Bruxelas' },
+          { date: '08/11/2025', kind: 'Revisão', desc: 'Revisão dos 40.000 km', km: 39850, value: 486.4, shop: 'Ford Service Anderlecht' },
+          { date: '22/07/2025', kind: 'Pneus', desc: 'Substituição dos 4 pneus', km: 34100, value: 612, shop: 'PneuMax' }
+        ],
+        fuelLogs: [
+          { date: '18/09/2026', km: 48120, liters: 62.4, fuel: 'Gasóleo', value: 108.58, station: 'Total Anderlecht' },
+          { date: '04/09/2026', km: 47410, liters: 58.9, fuel: 'Gasóleo', value: 101.31, station: 'Shell Ring Oost' },
+          { date: '21/08/2026', km: 46680, liters: 60.2, fuel: 'Gasóleo', value: 105.35, station: 'Total Anderlecht' }
+        ],
+        fines: [
+          { date: '02/09/2026', kind: 'Excesso de velocidade — 62 em 50', value: 53, who: 'Tiago Nunes', status: 'Identificada' },
+          { date: '11/05/2026', kind: 'Estacionamento indevido', value: 58, who: 'João Silva', status: 'Paga' }
+        ]
+      },
+      {
+        id: 'v2', plate: '2-XYZ-871', brand: 'Renault', model: 'Master L3H2', version: 'dCi 150', year: '2023',
+        color: 'Cinza', vin: 'VF1MA000X70123456', kind: 'Carrinha', fuel: 'Gasóleo', km: 96430, status: 'Ativo',
+        own: 'Leasing', firm: 'Construtora Horizonte', supplier: 'ALD Automotive', contract: 'LS-2023-0441', ownStart: '05/09/2023', ownEnd: '05/09/2027', monthly: 512.4,
+        leaseNo: 'LS-2023-0441', installment: 512.4, total: 48, paid: 36, nextDue: '05/10/2026',
+        drivers: [
+          { name: 'João Silva', from: '01/06/2026', to: '', type: 'Condutor principal' },
+          { name: 'Bruno Alves', from: '05/09/2023', to: '31/05/2026', type: 'Condutor principal' }
+        ],
+        docValid: '30/09/2027', inspection: '20/08/2026', nextInspection: '20/08/2027', insurance: 'AXA Frota BE', insValid: '10/01/2027',
+        nextReview: '30/10/2026',
+        maint: [
+          { date: '20/08/2026', kind: 'Inspeção', desc: 'Inspeção periódica obrigatória', km: 94100, value: 62, shop: 'Centro Técnico Gante' },
+          { date: '12/04/2026', kind: 'Corretiva', desc: 'Substituição do alternador', km: 88240, value: 742.9, shop: 'Renault Pro+ Gante' }
+        ],
+        fuelLogs: [
+          { date: '16/09/2026', km: 96180, liters: 78.1, fuel: 'Gasóleo', value: 135.9, station: 'Q8 Gante' },
+          { date: '31/08/2026', km: 95260, liters: 74.6, fuel: 'Gasóleo', value: 129.9, station: 'Q8 Gante' }
+        ],
+        fines: []
+      },
+      {
+        id: 'v3', plate: '1-KLM-009', brand: 'Volkswagen', model: 'Caddy Cargo', version: '2.0 TDI 102', year: '2025',
+        color: 'Azul', vin: 'WV1ZZZ2KZNX012345', kind: 'Van', fuel: 'Gasóleo', km: 21540, status: 'Em manutenção',
+        own: 'Alugado', firm: 'Construtora Horizonte', supplier: 'Athlon Rent', contract: 'RT-2025-1180', ownStart: '02/06/2025', ownEnd: '02/06/2027', monthly: 389,
+        leaseNo: '', installment: 0, total: 0, paid: 0, nextDue: '',
+        drivers: [
+          { name: 'Ana Duarte', from: '02/06/2025', to: '', type: 'Condutor principal' }
+        ],
+        docValid: '30/06/2027', inspection: '—', nextInspection: '02/06/2027', insurance: 'Athlon (incluído)', insValid: '02/06/2027',
+        nextReview: '05/10/2026',
+        maint: [
+          { date: '19/09/2026', kind: 'Corretiva', desc: 'Reparação da embreagem — em oficina', km: 21480, value: 0, shop: 'VW Nutzfahrzeuge Bruxelas' },
+          { date: '14/03/2026', kind: 'Preventiva', desc: 'Revisão dos 15.000 km', km: 15320, value: 298.5, shop: 'VW Nutzfahrzeuge Bruxelas' }
+        ],
+        fuelLogs: [
+          { date: '12/09/2026', km: 21390, liters: 44.2, fuel: 'Gasóleo', value: 76.91, station: 'Total Louise' }
+        ],
+        fines: []
+      },
+      {
+        id: 'v4', plate: 'E-220-BE', brand: 'Caterpillar', model: '320 GC', version: 'Escavadora de lagartas', year: '2022',
+        color: 'Amarelo', vin: 'CAT0320GCPKR01188', kind: 'Máquina', fuel: 'Gasóleo', km: 4120, status: 'Ativo',
+        own: 'Terceirizado', firm: 'Terra Forte', supplier: 'Terra Forte', contract: 'TF-2026-014', ownStart: '17/02/2026', ownEnd: '', monthly: 0,
+        leaseNo: '', installment: 0, total: 0, paid: 0, nextDue: '',
+        drivers: [
+          { name: 'Sérgio Matos', from: '17/02/2026', to: '', type: 'Operador' }
+        ],
+        docValid: '—', inspection: '05/03/2026', nextInspection: '05/03/2027', insurance: 'Terra Forte (equipamentos)', insValid: '30/11/2026',
+        nextReview: '28/09/2026',
+        maint: [
+          { date: '05/03/2026', kind: 'Revisão', desc: 'Revisão das 4.000 horas', km: 4000, value: 1240, shop: 'Cat Service Namur' }
+        ],
+        fuelLogs: [
+          { date: '15/09/2026', km: 4108, liters: 180, fuel: 'Gasóleo', value: 313.2, station: 'Depósito da obra' }
+        ],
+        fines: []
+      },
+      {
+        id: 'v5', plate: '1-QRS-556', brand: 'Peugeot', model: 'Partner', version: '1.5 BlueHDi 100', year: '2021',
+        color: 'Branco', vin: 'VF3YBZMFC12345678', kind: 'Van', fuel: 'Gasóleo', km: 132870, status: 'Inativo',
+        own: 'Próprio', firm: 'Construtora Horizonte', supplier: '', contract: '', ownStart: '09/04/2021', ownEnd: '', monthly: 0,
+        leaseNo: '', installment: 0, total: 0, paid: 0, nextDue: '',
+        drivers: [
+          { name: 'Marta Antunes', from: '09/04/2021', to: '30/06/2026', type: 'Condutor principal' }
+        ],
+        docValid: '30/04/2026', inspection: '18/04/2025', nextInspection: '18/04/2026', insurance: 'AXA Frota BE', insValid: '30/06/2026',
+        nextReview: '—',
+        maint: [
+          { date: '18/04/2025', kind: 'Inspeção', desc: 'Inspeção periódica obrigatória', km: 121400, value: 62, shop: 'Centro Técnico Bruxelas' }
+        ],
+        fuelLogs: [],
+        fines: [
+          { date: '08/02/2026', kind: 'Zona de baixa emissão sem registro', value: 150, who: 'Marta Antunes', status: 'Contestada' }
+        ]
+      },
+      {
+        id: 'v6', plate: 'R-118-BE', brand: 'Humbaur', model: 'HT 3500', version: 'Reboque basculante', year: '2024',
+        color: 'Cinza', vin: 'WHU0000HT35001188', kind: 'Reboque', fuel: '—', km: 0, status: 'Ativo',
+        own: 'Próprio', firm: 'Construtora Horizonte', supplier: '', contract: '', ownStart: '11/07/2024', ownEnd: '', monthly: 0,
+        leaseNo: '', installment: 0, total: 0, paid: 0, nextDue: '',
+        drivers: [],
+        docValid: '31/07/2027', inspection: '11/07/2026', nextInspection: '11/07/2027', insurance: 'AXA Frota BE', insValid: '10/01/2027',
+        nextReview: '11/07/2027',
+        maint: [
+          { date: '11/07/2026', kind: 'Inspeção', desc: 'Inspeção de reboque', km: 0, value: 48, shop: 'Centro Técnico Bruxelas' }
+        ],
+        fuelLogs: [],
+        fines: []
+      }
+    ];
+  }
+
+  ST = {
+    'Ativo': ['#ECFDF5', '#047857', '#10B981'],
+    'Em manutenção': ['#FFFBEB', '#B45309', '#F59E0B'],
+    'Inativo': ['#F1F5F9', '#475569', '#94A3B8'],
+    'Vendido': ['#EFF6FF', '#1D4ED8', '#3B82F6'],
+    'Baixado': ['#FEF2F2', '#B91C1C', '#EF4444']
+  };
+
+  KC = {
+    'Automóvel': ['#EEF0FE', '#4338CA'], 'Van': ['#EFF6FF', '#1D4ED8'], 'Carrinha': ['#ECFEFF', '#0E7490'],
+    'Caminhão': ['#FFF7ED', '#C2410C'], 'Máquina': ['#FFFBEB', '#B45309'], 'Equipamento': ['#FDF2F8', '#BE185D'],
+    'Reboque': ['#F1F5F9', '#475569'], 'Outro': ['#F1F5F9', '#475569']
+  };
+
+  OC = {
+    'Próprio': ['#ECFDF5', '#047857'], 'Alugado': ['#EFF6FF', '#1D4ED8'],
+    'Leasing': ['#EEF0FE', '#4338CA'], 'Terceirizado': ['#FDF2F8', '#BE185D']
+  };
+
+  FST = {
+    'Pendente': ['#FFFBEB', '#B45309'], 'Identificada': ['#EFF6FF', '#1D4ED8'],
+    'Paga': ['#ECFDF5', '#047857'], 'Contestada': ['#FFF7ED', '#C2410C']
+  };
+
+  MC = {
+    'Preventiva': ['#ECFDF5', '#047857', '#10B981'], 'Corretiva': ['#FEF2F2', '#B91C1C', '#EF4444'],
+    'Revisão': ['#EEF0FE', '#4338CA', '#6D5DFB'], 'Pneus': ['#FFF7ED', '#C2410C', '#F97316'],
+    'Inspeção': ['#EFF6FF', '#1D4ED8', '#3B82F6']
+  };
+
+  TONES = {
+    red: { bg: '#FEF2F2', bd: '#FECACA', color: '#B91C1C', btn: 'linear-gradient(135deg,#EF4444,#DC2626)', shadow: 'rgba(239,68,68,.9)' },
+    amber: { bg: '#FFFBEB', bd: '#FDE68A', color: '#B45309', btn: 'linear-gradient(135deg,#F59E0B,#D97706)', shadow: 'rgba(245,158,11,.9)' },
+    green: { bg: '#ECFDF5', bd: '#A7F3D0', color: '#047857', btn: 'linear-gradient(135deg,#10B981,#059669)', shadow: 'rgba(16,185,129,.9)' },
+    violet: { bg: '#EEF0FE', bd: '#DDD9FD', color: '#4338CA', btn: 'linear-gradient(135deg,#6D5DFB,#5145CD)', shadow: 'rgba(109,93,251,.95)' }
+  };
+
+  TODAY = new Date(2026, 8, 21);
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  onDocClick = (ev) => {
+    if ((this.state.rowMenu >= 0 || this.state.detailMenu || this.state.openFilter) && !ev.target.closest('button')) {
+      this.setState({ rowMenu: -1, detailMenu: false, openFilter: '' });
+    }
+  };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    document.addEventListener('click', this.onDocClick);
+    this.setState({ w: window.innerWidth });
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('click', this.onDocClick);
+    clearTimeout(this.tTimer); clearTimeout(this.sTimer);
+  }
+
+  get data() { if (!this._seed) this._seed = this.seed(); return this.state.data || this._seed; }
+  get view() { return this.state.viewSet ? this.state.view : (this.props.initialView || 'list'); }
+  get dataState() { return this.state.stateSet ? this.state.dataState : (this.props.listState || 'ready'); }
+
+  eur(v) { return '€ ' + Number(v).toFixed(2).replace('.', ','); }
+  km(v) { return String(v).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' km'; }
+
+  parseDate(s) {
+    if (!s || s === '—') return null;
+    const p = s.split('/');
+    return new Date(+p[2], +p[1] - 1, +p[0]);
+  }
+
+  daysTo(s) {
+    const d = this.parseDate(s);
+    if (!d) return null;
+    return Math.round((d - this.TODAY) / 86400000);
+  }
+
+  validity(s) {
+    const n = this.daysTo(s);
+    if (n === null) return { label: 'Não aplicável', tone: 'none', days: null };
+    if (n < 0) return { label: 'Vencido', tone: 'red', days: n };
+    if (n <= 60) return { label: 'Vence em ' + n + (n === 1 ? ' dia' : ' dias'), tone: 'amber', days: n };
+    return { label: 'Válido', tone: 'green', days: n };
+  }
+
+  docAlertsOf(v) {
+    return [v.nextInspection, v.insValid, v.docValid]
+      .map(d => this.validity(d).tone)
+      .filter(t => t === 'red' || t === 'amber').length;
+  }
+
+  driverOf(v) {
+    const cur = v.drivers.filter(d => !d.to)[0];
+    return cur ? cur.name : '';
+  }
+
+  flash(msg) {
+    clearTimeout(this.tTimer);
+    this.setState({ toast: msg });
+    this.tTimer = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  pill(bg, fg) { return 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;white-space:nowrap'; }
+
+  navBtn(active, extra) {
+    return 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:' + (active ? '700' : '500') +
+      ';color:' + (active ? '#fff' : '#CBD5E1') + ';background:' + (active ? 'rgba(109,93,251,.26)' : 'transparent') +
+      ';transition:background .16s,color .16s;' + (extra || '');
+  }
+
+  plateBox(v, big) {
+    return 'flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:' + (big ? '9px 13px' : '7px 9px') +
+      ';border-radius:' + (big ? 11 : 9) + 'px;background:' + (v.status === 'Ativo' ? '#0F172A' : '#475569') +
+      ';color:#fff;font-family:\'JetBrains Mono\',monospace;font-size:' + (big ? 14 : 11.5) + 'px;font-weight:600;letter-spacing:.04em;white-space:nowrap';
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, view = this.view, st = this.dataState;
+    const isMobile = w < 1024, wide = w >= 1440, mid = w >= 1240;
+    const F = s.filters;
+    const q = s.query.trim().toLowerCase();
+    const data = this.data;
+
+    const filtered = data.filter(v => {
+      const dr = this.driverOf(v);
+      if (q && !(v.plate + ' ' + v.brand + ' ' + v.model + ' ' + dr).toLowerCase().includes(q)) return false;
+      if (F.Status !== 'Todos' && v.status !== F.Status) return false;
+      if (F.Tipo !== 'Todos' && v.kind !== F.Tipo) return false;
+      if (F.Propriedade !== 'Todas' && v.own !== F.Propriedade) return false;
+      if (F['Responsável'] !== 'Todos' && dr !== F['Responsável']) return false;
+      return true;
+    });
+    const anyFilter = q !== '' || F.Status !== 'Todos' || F.Tipo !== 'Todos' || F.Propriedade !== 'Todas' || F['Responsável'] !== 'Todos';
+
+    const mkFilter = (key, title, options) => ({
+      title: title, label: title + ':', value: F[key], open: s.openFilter === key,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === key ? '' : key })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' +
+        (F[key] === options[0] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s',
+      options: options.map(o => ({
+        name: o,
+        pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [key]: o }), openFilter: '' })),
+        style: 'padding:9px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (F[key] === o ? '700' : '500') +
+          ';color:' + (F[key] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[key] === o ? '#EEF0FE' : 'transparent') + ';transition:background .15s'
+      }))
+    });
+
+    const chips = [];
+    if (q) chips.push({ t: 'Busca: ' + s.query, clear: () => this.setState({ query: '' }) });
+    [['Status', 'Status', 'Todos'], ['Tipo', 'Tipo', 'Todos'], ['Propriedade', 'Propriedade', 'Todas'], ['Responsável', 'Responsável', 'Todos']].forEach(([k, lbl, base]) => {
+      if (F[k] !== base) chips.push({ t: lbl + ': ' + F[k], clear: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [k]: base }) })) });
+    });
+
+    const cols = wide ? '1.7fr .9fr .6fr 1.2fr 1fr 1.1fr 1fr 48px'
+      : (mid ? '1.7fr .9fr 1.2fr 1fr 1.1fr 1fr 48px' : '1.7fr .9fr 1.2fr 1.1fr 1fr 48px');
+
+    const actives = data.filter(v => v.status === 'Ativo');
+    const inShop = data.filter(v => v.status === 'Em manutenção');
+    const docIssues = data.filter(v => this.docAlertsOf(v) > 0);
+    const openFines = data.reduce((a, v) => a + v.fines.filter(fn => fn.status === 'Pendente' || fn.status === 'Identificada').length, 0);
+
+    const rowActions = (v, i) => {
+      const acts = ['Visualizar', 'Editar', 'Registrar manutenção', 'Registrar abastecimento', 'Alterar responsável'];
+      const extra = v.status === 'Ativo' ? ['Enviar para manutenção', 'Desativar'] : (v.status === 'Em manutenção' ? ['Marcar como ativo'] : ['Reativar']);
+      return acts.concat(extra).map(a => ({
+        name: a,
+        run: () => {
+          if (a === 'Visualizar') { this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'geral', rowMenu: -1, detailMenu: false }); return; }
+          if (a === 'Editar') { this.setState({ view: 'edit', viewSet: true, curId: i, form: this.fromItem(v), dirty: false, formStatus: 'idle', rowMenu: -1, detailMenu: false }); return; }
+          if (a === 'Registrar manutenção') { this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'manut', rowMenu: -1, detailMenu: false, sheet: 'maint' }); return; }
+          if (a === 'Registrar abastecimento') { this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'abast', rowMenu: -1, detailMenu: false, sheet: 'fuel' }); return; }
+          if (a === 'Alterar responsável') { this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'resp', rowMenu: -1, detailMenu: false, sheet: 'driver' }); return; }
+          this.setState({ confirm: { kind: a, id: i }, confirmBusy: false, confirmError: false, rowMenu: -1, detailMenu: false });
+        },
+        style: 'padding:10px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:600;transition:background .15s;color:' +
+          (a === 'Desativar' ? '#B91C1C' : (a === 'Enviar para manutenção' ? '#C2410C' : (a === 'Reativar' || a === 'Marcar como ativo' ? '#047857' : '#0F172A')))
+      }));
+    };
+
+    const innerW = w - (isMobile ? 0 : 258) - 68;
+    const maintCols = '.8fr .9fr 2fr 1fr 1.2fr .8fr';
+    const fuelCols = '.9fr 1fr .8fr .9fr .9fr 1.2fr .8fr';
+    const mono0 = 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right;word-break:break-word';
+    const monoV = 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right;word-break:break-word';
+
+    const cur = data[s.curId] || data[0];
+    const curDriver = this.driverOf(cur);
+    const revV = this.validity(cur.nextReview);
+    const inspV = this.validity(cur.nextInspection);
+    const insV = this.validity(cur.insValid);
+    const docV = this.validity(cur.docValid);
+    const docAlerts = this.docAlertsOf(cur);
+
+    const totalLiters = cur.fuelLogs.reduce((a, fl) => a + fl.liters, 0);
+    const totalFuelCost = cur.fuelLogs.reduce((a, fl) => a + fl.value, 0);
+    const fuelStats = [
+      { label: 'Litros registrados', value: String(totalLiters.toFixed(1)).replace('.', ',') + ' L' },
+      { label: 'Custo total', value: this.eur(totalFuelCost) },
+      { label: 'Custo médio por litro', value: totalLiters ? this.eur(totalFuelCost / totalLiters) : '—' }
+    ];
+
+    const f = this.form;
+    const fs = s.formStatus;
+    const req = fs === 'required';
+
+    const FB = {
+      required: { title: 'Preencha os campos obrigatórios', text: 'Matrícula, marca, modelo, ano e quilometragem são necessários.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+      dupplate: { title: 'Matrícula já cadastrada', text: 'Outro veículo da frota já usa esta matrícula.', bg: '#FEF2F2', bd: '#FECACA', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' },
+      km: { title: 'Quilometragem inválida', text: 'Informe apenas números, sem separadores.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+      ownreq: { title: 'Dados de propriedade incompletos', text: 'Para este regime, informe o fornecedor e o contrato.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' }
+    };
+    const fb = FB[fs];
+
+    const fieldBox = (bad) => 'height:46px;padding:0 13px;border-radius:12px;border:1px solid ' + (bad ? '#FCA5A5' : '#E2E8F0') +
+      ';background:' + (bad ? '#FEF2F2' : '#F8FAFC') + ';font-size:14.5px;outline:none;color:#0F172A;transition:border-color .18s,background .18s';
+    const selBox = 'height:46px;padding:0 11px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;color:#0F172A';
+
+    const mkF = (key, label, o) => {
+      const op = o || {};
+      const missing = req && op.req && !String(f[key] || '').trim();
+      const ownMiss = fs === 'ownreq' && (key === 'supplier' || key === 'contract') && !String(f[key] || '').trim();
+      const bad = missing || ownMiss || (key === 'plate' && fs === 'dupplate') || (key === 'km' && fs === 'km');
+      return {
+        label: label, req: !!op.req, ph: op.ph || '', value: f[key],
+        isText: !op.options, isSelect: !!op.options, options: op.options || [],
+        onInput: (e) => this.patch({ [key]: e.target.value }),
+        inputStyle: fieldBox(bad), selectStyle: selBox,
+        error: missing ? 'Este campo é obrigatório.' : (ownMiss ? 'Necessário para este regime.' : (key === 'plate' && fs === 'dupplate' ? 'Esta matrícula já está cadastrada.' : (key === 'km' && fs === 'km' ? 'Informe apenas números.' : ''))),
+        wrapStyle: 'display:flex;flex-direction:column;gap:7px' + (op.span && w >= 900 ? ';grid-column:span 2' : '')
+      };
+    };
+
+    const isLease = f.own === 'Leasing';
+    const needsSupplier = f.own === 'Alugado' || f.own === 'Leasing' || f.own === 'Terceirizado';
+    const ownNote = f.own === 'Próprio' ? 'Veículo da própria empresa' : (isLease ? 'Contrato de leasing com parcelas' : (f.own === 'Alugado' ? 'Aluguer com mensalidade' : 'Veículo de empresa terceirizada'));
+    const ownFields = [].concat(
+      [mkF('firm', 'Empresa', { ph: 'Empresa detentora' })],
+      needsSupplier ? [mkF('supplier', 'Fornecedor / empresa', { ph: 'Nome do fornecedor' }), mkF('contract', 'Contrato', { ph: 'Número do contrato' })] : [],
+      [mkF('ownStart', 'Data de início', { ph: 'dd/mm/aaaa' }), mkF('ownEnd', 'Data de término', { ph: 'dd/mm/aaaa' })],
+      f.own === 'Alugado' ? [mkF('monthly', 'Valor mensal', { ph: '0,00' })] : [],
+      isLease ? [
+        mkF('leaseNo', 'Número do contrato de leasing', { ph: 'LS-0000-0000' }),
+        mkF('installment', 'Valor da parcela', { ph: '0,00' }),
+        mkF('total', 'Total de parcelas', { ph: '48' }),
+        mkF('paid', 'Parcelas pagas', { ph: '0' }),
+        mkF('nextDue', 'Próximo vencimento', { ph: 'dd/mm/aaaa' })
+      ] : []
+    );
+
+    const SHEETS = {
+      maint: {
+        title: 'Registrar manutenção', cta: 'Registrar manutenção',
+        note: '', totalLabel: '', totalHint: '', total: '',
+        fields: [
+          { key: 'mDate', label: 'Data', req: true, ph: 'dd/mm/aaaa' },
+          { key: 'mKind', label: 'Tipo', options: ['Preventiva', 'Corretiva', 'Revisão', 'Pneus', 'Inspeção'] },
+          { key: 'mDesc', label: 'Descrição', req: true, ph: 'O que foi feito', span: true },
+          { key: 'mKm', label: 'Quilometragem', ph: '0' },
+          { key: 'mShop', label: 'Oficina', ph: 'Nome da oficina' },
+          { key: 'mValue', label: 'Valor', ph: '0,00' },
+          { key: 'mNext', label: 'Próxima manutenção', ph: 'dd/mm/aaaa' }
+        ]
+      },
+      fuel: {
+        title: 'Registrar abastecimento', cta: 'Registrar abastecimento',
+        note: '', totalLabel: 'Custo por litro', totalHint: 'valor ÷ litros',
+        fields: [
+          { key: 'fDate', label: 'Data', req: true, ph: 'dd/mm/aaaa' },
+          { key: 'fKm', label: 'Quilometragem', req: true, ph: '0' },
+          { key: 'fLiters', label: 'Litros', req: true, ph: '0,00' },
+          { key: 'fFuel', label: 'Combustível', options: this.FUELS },
+          { key: 'fValue', label: 'Valor total', req: true, ph: '0,00' },
+          { key: 'fStation', label: 'Posto', ph: 'Nome do posto' }
+        ]
+      },
+      driver: {
+        title: 'Alterar responsável', cta: 'Confirmar alteração',
+        note: 'O responsável atual será encerrado na data informada e o período fica registrado no histórico.',
+        totalLabel: '', totalHint: '', total: '',
+        fields: [
+          { key: 'dName', label: 'Novo responsável', req: true, options: [''].concat(this.DRIVERS) },
+          { key: 'dType', label: 'Tipo de responsabilidade', options: ['Condutor principal', 'Condutor secundário', 'Operador', 'Uso partilhado'] },
+          { key: 'dFrom', label: 'Início', req: true, ph: 'dd/mm/aaaa' },
+          { key: 'dPrevEnd', label: 'Fim do período anterior', ph: 'dd/mm/aaaa' }
+        ]
+      }
+    };
+    const rawSheet = SHEETS[s.sheet] || SHEETS.maint;
+    const sh = this.state.sheetForm || {};
+    const litersN = parseFloat(String(sh.fLiters || '').replace(',', '.')) || 0;
+    const valueN = parseFloat(String(sh.fValue || '').replace(',', '.')) || 0;
+    const sheetSpec = {
+      title: rawSheet.title, cta: rawSheet.cta, note: rawSheet.note,
+      totalLabel: rawSheet.totalLabel, totalHint: rawSheet.totalHint,
+      total: s.sheet === 'fuel' && litersN > 0 ? this.eur(valueN / litersN) : '',
+      fields: rawSheet.fields.map(fd => ({
+        label: fd.label, req: !!fd.req, ph: fd.ph || '', value: sh[fd.key] || '',
+        isText: !fd.options, isSelect: !!fd.options, options: fd.options || [],
+        onInput: (e) => this.setState(x => ({ sheetForm: Object.assign({}, x.sheetForm, { [fd.key]: e.target.value }) })),
+        inputStyle: fieldBox(false), selectStyle: selBox,
+        wrapStyle: 'display:flex;flex-direction:column;gap:7px' + (fd.span && w >= 720 ? ';grid-column:span 2' : '')
+      }))
+    };
+
+    const c = s.confirm;
+    const cTarget = c ? data[c.id] : cur;
+    const CSPEC = {
+      'Desativar': { title: 'Desativar veículo?', text: 'O veículo sai da operação e não fica disponível para alocação. O histórico de responsáveis, manutenção e multas é preservado.', cta: 'Desativar veículo', tone: 'red' },
+      'Reativar': { title: 'Reativar veículo?', text: 'O veículo volta a estar disponível para alocação em obras e planejamento.', cta: 'Reativar veículo', tone: 'green' },
+      'Enviar para manutenção': { title: 'Enviar para manutenção?', text: 'O veículo passa a constar como indisponível enquanto estiver em oficina. Registre a intervenção na aba Manutenção.', cta: 'Enviar para manutenção', tone: 'amber' },
+      'Marcar como ativo': { title: 'Concluir manutenção?', text: 'O veículo volta ao estado ativo e fica novamente disponível para a operação.', cta: 'Marcar como ativo', tone: 'green' }
+    };
+    const cSpec = c ? CSPEC[c.kind] : null;
+    const cTone = cSpec ? this.TONES[cSpec.tone] : this.TONES.violet;
+
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile
+        ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);'
+        : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') +
+        'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }),
+      closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      dashItemStyle: this.navBtn(s.active === 'Dashboard'),
+      groups: this.NAV.map(g => ({
+        name: g.name, dot: g.dot, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: this.navBtn(false, 'color:#CBD5E1;font-weight:600;'),
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(it => ({
+          name: it.name, badge: it.count ? String(data.length) : '',
+          pick: () => this.setState({ active: it.name, navOpen: false }),
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === it.name ? '700' : '500') +
+            ';color:' + (s.active === it.name ? '#fff' : '#CBD5E1') + ';background:' + (s.active === it.name ? 'rgba(109,93,251,.26)' : 'transparent') + ';transition:background .16s,color .16s',
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === it.name ? '#6D5DFB' : '#64748B'),
+          badgeStyle: 'padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);color:#CBD5E1;font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:600'
+        }))
+      })),
+
+      isList: view === 'list',
+      goNew: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), dirty: false, formStatus: 'idle' }),
+
+      kpiGrid: 'display:grid;grid-template-columns:repeat(' + ((w - (isMobile ? 0 : 258) - 68) >= 860 ? 4 : 2) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)',
+      kpis: [
+        { label: 'Frota', value: String(data.length), hint: 'veículos cadastrados', color: '#6D5DFB', hintColor: '#64748B', apply: null },
+        { label: 'Ativos', value: String(actives.length), hint: 'em operação', color: '#10B981', hintColor: '#64748B', apply: { Status: 'Ativo' } },
+        { label: 'Em manutenção', value: String(inShop.length), hint: inShop.length === 0 ? 'nenhum parado' : (inShop.length === 1 ? 'indisponível' : 'indisponíveis'), color: '#F59E0B', hintColor: inShop.length ? '#B45309' : '#64748B', apply: { Status: 'Em manutenção' } },
+        { label: 'Documentação', value: String(docIssues.length), hint: docIssues.length === 0 ? 'tudo em ordem' : (docIssues.length === 1 ? 'precisa de atenção' : 'precisam de atenção'), color: docIssues.length ? '#EF4444' : '#10B981', hintColor: docIssues.length ? '#B91C1C' : '#64748B', apply: null }
+      ].map(k => ({
+        label: k.label, value: k.value, hint: k.hint, color: k.color, hintColor: k.hintColor,
+        style: 'text-align:left;background:#fff;border:1px solid ' + (k.apply && F.Status === k.apply.Status ? '#C7C3FB' : '#E2E8F0') +
+          ';border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;transition:transform .2s,box-shadow .2s,border-color .2s',
+        go: () => { if (k.apply) this.setState(x => ({ filters: Object.assign({}, x.filters, k.apply) })); }
+      })),
+
+      hasAlerts: docIssues.length > 0 || openFines > 0,
+      alerts: [].concat(
+        docIssues.length ? [{
+          t: docIssues.length === 1 ? '1 veículo com documentação vencida ou a vencer nos próximos 60 dias' : docIssues.length + ' veículos com documentação vencida ou a vencer nos próximos 60 dias',
+          color: '#EF4444', bg: '#FEF2F2', bd: '#FECACA',
+          go: () => this.setState({ view: 'detail', viewSet: true, curId: data.indexOf(docIssues[0]), tab: 'docs' })
+        }] : [],
+        openFines ? [{
+          t: openFines === 1 ? '1 multa pendente de tratamento' : openFines + ' multas pendentes de tratamento',
+          color: '#F59E0B', bg: '#FFFBEB', bd: '#FDE68A',
+          go: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'multas' })
+        }] : []
+      ).map(a => ({
+        t: a.t, color: a.color, go: a.go,
+        style: 'display:flex;align-items:center;gap:12px;padding:14px 15px;border-radius:15px;background:' + a.bg + ';border:1px solid ' + a.bd + ';transition:transform .16s' 
+      })),
+
+      query: s.query, hasQuery: s.query !== '',
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      clearQuery: () => this.setState({ query: '' }),
+      filters: [
+        mkFilter('Status', 'Status', ['Todos', 'Ativo', 'Em manutenção', 'Inativo', 'Vendido', 'Baixado']),
+        mkFilter('Tipo', 'Tipo', ['Todos'].concat(this.KINDS)),
+        mkFilter('Propriedade', 'Propriedade', ['Todas'].concat(this.OWNS)),
+        mkFilter('Responsável', 'Responsável', ['Todos'].concat(this.DRIVERS))
+      ],
+      anyFilter, activeChips: chips,
+      clearAll: () => this.setState({ query: '', filters: { Status: 'Todos', Tipo: 'Todos', Propriedade: 'Todas', 'Responsável': 'Todos' }, openFilter: '' }),
+
+      stLoading: st === 'loading', stError: st === 'error', stEmpty: st === 'empty',
+      stNoResults: st === 'ready' && filtered.length === 0,
+      stReady: st === 'ready' && filtered.length > 0,
+      skeletons: [1, 2, 3, 4, 5],
+      retry: () => { this.setState({ dataState: 'loading', stateSet: true }); clearTimeout(this.sTimer); this.sTimer = setTimeout(() => this.setState({ dataState: 'ready', stateSet: true }), 1100); },
+
+      isTable: !isMobile, isCards: isMobile, colYear: wide, colOwner: mid,
+      headRowStyle: 'display:grid;grid-template-columns:' + cols + ';gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0;border-radius:20px 20px 0 0',
+      thStyle: 'font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B',
+      countLabel: filtered.length + (filtered.length === 1 ? ' veículo' : ' veículos') + (anyFilter ? (filtered.length === 1 ? ' encontrado' : ' encontrados') : ''),
+
+      rows: filtered.map(v => {
+        const i = data.indexOf(v);
+        const col = this.ST[v.status];
+        const dr = this.driverOf(v);
+        const rev = this.validity(v.nextReview);
+        return {
+          plate: v.plate, plateStyle: this.plateBox(v),
+          model: v.brand + ' ' + v.model, firm: v.firm,
+          kind: v.kind, kindStyle: this.pill(this.KC[v.kind][0], this.KC[v.kind][1]),
+          year: v.year,
+          driver: dr || 'Sem responsável',
+          driverStyle: 'font-size:13px;font-weight:' + (dr ? '600' : '500') + ';color:' + (dr ? '#475569' : '#94A3B8') + ';min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis',
+          own: v.own, ownStyle: this.pill(this.OC[v.own][0], this.OC[v.own][1]),
+          status: v.status, statusDot: col[2], statusStyle: this.pill(col[0], col[1]),
+          review: v.nextReview,
+          reviewStyle: 'font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;white-space:nowrap;color:' +
+            (rev.tone === 'red' ? '#B91C1C' : (rev.tone === 'amber' ? '#B45309' : (rev.tone === 'none' ? '#94A3B8' : '#475569'))),
+          open: () => this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'geral' }),
+          menuOpen: s.rowMenu === i,
+          toggleMenu: () => this.setState(x => ({ rowMenu: x.rowMenu === i ? -1 : i })),
+          menuBtnStyle: 'width:34px;height:34px;border-radius:10px;font-size:17px;line-height:1;color:#64748B;background:' +
+            (s.rowMenu === i ? '#EEF0FE' : 'transparent') + ';border:1px solid ' + (s.rowMenu === i ? '#DDD9FD' : 'transparent') + ';transition:background .16s',
+          actions: rowActions(v, i),
+          rowStyle: 'display:grid;grid-template-columns:' + cols + ';gap:14px;padding:13px 20px;align-items:center;border-bottom:1px solid #F1F5F9;transition:background .16s'
+        };
+      }),
+
+      isDetail: view === 'detail', isForm: view === 'new' || view === 'edit',
+      goList: () => this.setState({ view: 'list', viewSet: true, form: null, dirty: false, formStatus: 'idle', detailMenu: false }),
+      goEdit: () => this.setState({ view: 'edit', viewSet: true, form: this.fromItem(cur), dirty: false, formStatus: 'idle', detailMenu: false }),
+      detailMenuOpen: s.detailMenu,
+      toggleDetailMenu: () => this.setState(x => ({ detailMenu: !x.detailMenu })),
+
+      summaryGrid: 'display:grid;grid-template-columns:repeat(' + (innerW >= 1100 ? 5 : (innerW >= 700 ? 3 : 2)) + ',minmax(0,1fr));gap:clamp(10px,1.2vw,14px)',
+      docGrid: 'display:grid;grid-template-columns:repeat(' + (innerW >= 880 ? 3 : (innerW >= 600 ? 2 : 1)) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)',
+      fuelKpiGrid: 'display:grid;grid-template-columns:repeat(' + (innerW >= 700 ? 3 : 1) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)',
+      maintHeadStyle: 'display:grid;grid-template-columns:' + maintCols + ';gap:14px;padding:13px clamp(16px,1.8vw,20px);background:#F8FAFC;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0',
+      fuelHeadStyle: 'display:grid;grid-template-columns:' + fuelCols + ';gap:14px;padding:13px clamp(16px,1.8vw,20px);background:#F8FAFC;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0',
+
+      tabs: [
+        { key: 'geral', name: 'Visão geral', badge: '' },
+        { key: 'resp', name: 'Responsabilidade', badge: String(cur.drivers.length) },
+        { key: 'docs', name: 'Documentação', badge: docAlerts ? String(docAlerts) : '' },
+        { key: 'manut', name: 'Manutenção', badge: String(cur.maint.length) },
+        { key: 'abast', name: 'Abastecimentos', badge: String(cur.fuelLogs.length) },
+        { key: 'multas', name: 'Multas', badge: cur.fines.length ? String(cur.fines.length) : '' }
+      ].map(t => {
+        const on = s.tab === t.key;
+        const warn = t.key === 'docs' && docAlerts > 0;
+        return {
+          name: t.name, badge: t.badge, pick: () => this.setState({ tab: t.key }),
+          style: 'flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:11px 11px 0 0;font-size:14px;font-weight:' + (on ? '700' : '600') +
+            ';color:' + (on ? '#4338CA' : '#64748B') + ';background:' + (on ? '#fff' : 'transparent') +
+            ';border:1px solid ' + (on ? '#E2E8F0' : 'transparent') + ';border-bottom:1px solid ' + (on ? '#fff' : 'transparent') +
+            ';margin-bottom:-1px;white-space:nowrap;transition:background .16s,color .16s',
+          badgeStyle: 'padding:2px 7px;border-radius:999px;background:' + (warn ? '#FEE2E2' : (on ? '#EEF0FE' : '#F1F5F9')) + ';color:' + (warn ? '#B91C1C' : (on ? '#4338CA' : '#64748B')) + ';font-family:\'JetBrains Mono\',monospace;font-size:10.5px;font-weight:600'
+        };
+      }),
+      tabGeral: s.tab === 'geral', tabResp: s.tab === 'resp', tabDocs: s.tab === 'docs',
+      tabManut: s.tab === 'manut', tabAbast: s.tab === 'abast', tabMultas: s.tab === 'multas',
+
+      cur: {
+        plate: cur.plate, plateStyle: this.plateBox(cur, true),
+        model: cur.brand + ' ' + cur.model, firm: cur.firm,
+        kind: cur.kind, kindStyle: this.pill(this.KC[cur.kind][0], this.KC[cur.kind][1]),
+        own: cur.own, ownStyle: this.pill(this.OC[cur.own][0], this.OC[cur.own][1]),
+        status: cur.status, statusDot: this.ST[cur.status][2], statusStyle: this.pill(this.ST[cur.status][0], this.ST[cur.status][1]),
+        nextReview: cur.nextReview,
+        summary: [
+          { label: 'Quilometragem', value: cur.kind === 'Máquina' ? cur.km + ' h' : this.km(cur.km), hint: 'último registro', color: '#6D5DFB', hintColor: '#64748B', tone: 'none' },
+          { label: 'Próxima revisão', value: cur.nextReview, hint: revV.label, color: '#3B82F6', tone: revV.tone },
+          { label: 'Inspeção', value: cur.nextInspection, hint: inspV.label, color: '#06B6D4', tone: inspV.tone },
+          { label: 'Seguro', value: cur.insValid, hint: insV.label, color: '#10B981', tone: insV.tone },
+          { label: 'Responsável', value: curDriver || 'Nenhum', hint: curDriver ? 'desde ' + cur.drivers[0].from : 'sem atribuição', color: '#EC4899', hintColor: '#64748B', tone: 'none', text: true }
+        ].map(k => {
+          const tone = k.tone === 'red' ? this.TONES.red : (k.tone === 'amber' ? this.TONES.amber : null);
+          return {
+            label: k.label, value: k.value, hint: k.hint,
+            color: k.color,
+            hintColor: tone ? tone.color : (k.hintColor || '#047857'),
+            boxStyle: 'background:' + (tone ? tone.bg : '#fff') + ';border:1px solid ' + (tone ? tone.bd : '#E2E8F0') + ';border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:7px',
+            valueStyle: (k.text ? '' : 'font-family:\'JetBrains Mono\',monospace;') + 'font-size:' + (k.text ? 'clamp(14px,1.5vw,17px)' : 'clamp(16px,1.8vw,20px)') +
+              ';font-weight:' + (k.text ? '700' : '600') + ';letter-spacing:-.02em;word-break:break-word;color:' + (tone ? tone.color : '#0F172A')
+          };
+        }),
+        specs: [
+          { k: 'Matrícula', v: cur.plate, style: monoV },
+          { k: 'Marca e modelo', v: cur.brand + ' ' + cur.model, style: mono0 },
+          { k: 'Versão', v: cur.version, style: mono0 },
+          { k: 'Ano', v: cur.year, style: monoV },
+          { k: 'Cor', v: cur.color, style: mono0 },
+          { k: 'VIN / chassis', v: cur.vin, style: monoV },
+          { k: 'Tipo de veículo', v: cur.kind, style: mono0 },
+          { k: 'Combustível', v: cur.fuel, style: mono0 },
+          { k: 'Quilometragem', v: cur.kind === 'Máquina' ? cur.km + ' h' : this.km(cur.km), style: monoV }
+        ],
+        ownership: [].concat(
+          [{ k: 'Regime', v: cur.own, style: mono0 }, { k: 'Empresa', v: cur.firm, style: mono0 }],
+          cur.supplier ? [{ k: 'Fornecedor', v: cur.supplier, style: mono0 }] : [],
+          cur.contract ? [{ k: 'Contrato', v: cur.contract, style: monoV }] : [],
+          [{ k: 'Início', v: cur.ownStart, style: monoV }, { k: 'Término', v: cur.ownEnd || '—', style: monoV }],
+          cur.monthly ? [{ k: 'Valor mensal', v: this.eur(cur.monthly), style: monoV }] : []
+        ),
+        isLease: cur.own === 'Leasing',
+        leaseProgress: cur.paid + ' de ' + cur.total + ' parcelas',
+        leaseBar: 'height:100%;width:' + (cur.total ? Math.round(cur.paid / cur.total * 100) : 0) + '%;border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#06B6D4)',
+        leaseValue: cur.installment ? this.eur(cur.installment) : '—',
+        leaseDue: cur.nextDue || '—',
+
+        driverCount: String(cur.drivers.length),
+        hasDrivers: cur.drivers.length > 0, noDrivers: cur.drivers.length === 0,
+        drivers: cur.drivers.map((dv, i) => ({
+          name: dv.name, type: dv.type, initials: this.initials(dv.name),
+          period: dv.from + ' — ' + (dv.to || 'Atual'),
+          tag: dv.to ? 'Encerrado' : 'Atual',
+          tagStyle: dv.to ? this.pill('#F1F5F9', '#475569') : this.pill('#ECFDF5', '#047857'),
+          dotStyle: 'width:32px;height:32px;border-radius:11px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:' +
+            (dv.to ? '#F1F5F9' : '#ECFDF5') + ';border:1px solid ' + (dv.to ? '#E2E8F0' : '#A7F3D0'),
+          avatarStyle: 'width:36px;height:36px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12.5px;font-weight:700;background:' +
+            (dv.to ? 'linear-gradient(135deg,#94A3B8,#64748B)' : 'linear-gradient(135deg,#6D5DFB,#06B6D4)')
+        })),
+
+        docs: [
+          { label: 'Documento do veículo', date: cur.docValid, v: this.validity(cur.docValid), color: '#6D5DFB', extra: '' },
+          { label: 'Inspeção', date: cur.nextInspection, v: inspV, color: '#3B82F6', extra: cur.inspection !== '—' ? 'última em ' + cur.inspection : '' },
+          { label: 'Seguro', date: cur.insValid, v: insV, color: '#10B981', extra: cur.insurance }
+        ].map(dc => {
+          const tone = dc.v.tone === 'red' ? this.TONES.red : (dc.v.tone === 'amber' ? this.TONES.amber : (dc.v.tone === 'green' ? this.TONES.green : null));
+          return {
+            label: dc.label, date: dc.date, extra: dc.extra, color: dc.color,
+            tag: dc.v.label,
+            tagStyle: this.pill(tone ? tone.bg : '#F1F5F9', tone ? tone.color : '#475569'),
+            iconStyle: 'width:28px;height:28px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#F8FAFC;border:1px solid #E2E8F0',
+            cardStyle: 'background:#fff;border:1px solid ' + (tone && dc.v.tone !== 'green' ? tone.bd : '#E2E8F0') + ';border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:10px'
+          };
+        }),
+
+        maintCount: String(cur.maint.length),
+        maintCountLabel: cur.maint.length === 1 ? '1 registro' : cur.maint.length + ' registros',
+        maintTotal: this.eur(cur.maint.reduce((a, m) => a + m.value, 0)),
+        hasMaint: cur.maint.length > 0, noMaint: cur.maint.length === 0,
+        maint: cur.maint.map(m => ({
+          date: m.date, kind: m.kind, desc: m.desc, shop: m.shop,
+          km: cur.kind === 'Máquina' ? m.km + ' h' : this.km(m.km),
+          value: m.value ? this.eur(m.value) : 'Em curso',
+          valueStyle: 'font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;white-space:nowrap;text-align:right;color:' + (m.value ? '#0F172A' : '#B45309'),
+          kindStyle: this.pill(this.MC[m.kind][0], this.MC[m.kind][1]),
+          rowStyle: (isMobile ? 'display:flex;flex-wrap:wrap;align-items:center;' : 'display:grid;grid-template-columns:' + maintCols + ';align-items:center;') +
+            'gap:14px;padding:13px clamp(16px,1.8vw,20px);border-bottom:1px solid #F1F5F9'
+        })),
+
+        fuelCount: String(cur.fuelLogs.length),
+        hasFuel: cur.fuelLogs.length > 0, noFuel: cur.fuelLogs.length === 0,
+        fuelKpis: fuelStats,
+        fuelLogs: cur.fuelLogs.map(fl => ({
+          date: fl.date, fuel: fl.fuel, station: fl.station,
+          km: cur.kind === 'Máquina' ? fl.km + ' h' : this.km(fl.km),
+          liters: String(fl.liters).replace('.', ',') + ' L',
+          perLiter: this.eur(fl.value / fl.liters),
+          value: this.eur(fl.value),
+          rowStyle: (isMobile ? 'display:flex;flex-wrap:wrap;align-items:center;' : 'display:grid;grid-template-columns:' + fuelCols + ';align-items:center;') +
+            'gap:14px;padding:13px clamp(16px,1.8vw,20px);border-bottom:1px solid #F1F5F9'
+        })),
+
+        fineCount: cur.fines.length === 1 ? '1 multa' : cur.fines.length + ' multas',
+        fineBadgeStyle: this.pill(cur.fines.length ? '#FFFBEB' : '#ECFDF5', cur.fines.length ? '#B45309' : '#047857'),
+        fineTotal: this.eur(cur.fines.reduce((a, fn) => a + fn.value, 0)),
+        hasFines: cur.fines.length > 0, noFines: cur.fines.length === 0,
+        fines: cur.fines.map(fn => ({
+          date: fn.date, kind: fn.kind, who: fn.who, status: fn.status,
+          value: this.eur(fn.value),
+          color: this.FST[fn.status][1],
+          statusStyle: this.pill(this.FST[fn.status][0], this.FST[fn.status][1])
+        })),
+
+        actions: rowActions(cur, s.curId)
+      },
+
+      sheetOpen: !!s.sheet,
+      closeSheet: () => this.setState({ sheet: '', sheetSaving: false }),
+      openMaint: () => this.setState({ sheet: 'maint' }),
+      openFuel: () => this.setState({ sheet: 'fuel' }),
+      openDriver: () => this.setState({ sheet: 'driver' }),
+      sheetTitle: sheetSpec.title,
+      sheetNote: sheetSpec.note,
+      sheetGrid: 'display:grid;grid-template-columns:repeat(' + (w >= 720 ? 2 : 1) + ',minmax(0,1fr));gap:14px',
+      sheetFields: sheetSpec.fields,
+      sheetTotal: sheetSpec.total,
+      sheetTotalLabel: sheetSpec.totalLabel,
+      sheetTotalHint: sheetSpec.totalHint,
+      sheetSaving: s.sheetSaving,
+      sheetSaveLabel: s.sheetSaving ? 'Registrando...' : sheetSpec.cta,
+      sheetSaveStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' +
+        (s.sheetSaving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';box-shadow:0 14px 28px -14px rgba(109,93,251,1);' + (s.sheetSaving ? 'pointer-events:none;' : ''),
+      saveSheet: this.saveSheet,
+
+      formTitle: view === 'new' ? 'Novo veículo' : 'Editar veículo',
+      formSub: view === 'new' ? 'Cadastre o veículo, o regime de propriedade e o responsável inicial.' : 'Altere os dados de ' + (f.plate || cur.plate) + '.',
+      dirty: s.dirty,
+      fieldGrid: 'display:grid;grid-template-columns:repeat(' + (w >= 900 ? 2 : 1) + ',minmax(0,1fr));gap:14px',
+      errTextStyle: 'display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#B91C1C',
+      errDotStyle: 'width:5px;height:5px;border-radius:50%;background:#EF4444;flex:0 0 auto',
+
+      formBanner: !!fb, formBannerTitle: fb ? fb.title : '', formBannerText: fb ? fb.text : '',
+      formBannerTitleColor: fb ? fb.titleColor : '', formBannerTextColor: fb ? fb.textColor : '',
+      formBannerStyle: 'display:flex;align-items:flex-start;gap:12px;padding:15px;border-radius:16px;animation:pgFade .26s cubic-bezier(.22,.7,.2,1);background:' + (fb ? fb.bg : '#fff') + ';border:1px solid ' + (fb ? fb.bd : '#E2E8F0'),
+      formBannerIconStyle: 'width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:' + (fb ? fb.iconBg : '#F1F5F9') + ';color:' + (fb ? fb.iconColor : '#64748B'),
+
+      ownOptions: this.OWNS.map(o => {
+        const on = f.own === o;
+        return {
+          name: o, pick: () => this.patch({ own: o }),
+          style: 'display:flex;align-items:center;gap:9px;padding:12px 17px;border-radius:12px;font-size:14px;font-weight:700;border:1px solid ' +
+            (on ? '#C7C3FB' : '#E2E8F0') + ';background:' + (on ? '#EEF0FE' : '#fff') + ';color:' + (on ? '#4338CA' : '#475569') + ';transition:background .16s,border-color .16s',
+          dotStyle: 'width:9px;height:9px;border-radius:50%;flex:0 0 auto;border:2px solid ' + (on ? '#6D5DFB' : '#CBD5E1') + ';background:' + (on ? '#6D5DFB' : '#fff')
+        };
+      }),
+
+      formSections: [
+        {
+          num: '01', title: 'Dados do veículo', numBg: '#EEF0FE', numColor: '#4338CA', note: '', hasOwnPicker: false,
+          fields: [
+            mkF('plate', 'Matrícula / placa', { req: true, ph: '1-ABC-234' }),
+            mkF('kind', 'Tipo de veículo', { options: this.KINDS }),
+            mkF('brand', 'Marca', { req: true, ph: 'Ford, Renault, Caterpillar...' }),
+            mkF('model', 'Modelo', { req: true, ph: 'Transit Custom' }),
+            mkF('version', 'Versão', { ph: '2.0 EcoBlue 130' }),
+            mkF('year', 'Ano', { req: true, ph: '2026' }),
+            mkF('color', 'Cor', { ph: 'Branco' }),
+            mkF('vin', 'VIN / chassis', { ph: '17 caracteres' }),
+            mkF('fuel', 'Combustível', { options: this.FUELS }),
+            mkF('km', 'Quilometragem atual', { req: true, ph: '0' }),
+            mkF('status', 'Status', { options: ['Ativo', 'Em manutenção', 'Inativo', 'Vendido', 'Baixado'] })
+          ]
+        },
+        {
+          num: '02', title: 'Propriedade', numBg: '#ECFDF5', numColor: '#047857',
+          note: ownNote, hasOwnPicker: true,
+          fields: ownFields
+        },
+        {
+          num: '03', title: 'Responsabilidade', numBg: '#FDF2F8', numColor: '#BE185D',
+          note: 'O período anterior é preservado no histórico', hasOwnPicker: false,
+          fields: [
+            mkF('driverName', 'Responsável', { options: [''].concat(this.DRIVERS) }),
+            mkF('driverType', 'Tipo de responsabilidade', { options: ['Condutor principal', 'Condutor secundário', 'Operador', 'Uso partilhado'] }),
+            mkF('driverFrom', 'Início', { ph: 'dd/mm/aaaa' })
+          ]
+        },
+        {
+          num: '04', title: 'Documentação', numBg: '#EFF6FF', numColor: '#1D4ED8', note: '', hasOwnPicker: false,
+          fields: [
+            mkF('docValid', 'Validade do documento', { ph: 'dd/mm/aaaa' }),
+            mkF('nextInspection', 'Próxima inspeção', { ph: 'dd/mm/aaaa' }),
+            mkF('insurance', 'Seguradora', { ph: 'Nome da seguradora' }),
+            mkF('insValid', 'Validade do seguro', { ph: 'dd/mm/aaaa' }),
+            mkF('nextReview', 'Próxima revisão', { ph: 'dd/mm/aaaa' })
+          ]
+        }
+      ].map(sec => Object.assign({}, sec, {
+        numStyle: 'width:28px;height:28px;border-radius:9px;background:' + sec.numBg + ';color:' + sec.numColor +
+          ';display:flex;align-items:center;justify-content:center;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;flex:0 0 auto'
+      })),
+
+      isSaving: s.saving,
+      saveLabel: s.saving ? 'Salvando...' : (view === 'new' ? 'Criar veículo' : 'Salvar alterações'),
+      saveBtnStyle: 'display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 21px;border-radius:12px;background:' +
+        (s.saving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);' + (s.saving ? 'pointer-events:none;' : ''),
+      save: this.save,
+      tryCancel: () => { if (s.dirty) { this.setState({ confirmLeave: true }); return; } this.setState({ view: view === 'edit' ? 'detail' : 'list', viewSet: true, form: null, formStatus: 'idle' }); },
+      confirmLeave: s.confirmLeave,
+      keepEditing: () => this.setState({ confirmLeave: false }),
+      discard: () => { this.setState({ confirmLeave: false, view: view === 'edit' ? 'detail' : 'list', viewSet: true, form: null, dirty: false, formStatus: 'idle' }); this.flash('Alterações descartadas'); },
+
+      confirm: !!c,
+      confirmTitle: cSpec ? cSpec.title : '',
+      confirmText: cSpec ? cSpec.text : '',
+      confirmCta: s.confirmBusy ? 'Processando...' : (cSpec ? cSpec.cta : ''),
+      confirmIcon: cSpec && cSpec.tone === 'green' ? '✓' : '!',
+      confirmIconStyle: 'width:44px;height:44px;border-radius:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;background:' +
+        cTone.bg + ';border:1px solid ' + cTone.bd + ';color:' + cTone.color,
+      confirmPlate: cTarget.plate, confirmPlateStyle: this.plateBox(cTarget),
+      confirmName: cTarget.brand + ' ' + cTarget.model,
+      confirmMeta: cTarget.kind + ' · ' + (this.driverOf(cTarget) || 'sem responsável'),
+      confirmBtnStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' +
+        (s.confirmBusy ? '#A5B4FC' : cTone.btn) + ';box-shadow:0 14px 28px -14px ' + cTone.shadow + ';' + (s.confirmBusy ? 'pointer-events:none;' : ''),
+      confirmBusy: s.confirmBusy, confirmError: s.confirmError,
+      closeConfirm: () => this.setState({ confirm: null, confirmBusy: false, confirmError: false }),
+      runConfirm: this.runConfirm,
+
+      demos: [
+        { name: 'Lista', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, query: '', filters: { Status: 'Todos', Tipo: 'Todos', Propriedade: 'Todas', 'Responsável': 'Todos' } }) },
+        { name: 'Carregando', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'loading', stateSet: true }) },
+        { name: 'Vazio', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'empty', stateSet: true }) },
+        { name: 'Erro', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'error', stateSet: true }) },
+        { name: 'Sem resultado', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, query: 'zzz' }) },
+        { name: 'Visualizar', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'geral' }) },
+        { name: 'Leasing', run: () => this.setState({ view: 'detail', viewSet: true, curId: 1, tab: 'geral' }) },
+        { name: 'Responsáveis', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'resp' }) },
+        { name: 'Sem responsável', run: () => this.setState({ view: 'detail', viewSet: true, curId: 5, tab: 'resp' }) },
+        { name: 'Documentação vencida', run: () => this.setState({ view: 'detail', viewSet: true, curId: 4, tab: 'docs' }) },
+        { name: 'Manutenção', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'manut' }) },
+        { name: 'Abastecimentos', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'abast' }) },
+        { name: 'Multas', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'multas' }) },
+        { name: 'Registrar manutenção', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'manut', sheet: 'maint' }) },
+        { name: 'Registrar abastecimento', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'abast', sheet: 'fuel' }) },
+        { name: 'Alterar responsável', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'resp', sheet: 'driver' }) },
+        { name: 'Novo', run: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), dirty: false, formStatus: 'idle' }) },
+        { name: 'Validação', run: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), formStatus: 'required' }) },
+        { name: 'Salvando', run: () => this.setState({ view: 'new', viewSet: true, saving: true, formStatus: 'saving', form: Object.assign(this.blank(), { plate: '1-NEW-100', brand: 'Fiat', model: 'Ducato', year: '2026', km: '120' }) }) },
+        { name: 'Desativar', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, confirm: { kind: 'Desativar', id: 0 }, confirmBusy: false, confirmError: false }) },
+        { name: 'Erro na ação', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, confirm: { kind: 'Desativar', id: 0 }, confirmBusy: false, confirmError: true }) },
+        { name: 'Sair sem salvar', run: () => this.setState({ view: 'edit', viewSet: true, curId: 0, form: Object.assign(this.fromItem(this.data[0]), { color: 'Azul' }), dirty: true, confirmLeave: true }) }
+      ].map(x => ({
+        name: x.name, run: x.run,
+        style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B;transition:border-color .16s,color .16s'
+      })),
+
+      toast: s.toast
+    };
+  }
+
+  initials(n) { return n.split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase(); }
+
+  get form() { return this.state.form || this.blank(); }
+
+  patch(p) {
+    const f = Object.assign({}, this.form, p);
+    const clears = ['required', 'dupplate', 'km', 'ownreq'].indexOf(this.state.formStatus) >= 0;
+    this.setState(Object.assign({ form: f, dirty: true }, clears ? { formStatus: 'idle' } : null));
+  }
+
+  save = () => {
+    const f = this.form, view = this.view;
+    if (!f.plate.trim() || !f.brand.trim() || !f.model.trim() || !String(f.year).trim() || !String(f.km).trim()) {
+      this.setState({ formStatus: 'required' }); return;
+    }
+    if (!/^\d+$/.test(String(f.km).replace(/[.\s]/g, ''))) { this.setState({ formStatus: 'km' }); return; }
+    if (this.data.filter(v => v.plate.toUpperCase() === f.plate.trim().toUpperCase() && v.id !== f.id).length) { this.setState({ formStatus: 'dupplate' }); return; }
+    if ((f.own === 'Alugado' || f.own === 'Leasing' || f.own === 'Terceirizado') && (!String(f.supplier || '').trim() || !String(f.contract || '').trim())) {
+      this.setState({ formStatus: 'ownreq' }); return;
+    }
+
+    this.setState({ saving: true, formStatus: 'saving' });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      const list = this.data.slice();
+      const num = (v) => parseFloat(String(v || '').replace(/[.\s]/g, '').replace(',', '.')) || 0;
+      const base = Object.assign({}, f, {
+        plate: f.plate.trim().toUpperCase(), km: num(f.km),
+        monthly: num(f.monthly), installment: num(f.installment),
+        total: parseInt(f.total, 10) || 0, paid: parseInt(f.paid, 10) || 0
+      });
+      delete base.driverName; delete base.driverFrom; delete base.driverType;
+
+      if (view === 'new') {
+        list.unshift(Object.assign(base, {
+          id: 'v' + Date.now(), inspection: '—',
+          drivers: f.driverName ? [{ name: f.driverName, from: f.driverFrom || '21/09/2026', to: '', type: f.driverType }] : [],
+          maint: [], fuelLogs: [], fines: []
+        }));
+        this.setState({ data: list, saving: false, view: 'detail', viewSet: true, curId: 0, tab: 'geral', form: null, dirty: false, formStatus: 'idle' });
+        this.flash('Veículo criado');
+      } else {
+        const i = list.map(v => v.id).indexOf(f.id);
+        const prev = list[i];
+        let drivers = prev.drivers;
+        const curD = drivers.filter(d => !d.to)[0];
+        if (f.driverName && (!curD || curD.name !== f.driverName)) {
+          drivers = drivers.map(d => d.to ? d : Object.assign({}, d, { to: '20/09/2026' }));
+          drivers = [{ name: f.driverName, from: f.driverFrom || '21/09/2026', to: '', type: f.driverType }].concat(drivers);
+        }
+        list[i] = Object.assign({}, prev, base, { drivers: drivers });
+        this.setState({ data: list, saving: false, view: 'detail', viewSet: true, curId: i, form: null, dirty: false, formStatus: 'idle' });
+        this.flash('Alterações salvas');
+      }
+    }, 1100);
+  };
+
+  saveSheet = () => {
+    const kind = this.state.sheet;
+    const sh = this.state.sheetForm || {};
+    this.setState({ sheetSaving: true });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      const list = this.data.slice();
+      const i = this.state.curId;
+      const v = list[i];
+      const num = (x) => parseFloat(String(x || '').replace(/[.\s]/g, '').replace(',', '.')) || 0;
+
+      if (kind === 'maint') {
+        list[i] = Object.assign({}, v, {
+          maint: [{
+            date: sh.mDate || '21/09/2026', kind: sh.mKind || 'Preventiva',
+            desc: sh.mDesc || 'Manutenção registrada', km: num(sh.mKm) || v.km,
+            value: num(sh.mValue), shop: sh.mShop || '—'
+          }].concat(v.maint),
+          nextReview: sh.mNext || v.nextReview
+        });
+        this.flash('Manutenção registrada');
+      } else if (kind === 'fuel') {
+        const liters = num(sh.fLiters), value = num(sh.fValue), km = num(sh.fKm);
+        list[i] = Object.assign({}, v, {
+          fuelLogs: [{
+            date: sh.fDate || '21/09/2026', km: km || v.km, liters: liters,
+            fuel: sh.fFuel || v.fuel, value: value, station: sh.fStation || '—'
+          }].concat(v.fuelLogs),
+          km: km > v.km ? km : v.km
+        });
+        this.flash('Abastecimento registrado');
+      } else {
+        const name = sh.dName;
+        if (!name) { this.setState({ sheetSaving: false }); return; }
+        const closed = v.drivers.map(d => d.to ? d : Object.assign({}, d, { to: sh.dPrevEnd || '20/09/2026' }));
+        list[i] = Object.assign({}, v, {
+          drivers: [{ name: name, from: sh.dFrom || '21/09/2026', to: '', type: sh.dType || 'Condutor principal' }].concat(closed)
+        });
+        this.flash('Responsável alterado — período anterior preservado');
+      }
+      this.setState({ data: list, sheet: '', sheetSaving: false, sheetForm: {} });
+    }, 1000);
+  };
+
+  runConfirm = () => {
+    const c = this.state.confirm;
+    if (!c) return;
+    this.setState({ confirmBusy: true, confirmError: false });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      if (this.props.failConfirm === true) { this.setState({ confirmBusy: false, confirmError: true }); return; }
+      const map = { 'Desativar': 'Inativo', 'Reativar': 'Ativo', 'Enviar para manutenção': 'Em manutenção', 'Marcar como ativo': 'Ativo' };
+      const list = this.data.slice();
+      list[c.id] = Object.assign({}, list[c.id], { status: map[c.kind] });
+      this.setState({ data: list, confirm: null, confirmBusy: false });
+      this.flash('Veículo agora está ' + map[c.kind].toLowerCase());
+    }, 900);
+  };
+
+  blank() {
+    return {
+      plate: '', brand: '', model: '', version: '', year: '', color: '', vin: '',
+      kind: 'Van', fuel: 'Gasóleo', km: '', status: 'Ativo',
+      own: 'Próprio', firm: 'Construtora Horizonte', supplier: '', contract: '', ownStart: '', ownEnd: '', monthly: '',
+      leaseNo: '', installment: '', total: '', paid: '', nextDue: '',
+      docValid: '', nextInspection: '', insurance: '', insValid: '', nextReview: '',
+      driverName: '', driverFrom: '', driverType: 'Condutor principal'
+    };
+  }
+
+  fromItem(v) {
+    const cur = v.drivers.filter(d => !d.to)[0];
+    return Object.assign({}, v, {
+      km: String(v.km), monthly: v.monthly ? String(v.monthly).replace('.', ',') : '',
+      installment: v.installment ? String(v.installment).replace('.', ',') : '',
+      total: v.total ? String(v.total) : '', paid: v.paid ? String(v.paid) : '',
+      driverName: cur ? cur.name : '', driverFrom: cur ? cur.from : '', driverType: cur ? cur.type : 'Condutor principal'
+    });
+  }
+}
+</script>
+</body>
+</html>
