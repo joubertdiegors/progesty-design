@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgSheet{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#94A3B8;font-size:15px;line-height:1">✕</button>
+      </sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="{{ dashItemStyle }}">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto">
+          <span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span>
+          <span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span>
+        </span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}">
+                  <span style="{{ it.dotStyle }}"></span>
+                  <span style="flex:1;text-align:left">{{ it.name }}</span>
+                  <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ it.badgeStyle }}">{{ it.badge }}</span>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column">
+        <span style="font-size:13px;font-weight:700;color:#E2E8F0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Carlos Mendes</span>
+        <span style="font-size:11px;color:#64748B">Administrador</span>
+      </div>
+    </div>
+  </aside>
+</sc-if>
+
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div>
+</sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;min-height:100vh">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto">
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+          </button>
+        </sc-if>
+        <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Projetos / Obras</h1>
+          <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Acompanhe suas obras, custos, prazos e resultados em um único lugar.</p>
+        </div>
+        <button onClick="{{ goNew }}" style="flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:13px 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s,box-shadow .18s" style-hover="transform:translateY(-1px);box-shadow:0 20px 34px -14px rgba(109,93,251,1)">
+          <span style="font-size:17px;line-height:1">+</span>Novo projeto
+        </button>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;transition:border-color .18s" style-hover="border-color:#C7C3FB">
+            <span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+            <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Pesquisar projetos ou obras..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clearQuery }}" aria-label="Limpar" style="width:22px;height:22px;border-radius:7px;background:#F1F5F9;color:#64748B;font-size:12px;line-height:1">✕</button>
+            </sc-if>
+          </div>
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6">
+            <div style="position:relative;flex:0 0 auto">
+              <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}">
+                <span style="color:#64748B;font-weight:600">{{ f.label }}</span>{{ f.value }}<span style="font-size:9px;color:#64748B">▼</span>
+              </button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 8px);left:0;min-width:186px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                  <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3">
+                    <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Filtros ativos:</span>
+            <sc-for list="{{ activeChips }}" as="c" hint-placeholder-count="2">
+              <button onClick="{{ c.clear }}" style="display:flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:12.5px;font-weight:700">{{ c.t }}<span style="font-size:11px;opacity:.7">✕</span></button>
+            </sc-for>
+            <button onClick="{{ clearAll }}" style="font-size:12.5px;font-weight:700;color:#64748B">Limpar tudo</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <div class="pg-sk" style="width:44px;height:44px;border-radius:14px;flex:0 0 auto"></div>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:7px"><div class="pg-sk" style="height:13px;width:46%"></div><div class="pg-sk" style="height:10px;width:26%"></div></div>
+                  <div class="pg-sk" style="width:88px;height:26px;border-radius:999px;flex:0 0 auto"></div>
+                </div>
+                <div class="pg-sk" style="height:8px;border-radius:99px"></div>
+                <div style="display:flex;gap:12px"><div class="pg-sk" style="flex:1;height:44px;border-radius:12px"></div><div class="pg-sk" style="flex:1;height:44px;border-radius:12px"></div><div class="pg-sk" style="flex:1;height:44px;border-radius:12px"></div><div class="pg-sk" style="flex:1;height:44px;border-radius:12px"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stError }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #FECACA;border-radius:20px;padding:clamp(28px,4vw,52px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:52px;height:52px;border-radius:16px;background:#FEF2F2;border:1px solid #FECACA;display:flex;align-items:center;justify-content:center;color:#B91C1C;font-size:24px;font-weight:800">!</span>
+            <span style="font-size:19px;font-weight:800;letter-spacing:-.02em">Não foi possível carregar as obras</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:44ch;text-wrap:pretty">Verifique sua conexão e tente novamente. Se o problema continuar, entre em contato com o suporte.</span>
+            <button onClick="{{ retry }}" style="margin-top:4px;padding:13px 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700">Tentar novamente</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#FFF7ED;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#F59E0B,#F97316)"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Você ainda não possui obras</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Cadastre sua primeira obra para acompanhar custos, prazos e resultado desde o início.</span>
+            <button onClick="{{ goNew }}" style="margin-top:4px;display:flex;align-items:center;gap:9px;padding:13px 21px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)"><span style="font-size:17px;line-height:1">+</span>Novo projeto</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stNoResults }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:50%;border:3px solid #94A3B8"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhuma obra encontrada</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Tente alterar os filtros ou realizar uma nova busca.</span>
+            <button onClick="{{ clearAll }}" style="margin-top:4px;padding:13px 21px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Limpar filtros</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+            <sc-for list="{{ rows }}" as="p" hint-placeholder-count="3">
+              <button onClick="{{ p.open }}" style="text-align:left;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:15px;transition:transform .2s,box-shadow .2s,border-color .2s" style-hover="transform:translateY(-3px);box-shadow:0 24px 44px -30px rgba(15,23,42,.5);border-color:#C7C3FB">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+                  <span style="width:44px;height:44px;border-radius:14px;background:{{ p.avatar }};flex:0 0 auto"></span>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:clamp(15px,1.6vw,17px);font-weight:700;letter-spacing:-.025em">{{ p.n }}</span>
+                    <span style="font-size:12.5px;color:#64748B">Cliente: {{ p.client }}</span>
+                  </div>
+                  <div style="flex:1;min-width:10px"></div>
+                  <span style="{{ p.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ p.statusDot }}"></span>{{ p.status }}</span>
+                  <span style="font-size:12.5px;color:#64748B;white-space:nowrap">Prazo {{ p.due }}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="flex:1;height:9px;border-radius:999px;background:#E9EEF5;overflow:hidden">
+                    <div data-prog style="{{ p.barStyle }}"></div>
+                  </div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600;color:#475569;min-width:44px;text-align:right">{{ p.pct }}</span>
+                  <span style="font-size:12px;color:#64748B;white-space:nowrap">concluído</span>
+                </div>
+                <div style="{{ metricsGrid }}">
+                  <sc-for list="{{ p.metrics }}" as="m" hint-placeholder-count="4">
+                    <div style="{{ m.style }}">
+                      <span style="font-size:11.5px;font-weight:600;color:{{ m.labelColor }}">{{ m.k }}</span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:{{ m.valueColor }};white-space:nowrap">{{ m.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </button>
+            </sc-for>
+            <span style="font-size:12.5px;color:#64748B">{{ countLabel }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;min-height:100vh">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <button onClick="{{ goList }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(19px,2vw,25px);font-weight:800;letter-spacing:-.03em">Novo projeto</h1>
+          <p style="margin:0;font-size:13.5px;color:#64748B">Contrato e orçamento inicial. Os custos você registra durante a obra.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex:0 0 auto">
+          <button onClick="{{ goList }}" style="padding:13px 19px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+          <button onClick="{{ save }}" style="{{ saveBtnStyle }}">{{ saveLabel }}</button>
+        </div>
+      </header>
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px)">
+        <div style="max-width:940px;display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="width:28px;height:28px;border-radius:9px;background:#FFF7ED;color:#C2410C;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex:0 0 auto">01</span>
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Informações da obra</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px">
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Nome da obra</span><input placeholder="Ex.: Residencial Jardim Europa" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Cliente</span>
+                <select style="height:44px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A"><option>Construtora Horizonte</option><option>Grupo Central Engenharia</option><option>Maria Oliveira</option><option>Reformas Delta</option></select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Tipo de obra</span>
+                <select style="height:44px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A"><option>Residencial</option><option>Comercial</option><option>Industrial</option><option>Reforma</option><option>Infraestrutura</option></select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Responsável</span>
+                <select style="height:44px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A"><option>Carlos Mendes</option><option>Ana Duarte</option><option>Rafael Lima</option></select>
+              </label>
+              <label style="grid-column:span 2;display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Localização</span><input placeholder="Endereço da obra" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Descrição</span><textarea rows="3" placeholder="Escopo resumido da obra" style="padding:12px 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;resize:vertical;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></textarea></label>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="width:28px;height:28px;border-radius:9px;background:#EEF0FE;color:#4338CA;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex:0 0 auto">02</span>
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Contrato</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:14px">
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Valor contratado</span><input placeholder="€ 0,00" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;font-family:'JetBrains Mono',monospace;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Data de início</span><input type="date" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Previsão de término</span><input type="date" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Número do contrato</span><input placeholder="CT-0000" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Observações</span><textarea rows="2" placeholder="Condições, medições, retenções..." style="padding:12px 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;resize:vertical;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></textarea></label>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="width:28px;height:28px;border-radius:9px;background:#ECFDF5;color:#047857;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex:0 0 auto">03</span>
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Planejamento financeiro</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:14px">
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Orçamento inicial</span><input placeholder="€ 0,00" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;font-family:'JetBrains Mono',monospace;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Margem desejada</span><input placeholder="25%" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;font-family:'JetBrains Mono',monospace;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Observações</span><textarea rows="2" placeholder="Premissas do orçamento" style="padding:12px 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;resize:vertical;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></textarea></label>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+            <button onClick="{{ goList }}" style="padding:14px 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Cancelar</button>
+            <button onClick="{{ save }}" style="{{ saveBtnStyle }}">{{ saveLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;min-height:100vh">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+        <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,34px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+          <button onClick="{{ goList }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+          <span style="width:46px;height:46px;border-radius:14px;background:{{ cur.avatar }};flex:0 0 auto"></span>
+          <div style="min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:5px">
+            <h1 style="margin:0;font-size:clamp(19px,2.1vw,26px);font-weight:800;letter-spacing:-.03em">{{ cur.n }}</h1>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+              <span style="{{ cur.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ cur.statusDot }}"></span>{{ cur.status }}</span>
+              <span style="font-size:13px;color:#64748B">Cliente: {{ cur.client }}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:9px;flex:0 0 auto">
+            <button onClick="{{ toastEdit }}" style="padding:12px 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700">Editar</button>
+            <button onClick="{{ toastActivity }}" style="display:flex;align-items:center;gap:8px;padding:12px 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700"><span style="font-size:16px;line-height:1">+</span>Nova atividade</button>
+            <button onClick="{{ openCost }}" style="display:flex;align-items:center;gap:8px;padding:12px 17px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14px;font-weight:700;box-shadow:0 14px 26px -14px rgba(109,93,251,1)"><span style="font-size:16px;line-height:1">+</span>Registrar custo</button>
+          </div>
+        </div>
+        <div class="pg-scroll" style="padding:14px clamp(16px,2.4vw,34px) 0;display:flex;gap:4px;overflow-x:auto">
+          <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="6">
+            <button onClick="{{ tb.pick }}" style="{{ tb.style }}">{{ tb.name }}</button>
+          </sc-for>
+        </div>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="{{ execGrid }}">
+          <sc-for list="{{ execCards }}" as="k" hint-placeholder-count="3">
+            <div style="{{ k.style }}">
+              <span style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span>
+                <span style="font-size:12.5px;font-weight:600;color:{{ k.labelColor }}">{{ k.label }}</span>
+              </span>
+              <span style="font-size:clamp(22px,2.4vw,29px);font-weight:800;letter-spacing:-.035em;color:{{ k.valueColor }};font-variant-numeric:tabular-nums">{{ k.value }}</span>
+              <span style="font-size:12px;font-weight:600;color:{{ k.hintColor }}">{{ k.hint }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ tabOverview }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.4vw,16px)">
+
+            <div style="flex:2 1 460px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:18px">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Orçado × Comprometido × Realizado × Projetado</span>
+                <div style="flex:1"></div>
+                <span style="{{ budgetBadgeStyle }}">{{ budgetBadge }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <sc-for list="{{ costBars }}" as="b" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;gap:8px">
+                    <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
+                      <span style="font-size:13.5px;font-weight:700">{{ b.label }}</span>
+                      <span style="font-size:12px;color:#64748B">{{ b.note }}</span>
+                      <div style="flex:1"></div>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:{{ b.color }}">{{ b.v }}</span>
+                    </div>
+                    <div style="height:12px;border-radius:999px;background:#F1F5F9;overflow:hidden">
+                      <div data-prog style="{{ b.barStyle }}"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;padding-top:16px;border-top:1px solid #F1F5F9">
+                <sc-for list="{{ marginCards }}" as="m" hint-placeholder-count="3">
+                  <div style="{{ m.style }}">
+                    <span style="font-size:11.5px;font-weight:600;color:{{ m.labelColor }}">{{ m.k }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:600;color:{{ m.valueColor }}">{{ m.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:14px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Progresso e prazo</span>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ progressBars }}" as="g" hint-placeholder-count="3">
+                    <div style="display:flex;flex-direction:column;gap:6px">
+                      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                        <span style="font-size:12.5px;font-weight:600;color:#475569">{{ g.k }}</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">{{ g.v }}</span>
+                      </div>
+                      <div style="height:8px;border-radius:999px;background:#F1F5F9;overflow:hidden">
+                        <div data-prog style="{{ g.barStyle }}"></div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;padding-top:14px;border-top:1px solid #F1F5F9">
+                  <div style="flex:1 1 90px;display:flex;flex-direction:column;gap:3px"><span style="font-size:11.5px;font-weight:600;color:#64748B">Início</span><span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">05/03/2026</span></div>
+                  <div style="flex:1 1 90px;display:flex;flex-direction:column;gap:3px"><span style="font-size:11.5px;font-weight:600;color:#64748B">Previsão</span><span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">30/11/2026</span></div>
+                  <div style="flex:1 1 90px;display:flex;flex-direction:column;gap:3px"><span style="font-size:11.5px;font-weight:600;color:#64748B">Dias restantes</span><span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600;color:#047857">70</span></div>
+                </div>
+              </div>
+
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:13px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="width:9px;height:9px;border-radius:50%;background:#F97316"></span>
+                  <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Alertas financeiros</span>
+                </div>
+                <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="3">
+                  <div style="{{ a.style }}">
+                    <span style="width:4px;align-self:stretch;min-height:30px;border-radius:99px;background:{{ a.color }};flex:0 0 auto"></span>
+                    <span style="font-size:13.5px;font-weight:600;line-height:1.4;min-width:0">{{ a.t }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="flex:1 1 320px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Distribuição dos custos</span>
+              <div style="display:flex;height:14px;border-radius:999px;overflow:hidden;background:#F1F5F9">
+                <sc-for list="{{ distribution }}" as="d" hint-placeholder-count="5">
+                  <div data-prog style="{{ d.segStyle }}"></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ distribution }}" as="d" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #F1F5F9">
+                    <span style="width:10px;height:10px;border-radius:3px;background:{{ d.color }};flex:0 0 auto"></span>
+                    <span style="font-size:13.5px;font-weight:600;min-width:0">{{ d.k }}</span>
+                    <div style="flex:1"></div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ d.pct }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600;white-space:nowrap">{{ d.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="flex:1 1 320px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Informações da obra</span>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ cur.info }}" as="i" hint-placeholder-count="6">
+                  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9">
+                    <span style="flex:0 0 130px;font-size:12.5px;font-weight:600;color:#64748B">{{ i.k }}</span>
+                    <span style="flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabCosts }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+            <div style="{{ costSummaryGrid }}">
+              <sc-for list="{{ costSummary }}" as="c" hint-placeholder-count="6">
+                <div style="{{ c.style }}">
+                  <span style="font-size:11.5px;font-weight:600;color:{{ c.labelColor }}">{{ c.k }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(16px,1.7vw,19px);font-weight:600;color:{{ c.valueColor }};white-space:nowrap">{{ c.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+              <sc-for list="{{ costFilters }}" as="f" hint-placeholder-count="3">
+                <div style="position:relative;flex:0 0 auto">
+                  <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}">
+                    <span style="color:#64748B;font-weight:600">{{ f.label }}</span>{{ f.value }}<span style="font-size:9px;color:#64748B">▼</span>
+                  </button>
+                  <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                    <div style="position:absolute;top:calc(100% + 8px);left:0;min-width:190px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                      <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4">
+                        <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+              <div style="flex:1;min-width:10px"></div>
+              <button onClick="{{ openCost }}" style="display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14px;font-weight:700;box-shadow:0 14px 26px -14px rgba(109,93,251,1)"><span style="font-size:16px;line-height:1">+</span>Registrar custo</button>
+            </div>
+
+            <sc-if value="{{ noCosts }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,56px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+                <span style="width:60px;height:60px;border-radius:19px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                  <span style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#6D5DFB,#3B82F6)"></span>
+                </span>
+                <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhum custo registrado</span>
+                <span style="font-size:14.5px;color:#64748B;max-width:48ch;text-wrap:pretty">Comece registrando o primeiro custo desta obra para acompanhar seu orçamento e resultado.</span>
+                <button onClick="{{ openCost }}" style="margin-top:4px;display:flex;align-items:center;gap:9px;padding:13px 21px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)"><span style="font-size:17px;line-height:1">+</span>Registrar custo</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ hasCosts }}" hint-placeholder-val="{{ true }}">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+                <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:grid;grid-template-columns:110px 2.2fr 1.1fr 1.2fr 1fr 110px;gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0">
+                    <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Data</span>
+                    <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Descrição</span>
+                    <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Categoria</span>
+                    <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Fornecedor</span>
+                    <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Status</span>
+                    <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B;text-align:right">Valor</span>
+                  </div>
+                </sc-if>
+                <sc-for list="{{ costRows }}" as="c" hint-placeholder-count="6">
+                  <div style="{{ c.rowStyle }}">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ c.d }}</span>
+                    <span style="font-size:14px;font-weight:600;min-width:0">{{ c.t }}</span>
+                    <span style="font-size:13px;color:#475569;min-width:0">{{ c.cat }}</span>
+                    <span style="font-size:13px;color:#64748B;min-width:0">{{ c.sup }}</span>
+                    <span style="{{ c.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ c.statusDot }}"></span>{{ c.st }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;font-weight:600;text-align:right;white-space:nowrap">{{ c.v }}</span>
+                  </div>
+                </sc-for>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 20px;background:#F8FAFC;border-top:1px solid #E2E8F0">
+                  <span style="font-size:13px;font-weight:700;color:#475569">{{ costCountLabel }}</span>
+                  <div style="flex:1"></div>
+                  <span style="font-size:12.5px;font-weight:600;color:#64748B">Total listado (exceto cancelados)</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">{{ costTotal }}</span>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabTasks }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+              <div style="display:flex;gap:4px;padding:4px;border-radius:12px;background:#fff;border:1px solid #E2E8F0">
+                <button onClick="{{ setListView }}" style="{{ listViewStyle }}">Lista</button>
+                <button onClick="{{ setKanbanView }}" style="{{ kanbanViewStyle }}">Kanban</button>
+              </div>
+              <div style="flex:1"></div>
+              <button onClick="{{ toastTask }}" style="display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700" style-hover="border-color:#C7C3FB"><span style="font-size:16px;line-height:1">+</span>Nova tarefa</button>
+            </div>
+
+            <sc-if value="{{ isTaskList }}" hint-placeholder-val="{{ true }}">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="5">
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 15px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0;transition:background .18s,border-color .18s" style-hover="background:#fff;border-color:#C7C3FB">
+                    <span style="width:4px;align-self:stretch;min-height:30px;border-radius:99px;background:{{ t.prioColor }};flex:0 0 auto"></span>
+                    <div style="min-width:0;flex:1 1 200px;display:flex;flex-direction:column;gap:3px">
+                      <span style="font-size:14.5px;font-weight:700;letter-spacing:-.015em">{{ t.t }}</span>
+                      <span style="font-size:12px;color:#64748B">{{ t.stage }}</span>
+                    </div>
+                    <span style="{{ t.prioStyle }}">{{ t.prio }}</span>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <span style="width:26px;height:26px;border-radius:50%;background:{{ t.avatar }};flex:0 0 auto"></span>
+                      <span style="font-size:13px;font-weight:600;white-space:nowrap">{{ t.who }}</span>
+                    </div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ t.due }}</span>
+                    <span style="{{ t.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ t.statusDot }}"></span>{{ t.status }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isKanban }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:clamp(12px,1.4vw,16px)">
+                <sc-for list="{{ kanban }}" as="col" hint-placeholder-count="3">
+                  <div style="background:#F1F5F9;border:1px solid #E2E8F0;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px">
+                    <div style="display:flex;align-items:center;gap:9px">
+                      <span style="width:9px;height:9px;border-radius:50%;background:{{ col.color }}"></span>
+                      <span style="font-size:13.5px;font-weight:700">{{ col.name }}</span>
+                      <div style="flex:1"></div>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#64748B">{{ col.count }}</span>
+                    </div>
+                    <sc-for list="{{ col.cards }}" as="c" hint-placeholder-count="2">
+                      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:13px;padding:13px;display:flex;flex-direction:column;gap:10px;transition:transform .18s,box-shadow .18s" style-hover="transform:translateY(-2px);box-shadow:0 16px 30px -22px rgba(15,23,42,.6)">
+                        <span style="font-size:13.5px;font-weight:700;line-height:1.35">{{ c.t }}</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                          <span style="width:22px;height:22px;border-radius:50%;background:{{ c.avatar }};flex:0 0 auto"></span>
+                          <span style="font-size:12px;color:#64748B">{{ c.who }}</span>
+                          <div style="flex:1"></div>
+                          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ c.due }}</span>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabSchedule }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Cronograma da obra</span>
+              <div style="flex:1"></div>
+              <span style="font-size:12.5px;color:#64748B">05/03/2026 — 30/11/2026</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-for list="{{ phases }}" as="ph" hint-placeholder-count="5">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+                  <div style="flex:0 0 auto;display:flex;align-items:center;gap:11px;min-width:190px">
+                    <span style="width:30px;height:30px;border-radius:10px;background:{{ ph.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                      <span style="width:10px;height:10px;border-radius:3px;background:{{ ph.color }}"></span>
+                    </span>
+                    <div style="display:flex;flex-direction:column">
+                      <span style="font-size:14px;font-weight:700">{{ ph.n }}</span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ ph.range }}</span>
+                    </div>
+                  </div>
+                  <div style="flex:1 1 200px;min-width:0;display:flex;align-items:center;gap:12px">
+                    <div style="flex:1;height:12px;border-radius:999px;background:#F1F5F9;overflow:hidden">
+                      <div data-prog style="{{ ph.barStyle }}"></div>
+                    </div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;min-width:42px;text-align:right">{{ ph.pct }}</span>
+                  </div>
+                  <span style="{{ ph.statusStyle }}">{{ ph.status }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabDocs }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Documentos</span>
+              <span style="padding:3px 9px;border-radius:999px;background:#EFF6FF;color:#1D4ED8;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ docsCount }}</span>
+              <div style="flex:1"></div>
+              <button onClick="{{ toastDoc }}" style="display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700" style-hover="border-color:#C7C3FB"><span style="font-size:16px;line-height:1">+</span>Adicionar documento</button>
+            </div>
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{ docs }}" as="d" hint-placeholder-count="5">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;padding:14px 15px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0;transition:background .18s,border-color .18s" style-hover="background:#fff;border-color:#C7C3FB">
+                  <span style="width:36px;height:36px;border-radius:11px;background:{{ d.bg }};display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:{{ d.color }};flex:0 0 auto">{{ d.ext }}</span>
+                  <div style="min-width:0;flex:1 1 200px;display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:14px;font-weight:700">{{ d.n }}</span>
+                    <span style="font-size:12px;color:#64748B">{{ d.kind }}</span>
+                  </div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ d.date }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ d.size }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabActs }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ timeline }}" as="a" hint-placeholder-count="5">
+              <div style="display:flex;gap:16px">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto">
+                  <span style="width:32px;height:32px;border-radius:11px;background:{{ a.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                    <span style="width:11px;height:11px;border-radius:3.5px;background:{{ a.color }}"></span>
+                  </span>
+                  <span style="flex:1;width:2px;border-radius:99px;background:#F1F5F9;min-height:14px"></span>
+                </div>
+                <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:4px;padding-bottom:20px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#64748B">{{ a.when }}</span>
+                  <span style="font-size:14.5px;font-weight:700;letter-spacing:-.015em;line-height:1.35">{{ a.t }}</span>
+                  <span style="font-size:12.5px;color:#64748B">{{ a.meta }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</main>
+
+<sc-if value="{{ costOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center">
+    <div onClick="{{ closeCost }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(760px,100%);max-height:92vh;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:24px 24px 0 0;padding:clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 -30px 70px -30px rgba(15,23,42,.6);animation:pgSheet .3s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+          <span style="font-size:19px;font-weight:800;letter-spacing:-.025em">Registrar custo</span>
+          <span style="font-size:13px;color:#64748B">{{ cur.n }}</span>
+        </div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeCost }}" aria-label="Fechar" style="width:38px;height:38px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B">✕</button>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ costStatusOptions }}" as="o" hint-placeholder-count="4">
+          <button onClick="{{ o.pick }}" style="{{ o.style }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ o.dot }}"></span>{{ o.name }}</button>
+        </sc-for>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:14px">
+        <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Categoria</span>
+          <select value="{{ costCat }}" onChange="{{ onCostCat }}" style="height:44px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A">
+            <sc-for list="{{ categories }}" as="c" hint-placeholder-count="7"><option>{{ c }}</option></sc-for>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Subcategoria</span>
+          <select style="height:44px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A">
+            <sc-for list="{{ subcategories }}" as="sc" hint-placeholder-count="4"><option>{{ sc }}</option></sc-for>
+          </select>
+        </label>
+        <label style="grid-column:span 2;display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Descrição</span><input placeholder="Ex.: Aço estrutural — 12 t" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+        <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Fornecedor</span><input placeholder="Nome do fornecedor" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+        <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Data</span><input type="date" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+      </div>
+
+      <div style="border:1px solid #E2E8F0;border-radius:16px;padding:16px;background:#F8FAFC;display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:14px">
+          <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Quantidade</span><input value="{{ costQty }}" onInput="{{ onQty }}" inputmode="decimal" placeholder="0" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .18s" style-focus="border-color:#6D5DFB"></label>
+          <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Unidade</span>
+            <select style="height:44px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:14px;outline:none;color:#0F172A"><option>un</option><option>m²</option><option>m³</option><option>kg</option><option>t</option><option>h</option><option>mês</option></select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Valor unitário</span><input value="{{ costUnit }}" onInput="{{ onUnit }}" inputmode="decimal" placeholder="0,00" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .18s" style-focus="border-color:#6D5DFB"></label>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-top:14px;border-top:1px solid #E2E8F0">
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <span style="font-size:12.5px;font-weight:600;color:#475569">Valor total</span>
+            <span style="font-size:11.5px;color:#64748B">{{ costFormula }}</span>
+          </div>
+          <div style="flex:1"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(20px,2.2vw,26px);font-weight:600;letter-spacing:-.02em">{{ costTotalCalc }}</span>
+        </div>
+      </div>
+
+      <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Observação</span><textarea rows="2" placeholder="Informação complementar sobre este custo" style="padding:12px 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;resize:vertical;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></textarea></label>
+
+      <div style="display:flex;align-items:center;gap:13px;padding:15px;border-radius:14px;border:1px dashed #CBD5E1;background:#F8FAFC">
+        <span style="width:34px;height:34px;border-radius:11px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;color:#4338CA;font-size:17px;font-weight:700;flex:0 0 auto">+</span>
+        <div style="min-width:0;display:flex;flex-direction:column">
+          <span style="font-size:13.5px;font-weight:700">Documento / anexo</span>
+          <span style="font-size:12px;color:#64748B">Nota fiscal, recibo ou comprovante</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;padding-top:4px">
+        <button onClick="{{ closeCost }}" style="padding:14px 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Cancelar</button>
+        <button onClick="{{ saveCost }}" style="{{ costSaveStyle }}">{{ costSaveLabel }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>
+    {{ toast }}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;list&quot;,&quot;new&quot;,&quot;detail&quot;],&quot;default&quot;:&quot;list&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;listState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;empty&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'list', active: 'Projetos / Obras', tab: 'Visão geral',
+    open: { Comercial: false, Clientes: false, Projetos: true, Financeiro: false, Configurações: false },
+    navOpen: false, w: 1400,
+    query: '', filters: { Status: 'Todos', Cliente: 'Todos', 'Responsável': 'Todos', Progresso: 'Todos', Financeiro: 'Todos' },
+    openFilter: '', dataState: 'ready', curId: 0, saving: false, toast: '',
+    costOpen: false, costQty: '', costUnit: '', costCat: 'Materiais', costStatus: 'Realizado', costSaving: false,
+    costFilters: { Categoria: 'Todas', Status: 'Todos', Fornecedor: 'Todos' }, openCostFilter: '',
+    taskView: 'Lista', costsEmpty: false
+  };
+
+  GROUPS = [
+    { name: 'Comercial', dot: '#EC4899', items: [{ name: 'CRM' }, { name: 'Leads', badge: '32' }, { name: 'Oportunidades', badge: '24' }] },
+    { name: 'Clientes', dot: '#3B82F6', items: [{ name: 'Clientes' }, { name: 'Contatos' }] },
+    { name: 'Projetos', dot: '#F97316', items: [{ name: 'Projetos / Obras', badge: '12' }, { name: 'Tarefas' }, { name: 'Documentos' }] },
+    { name: 'Financeiro', dot: '#10B981', items: [{ name: 'Contas a Receber', badge: '8' }, { name: 'Contas a Pagar' }, { name: 'Faturas' }, { name: 'Fluxo de Caixa' }] },
+    { name: 'Configurações', dot: '#64748B', items: [{ name: 'Empresa' }, { name: 'Usuários' }, { name: 'Preferências' }] }
+  ];
+
+  WORKS = [
+    {
+      n: 'Residencial Jardim Europa', client: 'Construtora Horizonte', owner: 'Carlos Mendes', pct: 78,
+      contract: 185000, budget: 142000, done: 96500, committed: 18700, projected: 138500,
+      status: 'Em andamento', due: '30/11/2026', start: '05/03/2026', kind: 'Residencial', contractNo: 'CT-2026-014',
+      place: 'Avenue Louise 143, Bruxelas', fin: 'No orçamento', av: 'linear-gradient(135deg,#6D5DFB,#3B82F6)'
+    },
+    {
+      n: 'Edifício Central', client: 'Grupo Central Engenharia', owner: 'Ana Duarte', pct: 56,
+      contract: 420000, budget: 338000, done: 214600, committed: 61200, projected: 344800,
+      status: 'Atenção', due: '04/02/2027', start: '18/01/2026', kind: 'Comercial', contractNo: 'CT-2026-021',
+      place: 'Korenmarkt 8, Gante', fin: 'Acima do orçamento', av: 'linear-gradient(135deg,#F59E0B,#F97316)'
+    },
+    {
+      n: 'Casa Oliveira', client: 'Maria Oliveira', owner: 'Rafael Lima', pct: 91,
+      contract: 96000, budget: 74000, done: 66200, committed: 3400, projected: 71800,
+      status: 'Em andamento', due: '29/09/2026', start: '11/02/2026', kind: 'Residencial', contractNo: 'CT-2026-008',
+      place: 'Meir 22, Antuérpia', fin: 'No orçamento', av: 'linear-gradient(135deg,#10B981,#06B6D4)'
+    },
+    {
+      n: 'Reforma Comercial Delta', client: 'Reformas Delta', owner: 'Carlos Mendes', pct: 34,
+      contract: 128000, budget: 101000, done: 38900, committed: 22400, projected: 104600,
+      status: 'Atrasada', due: '12/10/2026', start: '20/04/2026', kind: 'Reforma', contractNo: 'CT-2026-031',
+      place: 'Rue Saint-Gilles 51, Liège', fin: 'Acima do orçamento', av: 'linear-gradient(135deg,#EC4899,#6D5DFB)'
+    }
+  ];
+
+  ST = { 'Em andamento': ['#ECFDF5', '#047857', '#10B981'], 'Atenção': ['#FFFBEB', '#B45309', '#F59E0B'], 'Atrasada': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Concluída': ['#F1F5F9', '#475569', '#94A3B8'] };
+  CSTAT = { 'Realizado': ['#ECFDF5', '#047857', '#10B981'], 'Comprometido': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Previsto': ['#FFFBEB', '#B45309', '#F59E0B'], 'Cancelado': ['#F1F5F9', '#475569', '#94A3B8'] };
+
+  COSTS = [
+    { d: '18/09/2026', t: 'Instalação elétrica — 2.º pavimento', cat: 'Subempreitadas', sup: 'EletroSul', st: 'Comprometido', v: 9800 },
+    { d: '16/09/2026', t: 'Esquadrias de alumínio', cat: 'Materiais', sup: 'AluBel', st: 'Comprometido', v: 8900 },
+    { d: '15/09/2026', t: 'Aço estrutural — 12 t', cat: 'Materiais', sup: 'Fornecedor ABC', st: 'Realizado', v: 8500 },
+    { d: '12/09/2026', t: 'Equipe de alvenaria — setembro', cat: 'Mão de obra', sup: 'Equipe própria', st: 'Realizado', v: 12400 },
+    { d: '10/09/2026', t: 'Concreto usinado — 140 m³', cat: 'Materiais', sup: 'Betão Pronto', st: 'Realizado', v: 18600 },
+    { d: '08/09/2026', t: 'Aluguel de betoneira — 30 dias', cat: 'Equipamentos', sup: 'MaqRent', st: 'Realizado', v: 2100 },
+    { d: '05/09/2026', t: 'Locação de guindaste', cat: 'Equipamentos', sup: 'MaqRent', st: 'Cancelado', v: 4800 },
+    { d: '04/09/2026', t: 'Cimento CP-II — 400 sacos', cat: 'Materiais', sup: 'Fornecedor ABC', st: 'Realizado', v: 6400 },
+    { d: '02/09/2026', t: 'Frete de materiais', cat: 'Logística', sup: 'TransLog', st: 'Realizado', v: 1850 },
+    { d: '30/08/2026', t: 'Pintura externa', cat: 'Subempreitadas', sup: 'Pinturas Nova', st: 'Previsto', v: 14200 },
+    { d: '29/08/2026', t: 'Acabamentos — revestimentos', cat: 'Materiais', sup: 'Fornecedor ABC', st: 'Previsto', v: 9100 },
+    { d: '28/08/2026', t: 'Estrutura pré-moldada — Bloco A', cat: 'Subempreitadas', sup: 'EstruturaSul', st: 'Realizado', v: 26500 },
+    { d: '25/08/2026', t: 'Seguro de obra — parcela 3', cat: 'Despesas da obra', sup: 'Seguradora BE', st: 'Realizado', v: 1650 },
+    { d: '20/08/2026', t: 'Supervisão de engenharia', cat: 'Custos indiretos', sup: 'Interno', st: 'Realizado', v: 3600 },
+    { d: '14/08/2026', t: 'Equipe de fundação — agosto', cat: 'Mão de obra', sup: 'Equipe própria', st: 'Realizado', v: 9700 },
+    { d: '06/08/2026', t: 'Hidráulica — prumadas', cat: 'Subempreitadas', sup: 'HidroTec', st: 'Realizado', v: 5200 }
+  ];
+
+  CATEGORIES = ['Materiais', 'Mão de obra', 'Subempreitadas', 'Equipamentos', 'Logística', 'Despesas da obra', 'Custos indiretos'];
+  SUBS = {
+    'Materiais': ['Cimento', 'Aço', 'Madeira', 'Acabamentos', 'Elétrica', 'Hidráulica'],
+    'Mão de obra': ['Funcionários', 'Equipes', 'Horas extras', 'Encargos'],
+    'Subempreitadas': ['Eletricista', 'Hidráulica', 'Pintura', 'Estrutura', 'Instalações'],
+    'Equipamentos': ['Máquinas', 'Ferramentas', 'Aluguel de equipamentos'],
+    'Logística': ['Transporte', 'Entregas', 'Fretes'],
+    'Despesas da obra': ['Alimentação', 'Alojamento', 'Taxas', 'Licenças', 'Seguros'],
+    'Custos indiretos': ['Administração', 'Engenharia', 'Supervisão']
+  };
+
+  TASKS = [
+    { t: 'Instalação elétrica — 2.º pavimento', stage: 'Instalações', who: 'João', due: '25/09/2026', prio: 'Alta', status: 'Em andamento', av: 'linear-gradient(135deg,#6D5DFB,#3B82F6)' },
+    { t: 'Concretagem da laje — Bloco B', stage: 'Estrutura', who: 'Carlos Mendes', due: '18/09/2026', prio: 'Alta', status: 'Concluída', av: 'linear-gradient(135deg,#EC4899,#F97316)' },
+    { t: 'Vistoria de fundação', stage: 'Fundação', who: 'Rafael Lima', due: '12/09/2026', prio: 'Média', status: 'Concluída', av: 'linear-gradient(135deg,#10B981,#06B6D4)' },
+    { t: 'Pedido de acabamentos', stage: 'Acabamento', who: 'Ana Duarte', due: '02/10/2026', prio: 'Média', status: 'A fazer', av: 'linear-gradient(135deg,#F59E0B,#EC4899)' },
+    { t: 'Medição semanal da obra', stage: 'Gestão', who: 'Carlos Mendes', due: '27/09/2026', prio: 'Baixa', status: 'A fazer', av: 'linear-gradient(135deg,#EC4899,#F97316)' }
+  ];
+
+  PHASES = [
+    { n: 'Fundação', range: '05/03 — 28/04', pct: 100, color: '#6D5DFB', bg: '#EEF0FE' },
+    { n: 'Estrutura', range: '29/04 — 12/07', pct: 100, color: '#5145CD', bg: '#EEF0FE' },
+    { n: 'Instalações', range: '13/07 — 30/09', pct: 64, color: '#3B82F6', bg: '#EFF6FF' },
+    { n: 'Acabamento', range: '01/10 — 15/11', pct: 0, color: '#F59E0B', bg: '#FFFBEB' },
+    { n: 'Entrega', range: '16/11 — 30/11', pct: 0, color: '#10B981', bg: '#ECFDF5' }
+  ];
+
+  DOCS = [
+    { n: 'Contrato CT-2026-014', kind: 'Contrato', date: '05/03/2026', size: '420 KB', ext: 'PDF', bg: '#FEF2F2', color: '#B91C1C' },
+    { n: 'Orçamento inicial', kind: 'Orçamento', date: '28/02/2026', size: '186 KB', ext: 'XLSX', bg: '#ECFDF5', color: '#047857' },
+    { n: 'Planta estrutural — rev. 3', kind: 'Planta', date: '14/04/2026', size: '4,2 MB', ext: 'DWG', bg: '#EFF6FF', color: '#1D4ED8' },
+    { n: 'Nota fiscal — Aço estrutural', kind: 'Nota', date: '15/09/2026', size: '92 KB', ext: 'PDF', bg: '#FEF2F2', color: '#B91C1C' },
+    { n: 'Medição 06 — setembro', kind: 'Comprovante', date: '18/09/2026', size: '310 KB', ext: 'PDF', bg: '#FEF2F2', color: '#B91C1C' }
+  ];
+
+  rootRef = (el) => { this.rootEl = el; };
+
+  eur(n) { return '€ ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+
+  setupAnim() {
+    const root = this.rootEl;
+    if (!root) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    root.querySelectorAll('[data-prog]').forEach(e => {
+      if (e.dataset.pgInit) return;
+      e.dataset.pgInit = '1';
+      const horizontal = true;
+      Object.assign(e.style, { transformOrigin: 'left', transform: 'scaleX(0)', transition: 'transform 1s cubic-bezier(.22,.7,.2,1)' });
+      requestAnimationFrame(() => requestAnimationFrame(() => { e.style.transform = 'scaleX(1)'; }));
+    });
+  }
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    this.setState({ w: window.innerWidth });
+    requestAnimationFrame(() => this.setupAnim());
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tTimer); clearTimeout(this.sTimer); }
+  componentDidUpdate() { requestAnimationFrame(() => this.setupAnim()); }
+
+  get view() { return this.state.viewSet ? this.state.view : (this.props.initialView || 'list'); }
+  get dataState() { return this.state.stateSet ? this.state.dataState : (this.props.listState || 'ready'); }
+
+  flash(msg) {
+    clearTimeout(this.tTimer);
+    this.setState({ toast: msg });
+    this.tTimer = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  navBtn(active, extra) {
+    return 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:' + (active ? '700' : '500') +
+      ';color:' + (active ? '#fff' : '#94A3B8') + ';background:' + (active ? 'rgba(109,93,251,.26)' : 'transparent') +
+      ';transition:background .16s,color .16s;' + (extra || '');
+  }
+
+  pill(bg, fg) { return 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;white-space:nowrap'; }
+  statusStyle(s) { const c = this.ST[s] || this.ST['Concluída']; return this.pill(c[0], c[1]); }
+
+  renderVals() {
+    const s = this.state, w = s.w, isMobile = w < 1024, wide = w >= 1180;
+    const st = this.dataState, view = this.view, F = s.filters;
+    const q = s.query.trim().toLowerCase();
+
+    const filtered = this.WORKS.filter(p => {
+      if (q && !(p.n + ' ' + p.client + ' ' + p.contractNo).toLowerCase().includes(q)) return false;
+      if (F.Status !== 'Todos' && p.status !== F.Status) return false;
+      if (F.Cliente !== 'Todos' && p.client !== F.Cliente) return false;
+      if (F['Responsável'] !== 'Todos' && p.owner !== F['Responsável']) return false;
+      if (F.Progresso === 'Até 50%' && p.pct > 50) return false;
+      if (F.Progresso === '50% a 80%' && (p.pct <= 50 || p.pct > 80)) return false;
+      if (F.Progresso === 'Acima de 80%' && p.pct <= 80) return false;
+      if (F.Financeiro !== 'Todos' && p.fin !== F.Financeiro) return false;
+      return true;
+    });
+    const anyFilter = q !== '' || F.Status !== 'Todos' || F.Cliente !== 'Todos' || F['Responsável'] !== 'Todos' || F.Progresso !== 'Todos' || F.Financeiro !== 'Todos';
+
+    const mkFilter = (label, options) => ({
+      label: label + ':', value: F[label], open: s.openFilter === label,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === label ? '' : label })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' + (F[label] === options[0] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s',
+      options: options.map(o => ({
+        name: o, pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [label]: o }), openFilter: '' })),
+        style: 'padding:9px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (F[label] === o ? '700' : '500') +
+          ';color:' + (F[label] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[label] === o ? '#EEF0FE' : 'transparent') + ';transition:background .15s'
+      }))
+    });
+
+    const chips = [];
+    if (q) chips.push({ t: 'Busca: ' + s.query, clear: () => this.setState({ query: '' }) });
+    ['Status', 'Cliente', 'Responsável', 'Progresso', 'Financeiro'].forEach(k => {
+      if (F[k] !== 'Todos') chips.push({ t: k + ': ' + F[k], clear: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [k]: 'Todos' }) })) });
+    });
+
+    const metricBox = 'display:flex;flex-direction:column;gap:5px;padding:11px 13px;border-radius:12px;';
+    const p0 = this.WORKS[s.curId];
+    const result = p0.contract - p0.projected;
+    const margin = (result / p0.contract * 100);
+    const currentResult = p0.contract - p0.done;
+    const available = p0.budget - p0.done - p0.committed;
+    const overBudget = p0.projected > p0.budget;
+    const maxScale = Math.max(p0.budget, p0.projected, p0.done + p0.committed);
+
+    const bar = (v, color) => 'height:100%;width:' + (v / maxScale * 100).toFixed(1) + '%;border-radius:999px;background:' + color + ';transition:transform 1s cubic-bezier(.22,.7,.2,1)';
+
+    const dist = [
+      { k: 'Materiais', v: 52000, color: '#6D5DFB' },
+      { k: 'Mão de obra', v: 28500, color: '#3B82F6' },
+      { k: 'Subempreitadas', v: 18000, color: '#06B6D4' },
+      { k: 'Equipamentos', v: 8000, color: '#F59E0B' },
+      { k: 'Outros', v: 5000, color: '#EC4899' }
+    ];
+    const distTotal = dist.reduce((a, b) => a + b.v, 0);
+
+    const sumBox = 'display:flex;flex-direction:column;gap:6px;padding:14px 15px;border-radius:15px;';
+    const CF = s.costFilters;
+    const suppliers = this.COSTS.map(c => c.sup).filter((v, i, a) => a.indexOf(v) === i);
+    const mkCostFilter = (label, options) => ({
+      label: label + ':', value: CF[label], open: s.openCostFilter === label,
+      toggle: () => this.setState(x => ({ openCostFilter: x.openCostFilter === label ? '' : label })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:44px;padding:0 14px;border-radius:12px;border:1px solid ' + (CF[label] === options[0] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s',
+      options: options.map(o => ({
+        name: o, pick: () => this.setState(x => ({ costFilters: Object.assign({}, x.costFilters, { [label]: o }), openCostFilter: '' })),
+        style: 'padding:9px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (CF[label] === o ? '700' : '500') +
+          ';color:' + (CF[label] === o ? '#4338CA' : '#0F172A') + ';background:' + (CF[label] === o ? '#EEF0FE' : 'transparent') + ';transition:background .15s'
+      }))
+    });
+    const costList = this.COSTS.filter(c => {
+      if (CF.Categoria !== 'Todas' && c.cat !== CF.Categoria) return false;
+      if (CF.Status !== 'Todos' && c.st !== CF.Status) return false;
+      if (CF.Fornecedor !== 'Todos' && c.sup !== CF.Fornecedor) return false;
+      return true;
+    });
+
+    const PRIO = { 'Alta': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Média': ['#FFFBEB', '#B45309', '#F59E0B'], 'Baixa': ['#F1F5F9', '#475569', '#94A3B8'] };
+    const TSTAT = { 'Em andamento': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Concluída': ['#ECFDF5', '#047857', '#10B981'], 'A fazer': ['#F1F5F9', '#475569', '#94A3B8'] };
+
+    const num = (v) => { const n = parseFloat(String(v).replace(/\s/g, '').replace(',', '.')); return isNaN(n) ? 0 : n; };
+    const qty = num(s.costQty), unitV = num(s.costUnit);
+
+    const avail = w - (isMobile ? 0 : 258) - 68;
+    const cols = (n, per) => 'display:grid;grid-template-columns:repeat(' + (avail - 48 >= n * per ? n : (avail - 48 >= (n / 2) * per ? n / 2 : (n >= 6 ? 2 : 1))) + ',minmax(0,1fr));gap:';
+    const metricsGrid = cols(4, 175) + '10px';
+    const execGrid = 'display:grid;grid-template-columns:repeat(' + (avail >= 900 ? 3 : 1) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)';
+    const costSummaryGrid = cols(6, 200) + '10px';
+
+    return {
+      rootRef: this.rootRef,
+      isMobile, wide,
+      navOpen: s.navOpen,
+      showSidebar: !isMobile || s.navOpen,
+      sidebarStyle: (isMobile
+        ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);'
+        : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') +
+        'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }),
+      closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      dashItemStyle: this.navBtn(s.active === 'Dashboard'),
+      groups: this.GROUPS.map(g => ({
+        name: g.name, dot: g.dot, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: this.navBtn(false, 'color:#CBD5E1;font-weight:600;'),
+        caretStyle: 'font-size:9px;color:#64748B;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(it => ({
+          name: it.name, badge: it.badge || '',
+          pick: () => this.setState({ active: it.name, navOpen: false, view: it.name === 'Projetos / Obras' ? 'list' : view, viewSet: true }),
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === it.name ? '700' : '500') +
+            ';color:' + (s.active === it.name ? '#fff' : '#8C9AAE') + ';background:' + (s.active === it.name ? 'rgba(109,93,251,.26)' : 'transparent') + ';transition:background .16s,color .16s',
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === it.name ? '#6D5DFB' : '#475569'),
+          badgeStyle: 'padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);color:#94A3B8;font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:600'
+        }))
+      })),
+
+      isList: view === 'list', isNew: view === 'new', isDetail: view === 'detail',
+      goNew: () => this.setState({ view: 'new', viewSet: true }),
+      goList: () => this.setState({ view: 'list', viewSet: true, saving: false }),
+
+      query: s.query, hasQuery: s.query !== '',
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      clearQuery: () => this.setState({ query: '' }),
+      filters: [
+        mkFilter('Status', ['Todos', 'Em andamento', 'Atenção', 'Atrasada']),
+        mkFilter('Cliente', ['Todos', 'Construtora Horizonte', 'Grupo Central Engenharia', 'Maria Oliveira', 'Reformas Delta']),
+        mkFilter('Responsável', ['Todos', 'Carlos Mendes', 'Ana Duarte', 'Rafael Lima']),
+        mkFilter('Progresso', ['Todos', 'Até 50%', '50% a 80%', 'Acima de 80%']),
+        mkFilter('Financeiro', ['Todos', 'No orçamento', 'Acima do orçamento'])
+      ],
+      anyFilter, activeChips: chips,
+      clearAll: () => this.setState({ query: '', filters: { Status: 'Todos', Cliente: 'Todos', 'Responsável': 'Todos', Progresso: 'Todos', Financeiro: 'Todos' }, openFilter: '' }),
+
+      metricsGrid, costSummaryGrid, execGrid,
+      stLoading: st === 'loading', stError: st === 'error', stEmpty: st === 'empty',
+      stNoResults: st === 'ready' && filtered.length === 0,
+      stReady: st === 'ready' && filtered.length > 0,
+      skeletons: [1, 2, 3],
+      countLabel: filtered.length + (filtered.length === 1 ? ' obra' : ' obras') + (anyFilter ? ' encontrada' + (filtered.length === 1 ? '' : 's') : ''),
+      retry: () => { this.setState({ dataState: 'loading', stateSet: true }); clearTimeout(this.sTimer); this.sTimer = setTimeout(() => this.setState({ dataState: 'ready', stateSet: true }), 1100); },
+
+      rows: filtered.map(p => {
+        const i = this.WORKS.indexOf(p);
+        const res = p.contract - p.projected;
+        const col = this.ST[p.status];
+        return {
+          n: p.n, client: p.client, pct: p.pct + '%', due: p.due, avatar: p.av,
+          status: p.status, statusDot: col[2], statusStyle: this.statusStyle(p.status),
+          barStyle: 'height:100%;width:' + p.pct + '%;border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#06B6D4);transition:transform 1s cubic-bezier(.22,.7,.2,1)',
+          open: () => this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'Visão geral' }),
+          metrics: [
+            { k: 'Valor contratado', v: this.eur(p.contract), style: metricBox + 'background:#F8FAFC;border:1px solid #E2E8F0', labelColor: '#64748B', valueColor: '#0F172A' },
+            { k: 'Custo previsto', v: this.eur(p.budget), style: metricBox + 'background:#F8FAFC;border:1px solid #E2E8F0', labelColor: '#64748B', valueColor: '#0F172A' },
+            { k: 'Custo realizado', v: this.eur(p.done), style: metricBox + 'background:#EEF0FE;border:1px solid #DDD9FD', labelColor: '#4338CA', valueColor: '#312E81' },
+            { k: 'Resultado projetado', v: this.eur(res), style: metricBox + (res >= 0 ? 'background:#ECFDF5;border:1px solid #A7F3D0' : 'background:#FEF2F2;border:1px solid #FECACA'), labelColor: res >= 0 ? '#047857' : '#B91C1C', valueColor: res >= 0 ? '#065F46' : '#991B1B' }
+          ]
+        };
+      }),
+
+      saveLabel: s.saving ? 'Criando...' : 'Criar projeto',
+      saveBtnStyle: 'padding:13px 21px;border-radius:12px;background:' + (s.saving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);' + (s.saving ? 'pointer-events:none;' : ''),
+      save: () => {
+        this.setState({ saving: true });
+        clearTimeout(this.sTimer);
+        this.sTimer = setTimeout(() => { this.setState({ saving: false, view: 'list', viewSet: true }); this.flash('Projeto criado com sucesso'); }, 900);
+      },
+
+      cur: {
+        n: p0.n, client: p0.client, avatar: p0.av, status: p0.status,
+        statusDot: this.ST[p0.status][2], statusStyle: this.statusStyle(p0.status),
+        info: [
+          { k: 'Cliente', v: p0.client }, { k: 'Tipo de obra', v: p0.kind }, { k: 'Responsável', v: p0.owner },
+          { k: 'Localização', v: p0.place }, { k: 'N.º do contrato', v: p0.contractNo },
+          { k: 'Início', v: p0.start }, { k: 'Previsão de término', v: p0.due }
+        ]
+      },
+      tabs: ['Visão geral', 'Custos', 'Tarefas', 'Cronograma', 'Documentos', 'Atividades'].map(t => ({
+        name: t, pick: () => this.setState({ tab: t }),
+        style: 'flex:0 0 auto;padding:12px 16px;border-radius:11px 11px 0 0;font-size:14px;font-weight:' + (s.tab === t ? '700' : '600') +
+          ';color:' + (s.tab === t ? '#4338CA' : '#64748B') + ';background:' + (s.tab === t ? '#fff' : 'transparent') +
+          ';border:1px solid ' + (s.tab === t ? '#E2E8F0' : 'transparent') + ';border-bottom:' + (s.tab === t ? '1px solid #fff' : '1px solid transparent') +
+          ';margin-bottom:-1px;white-space:nowrap;transition:background .16s,color .16s'
+      })),
+      tabOverview: s.tab === 'Visão geral', tabCosts: s.tab === 'Custos', tabTasks: s.tab === 'Tarefas',
+      tabSchedule: s.tab === 'Cronograma', tabDocs: s.tab === 'Documentos', tabActs: s.tab === 'Atividades',
+
+      execCards: [
+        { label: 'Valor contratado', value: this.eur(p0.contract), hint: 'Contrato ' + p0.contractNo, color: '#6D5DFB', style: 'background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:9px', labelColor: '#64748B', valueColor: '#0F172A', hintColor: '#64748B' },
+        { label: 'Custo projetado final', value: this.eur(p0.projected), hint: overBudget ? 'Acima do orçamento' : 'Dentro do orçamento de ' + this.eur(p0.budget), color: overBudget ? '#EF4444' : '#3B82F6', style: 'background:#fff;border:1px solid ' + (overBudget ? '#FECACA' : '#E2E8F0') + ';border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:9px', labelColor: '#64748B', valueColor: '#0F172A', hintColor: overBudget ? '#B91C1C' : '#64748B' },
+        { label: 'Resultado projetado', value: this.eur(result), hint: 'Margem projetada ' + margin.toFixed(1).replace('.', ',') + '%', color: result >= 0 ? '#10B981' : '#EF4444', style: 'background:' + (result >= 0 ? '#ECFDF5;border:1px solid #A7F3D0' : '#FEF2F2;border:1px solid #FECACA') + ';border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:9px', labelColor: result >= 0 ? '#047857' : '#B91C1C', valueColor: result >= 0 ? '#065F46' : '#991B1B', hintColor: result >= 0 ? '#047857' : '#B91C1C' }
+      ],
+      budgetBadge: overBudget ? 'Acima do orçamento' : 'Dentro do orçamento',
+      budgetBadgeStyle: overBudget ? this.pill('#FEF2F2', '#B91C1C') : this.pill('#ECFDF5', '#047857'),
+
+      costBars: [
+        { label: 'Orçado', note: 'quanto a empresa espera gastar', v: this.eur(p0.budget), color: '#475569', barStyle: bar(p0.budget, '#CBD5E1') },
+        { label: 'Comprometido', note: 'contratado, ainda não pago', v: this.eur(p0.committed), color: '#1D4ED8', barStyle: bar(p0.committed, 'linear-gradient(90deg,#60A5FA,#3B82F6)') },
+        { label: 'Realizado', note: 'já lançado como custo', v: this.eur(p0.done), color: '#4338CA', barStyle: bar(p0.done, 'linear-gradient(90deg,#8B87FB,#6D5DFB)') },
+        { label: 'Projetado final', note: 'realizado + comprometido + previsto', v: this.eur(p0.projected), color: overBudget ? '#B91C1C' : '#047857', barStyle: bar(p0.projected, overBudget ? 'linear-gradient(90deg,#F87171,#EF4444)' : 'linear-gradient(90deg,#34D399,#10B981)') }
+      ],
+      marginCards: [
+        { k: 'Saldo disponível', v: this.eur(available), style: metricBox + 'flex:1 1 150px;background:#F8FAFC;border:1px solid #E2E8F0', labelColor: '#64748B', valueColor: '#0F172A' },
+        { k: 'Resultado atual', v: this.eur(currentResult), style: metricBox + 'flex:1 1 150px;background:#F8FAFC;border:1px solid #E2E8F0', labelColor: '#64748B', valueColor: '#0F172A' },
+        { k: 'Margem projetada', v: margin.toFixed(1).replace('.', ',') + '%', style: metricBox + 'flex:1 1 150px;' + (margin >= 20 ? 'background:#ECFDF5;border:1px solid #A7F3D0' : 'background:#FFFBEB;border:1px solid #FDE68A'), labelColor: margin >= 20 ? '#047857' : '#B45309', valueColor: margin >= 20 ? '#065F46' : '#92400E' }
+      ],
+      progressBars: [
+        { k: 'Progresso físico', v: p0.pct + '%', barStyle: 'height:100%;width:' + p0.pct + '%;border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#06B6D4);transition:transform 1s cubic-bezier(.22,.7,.2,1)' },
+        { k: 'Custo realizado', v: Math.round(p0.done / p0.budget * 100) + '% do orçamento', barStyle: 'height:100%;width:' + Math.round(p0.done / p0.budget * 100) + '%;border-radius:999px;background:linear-gradient(90deg,#8B87FB,#6D5DFB);transition:transform 1s cubic-bezier(.22,.7,.2,1)' },
+        { k: 'Prazo decorrido', v: '74%', barStyle: 'height:100%;width:74%;border-radius:999px;background:linear-gradient(90deg,#FBBF24,#F59E0B);transition:transform 1s cubic-bezier(.22,.7,.2,1)' }
+      ],
+      alerts: [
+        { t: 'Custo de materiais 12% acima do previsto', color: '#F97316', bg: '#FFF7ED', bd: '#FED7AA' },
+        { t: 'Margem projetada caiu de 28% para 25,1%', color: '#EF4444', bg: '#FEF2F2', bd: '#FECACA' },
+        { t: '€ 18.700 comprometidos ainda não realizados', color: '#3B82F6', bg: '#EFF6FF', bd: '#BFDBFE' }
+      ].map(a => ({ t: a.t, color: a.color, style: 'display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:' + a.bg + ';border:1px solid ' + a.bd })),
+
+      distribution: dist.map(d => ({
+        k: d.k, v: this.eur(d.v), color: d.color,
+        pct: Math.round(d.v / distTotal * 100) + '%',
+        segStyle: 'width:' + (d.v / distTotal * 100).toFixed(1) + '%;background:' + d.color + ';transition:transform 1s cubic-bezier(.22,.7,.2,1)'
+      })),
+
+      toastEdit: () => this.flash('Modo de edição aberto'),
+      toastActivity: () => this.flash('Atividade registrada'),
+      toastTask: () => this.flash('Tarefa criada'),
+      toastDoc: () => this.flash('Documento adicionado'),
+
+      costSummary: [
+        { k: 'Orçamento', v: this.eur(p0.budget), style: sumBox + 'background:#fff;border:1px solid #E2E8F0', labelColor: '#64748B', valueColor: '#0F172A' },
+        { k: 'Realizado', v: this.eur(p0.done), style: sumBox + 'background:#EEF0FE;border:1px solid #DDD9FD', labelColor: '#4338CA', valueColor: '#312E81' },
+        { k: 'Comprometido', v: this.eur(p0.committed), style: sumBox + 'background:#EFF6FF;border:1px solid #BFDBFE', labelColor: '#1D4ED8', valueColor: '#1E3A8A' },
+        { k: 'Projetado', v: this.eur(p0.projected), style: sumBox + (overBudget ? 'background:#FEF2F2;border:1px solid #FECACA' : 'background:#F8FAFC;border:1px solid #E2E8F0'), labelColor: overBudget ? '#B91C1C' : '#64748B', valueColor: overBudget ? '#991B1B' : '#0F172A' },
+        { k: 'Saldo disponível', v: this.eur(available), style: sumBox + (available >= 0 ? 'background:#ECFDF5;border:1px solid #A7F3D0' : 'background:#FEF2F2;border:1px solid #FECACA'), labelColor: available >= 0 ? '#047857' : '#B91C1C', valueColor: available >= 0 ? '#065F46' : '#991B1B' },
+        { k: 'Margem', v: margin.toFixed(1).replace('.', ',') + '%', style: sumBox + (margin >= 20 ? 'background:#ECFDF5;border:1px solid #A7F3D0' : 'background:#FFFBEB;border:1px solid #FDE68A'), labelColor: margin >= 20 ? '#047857' : '#B45309', valueColor: margin >= 20 ? '#065F46' : '#92400E' }
+      ],
+      costFilters: [
+        mkCostFilter('Categoria', ['Todas'].concat(this.CATEGORIES)),
+        mkCostFilter('Status', ['Todos', 'Previsto', 'Comprometido', 'Realizado', 'Cancelado']),
+        mkCostFilter('Fornecedor', ['Todos'].concat(suppliers))
+      ],
+      noCosts: s.costsEmpty || costList.length === 0,
+      hasCosts: !s.costsEmpty && costList.length > 0,
+      costRows: costList.map(c => {
+        const col = this.CSTAT[c.st];
+        return {
+          d: c.d, t: c.t, cat: c.cat, sup: c.sup, st: c.st, v: this.eur(c.v),
+          statusDot: col[2], statusStyle: this.pill(col[0], col[1]),
+          rowStyle: (wide ? 'display:grid;grid-template-columns:110px 2.2fr 1.1fr 1.2fr 1fr 110px;align-items:center;' : 'display:flex;flex-wrap:wrap;align-items:center;') +
+            'gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;transition:background .16s'
+        };
+      }),
+      costCountLabel: costList.length + (costList.length === 1 ? ' lançamento' : ' lançamentos'),
+      costTotal: this.eur(costList.filter(c => c.st !== 'Cancelado').reduce((a, b) => a + b.v, 0)),
+
+      taskViewMode: s.taskView,
+      isTaskList: s.taskView === 'Lista', isKanban: s.taskView === 'Kanban',
+      setListView: () => this.setState({ taskView: 'Lista' }),
+      setKanbanView: () => this.setState({ taskView: 'Kanban' }),
+      listViewStyle: 'padding:9px 15px;border-radius:9px;font-size:13px;font-weight:700;background:' + (s.taskView === 'Lista' ? '#EEF0FE' : 'transparent') + ';color:' + (s.taskView === 'Lista' ? '#4338CA' : '#64748B') + ';transition:background .16s',
+      kanbanViewStyle: 'padding:9px 15px;border-radius:9px;font-size:13px;font-weight:700;background:' + (s.taskView === 'Kanban' ? '#EEF0FE' : 'transparent') + ';color:' + (s.taskView === 'Kanban' ? '#4338CA' : '#64748B') + ';transition:background .16s',
+      tasks: this.TASKS.map(t => {
+        const pc = PRIO[t.prio], sc = TSTAT[t.status];
+        return {
+          t: t.t, stage: t.stage, who: t.who, due: t.due, prio: t.prio, status: t.status,
+          prioColor: pc[2], prioStyle: this.pill(pc[0], pc[1]),
+          statusDot: sc[2], statusStyle: this.pill(sc[0], sc[1]),
+          avatar: t.av
+        };
+      }),
+      kanban: ['A fazer', 'Em andamento', 'Concluída'].map((name, i) => {
+        const cards = this.TASKS.filter(t => t.status === name);
+        return {
+          name, count: String(cards.length), color: ['#94A3B8', '#3B82F6', '#10B981'][i],
+          cards: cards.map(t => ({ t: t.t, who: t.who, due: t.due, avatar: t.av }))
+        };
+      }),
+
+      phases: this.PHASES.map(p => {
+        const sc = p.pct === 100 ? ['#ECFDF5', '#047857'] : (p.pct > 0 ? ['#EFF6FF', '#1D4ED8'] : ['#F1F5F9', '#475569']);
+        const label = p.pct === 100 ? 'Concluída' : (p.pct > 0 ? 'Em andamento' : 'Não iniciada');
+        return {
+          n: p.n, range: p.range, pct: p.pct + '%', color: p.color, bg: p.bg,
+          statusStyle: this.pill(sc[0], sc[1]), status: label,
+          barStyle: 'height:100%;width:' + p.pct + '%;border-radius:999px;background:linear-gradient(90deg,' + p.color + ',#06B6D4);transition:transform 1s cubic-bezier(.22,.7,.2,1)'
+        };
+      }),
+
+      docsCount: String(this.DOCS.length),
+      docs: this.DOCS,
+
+      timeline: [
+        { when: 'Hoje — 10:30', t: 'Custo de € 2.400 registrado', meta: 'Custos • Materiais — Fornecedor ABC', color: '#6D5DFB', bg: '#EEF0FE' },
+        { when: 'Ontem — 15:20', t: 'Tarefa concluída', meta: 'Tarefas • Concretagem da laje', color: '#10B981', bg: '#ECFDF5' },
+        { when: '18/09/2026 — 09:40', t: 'Novo documento adicionado', meta: 'Documentos • Medição 06', color: '#3B82F6', bg: '#EFF6FF' },
+        { when: '15/09/2026 — 14:05', t: 'Subempreitada de elétrica comprometida', meta: 'Custos • € 9.800 — EletroSul', color: '#F59E0B', bg: '#FFFBEB' },
+        { when: '12/09/2026 — 08:15', t: 'Progresso atualizado para 78%', meta: 'Obra • Carlos Mendes', color: '#06B6D4', bg: '#ECFEFF' }
+      ],
+
+      costOpen: s.costOpen,
+      openCost: () => this.setState({ costOpen: true }),
+      closeCost: () => this.setState({ costOpen: false }),
+      categories: this.CATEGORIES,
+      subcategories: (this.SUBS[s.costCat] || ['Geral']),
+      costCat: s.costCat,
+      onCostCat: (e) => this.setState({ costCat: e.target.value }),
+      costStatusOptions: ['Previsto', 'Comprometido', 'Realizado', 'Cancelado'].map(o => {
+        const c = this.CSTAT[o], on = s.costStatus === o;
+        return {
+          name: o, dot: c[2], pick: () => this.setState({ costStatus: o }),
+          style: 'display:flex;align-items:center;gap:8px;padding:10px 15px;border-radius:11px;font-size:13.5px;font-weight:700;border:1px solid ' + (on ? c[2] : '#E2E8F0') + ';background:' + (on ? c[0] : '#fff') + ';color:' + (on ? c[1] : '#64748B') + ';transition:background .16s,border-color .16s'
+        };
+      }),
+      costQty: s.costQty, costUnit: s.costUnit,
+      onQty: (e) => this.setState({ costQty: e.target.value }),
+      onUnit: (e) => this.setState({ costUnit: e.target.value }),
+      costFormula: qty > 0 ? (s.costQty + ' × ' + s.costUnit) : 'Informe quantidade e valor unitário, ou lance o total direto',
+      costTotalCalc: this.eur(qty * unitV),
+      costSaveLabel: s.costSaving ? 'Registrando...' : 'Registrar custo',
+      costSaveStyle: 'padding:14px 22px;border-radius:12px;background:' + (s.costSaving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';color:#fff;font-size:15px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);' + (s.costSaving ? 'pointer-events:none;' : ''),
+      saveCost: () => {
+        this.setState({ costSaving: true });
+        clearTimeout(this.sTimer);
+        this.sTimer = setTimeout(() => {
+          this.setState({ costSaving: false, costOpen: false, costQty: '', costUnit: '' });
+          this.flash('Custo registrado com sucesso');
+        }, 900);
+      },
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
