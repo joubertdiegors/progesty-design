@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#94A3B8;font-size:15px;line-height:1">✕</button>
+      </sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="{{ dashItemStyle }}">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto">
+          <span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span>
+          <span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span>
+        </span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}">
+                  <span style="{{ it.dotStyle }}"></span>
+                  <span style="flex:1;text-align:left">{{ it.name }}</span>
+                  <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ it.badgeStyle }}">{{ it.badge }}</span>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column">
+        <span style="font-size:13px;font-weight:700;color:#E2E8F0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Carlos Mendes</span>
+        <span style="font-size:11px;color:#64748B">Administrador</span>
+      </div>
+    </div>
+  </aside>
+</sc-if>
+
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div>
+</sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+  <sc-if value="{{ isContacts }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;min-height:100vh">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto">
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+          </button>
+        </sc-if>
+        <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Contatos</h1>
+          <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Todas as pessoas ligadas aos seus clientes em uma única lista.</p>
+        </div>
+        <button onClick="{{ toastContact }}" style="flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:13px 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s,box-shadow .18s" style-hover="transform:translateY(-1px);box-shadow:0 20px 34px -14px rgba(109,93,251,1)">
+          <span style="font-size:17px;line-height:1">+</span>Novo contato
+        </button>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;transition:border-color .18s" style-hover="border-color:#C7C3FB">
+            <span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+            <input value="{{ cQuery }}" onInput="{{ onCQuery }}" placeholder="Pesquisar contatos..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+            <sc-if value="{{ hasCQuery }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clearCQuery }}" aria-label="Limpar" style="width:22px;height:22px;border-radius:7px;background:#F1F5F9;color:#64748B;font-size:12px;line-height:1">✕</button>
+            </sc-if>
+          </div>
+          <sc-for list="{{ cFilters }}" as="f" hint-placeholder-count="4">
+            <div style="position:relative;flex:0 0 auto">
+              <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}">
+                <span style="color:#64748B;font-weight:600">{{ f.label }}</span>{{ f.value }}<span style="font-size:9px;color:#64748B">▼</span>
+              </button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 8px);left:0;min-width:200px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                  <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4">
+                    <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ anyCFilter }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ clearCAll }}" style="height:46px;padding:0 15px;border-radius:12px;font-size:13px;font-weight:700;color:#64748B;border:1px solid #E2E8F0;background:#fff">Limpar filtros</button>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ cNoResults }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:50%;border:3px solid #94A3B8"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhum contato encontrado</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Tente alterar os filtros ou realizar uma nova busca.</span>
+            <button onClick="{{ clearCAll }}" style="margin-top:4px;padding:13px 21px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Limpar filtros</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ cHasRows }}" hint-placeholder-val="{{ true }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+            <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:1.9fr 1.6fr 1fr 1.7fr 1.1fr .9fr 92px;gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0">
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Contato</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Cliente</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Cargo</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">E-mail</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Telefone</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Status</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B;text-align:right">Ações</span>
+              </div>
+            </sc-if>
+            <sc-for list="{{ cRows }}" as="c" hint-placeholder-count="6">
+              <div style="{{ c.rowStyle }}">
+                <div style="min-width:0;display:flex;align-items:center;gap:12px">
+                  <span style="width:38px;height:38px;border-radius:12px;background:{{ c.avatar }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;flex:0 0 auto">{{ c.initials }}</span>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                    <span style="font-size:14.5px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+                    <sc-if value="{{ c.main }}" hint-placeholder-val="{{ false }}">
+                      <span style="align-self:flex-start;padding:3px 9px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:11px;font-weight:700;white-space:nowrap">Principal</span>
+                    </sc-if>
+                  </div>
+                </div>
+                <button onClick="{{ c.openClient }}" style="min-width:0;display:flex;align-items:center;gap:9px;text-align:left" style-hover="color:#5145CD">
+                  <span style="width:8px;height:8px;border-radius:3px;background:{{ c.clientColor }};flex:0 0 auto"></span>
+                  <span style="font-size:13.5px;font-weight:600;color:#4338CA;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.client }}</span>
+                </button>
+                <span style="font-size:13px;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.role }}</span>
+                <span style="font-size:13px;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.email }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ c.phone }}</span>
+                <span style="{{ c.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ c.statusDot }}"></span>{{ c.status }}</span>
+                <div style="display:flex;justify-content:flex-end;align-items:center;gap:7px">
+                  <button onClick="{{ c.edit }}" style="padding:7px 12px;border-radius:9px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:12.5px;font-weight:700;color:#475569;white-space:nowrap;transition:background .16s,color .16s" style-hover="background:#EEF0FE;color:#4338CA">Editar</button>
+                  <button onClick="{{ c.openClient }}" aria-label="Abrir cliente" style="width:30px;height:30px;border-radius:9px;background:#F8FAFC;border:1px solid #E2E8F0;color:#64748B;font-size:15px;flex:0 0 auto;transition:background .16s" style-hover="background:#EEF0FE;color:#4338CA">›</button>
+                </div>
+              </div>
+            </sc-for>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 20px;background:#F8FAFC;border-top:1px solid #E2E8F0">
+              <span style="font-size:13px;font-weight:700;color:#475569">{{ cCountLabel }}</span>
+              <div style="flex:1"></div>
+              <span style="font-size:12.5px;color:#64748B">{{ cMainLabel }}</span>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;min-height:100vh">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto">
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+          </button>
+        </sc-if>
+        <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Clientes</h1>
+          <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Gerencie seus clientes e acompanhe todo o relacionamento com sua empresa.</p>
+        </div>
+        <button onClick="{{ goNew }}" style="flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:13px 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s,box-shadow .18s" style-hover="transform:translateY(-1px);box-shadow:0 20px 34px -14px rgba(109,93,251,1)">
+          <span style="font-size:17px;line-height:1">+</span>Novo cliente
+        </button>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="{{ listKpiGrid }}">
+          <sc-for list="{{ listKpis }}" as="k" hint-placeholder-count="4">
+            <button onClick="{{ k.go }}" style="{{ k.style }}">
+              <span style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span>
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">{{ k.label }}</span>
+              </span>
+              <span style="font-size:clamp(21px,2.3vw,28px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ k.value }}</span>
+              <span style="font-size:11.5px;font-weight:600;color:#64748B">{{ k.hint }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;transition:border-color .18s,box-shadow .18s" style-hover="border-color:#C7C3FB">
+            <span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+            <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Pesquisar clientes..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clearQuery }}" aria-label="Limpar" style="width:22px;height:22px;border-radius:7px;background:#F1F5F9;color:#64748B;font-size:12px;line-height:1">✕</button>
+            </sc-if>
+          </div>
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+            <div style="position:relative;flex:0 0 auto">
+              <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}">
+                <span style="color:#64748B;font-weight:600">{{ f.label }}</span>{{ f.value }}<span style="font-size:9px;color:#64748B">▼</span>
+              </button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 8px);left:0;min-width:180px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                  <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3">
+                    <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <div style="display:flex;gap:4px;padding:4px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;flex:0 0 auto">
+            <button onClick="{{ setTable }}" style="{{ tableViewStyle }}">Tabela</button>
+            <button onClick="{{ setCards }}" style="{{ cardsViewStyle }}">Cards</button>
+          </div>
+        </div>
+
+        <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Filtros ativos:</span>
+            <sc-for list="{{ activeChips }}" as="c" hint-placeholder-count="2">
+              <button onClick="{{ c.clear }}" style="display:flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:12.5px;font-weight:700">{{ c.t }}<span style="font-size:11px;opacity:.7">✕</span></button>
+            </sc-for>
+            <button onClick="{{ clearAll }}" style="font-size:12.5px;font-weight:700;color:#64748B">Limpar tudo</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(14px,1.6vw,20px);display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:14px">
+                <div class="pg-sk" style="width:42px;height:42px;border-radius:13px;flex:0 0 auto"></div>
+                <div style="flex:2 1 180px;display:flex;flex-direction:column;gap:7px">
+                  <div class="pg-sk" style="height:12px;width:62%"></div>
+                  <div class="pg-sk" style="height:10px;width:38%"></div>
+                </div>
+                <div class="pg-sk" style="flex:1 1 90px;height:11px"></div>
+                <div class="pg-sk" style="width:76px;height:26px;border-radius:999px;flex:0 0 auto"></div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stError }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #FECACA;border-radius:20px;padding:clamp(28px,4vw,52px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:52px;height:52px;border-radius:16px;background:#FEF2F2;border:1px solid #FECACA;display:flex;align-items:center;justify-content:center;color:#B91C1C;font-size:24px;font-weight:800">!</span>
+            <span style="font-size:19px;font-weight:800;letter-spacing:-.02em">Não foi possível carregar os clientes</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:44ch;text-wrap:pretty">Verifique sua conexão e tente novamente. Se o problema continuar, entre em contato com o suporte.</span>
+            <button onClick="{{ retry }}" style="margin-top:4px;padding:13px 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700">Tentar novamente</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#6D5DFB,#06B6D4)"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Você ainda não possui clientes</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Cadastre seu primeiro cliente para começar a organizar seus relacionamentos.</span>
+            <button onClick="{{ goNew }}" style="margin-top:4px;display:flex;align-items:center;gap:9px;padding:13px 21px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)"><span style="font-size:17px;line-height:1">+</span>Novo cliente</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stNoResults }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:50%;border:3px solid #94A3B8"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhum cliente encontrado</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Tente alterar os filtros ou realizar uma nova busca.</span>
+            <button onClick="{{ clearAll }}" style="margin-top:4px;padding:13px 21px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Limpar filtros</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stTable }}" hint-placeholder-val="{{ true }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+            <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:2.1fr 1.4fr .8fr 1.1fr 1fr .9fr 56px;gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0">
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Cliente</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Contato principal</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Projetos</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Oportunidades</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Última atividade</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Status</span>
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B;text-align:right">Ações</span>
+              </div>
+            </sc-if>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+              <div onClick="{{ r.open }}" style="{{ r.rowStyle }}">
+                <div style="min-width:0;display:flex;align-items:center;gap:12px">
+                  <span style="width:40px;height:40px;border-radius:13px;background:{{ r.avatar }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;flex:0 0 auto">{{ r.initials }}</span>
+                  <div style="min-width:0;display:flex;flex-direction:column">
+                    <span style="font-size:14.5px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                    <span style="font-size:12.5px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span>
+                  </div>
+                </div>
+                <div style="min-width:0;display:flex;flex-direction:column">
+                  <span style="font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.contact }}</span>
+                  <span style="font-size:12px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.email }}</span>
+                </div>
+                <span style="font-size:13.5px;font-weight:600;color:#475569;white-space:nowrap">{{ r.projects }}</span>
+                <span style="{{ r.oppsStyle }}">{{ r.opps }}</span>
+                <span style="font-size:13.5px;color:#64748B;white-space:nowrap">{{ r.last }}</span>
+                <span style="{{ r.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.statusDot }}"></span>{{ r.status }}</span>
+                <div style="display:flex;justify-content:flex-end;align-items:center">
+                  <span style="width:30px;height:30px;border-radius:9px;background:#F8FAFC;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;color:#64748B;font-size:15px">›</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stCards }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(12px,1.4vw,16px)">
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
+              <button onClick="{{ r.open }}" style="text-align:left;background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px;transition:transform .2s,box-shadow .2s,border-color .2s" style-hover="transform:translateY(-3px);box-shadow:0 22px 40px -28px rgba(15,23,42,.5);border-color:#C7C3FB">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span style="width:44px;height:44px;border-radius:14px;background:{{ r.avatar }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:800;flex:0 0 auto">{{ r.initials }}</span>
+                  <div style="min-width:0;display:flex;flex-direction:column">
+                    <span style="font-size:15px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                    <span style="font-size:12.5px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:7px">
+                  <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12.5px;color:#64748B;min-width:64px">Contato</span><span style="font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.contact }}</span></div>
+                  <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12.5px;color:#64748B;min-width:64px">Projetos</span><span style="font-size:13px;font-weight:600">{{ r.projects }}</span></div>
+                  <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12.5px;color:#64748B;min-width:64px">Atividade</span><span style="font-size:13px;font-weight:600">{{ r.last }}</span></div>
+                </div>
+                <span style="{{ r.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.statusDot }}"></span>{{ r.status }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showCount }}" hint-placeholder-val="{{ true }}">
+          <span style="font-size:12.5px;color:#64748B">{{ countLabel }}</span>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;min-height:100vh">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <button onClick="{{ goList }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(19px,2vw,25px);font-weight:800;letter-spacing:-.03em">Novo cliente</h1>
+          <p style="margin:0;font-size:13.5px;color:#64748B">Preencha as informações essenciais. Você pode completar o resto depois.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex:0 0 auto">
+          <button onClick="{{ goList }}" style="padding:13px 19px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+          <button onClick="{{ save }}" style="{{ saveBtnStyle }}">{{ saveLabel }}</button>
+        </div>
+      </header>
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px)">
+        <div style="max-width:940px;display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="width:28px;height:28px;border-radius:9px;background:#EEF0FE;color:#4338CA;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex:0 0 auto">01</span>
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Informações principais</span>
+            </div>
+            <div style="display:flex;gap:8px;padding:4px;border-radius:12px;background:#F1F5F9;align-self:flex-start">
+              <button onClick="{{ pickPessoa }}" style="{{ pessoaStyle }}">Pessoa</button>
+              <button onClick="{{ pickEmpresa }}" style="{{ empresaStyle }}">Empresa</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px">
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">{{ nameLabel }}</span><input placeholder="{{ namePh }}" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Nome fantasia</span><input placeholder="Como o cliente é conhecido" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">{{ docLabel }}</span><input placeholder="{{ docPh }}" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Telefone</span><input placeholder="+32 000 000 000" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">E-mail</span><input placeholder="nome@empresa.com" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Website</span><input placeholder="empresa.com" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="width:28px;height:28px;border-radius:9px;background:#EFF6FF;color:#1D4ED8;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex:0 0 auto">02</span>
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Endereço</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:14px">
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Código postal</span><input placeholder="1050" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="grid-column:span 2;display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Endereço</span><input placeholder="Rua, avenida..." style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Número</span><input placeholder="000" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Complemento</span><input placeholder="Sala, andar..." style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Cidade</span><input placeholder="Cidade" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Estado / região</span><input placeholder="Região, província ou estado" style="height:44px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></label>
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">País</span>
+                <select style="height:44px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A">
+                  <sc-for list="{{ countries }}" as="ct" hint-placeholder-count="8"><option>{{ ct }}</option></sc-for>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="width:28px;height:28px;border-radius:9px;background:#ECFEFF;color:#0E7490;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex:0 0 auto">03</span>
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Informações adicionais</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px">
+              <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Responsável</span>
+                <select style="height:44px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;color:#0F172A">
+                  <option>Carlos Mendes</option><option>Ana Duarte</option><option>Rafael Lima</option>
+                </select>
+              </label>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12.5px;font-weight:600;color:#475569">Observações</span><textarea rows="3" placeholder="Anotações internas sobre este cliente" style="padding:12px 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14px;outline:none;resize:vertical;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></textarea></label>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+            <button onClick="{{ goList }}" style="padding:14px 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Cancelar</button>
+            <button onClick="{{ save }}" style="{{ saveBtnStyle }}">{{ saveLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;min-height:100vh">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+        <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,34px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+          <button onClick="{{ goList }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+          <span style="width:46px;height:46px;border-radius:14px;background:{{ cur.avatar }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex:0 0 auto">{{ cur.initials }}</span>
+          <div style="min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:5px">
+            <h1 style="margin:0;font-size:clamp(19px,2.1vw,26px);font-weight:800;letter-spacing:-.03em">{{ cur.name }}</h1>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+              <span style="{{ cur.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ cur.statusDot }}"></span>{{ cur.status }}</span>
+              <span style="font-size:13px;color:#64748B">{{ cur.sub }}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:9px;flex:0 0 auto">
+            <button onClick="{{ toastEdit }}" style="padding:12px 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700">Editar</button>
+            <div style="position:relative">
+              <button onClick="{{ toggleQuick }}" style="display:flex;align-items:center;gap:8px;padding:12px 17px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14px;font-weight:700;box-shadow:0 14px 26px -14px rgba(109,93,251,1)"><span style="font-size:16px;line-height:1">+</span>Ações rápidas<span style="font-size:9px;opacity:.85">▼</span></button>
+              <sc-if value="{{ quickOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:60">
+                  <sc-for list="{{ quickActions }}" as="q" hint-placeholder-count="4">
+                    <button onClick="{{ q.run }}" style="display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:600;transition:background .15s" style-hover="background:#F8FAFC">
+                      <span style="width:8px;height:8px;border-radius:3px;background:{{ q.color }};flex:0 0 auto"></span>{{ q.name }}
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+        <div class="pg-scroll" style="padding:14px clamp(16px,2.4vw,34px) 0;display:flex;gap:4px;overflow-x:auto">
+          <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="6">
+            <button onClick="{{ tb.pick }}" style="{{ tb.style }}">{{ tb.name }}</button>
+          </sc-for>
+        </div>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="{{ kpiGrid }}">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <button onClick="{{ k.go }}" style="{{ k.style }}">
+              <span style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span>
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">{{ k.label }}</span>
+              </span>
+              <span style="font-size:clamp(21px,2.3vw,27px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ k.value }}</span>
+              <span style="font-size:12px;font-weight:600;color:#5145CD">{{ k.hint }} ›</span>
+              <sc-if value="{{ k.updated }}" hint-placeholder-val="{{ false }}">
+                <span style="display:flex;align-items:center;gap:7px;margin-top:2px;padding-top:11px;border-top:1px solid #E2E8F0">
+                  <span style="width:6px;height:6px;border-radius:50%;background:#10B981;flex:0 0 auto"></span>
+                  <span style="font-size:11.5px;font-weight:600;color:#64748B">Atualizado</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#475569">{{ k.updated }}</span>
+                </span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ tabOverview }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.4vw,16px)">
+            <div style="flex:1 1 320px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Informações do cliente</span>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ cur.info }}" as="i" hint-placeholder-count="7">
+                  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9">
+                    <span style="flex:0 0 116px;font-size:12.5px;font-weight:600;color:#64748B">{{ i.k }}</span>
+                    <span style="flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:14px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Situação financeira</span>
+                <div style="display:flex;height:12px;border-radius:999px;overflow:hidden;background:#F1F5F9">
+                  <div data-prog style="width:71%;background:linear-gradient(90deg,#34D399,#10B981)"></div>
+                  <div data-prog style="width:26%;background:linear-gradient(90deg,#FBBF24,#F59E0B)"></div>
+                  <div data-prog style="width:3%;background:#EF4444"></div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:14px">
+                  <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#475569"><span style="width:8px;height:8px;border-radius:2px;background:#10B981"></span>Recebido € 320.000</span>
+                  <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#475569"><span style="width:8px;height:8px;border-radius:2px;background:#F59E0B"></span>A receber € 130.000</span>
+                  <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#475569"><span style="width:8px;height:8px;border-radius:2px;background:#EF4444"></span>Vencido € 12.000</span>
+                </div>
+              </div>
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:13px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Atividades recentes</span>
+                  <div style="flex:1"></div>
+                  <button onClick="{{ goActivities }}" style="font-size:13px;font-weight:700;color:#5145CD">Ver todas</button>
+                </div>
+                <sc-for list="{{ recentActs }}" as="a" hint-placeholder-count="3">
+                  <div style="display:flex;gap:11px;align-items:flex-start">
+                    <span style="width:8px;height:8px;border-radius:50%;background:{{ a.color }};margin-top:6px;flex:0 0 auto"></span>
+                    <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:13.5px;font-weight:600;line-height:1.35">{{ a.t }}</span>
+                      <span style="font-size:11.5px;color:#64748B">{{ a.w }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabContacts }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Contatos</span>
+              <span style="padding:3px 9px;border-radius:999px;background:#EFF6FF;color:#1D4ED8;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ contactsCount }}</span>
+              <div style="flex:1"></div>
+              <button onClick="{{ toastContact }}" style="display:flex;align-items:center;gap:8px;padding:11px 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700" style-hover="border-color:#C7C3FB"><span style="font-size:16px;line-height:1">+</span>Novo contato</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:clamp(12px,1.4vw,16px)">
+              <sc-for list="{{ contacts }}" as="c" hint-placeholder-count="3">
+                <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px;transition:transform .2s,box-shadow .2s,border-color .2s" style-hover="transform:translateY(-3px);box-shadow:0 22px 40px -28px rgba(15,23,42,.5);border-color:#C7C3FB">
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <span style="width:42px;height:42px;border-radius:13px;background:{{ c.avatar }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;flex:0 0 auto">{{ c.initials }}</span>
+                    <div style="min-width:0;display:flex;flex-direction:column">
+                      <span style="font-size:15px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+                      <span style="font-size:12.5px;color:#64748B">{{ c.role }}</span>
+                    </div>
+                    <div style="flex:1"></div>
+                    <sc-if value="{{ c.main }}" hint-placeholder-val="{{ false }}">
+                      <span style="padding:4px 10px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:11.5px;font-weight:700;white-space:nowrap">Principal</span>
+                    </sc-if>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <span style="width:26px;height:26px;border-radius:8px;background:#ECFEFF;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:9px;height:9px;border-radius:3px;background:#06B6D4"></span></span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;color:#475569">{{ c.phone }}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                      <span style="width:26px;height:26px;border-radius:8px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:10px;height:8px;border-radius:2px;border:1.5px solid #6D5DFB"></span></span>
+                      <span style="font-size:13px;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.email }}</span>
+                    </div>
+                  </div>
+                  <sc-if value="{{ c.note }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12.5px;color:#64748B;line-height:1.5;padding-top:12px;border-top:1px solid #F1F5F9;text-wrap:pretty">{{ c.note }}</span>
+                  </sc-if>
+                  <div style="display:flex;gap:8px;margin-top:auto;padding-top:12px;border-top:1px solid #F1F5F9">
+                    <button onClick="{{ toastEdit }}" style="flex:1;padding:9px;border-radius:10px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:12.5px;font-weight:700;color:#475569;transition:background .16s,color .16s" style-hover="background:#EEF0FE;color:#4338CA">Editar</button>
+                    <sc-if value="{{ c.notMain }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ c.setMain }}" style="flex:1;padding:9px;border-radius:10px;background:#EEF0FE;border:1px solid #DDD9FD;font-size:12.5px;font-weight:700;color:#4338CA;transition:background .16s">Definir como principal</button>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabProjects }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+            <sc-for list="{{ projects }}" as="p" hint-placeholder-count="2">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:13px;transition:border-color .2s,transform .2s" style-hover="border-color:#C7C3FB;transform:translateY(-2px)">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px">
+                  <span style="width:40px;height:40px;border-radius:13px;background:{{ p.avatar }};flex:0 0 auto"></span>
+                  <div style="min-width:0;display:flex;flex-direction:column">
+                    <span style="font-size:15.5px;font-weight:700;letter-spacing:-.02em">{{ p.n }}</span>
+                    <span style="font-size:12.5px;color:#64748B">{{ p.owner }}</span>
+                  </div>
+                  <div style="flex:1;min-width:10px"></div>
+                  <span style="padding:5px 11px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:12px;font-weight:700;white-space:nowrap">{{ p.status }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;white-space:nowrap">{{ p.v }}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="flex:1;height:8px;border-radius:999px;background:#E9EEF5;overflow:hidden">
+                    <div data-prog style="{{ p.barStyle }}"></div>
+                  </div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#475569;min-width:38px;text-align:right">{{ p.pct }}</span>
+                  <span style="font-size:12px;color:#64748B;white-space:nowrap">{{ p.due }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabCrm }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(12px,1.4vw,16px)">
+            <sc-for list="{{ opportunities }}" as="o" hint-placeholder-count="2">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px;transition:border-color .2s,transform .2s" style-hover="border-color:#C7C3FB;transform:translateY(-2px)">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="font-size:15.5px;font-weight:700;letter-spacing:-.02em;min-width:0">{{ o.n }}</span>
+                  <div style="flex:1"></div>
+                  <span style="{{ o.stageStyle }}">{{ o.stage }}</span>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.02em">{{ o.v }}</span>
+                <div style="display:flex;align-items:center;gap:9px;padding-top:12px;border-top:1px solid #F1F5F9">
+                  <span style="width:26px;height:26px;border-radius:50%;background:{{ o.avatar }};flex:0 0 auto"></span>
+                  <span style="font-size:12.5px;color:#64748B">Responsável</span>
+                  <span style="font-size:13px;font-weight:700">{{ o.owner }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabFinance }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.4vw,16px)">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:clamp(12px,1.4vw,16px)">
+              <sc-for list="{{ finCards }}" as="f" hint-placeholder-count="4">
+                <div style="{{ f.style }}">
+                  <span style="font-size:12.5px;font-weight:600;color:{{ f.labelColor }}">{{ f.label }}</span>
+                  <span style="font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.035em;color:{{ f.valueColor }};font-variant-numeric:tabular-nums">{{ f.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:12px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Últimas faturas</span>
+              <sc-for list="{{ invoices }}" as="iv" hint-placeholder-count="4">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 15px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0;transition:background .18s,border-color .18s" style-hover="background:#fff;border-color:#C7C3FB">
+                  <span style="width:4px;align-self:stretch;min-height:34px;border-radius:99px;background:{{ iv.color }};flex:0 0 auto"></span>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:14px;font-weight:700">{{ iv.no }}</span>
+                    <span style="font-size:12px;color:#64748B">Vencimento: {{ iv.due }}</span>
+                  </div>
+                  <div style="flex:1;min-width:10px"></div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;white-space:nowrap">{{ iv.v }}</span>
+                  <span style="{{ iv.badgeStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ iv.color }}"></span>{{ iv.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabActivities }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ timeline }}" as="a" hint-placeholder-count="5">
+              <div style="display:flex;gap:16px">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto">
+                  <span style="width:32px;height:32px;border-radius:11px;background:{{ a.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                    <span style="width:11px;height:11px;border-radius:3.5px;background:{{ a.color }}"></span>
+                  </span>
+                  <span style="flex:1;width:2px;border-radius:99px;background:#F1F5F9;min-height:14px"></span>
+                </div>
+                <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:4px;padding-bottom:20px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#64748B">{{ a.when }}</span>
+                  <span style="font-size:14.5px;font-weight:700;letter-spacing:-.015em;line-height:1.35">{{ a.t }}</span>
+                  <span style="font-size:12.5px;color:#64748B">{{ a.meta }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</main>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>
+    {{ toast }}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;list&quot;,&quot;new&quot;,&quot;detail&quot;],&quot;default&quot;:&quot;list&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;listState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;empty&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'list', active: 'Clientes', tab: 'Visão geral',
+    open: { Comercial: false, Clientes: true, Projetos: false, Financeiro: false, Configurações: false },
+    navOpen: false, w: 1400,
+    query: '', filters: { Status: 'Todos', Tipo: 'Todos', Cidade: 'Todas', Responsável: 'Todos' },
+    openFilter: '', view_mode: 'table', dataState: 'ready',
+    curId: 0, kind: 'Empresa', saving: false, quickOpen: false, toast: '',
+    mainContact: { 0: 0, 1: 4, 2: 5, 3: 7 },
+    cQuery: '', cFilters: { Cliente: 'Todos', Cargo: 'Todos', Status: 'Todos' }, cOpenFilter: ''
+  };
+
+  get view() { return this.state.viewSet ? this.state.view : (this.props.initialView || 'list'); }
+  get dataState() { return this.state.stateSet ? this.state.dataState : (this.props.listState || 'ready'); }
+  go = (v) => this.setState({ view: v, viewSet: true });
+
+  GROUPS = [
+    { name: 'Comercial', dot: '#EC4899', items: [{ name: 'CRM' }, { name: 'Leads', badge: '32' }, { name: 'Oportunidades', badge: '24' }] },
+    { name: 'Clientes', dot: '#3B82F6', items: [{ name: 'Clientes', badge: '4' }, { name: 'Contatos' }] },
+    { name: 'Projetos', dot: '#F97316', items: [{ name: 'Projetos / Obras', badge: '12' }, { name: 'Tarefas' }, { name: 'Documentos' }] },
+    { name: 'Financeiro', dot: '#10B981', items: [{ name: 'Contas a Receber', badge: '8' }, { name: 'Contas a Pagar' }, { name: 'Faturas' }, { name: 'Fluxo de Caixa' }] },
+    { name: 'Configurações', dot: '#64748B', items: [{ name: 'Empresa' }, { name: 'Usuários' }, { name: 'Preferências' }] }
+  ];
+
+  CLIENTS = [
+    { name: 'Construtora Horizonte', sub: 'Empresa • Bruxelas', contact: 'João Silva', email: 'joao@horizonte.com', projects: '3 projetos', np: 3, opps: 2, since: 'Março 2025', novo: false, last: 'Hoje', status: 'Ativo', city: 'Bruxelas', kind: 'Empresa', owner: 'Carlos Mendes', doc: 'BE 0642.913.220', docKind: 'N.º de empresa (VAT)', phone: '+32 000 000 000', site: 'horizonte.com', addr: 'Avenue Louise 143, 1050 Bruxelas, Bélgica', av: 'linear-gradient(135deg,#6D5DFB,#3B82F6)' },
+    { name: 'Maria Oliveira', sub: 'Pessoa • Antuérpia', contact: 'Maria Oliveira', email: 'maria.oliveira@mail.com', projects: '1 projeto', np: 1, opps: 0, since: 'Setembro 2026', novo: true, last: 'Ontem', status: 'Em negociação', city: 'Antuérpia', kind: 'Pessoa', owner: 'Ana Duarte', doc: 'BE 84.02.11.533-04', docKind: 'Registo nacional', phone: '+32 000 000 000', site: '—', addr: 'Meir 22, 2000 Antuérpia, Bélgica', av: 'linear-gradient(135deg,#EC4899,#F97316)' },
+    { name: 'Grupo Central Engenharia', sub: 'Empresa • Gante', contact: 'Carlos Mendes', email: 'carlos@centraleng.com', projects: '5 projetos', np: 5, opps: 1, since: 'Janeiro 2024', novo: false, last: '12/09/2026', status: 'Ativo', city: 'Gante', kind: 'Empresa', owner: 'Rafael Lima', doc: 'BE 0511.408.912', docKind: 'N.º de empresa (VAT)', phone: '+32 000 000 000', site: 'centraleng.com', addr: 'Korenmarkt 8, 9000 Gante, Bélgica', av: 'linear-gradient(135deg,#10B981,#06B6D4)' },
+    { name: 'Reformas Delta', sub: 'Empresa • Liège', contact: 'Sofia Martins', email: 'sofia@delta.be', projects: '2 projetos', np: 2, opps: 1, since: 'Junho 2026', novo: true, last: '04/09/2026', status: 'Inativo', city: 'Liège', kind: 'Empresa', owner: 'Carlos Mendes', doc: 'BE 0724.551.108', docKind: 'N.º de empresa (VAT)', phone: '+32 000 000 000', site: 'delta.be', addr: 'Rue Saint-Gilles 51, 4000 Liège, Bélgica', av: 'linear-gradient(135deg,#F59E0B,#EC4899)' }
+  ];
+
+  ST = { 'Ativo': ['#ECFDF5', '#047857', '#10B981'], 'Em negociação': ['#FFFBEB', '#B45309', '#F59E0B'], 'Inativo': ['#F1F5F9', '#475569', '#94A3B8'] };
+
+  ALLCONTACTS = [
+    { id: 0, ci: 0, name: 'João Silva', role: 'Diretor', email: 'joao@horizonte.com', phone: '+32 000 000 000', status: 'Ativo', note: 'Ponto de contato para decisões de obra e aprovação de orçamentos.', av: 'linear-gradient(135deg,#6D5DFB,#3B82F6)' },
+    { id: 1, ci: 0, name: 'Ana Martins', role: 'Financeiro', email: 'ana@horizonte.com', phone: '+32 000 000 000', status: 'Ativo', note: 'Recebe as faturas e trata os pagamentos.', av: 'linear-gradient(135deg,#10B981,#06B6D4)' },
+    { id: 2, ci: 0, name: 'Pedro Costa', role: 'Engenharia', email: 'pedro@horizonte.com', phone: '+32 000 000 000', status: 'Ativo', note: '', av: 'linear-gradient(135deg,#F59E0B,#EC4899)' },
+    { id: 3, ci: 0, name: 'Lara Nunes', role: 'Compras', email: 'lara@horizonte.com', phone: '+32 000 000 000', status: 'Inativo', note: 'Saiu da equipa de compras em agosto.', av: 'linear-gradient(135deg,#94A3B8,#64748B)' },
+    { id: 4, ci: 1, name: 'Maria Oliveira', role: 'Proprietária', email: 'maria.oliveira@mail.com', phone: '+32 000 000 000', status: 'Ativo', note: 'Trata diretamente de todas as decisões da obra.', av: 'linear-gradient(135deg,#EC4899,#F97316)' },
+    { id: 5, ci: 2, name: 'Carlos Mendes', role: 'Diretor de obras', email: 'carlos@centraleng.com', phone: '+32 000 000 000', status: 'Ativo', note: '', av: 'linear-gradient(135deg,#10B981,#06B6D4)' },
+    { id: 6, ci: 2, name: 'Nadia Peeters', role: 'Financeiro', email: 'nadia@centraleng.com', phone: '+32 000 000 000', status: 'Ativo', note: 'Aprova medições antes do faturamento.', av: 'linear-gradient(135deg,#6D5DFB,#EC4899)' },
+    { id: 7, ci: 3, name: 'Sofia Martins', role: 'Sócia-gerente', email: 'sofia@delta.be', phone: '+32 000 000 000', status: 'Ativo', note: '', av: 'linear-gradient(135deg,#F59E0B,#EC4899)' },
+    { id: 8, ci: 3, name: 'Thomas Dubois', role: 'Engenharia', email: 'thomas@delta.be', phone: '+32 000 000 000', status: 'Inativo', note: 'Contrato encerrado em julho.', av: 'linear-gradient(135deg,#94A3B8,#64748B)' }
+  ];
+
+  CDOT = ['#6D5DFB', '#EC4899', '#10B981', '#F59E0B'];
+
+  rootRef = (el) => { this.rootEl = el; };
+
+  setupAnim() {
+    const root = this.rootEl;
+    if (!root || !('IntersectionObserver' in window)) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    root.querySelectorAll('[data-prog]').forEach(e => {
+      if (e.dataset.pgInit) return;
+      e.dataset.pgInit = '1';
+      Object.assign(e.style, { transformOrigin: 'left', transform: 'scaleX(0)', transition: 'transform 1s cubic-bezier(.22,.7,.2,1)' });
+      requestAnimationFrame(() => requestAnimationFrame(() => { e.style.transform = 'scaleX(1)'; }));
+    });
+  }
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    this.setState({ w: window.innerWidth });
+    requestAnimationFrame(() => this.setupAnim());
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tTimer); clearTimeout(this.sTimer); }
+  componentDidUpdate() { requestAnimationFrame(() => this.setupAnim()); }
+
+  flash(msg) {
+    clearTimeout(this.tTimer);
+    this.setState({ toast: msg, quickOpen: false });
+    this.tTimer = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  navBtn(active, extra) {
+    return 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:' + (active ? '700' : '500') +
+      ';color:' + (active ? '#fff' : '#94A3B8') + ';background:' + (active ? 'rgba(109,93,251,.26)' : 'transparent') +
+      ';transition:background .16s,color .16s;' + (extra || '');
+  }
+
+  statusStyle(s) {
+    const c = this.ST[s] || this.ST['Inativo'];
+    return 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + c[0] + ';color:' + c[1] + ';font-size:12px;font-weight:700;white-space:nowrap';
+  }
+
+  initials(n) {
+    const p = n.trim().split(/\s+/);
+    return ((p[0] || '')[0] + (p[1] || '')[0] || p[0][0]).toUpperCase();
+  }
+
+  isMain(c) { return this.state.mainContact[c.ci] === c.id; }
+
+  renderVals() {
+    const s = this.state;
+    const w = s.w, isMobile = w < 1024, wide = w >= 1100;
+    const st = this.dataState, view = this.view;
+    const F = s.filters;
+
+    const q = s.query.trim().toLowerCase();
+    const filtered = this.CLIENTS.filter(c => {
+      if (q && !(c.name + ' ' + c.contact + ' ' + c.email + ' ' + c.phone + ' ' + c.doc).toLowerCase().includes(q)) return false;
+      if (F.Status !== 'Todos' && c.status !== F.Status) return false;
+      if (F.Tipo !== 'Todos' && c.kind !== F.Tipo) return false;
+      if (F.Cidade !== 'Todas' && c.city !== F.Cidade) return false;
+      if (F['Responsável'] !== 'Todos' && c.owner !== F['Responsável']) return false;
+      return true;
+    });
+
+    const anyFilter = q !== '' || F.Status !== 'Todos' || F.Tipo !== 'Todos' || F.Cidade !== 'Todas' || F['Responsável'] !== 'Todos';
+    const listOk = st === 'ready' && filtered.length > 0;
+
+    const mkFilter = (label, options) => ({
+      label: label + ':', value: F[label], open: s.openFilter === label,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === label ? '' : label })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' + (F[label] === options[0] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s',
+      options: options.map(o => ({
+        name: o, pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [label]: o }), openFilter: '' })),
+        style: 'padding:9px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (F[label] === o ? '700' : '500') +
+          ';color:' + (F[label] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[label] === o ? '#EEF0FE' : 'transparent') + ';transition:background .15s'
+      }))
+    });
+
+    const chips = [];
+    if (q) chips.push({ t: 'Busca: ' + s.query, clear: () => this.setState({ query: '' }) });
+    ['Status', 'Tipo', 'Cidade', 'Responsável'].forEach(k => {
+      const base = k === 'Cidade' ? 'Todas' : 'Todos';
+      if (F[k] !== base) chips.push({ t: k + ': ' + F[k], clear: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [k]: base }) })) });
+    });
+
+    const cur = this.CLIENTS[s.curId];
+    const tabs = ['Visão geral', 'Contatos', 'Projetos', 'CRM', 'Financeiro', 'Atividades'];
+
+    const CF = s.cFilters;
+    const roles = this.ALLCONTACTS.map(c => c.role).filter((v, i, a) => a.indexOf(v) === i);
+    const cq = s.cQuery.trim().toLowerCase();
+    const cFiltered = this.ALLCONTACTS.filter(c => {
+      if (cq && !(c.name + ' ' + c.role + ' ' + c.email + ' ' + c.phone + ' ' + this.CLIENTS[c.ci].name).toLowerCase().includes(cq)) return false;
+      if (CF.Cliente !== 'Todos' && this.CLIENTS[c.ci].name !== CF.Cliente) return false;
+      if (CF.Cargo !== 'Todos' && c.role !== CF.Cargo) return false;
+      if (CF.Status !== 'Todos' && c.status !== CF.Status) return false;
+      return true;
+    });
+    const anyCFilter = cq !== '' || CF.Cliente !== 'Todos' || CF.Cargo !== 'Todos' || CF.Status !== 'Todos';
+    const mkCFilter = (label, options) => ({
+      label: label + ':', value: CF[label], open: s.cOpenFilter === label,
+      toggle: () => this.setState(x => ({ cOpenFilter: x.cOpenFilter === label ? '' : label })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' + (CF[label] === 'Todos' ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s',
+      options: options.map(o => ({
+        name: o, pick: () => this.setState(x => ({ cFilters: Object.assign({}, x.cFilters, { [label]: o }), cOpenFilter: '' })),
+        style: 'padding:9px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (CF[label] === o ? '700' : '500') +
+          ';color:' + (CF[label] === o ? '#4338CA' : '#0F172A') + ';background:' + (CF[label] === o ? '#EEF0FE' : 'transparent') + ';transition:background .15s'
+      }))
+    });
+
+    const curContacts = this.ALLCONTACTS.filter(c => c.ci === s.curId);
+
+    const kpiStyle = 'text-align:left;background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:9px;transition:transform .2s,box-shadow .2s,border-color .2s';
+    const d = new Date(), p2 = (v) => String(v).padStart(2, '0');
+    const updatedAt = p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + '/' + d.getFullYear() + ' · ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
+
+    const kpis = [
+      { label: 'Projetos', value: '3', hint: 'Ver projetos', color: '#3B82F6', tab: 'Projetos' },
+      { label: 'Oportunidades', value: '2', hint: 'Ver CRM', color: '#EC4899', tab: 'CRM' },
+      { label: 'Em aberto', value: '€ 84.500', hint: 'Ver financeiro', color: '#F59E0B', tab: 'Financeiro', updated: updatedAt },
+      { label: 'Última atividade', value: 'Hoje', hint: 'Ver atividades', color: '#06B6D4', tab: 'Atividades' }
+    ].map(k => ({ label: k.label, value: k.value, hint: k.hint, color: k.color, updated: k.updated || '', style: kpiStyle, go: () => this.setState({ tab: k.tab }) }));
+
+    const stageStyle = (bg, fg) => 'padding:5px 11px;border-radius:999px;background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;white-space:nowrap';
+    const finBase = 'border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:8px;';
+
+    return {
+      rootRef: this.rootRef,
+      isMobile, wide,
+      kpiGrid: 'display:grid;grid-template-columns:repeat(' + ((w - (isMobile ? 0 : 258) - 68) >= 900 ? 4 : 2) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)',
+      navOpen: s.navOpen,
+      showSidebar: !isMobile || s.navOpen,
+      sidebarStyle: (isMobile
+        ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);'
+        : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') +
+        'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }),
+      closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      dashItemStyle: this.navBtn(s.active === 'Dashboard'),
+      groups: this.GROUPS.map(g => ({
+        name: g.name, dot: g.dot, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: this.navBtn(false, 'color:#CBD5E1;font-weight:600;'),
+        caretStyle: 'font-size:9px;color:#64748B;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(it => ({
+          name: it.name, badge: it.badge || '',
+          pick: () => this.setState({ active: it.name, navOpen: false, view: it.name === 'Clientes' ? 'list' : (it.name === 'Contatos' ? 'contacts' : view), viewSet: true }),
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === it.name ? '700' : '500') +
+            ';color:' + (s.active === it.name ? '#fff' : '#8C9AAE') + ';background:' + (s.active === it.name ? 'rgba(109,93,251,.26)' : 'transparent') + ';transition:background .16s,color .16s',
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === it.name ? '#6D5DFB' : '#475569'),
+          badgeStyle: 'padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);color:#94A3B8;font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:600'
+        }))
+      })),
+
+      isList: view === 'list', isNew: view === 'new', isDetail: view === 'detail', isContacts: view === 'contacts',
+
+      cQuery: s.cQuery, hasCQuery: s.cQuery !== '',
+      onCQuery: (e) => this.setState({ cQuery: e.target.value }),
+      clearCQuery: () => this.setState({ cQuery: '' }),
+      cFilters: [
+        mkCFilter('Cliente', ['Todos'].concat(this.CLIENTS.map(c => c.name))),
+        mkCFilter('Cargo', ['Todos'].concat(roles)),
+        mkCFilter('Status', ['Todos', 'Ativo', 'Inativo'])
+      ],
+      anyCFilter, clearCAll: () => this.setState({ cQuery: '', cOpenFilter: '', cFilters: { Cliente: 'Todos', Cargo: 'Todos', Status: 'Todos' } }),
+      cNoResults: cFiltered.length === 0,
+      cHasRows: cFiltered.length > 0,
+      cCountLabel: cFiltered.length + (cFiltered.length === 1 ? ' contato' : ' contatos') + (anyCFilter ? ' encontrado' + (cFiltered.length === 1 ? '' : 's') : ''),
+      cMainLabel: (function (n) { return n + (n === 1 ? ' marcado como principal' : ' marcados como principal'); })(cFiltered.filter(c => this.isMain(c)).length),
+      cRows: cFiltered.map(c => {
+        const col = this.ST[c.status];
+        return {
+          name: c.name, role: c.role, email: c.email, phone: c.phone, status: c.status,
+          statusDot: col[2], statusStyle: this.statusStyle(c.status),
+          avatar: c.av, initials: this.initials(c.name),
+          main: this.isMain(c),
+          client: this.CLIENTS[c.ci].name, clientColor: this.CDOT[c.ci],
+          openClient: () => this.setState({ view: 'detail', viewSet: true, curId: c.ci, tab: 'Contatos', active: 'Clientes' }),
+          edit: () => this.flash('Editando ' + c.name),
+          rowStyle: (wide
+            ? 'display:grid;grid-template-columns:1.9fr 1.6fr 1fr 1.7fr 1.1fr .9fr 92px;align-items:center;'
+            : 'display:flex;flex-wrap:wrap;align-items:center;') +
+            'gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;transition:background .16s'
+        };
+      }),
+
+      goNew: () => this.setState({ view: 'new', viewSet: true, quickOpen: false }),
+      goList: () => this.setState({ view: 'list', viewSet: true, saving: false }),
+      goActivities: () => this.setState({ tab: 'Atividades' }),
+
+      query: s.query, hasQuery: s.query !== '',
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      clearQuery: () => this.setState({ query: '' }),
+      filters: [
+        mkFilter('Status', ['Todos', 'Ativo', 'Em negociação', 'Inativo']),
+        mkFilter('Tipo', ['Todos', 'Empresa', 'Pessoa']),
+        mkFilter('Cidade', ['Todas', 'Bruxelas', 'Antuérpia', 'Gante', 'Liège']),
+        mkFilter('Responsável', ['Todos', 'Carlos Mendes', 'Ana Duarte', 'Rafael Lima'])
+      ],
+      anyFilter, activeChips: chips,
+      clearAll: () => this.setState({ query: '', filters: { Status: 'Todos', Tipo: 'Todos', Cidade: 'Todas', 'Responsável': 'Todos' }, openFilter: '' }),
+
+      setTable: () => this.setState({ view_mode: 'table' }),
+      setCards: () => this.setState({ view_mode: 'cards' }),
+      tableViewStyle: 'padding:9px 15px;border-radius:9px;font-size:13px;font-weight:700;background:' + (s.view_mode === 'table' ? '#EEF0FE' : 'transparent') + ';color:' + (s.view_mode === 'table' ? '#4338CA' : '#64748B') + ';transition:background .16s',
+      cardsViewStyle: 'padding:9px 15px;border-radius:9px;font-size:13px;font-weight:700;background:' + (s.view_mode === 'cards' ? '#EEF0FE' : 'transparent') + ';color:' + (s.view_mode === 'cards' ? '#4338CA' : '#64748B') + ';transition:background .16s',
+
+      stLoading: st === 'loading', stError: st === 'error',
+      stEmpty: st === 'empty', stNoResults: st === 'ready' && filtered.length === 0,
+      stTable: listOk && s.view_mode === 'table', stCards: listOk && s.view_mode === 'cards',
+      showCount: listOk, countLabel: filtered.length + (filtered.length === 1 ? ' cliente' : ' clientes') + (anyFilter ? ' encontrado' + (filtered.length === 1 ? '' : 's') : ''),
+      skeletons: [1, 2, 3, 4, 5],
+      retry: () => { this.setState({ dataState: 'loading', stateSet: true }); clearTimeout(this.sTimer); this.sTimer = setTimeout(() => this.setState({ dataState: 'ready', stateSet: true }), 1100); },
+
+      listKpiGrid: 'display:grid;grid-template-columns:repeat(' + ((w - (isMobile ? 0 : 258) - 68) >= 860 ? 4 : 2) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)',
+      listKpis: [
+        { label: 'Clientes', value: String(this.CLIENTS.length), hint: 'Total cadastrado', color: '#6D5DFB', apply: { Status: 'Todos' } },
+        { label: 'Ativos', value: String(this.CLIENTS.filter(c => c.status === 'Ativo').length), hint: 'Ver ativos', color: '#10B981', apply: { Status: 'Ativo' } },
+        { label: 'Novos', value: String(this.CLIENTS.filter(c => c.novo).length), hint: 'Nos últimos 3 meses', color: '#06B6D4', apply: null },
+        { label: 'Com projetos', value: String(this.CLIENTS.filter(c => c.np > 0).length), hint: 'Vinculados a obras', color: '#3B82F6', apply: null }
+      ].map(k => ({
+        label: k.label, value: k.value, hint: k.hint, color: k.color,
+        style: 'text-align:left;background:#fff;border:1px solid ' + (k.apply && F.Status === k.apply.Status && k.apply.Status !== 'Todos' ? '#C7C3FB' : '#E2E8F0') +
+          ';border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;transition:transform .2s,box-shadow .2s,border-color .2s',
+        go: () => { if (k.apply) this.setState(x => ({ filters: Object.assign({}, x.filters, k.apply) })); }
+      })),
+
+      rows: filtered.map(c => {
+        const i = this.CLIENTS.indexOf(c);
+        const col = this.ST[c.status];
+        return {
+          name: c.name, sub: c.sub, projects: c.projects, last: c.last,
+          contact: (this.ALLCONTACTS.filter(x => x.id === s.mainContact[i])[0] || { name: c.contact }).name,
+          email: (this.ALLCONTACTS.filter(x => x.id === s.mainContact[i])[0] || { email: c.email }).email,
+          opps: c.opps === 1 ? '1 oportunidade' : c.opps + ' oportunidades',
+          oppsStyle: 'font-size:13.5px;font-weight:' + (c.opps > 0 ? '600' : '500') + ';color:' + (c.opps > 0 ? '#BE185D' : '#94A3B8') + ';white-space:nowrap',
+          status: c.status, statusDot: col[2], statusStyle: this.statusStyle(c.status),
+          avatar: c.av, initials: this.initials(c.name),
+          open: () => this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'Visão geral' }),
+          rowStyle: (wide
+            ? 'display:grid;grid-template-columns:2.1fr 1.4fr .8fr 1.1fr 1fr .9fr 56px;align-items:center;'
+            : 'display:flex;flex-wrap:wrap;align-items:center;') +
+            'gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .16s'
+        };
+      }),
+
+      kind: s.kind,
+      pickPessoa: () => this.setState({ kind: 'Pessoa' }),
+      pickEmpresa: () => this.setState({ kind: 'Empresa' }),
+      pessoaStyle: 'padding:9px 18px;border-radius:9px;font-size:13.5px;font-weight:700;background:' + (s.kind === 'Pessoa' ? '#fff' : 'transparent') + ';color:' + (s.kind === 'Pessoa' ? '#4338CA' : '#64748B') + ';box-shadow:' + (s.kind === 'Pessoa' ? '0 2px 8px -3px rgba(15,23,42,.3)' : 'none') + ';transition:background .16s',
+      empresaStyle: 'padding:9px 18px;border-radius:9px;font-size:13.5px;font-weight:700;background:' + (s.kind === 'Empresa' ? '#fff' : 'transparent') + ';color:' + (s.kind === 'Empresa' ? '#4338CA' : '#64748B') + ';box-shadow:' + (s.kind === 'Empresa' ? '0 2px 8px -3px rgba(15,23,42,.3)' : 'none') + ';transition:background .16s',
+      nameLabel: s.kind === 'Empresa' ? 'Razão social' : 'Nome completo',
+      namePh: s.kind === 'Empresa' ? 'Nome registrado da empresa' : 'Nome do cliente',
+      docLabel: s.kind === 'Empresa' ? 'N.º de empresa / VAT' : 'Documento de identificação',
+      docPh: s.kind === 'Empresa' ? 'BE 0000.000.000 · FR 00000000000 · NL 000000000B00' : 'Registo nacional ou documento equivalente',
+      countries: ['Bélgica', 'França', 'Países Baixos', 'Luxemburgo', 'Portugal', 'Alemanha', 'Espanha', 'Outro'],
+      saveLabel: s.saving ? 'Salvando...' : 'Salvar cliente',
+      saveBtnStyle: 'padding:13px 21px;border-radius:12px;background:' + (s.saving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s;' + (s.saving ? 'pointer-events:none;' : ''),
+      save: () => {
+        this.setState({ saving: true });
+        clearTimeout(this.sTimer);
+        this.sTimer = setTimeout(() => { this.setState({ saving: false, view: 'list', viewSet: true }); this.flash('Cliente salvo com sucesso'); }, 900);
+      },
+
+      cur: {
+        name: cur.name, sub: cur.sub, avatar: cur.av, initials: this.initials(cur.name),
+        status: cur.status, statusDot: this.ST[cur.status][2], statusStyle: this.statusStyle(cur.status),
+        info: [
+          { k: 'Nome', v: cur.name }, { k: 'Tipo', v: cur.kind }, { k: cur.docKind, v: cur.doc }, { k: 'Cliente desde', v: cur.since },
+          { k: 'Telefone', v: cur.phone }, { k: 'E-mail', v: cur.email }, { k: 'Endereço', v: cur.addr },
+          { k: 'Responsável', v: cur.owner }
+        ]
+      },
+      tabs: tabs.map(t => ({
+        name: t, pick: () => this.setState({ tab: t }),
+        style: 'flex:0 0 auto;padding:12px 16px;border-radius:11px 11px 0 0;font-size:14px;font-weight:' + (s.tab === t ? '700' : '600') +
+          ';color:' + (s.tab === t ? '#4338CA' : '#64748B') + ';background:' + (s.tab === t ? '#fff' : 'transparent') +
+          ';border:1px solid ' + (s.tab === t ? '#E2E8F0' : 'transparent') + ';border-bottom:' + (s.tab === t ? '1px solid #fff' : '1px solid transparent') +
+          ';margin-bottom:-1px;white-space:nowrap;transition:background .16s,color .16s'
+      })),
+      tabOverview: s.tab === 'Visão geral', tabContacts: s.tab === 'Contatos', tabProjects: s.tab === 'Projetos',
+      tabCrm: s.tab === 'CRM', tabFinance: s.tab === 'Financeiro', tabActivities: s.tab === 'Atividades',
+      kpis,
+
+      quickOpen: s.quickOpen,
+      toggleQuick: () => this.setState(x => ({ quickOpen: !x.quickOpen })),
+      quickActions: [
+        { name: 'Nova atividade', color: '#06B6D4', done: 'Atividade registrada' },
+        { name: 'Novo contato', color: '#3B82F6', done: 'Contato criado' },
+        { name: 'Nova oportunidade', color: '#EC4899', done: 'Oportunidade criada' },
+        { name: 'Novo projeto', color: '#F97316', done: 'Projeto criado' },
+        { name: 'Nova fatura', color: '#10B981', done: 'Fatura criada' }
+      ].map(a => ({ name: a.name, color: a.color, run: () => this.flash(a.done) })),
+      toastEdit: () => this.flash('Modo de edição aberto'),
+      toastContact: () => this.flash('Novo contato criado'),
+
+      recentActs: [
+        { t: 'Ligação realizada com João Silva', w: 'Hoje — 10:30', color: '#3B82F6' },
+        { t: 'Proposta enviada', w: 'Ontem — 15:20', color: '#EC4899' },
+        { t: 'Novo projeto criado', w: '18/09/2026 — 09:40', color: '#F97316' }
+      ],
+      contactsCount: String(curContacts.length),
+      contacts: curContacts.map(c => ({
+        name: c.name, role: c.role, phone: c.phone, email: c.email, note: c.note,
+        avatar: c.av, initials: this.initials(c.name),
+        main: this.isMain(c), notMain: !this.isMain(c),
+        setMain: () => { this.setState(x => ({ mainContact: Object.assign({}, x.mainContact, { [c.ci]: c.id }) })); this.flash(c.name + ' definido como contato principal'); }
+      })),
+      projects: [
+        { n: 'Residencial Jardim Europa', owner: 'Carlos Mendes', v: '€ 185.000', pct: '78%', status: 'Em andamento', due: 'Prazo 18/11', avatar: 'linear-gradient(135deg,#6D5DFB,#3B82F6)', barStyle: 'height:100%;width:78%;border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#06B6D4);transition:transform 1s cubic-bezier(.22,.7,.2,1)' },
+        { n: 'Reforma Comercial Central', owner: 'Ana Duarte', v: '€ 96.000', pct: '42%', status: 'Em andamento', due: 'Prazo 03/12', avatar: 'linear-gradient(135deg,#F59E0B,#F97316)', barStyle: 'height:100%;width:42%;border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#06B6D4);transition:transform 1s cubic-bezier(.22,.7,.2,1)' }
+      ],
+      opportunities: [
+        { n: 'Ampliação da sede', stage: 'Proposta', v: '€ 120.000', owner: 'João', stageStyle: stageStyle('#EEF0FE', '#4338CA'), avatar: 'linear-gradient(135deg,#6D5DFB,#3B82F6)' },
+        { n: 'Nova unidade', stage: 'Negociação', v: '€ 280.000', owner: 'Carlos', stageStyle: stageStyle('#FDF2F8', '#BE185D'), avatar: 'linear-gradient(135deg,#EC4899,#F97316)' }
+      ],
+      finCards: [
+        { label: 'Total contratado', value: '€ 450.000', style: finBase + 'background:#fff;border:1px solid #E2E8F0', labelColor: '#64748B', valueColor: '#0F172A' },
+        { label: 'Recebido', value: '€ 320.000', style: finBase + 'background:#ECFDF5;border:1px solid #A7F3D0', labelColor: '#047857', valueColor: '#065F46' },
+        { label: 'A receber', value: '€ 130.000', style: finBase + 'background:#FFFBEB;border:1px solid #FDE68A', labelColor: '#B45309', valueColor: '#92400E' },
+        { label: 'Vencido', value: '€ 12.000', style: finBase + 'background:#FEF2F2;border:1px solid #FECACA', labelColor: '#B91C1C', valueColor: '#991B1B' }
+      ],
+      invoices: [
+        { no: 'Fatura #1048', v: '€ 18.500', due: '20/09/2026', label: 'Vencida', color: '#EF4444', badgeStyle: stageStyle('#FEF2F2', '#B91C1C').replace('padding:5px 11px', 'display:inline-flex;align-items:center;gap:7px;padding:5px 11px') },
+        { no: 'Fatura #1052', v: '€ 24.000', due: '05/10/2026', label: 'Em aberto', color: '#F59E0B', badgeStyle: stageStyle('#FFFBEB', '#B45309').replace('padding:5px 11px', 'display:inline-flex;align-items:center;gap:7px;padding:5px 11px') },
+        { no: 'Fatura #1041', v: '€ 32.400', due: '28/08/2026', label: 'Recebida', color: '#10B981', badgeStyle: stageStyle('#ECFDF5', '#047857').replace('padding:5px 11px', 'display:inline-flex;align-items:center;gap:7px;padding:5px 11px') },
+        { no: 'Fatura #1036', v: '€ 27.900', due: '14/08/2026', label: 'Recebida', color: '#10B981', badgeStyle: stageStyle('#ECFDF5', '#047857').replace('padding:5px 11px', 'display:inline-flex;align-items:center;gap:7px;padding:5px 11px') }
+      ],
+      timeline: [
+        { when: 'Hoje — 10:30', t: 'Ligação realizada com João Silva', meta: 'Contato • Carlos Mendes', color: '#3B82F6', bg: '#EFF6FF' },
+        { when: 'Ontem — 15:20', t: 'Proposta enviada', meta: 'Oportunidade • Ampliação da sede', color: '#EC4899', bg: '#FDF2F8' },
+        { when: '18/09/2026 — 09:40', t: 'Novo projeto criado', meta: 'Projeto • Reforma Comercial Central', color: '#F97316', bg: '#FFF7ED' },
+        { when: '15/09/2026 — 11:05', t: 'Fatura #1041 recebida', meta: 'Financeiro • € 32.400', color: '#10B981', bg: '#ECFDF5' },
+        { when: '12/09/2026 — 16:30', t: 'Contato Maria Santos adicionado', meta: 'Contato • Financeiro', color: '#06B6D4', bg: '#ECFEFF' }
+      ],
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
