@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-scroll{overflow-x:hidden;scrollbar-width:none}
+.pg-scroll::-webkit-scrollbar{width:0;height:0}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="{{ shellStyle }}">
+
+  <div style="position:fixed;top:14px;right:14px;z-index:70;display:flex;gap:4px;padding:4px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;box-shadow:0 10px 24px -14px rgba(15,23,42,.4)">
+    <button onClick="{{ pickDesktop }}" style="{{ desktopBtnStyle }}">Desktop</button>
+    <button onClick="{{ pickMobile }}" style="{{ mobileBtnStyle }}">Mobile</button>
+  </div>
+
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <div style="width:100%;max-width:1240px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-right:186px;margin-bottom:6px">
+      <div style="min-width:0;display:flex;flex-direction:column;gap:4px">
+        <h1 style="margin:0;font-size:clamp(18px,1.9vw,23px);font-weight:800;letter-spacing:-.03em">Primeiro acesso — mobile</h1>
+        <p style="margin:0;font-size:13px;color:#64748B">Ativação do convite no layout de telefone.</p>
+      </div>
+      <div style="flex:1;min-width:10px"></div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">
+        <sc-for list="{{ demos }}" as="d" hint-placeholder-count="10">
+          <button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showAside }}" hint-placeholder-val="{{ true }}">
+    <aside style="flex:0 0 44%;max-width:600px;position:relative;overflow:hidden;background:linear-gradient(150deg,#0F172A,#1E1B4B 62%,#312E81);padding:clamp(34px,4vw,56px);display:flex;flex-direction:column;gap:28px">
+      <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(620px 340px at 82% 8%,rgba(109,93,251,.32),transparent 68%),radial-gradient(520px 300px at 12% 88%,rgba(6,182,212,.22),transparent 70%)"></div>
+      <div style="position:relative;display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:19px;box-shadow:0 10px 22px -10px rgba(109,93,251,1)">P</div>
+        <span style="font-size:18px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      </div>
+      <div style="position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px">
+        <h2 style="margin:0;font-size:clamp(26px,2.8vw,38px);font-weight:800;letter-spacing:-.035em;line-height:1.12;color:#fff;max-width:16ch;text-wrap:balance">Você foi convidado para o Progesty.</h2>
+        <p style="margin:0;font-size:clamp(14.5px,1.2vw,16.5px);line-height:1.6;color:#A5B4FC;max-width:44ch;text-wrap:pretty">Defina as suas credenciais para ativar o acesso. O convite é pessoal e expira em 7 dias.</p>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-top:6px">
+          <sc-for list="{{ steps }}" as="p" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)">
+              <span style="width:24px;height:24px;border-radius:8px;background:rgba(109,93,251,.35);display:flex;align-items:center;justify-content:center;color:#C7D2FE;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;flex:0 0 auto">{{ p.n }}</span>
+              <span style="font-size:13.5px;font-weight:600;color:#E2E8F0">{{ p.t }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="position:relative;display:flex;align-items:center;gap:10px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1)">
+        <span style="width:7px;height:7px;border-radius:50%;background:#10B981;flex:0 0 auto"></span>
+        <span style="font-size:12.5px;color:#94A3B8">Convite enviado pela Gestão de Acessos da sua empresa</span>
+      </div>
+    </aside>
+  </sc-if>
+
+  <div style="{{ bezelStyle }}">
+    <div style="{{ screenStyle }}">
+
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative;z-index:3;flex:0 0 auto;height:54px;padding:16px 28px 0;display:flex;align-items:flex-start;justify-content:space-between;color:#fff;background:#12193A">
+          <span style="font-size:14px;font-weight:700;font-variant-numeric:tabular-nums">9:41</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="display:flex;align-items:flex-end;gap:2px">
+              <span style="width:3px;height:5px;border-radius:1px;background:currentColor"></span>
+              <span style="width:3px;height:7px;border-radius:1px;background:currentColor"></span>
+              <span style="width:3px;height:9px;border-radius:1px;background:currentColor"></span>
+              <span style="width:3px;height:11px;border-radius:1px;background:currentColor;opacity:.4"></span>
+            </span>
+            <span style="width:22px;height:11px;border-radius:3px;border:1.5px solid currentColor;padding:1.5px;display:flex"><span style="flex:1;border-radius:1px;background:currentColor"></span></span>
+          </div>
+        </div>
+        <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:120px;height:31px;border-radius:999px;background:#0F172A;z-index:4"></div>
+      </sc-if>
+
+      <div class="pg-scroll" style="{{ scrollStyle }}">
+
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <div style="position:relative;flex:0 0 auto;padding:4px 22px 26px;background:linear-gradient(150deg,#12193A,#1E1B4B 60%,#312E81);overflow:hidden">
+            <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(320px 180px at 86% 4%,rgba(109,93,251,.4),transparent 70%),radial-gradient(260px 160px at 6% 96%,rgba(6,182,212,.26),transparent 72%)"></div>
+            <div style="position:relative;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px">P</div>
+                <span style="font-size:15px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h2 style="margin:0;font-size:23px;font-weight:800;letter-spacing:-.035em;line-height:1.14;color:#fff;max-width:15ch;text-wrap:balance">Você foi convidado para o Progesty.</h2>
+                <p style="margin:0;font-size:13px;line-height:1.5;color:#A5B4FC;max-width:34ch;text-wrap:pretty">Defina as suas credenciais para ativar o acesso.</p>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="{{ contentStyle }}">
+          <sc-if value="{{ showLogo }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:11px;align-self:center">
+              <div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px">P</div>
+              <span style="font-size:19px;font-weight:800;letter-spacing:.06em">PROGESTY</span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isBlocked }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ cardStyle }}">
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:15px">
+                <span style="{{ blockIconStyle }}">!</span>
+                <div style="display:flex;flex-direction:column;gap:7px">
+                  <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">{{ blockTitle }}</span>
+                  <span style="font-size:14.5px;color:#64748B;line-height:1.5;text-wrap:pretty">{{ blockText }}</span>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <button onClick="{{ runBlockPrimary }}" style="{{ primaryStyle }}">{{ blockPrimary }}</button>
+                <button onClick="{{ runBlockSecondary }}" style="{{ ghostStyle }}">{{ blockSecondary }}</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ successCardStyle }}">
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:15px">
+                <span style="width:58px;height:58px;border-radius:18px;background:#ECFDF5;border:1px solid #A7F3D0;display:flex;align-items:center;justify-content:center;color:#047857;font-size:27px;font-weight:800">✓</span>
+                <div style="display:flex;flex-direction:column;gap:7px">
+                  <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Seu acesso foi ativado.</span>
+                  <span style="font-size:14.5px;color:#64748B;line-height:1.5;text-wrap:pretty">Use o e-mail ou o nome de usuário que você acabou de definir para entrar.</span>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px;padding:4px 0">
+                <sc-for list="{{ summary }}" as="i" hint-placeholder-count="3">
+                  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9">
+                    <span style="flex:0 0 118px;font-size:12.5px;font-weight:600;color:#64748B">{{ i.k }}</span>
+                    <span style="flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right;word-break:break-all">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <button onClick="{{ goLogin }}" style="{{ primaryStyle }}">Entrar no Progesty</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isForm }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ cardStyle }}">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h1 style="{{ titleStyle }}">Ativar acesso</h1>
+                <p style="margin:0;font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">Confirme os seus dados e escolha uma senha para entrar no Progesty.</p>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;background:#EEF0FE;border:1px solid #DDD9FD">
+                <span style="width:30px;height:30px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                  <span style="width:13px;height:10px;border-radius:2px;border:1.5px solid #6D5DFB"></span>
+                </span>
+                <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+                  <span style="font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#4338CA">Convite para</span>
+                  <span style="font-size:14px;font-weight:700;color:#312E81;word-break:break-all">{{ inviteMail }}</span>
+                </div>
+              </div>
+
+              <sc-if value="{{ banner }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ bannerStyle }}">
+                  <span style="{{ bannerIconStyle }}">!</span>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                    <span style="font-size:13.5px;font-weight:700;line-height:1.35;color:{{ bannerTitleColor }}">{{ bannerTitle }}</span>
+                    <span style="font-size:12.5px;line-height:1.45;color:{{ bannerTextColor }};text-wrap:pretty">{{ bannerText }}</span>
+                  </div>
+                </div>
+              </sc-if>
+
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <label for="pg-name" style="font-size:12.5px;font-weight:600;color:#475569">Nome completo</label>
+                <input id="pg-name" value="{{ name }}" onInput="{{ onName }}" autocomplete="name" placeholder="Como o seu nome aparece no sistema" style="{{ nameInputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+                <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}">
+                  <span style="{{ errorTextStyle }}"><span style="width:5px;height:5px;border-radius:50%;background:#EF4444;flex:0 0 auto"></span>{{ nameError }}</span>
+                </sc-if>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <label for="pg-alias" style="font-size:12.5px;font-weight:600;color:#475569">Nome de usuário</label>
+                <input id="pg-alias" value="{{ alias }}" onInput="{{ onAlias }}" autocomplete="username" placeholder="nome.sobrenome" style="{{ aliasInputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+                <sc-if value="{{ aliasError }}" hint-placeholder-val="{{ false }}">
+                  <span style="{{ errorTextStyle }}"><span style="width:5px;height:5px;border-radius:50%;background:#EF4444;flex:0 0 auto"></span>{{ aliasError }}</span>
+                </sc-if>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <label for="pg-pass" style="font-size:12.5px;font-weight:600;color:#475569">Senha</label>
+                <div style="{{ passWrapStyle }}">
+                  <input id="pg-pass" type="{{ passType }}" value="{{ pass }}" onInput="{{ onPass }}" autocomplete="new-password" placeholder="••••••••" style="flex:1;min-width:0;height:100%;padding:0 4px 0 13px;border:0;outline:none;background:transparent;font-size:14.5px;color:#0F172A">
+                  <button onClick="{{ toggleReveal }}" aria-label="{{ revealLabel }}" style="{{ revealBtnStyle }}">{{ revealLabel }}</button>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:3px">
+                  <div style="flex:1;height:6px;border-radius:999px;background:#F1F5F9;overflow:hidden">
+                    <div style="{{ strengthBarStyle }}"></div>
+                  </div>
+                  <span style="font-size:11.5px;font-weight:700;color:{{ strengthColor }};white-space:nowrap">{{ strengthLabel }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;margin-top:5px">
+                  <sc-for list="{{ rules }}" as="r" hint-placeholder-count="4">
+                    <span style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:{{ r.color }}">
+                      <span style="{{ r.dotStyle }}">{{ r.mark }}</span>{{ r.t }}
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <label for="pg-pass2" style="font-size:12.5px;font-weight:600;color:#475569">Confirmar senha</label>
+                <input id="pg-pass2" type="{{ passType }}" value="{{ pass2 }}" onInput="{{ onPass2 }}" autocomplete="new-password" placeholder="••••••••" style="{{ pass2InputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+                <sc-if value="{{ pass2Error }}" hint-placeholder-val="{{ false }}">
+                  <span style="{{ errorTextStyle }}"><span style="width:5px;height:5px;border-radius:50%;background:#EF4444;flex:0 0 auto"></span>{{ pass2Error }}</span>
+                </sc-if>
+                <sc-if value="{{ pass2Ok }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#047857">
+                    <span style="width:5px;height:5px;border-radius:50%;background:#10B981;flex:0 0 auto"></span>As senhas coincidem.
+                  </span>
+                </sc-if>
+              </div>
+
+              <button onClick="{{ toggleTerms }}" style="display:flex;align-items:flex-start;gap:11px;text-align:left">
+                <span style="{{ termsBoxStyle }}">{{ termsMark }}</span>
+                <span style="font-size:13px;font-weight:600;color:#475569;line-height:1.45">Aceito os <a href="#termos">Termos de Uso</a> e a <a href="#privacidade">Política de Privacidade</a>.</span>
+              </button>
+              <sc-if value="{{ termsError }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ errorTextStyle }}"><span style="width:5px;height:5px;border-radius:50%;background:#EF4444;flex:0 0 auto"></span>{{ termsError }}</span>
+              </sc-if>
+
+              <button onClick="{{ submit }}" style="{{ submitStyle }}">
+                <sc-if value="{{ isSaving }}" hint-placeholder-val="{{ false }}">
+                  <span style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+                </sc-if>
+                {{ submitLabel }}
+              </button>
+
+              <div style="display:flex;align-items:center;gap:11px;padding-top:16px;border-top:1px solid #F1F5F9">
+                <span style="width:30px;height:30px;border-radius:10px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                  <span style="width:11px;height:11px;border-radius:3px;background:#6D5DFB"></span>
+                </span>
+                <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">O e-mail do convite não pode ser alterado. Para trocá-lo, fale com o administrador.</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px">
+              <span style="font-size:12px;color:#94A3B8">Estados:</span>
+              <sc-for list="{{ demos }}" as="d" hint-placeholder-count="10">
+                <button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+            <span style="align-self:center;font-size:11.5px;color:#94A3B8">© 2026 Progesty · Gestão para empresas da construção civil</span>
+          </sc-if>
+        </div>
+      </div>
+
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:0 0 auto;height:26px;display:flex;align-items:center;justify-content:center;background:#F8FAFC">
+          <span style="width:134px;height:5px;border-radius:999px;background:#0F172A;opacity:.85"></span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ toastStyle }}">
+          <span style="width:19px;height:19px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:11px;font-weight:800;flex:0 0 auto">✓</span>
+          {{ toast }}
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;idle&quot;,&quot;required&quot;,&quot;weak&quot;,&quot;mismatch&quot;,&quot;terms&quot;,&quot;saving&quot;,&quot;done&quot;,&quot;expired&quot;,&quot;invalid&quot;,&quot;used&quot;,&quot;error&quot;],&quot;default&quot;:&quot;idle&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Estado&quot;}}">
+class Component extends DCLogic {
+  state = {
+    mode: 'desktop', w: 1400,
+    name: 'Carlos Mendes', alias: '', pass: '', pass2: '', reveal: false, terms: false,
+    status: 'idle', statusSet: false, touched: false, toast: ''
+  };
+
+  INVITE = 'carlos.mendes@construtorahorizonte.be';
+
+  BLOCKS = {
+    expired: { title: 'Este convite expirou', text: 'Convites são válidos por 7 dias. Solicite um novo convite ao administrador da sua empresa.', bg: '#FFF7ED', bd: '#FED7AA', color: '#C2410C', primary: 'Solicitar novo convite', secondary: 'Voltar para o login' },
+    invalid: { title: 'Link inválido', text: 'Este link de ativação não é reconhecido. Confirme se abriu o endereço completo recebido por e-mail.', bg: '#FEF2F2', bd: '#FECACA', color: '#B91C1C', primary: 'Solicitar novo convite', secondary: 'Voltar para o login' },
+    used: { title: 'Convite já utilizado', text: 'Este acesso já foi ativado. Entre com as suas credenciais ou recupere a senha.', bg: '#F1F5F9', bd: '#E2E8F0', color: '#475569', primary: 'Entrar no Progesty', secondary: 'Recuperar senha' }
+  };
+
+  BANNERS = {
+    required: { title: 'Preencha os campos obrigatórios', text: 'Nome, usuário e senha são necessários para ativar o acesso.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+    weak: { title: 'Senha fraca', text: 'Atenda a todos os requisitos abaixo antes de continuar.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+    mismatch: { title: 'As senhas não coincidem', text: 'Digite a mesma senha nos dois campos.', bg: '#FEF2F2', bd: '#FECACA', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' },
+    error: { title: 'Não foi possível ativar', text: 'Houve uma falha ao ativar o acesso. Verifique a conexão e tente novamente.', bg: '#FEF2F2', bd: '#FECACA', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' }
+  };
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() { window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth }); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tTimer); clearTimeout(this.sTimer); }
+
+  get status() { return this.state.statusSet ? this.state.status : (this.props.initialState || 'idle'); }
+
+  flash(msg) {
+    clearTimeout(this.tTimer);
+    this.setState({ toast: msg });
+    this.tTimer = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  setStatus(v, extra) { this.setState(Object.assign({ status: v, statusSet: true }, extra || {})); }
+
+  edit(patch) {
+    const clears = ['required', 'weak', 'mismatch', 'terms', 'error'].indexOf(this.status) >= 0;
+    this.setState(Object.assign({}, patch, clears ? { status: 'idle', statusSet: true, touched: false } : null));
+  }
+
+  checks(p) {
+    return [
+      { t: 'Ao menos 8 caracteres', ok: p.length >= 8 },
+      { t: 'Uma letra maiúscula e uma minúscula', ok: /[a-z]/.test(p) && /[A-Z]/.test(p) },
+      { t: 'Ao menos um número', ok: /\d/.test(p) },
+      { t: 'Ao menos um símbolo (!@#$...)', ok: /[^\w\s]/.test(p) }
+    ];
+  }
+
+  activate = () => {
+    const s = this.state;
+    if (!s.name.trim() || !s.alias.trim() || !s.pass || !s.pass2) { this.setStatus('required', { touched: true }); return; }
+    if (this.checks(s.pass).filter(c => !c.ok).length) { this.setStatus('weak', { touched: true }); return; }
+    if (s.pass !== s.pass2) { this.setStatus('mismatch', { touched: true }); return; }
+    if (!s.terms) { this.setStatus('terms', { touched: true }); return; }
+    this.setStatus('saving', { touched: true });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => this.setStatus('done'), 1200);
+  };
+
+  renderVals() {
+    const s = this.state, st = this.status, mobile = s.mode === 'mobile';
+    const wide = !mobile && s.w >= 1000;
+    const saving = st === 'saving', done = st === 'done';
+    const blocked = !!this.BLOCKS[st];
+    const b = this.BANNERS[st];
+    const rules = this.checks(s.pass);
+    const okCount = rules.filter(r => r.ok).length;
+    const strength = s.pass ? okCount : 0;
+    const sInfo = [
+      { l: 'Muito fraca', c: '#EF4444' }, { l: 'Fraca', c: '#F97316' },
+      { l: 'Média', c: '#F59E0B' }, { l: 'Boa', c: '#3B82F6' }, { l: 'Forte', c: '#10B981' }
+    ][strength];
+
+    const missName = st === 'required' && !s.name.trim();
+    const missAlias = st === 'required' && !s.alias.trim();
+    const missPass = st === 'required' && !s.pass;
+    const mismatch = st === 'mismatch';
+
+    const field = (bad, h) => 'height:' + (h || (mobile ? 50 : 46)) + 'px;padding:0 13px;border-radius:' + (mobile ? 14 : 12) + 'px;border:1px solid ' +
+      (bad ? '#FCA5A5' : '#E2E8F0') + ';background:' + (bad ? '#FEF2F2' : (mobile ? '#fff' : '#F8FAFC')) +
+      ';font-size:' + (mobile ? 15 : 14.5) + 'px;outline:none;color:#0F172A;transition:border-color .18s,background .18s';
+
+    const cardBase = 'background:#fff;border-radius:' + (mobile ? 20 : 22) + 'px;padding:' + (mobile ? '22px 18px' : 'clamp(24px,3vw,32px)') +
+      ';display:flex;flex-direction:column;gap:' + (mobile ? 16 : 18) + 'px;' + (mobile ? '' : 'box-shadow:0 30px 60px -44px rgba(15,23,42,.55);');
+
+    return {
+      isMobile: mobile, isDesktop: !mobile, showAside: wide, showLogo: !mobile && !wide,
+      shellStyle: 'position:relative;min-height:100vh;color:#0F172A;font-family:\'Plus Jakarta Sans\',system-ui,sans-serif;display:flex;background:' +
+        (mobile ? '#EEF1F6;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(20px,3vw,40px) 16px' : '#F8FAFC'),
+      pickDesktop: () => this.setState({ mode: 'desktop' }),
+      pickMobile: () => this.setState({ mode: 'mobile' }),
+      desktopBtnStyle: 'padding:8px 15px;border-radius:9px;font-size:12.5px;font-weight:700;background:' + (mobile ? 'transparent' : '#EEF0FE') + ';color:' + (mobile ? '#64748B' : '#4338CA'),
+      mobileBtnStyle: 'padding:8px 15px;border-radius:9px;font-size:12.5px;font-weight:700;background:' + (mobile ? '#EEF0FE' : 'transparent') + ';color:' + (mobile ? '#4338CA' : '#64748B'),
+
+      bezelStyle: mobile
+        ? 'width:390px;max-width:100%;height:844px;border-radius:52px;background:#0F172A;padding:11px;box-shadow:0 50px 90px -40px rgba(15,23,42,.65);flex:0 0 auto'
+        : 'flex:1;min-width:0;display:flex',
+      screenStyle: mobile
+        ? 'position:relative;width:100%;height:100%;border-radius:42px;overflow:hidden;background:#F8FAFC;display:flex;flex-direction:column'
+        : 'position:relative;flex:1;min-width:0;display:flex;flex-direction:column',
+      scrollStyle: mobile
+        ? 'flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column'
+        : 'flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(56px,5vw,64px) clamp(16px,3vw,40px) clamp(24px,4vw,44px)',
+      contentStyle: mobile
+        ? 'flex:1;min-height:0;margin-top:-16px;border-radius:22px 22px 0 0;background:#F8FAFC;padding:22px 18px 24px;display:flex;flex-direction:column;gap:16px'
+        : 'width:100%;max-width:452px;display:flex;flex-direction:column;gap:20px',
+
+      steps: [{ n: '01', t: 'Confira o e-mail do convite' }, { n: '02', t: 'Defina usuário e senha' }, { n: '03', t: 'Entre no Progesty' }],
+      inviteMail: this.INVITE,
+
+      isForm: !done && !blocked, isDone: done, isBlocked: blocked, isSaving: saving,
+      cardStyle: cardBase + 'border:1px solid #E2E8F0',
+      successCardStyle: cardBase + 'border:1px solid #A7F3D0;animation:pgFade .3s cubic-bezier(.22,.7,.2,1)',
+      titleStyle: 'margin:0;font-size:' + (mobile ? 21 : 24) + 'px;font-weight:800;letter-spacing:-.03em',
+
+      blockTitle: blocked ? this.BLOCKS[st].title : '',
+      blockText: blocked ? this.BLOCKS[st].text : '',
+      blockPrimary: blocked ? this.BLOCKS[st].primary : '',
+      blockSecondary: blocked ? this.BLOCKS[st].secondary : '',
+      runBlockPrimary: () => {
+        if (st === 'used') { this.flash('Abrindo o login do Progesty'); return; }
+        this.flash('Pedido de novo convite enviado');
+      },
+      runBlockSecondary: () => {
+        if (st === 'used') { this.flash('Abrindo recuperação de senha'); return; }
+        this.flash('Abrindo o login do Progesty');
+      },
+      blockIconStyle: 'width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:800;background:' +
+        (blocked ? this.BLOCKS[st].bg : '#F1F5F9') + ';border:1px solid ' + (blocked ? this.BLOCKS[st].bd : '#E2E8F0') + ';color:' + (blocked ? this.BLOCKS[st].color : '#475569'),
+
+      banner: !!b, bannerTitle: b ? b.title : '', bannerText: b ? b.text : '',
+      bannerTitleColor: b ? b.titleColor : '', bannerTextColor: b ? b.textColor : '',
+      bannerStyle: 'display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;animation:pgFade .26s cubic-bezier(.22,.7,.2,1);background:' + (b ? b.bg : '#fff') + ';border:1px solid ' + (b ? b.bd : '#E2E8F0'),
+      bannerIconStyle: 'width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:' + (b ? b.iconBg : '#F1F5F9') + ';color:' + (b ? b.iconColor : '#64748B'),
+
+      name: s.name, alias: s.alias, pass: s.pass, pass2: s.pass2,
+      onName: (e) => this.edit({ name: e.target.value }),
+      onAlias: (e) => this.edit({ alias: e.target.value }),
+      onPass: (e) => this.edit({ pass: e.target.value }),
+      onPass2: (e) => this.edit({ pass2: e.target.value }),
+      nameInputStyle: field(missName), aliasInputStyle: field(missAlias), pass2InputStyle: field(mismatch),
+      passWrapStyle: 'display:flex;align-items:center;height:' + (mobile ? 50 : 46) + 'px;border-radius:' + (mobile ? 14 : 12) + 'px;border:1px solid ' +
+        (missPass ? '#FCA5A5' : '#E2E8F0') + ';background:' + (missPass ? '#FEF2F2' : (mobile ? '#fff' : '#F8FAFC')) + ';transition:border-color .18s,background .18s',
+      errorTextStyle: 'display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#B91C1C',
+      nameError: missName ? 'Informe o seu nome completo.' : '',
+      aliasError: missAlias ? 'Escolha um nome de usuário.' : '',
+      pass2Error: mismatch ? 'A confirmação não coincide com a senha.' : '',
+      pass2Ok: s.pass !== '' && s.pass2 !== '' && s.pass === s.pass2 && !mismatch,
+
+      passType: s.reveal ? 'text' : 'password',
+      revealLabel: s.reveal ? 'Ocultar' : 'Mostrar',
+      revealBtnStyle: 'flex:0 0 auto;display:flex;align-items:center;height:' + (mobile ? 36 : 32) + 'px;margin-right:' + (mobile ? 7 : 6) + 'px;padding:0 12px;border-radius:9px;background:#F1F5F9;font-size:12px;font-weight:700;color:#475569',
+      toggleReveal: () => this.setState(x => ({ reveal: !x.reveal })),
+
+      strengthLabel: s.pass ? sInfo.l : 'Defina a senha',
+      strengthColor: s.pass ? sInfo.c : '#94A3B8',
+      strengthBarStyle: 'height:100%;border-radius:999px;transition:width .3s cubic-bezier(.22,.7,.2,1),background .3s;width:' +
+        (strength / 4 * 100) + '%;background:' + (s.pass ? sInfo.c : '#E2E8F0'),
+      rules: rules.map(r => ({
+        t: r.t, color: r.ok ? '#047857' : '#64748B',
+        mark: r.ok ? '✓' : '',
+        dotStyle: 'width:16px;height:16px;border-radius:5px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;background:' +
+          (r.ok ? '#10B981' : '#E2E8F0')
+      })),
+
+      toggleTerms: () => this.edit({ terms: !s.terms }),
+      termsMark: s.terms ? '✓' : '',
+      termsBoxStyle: 'width:20px;height:20px;border-radius:6px;flex:0 0 auto;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;border:2px solid ' +
+        (s.terms ? '#6D5DFB' : (st === 'terms' ? '#FCA5A5' : '#CBD5E1')) + ';background:' + (s.terms ? '#6D5DFB' : '#fff') + ';transition:border-color .16s,background .16s',
+      termsError: st === 'terms' ? 'É necessário aceitar os termos para ativar o acesso.' : '',
+
+      submitLabel: saving ? 'Ativando acesso...' : 'Ativar acesso',
+      submitStyle: 'display:flex;align-items:center;justify-content:center;gap:10px;min-height:' + (mobile ? 54 : 50) + 'px;border-radius:' + (mobile ? 15 : 13) + 'px;font-size:15.5px;font-weight:700;color:#fff;background:' +
+        (saving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';box-shadow:0 16px 30px -16px rgba(109,93,251,1);' + (saving ? 'pointer-events:none;' : ''),
+      primaryStyle: 'display:flex;align-items:center;justify-content:center;min-height:' + (mobile ? 54 : 50) + 'px;border-radius:' + (mobile ? 15 : 13) + 'px;font-size:15.5px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6D5DFB,#5145CD);box-shadow:0 16px 30px -16px rgba(109,93,251,1)',
+      ghostStyle: 'min-height:' + (mobile ? 50 : 46) + 'px;border-radius:' + (mobile ? 14 : 13) + 'px;font-size:14.5px;font-weight:700;color:#5145CD',
+      submit: this.activate,
+
+      summary: [
+        { k: 'Nome', v: s.name || 'Carlos Mendes' },
+        { k: 'E-mail', v: this.INVITE },
+        { k: 'Usuário', v: s.alias || 'carlos.mendes' }
+      ],
+      goLogin: () => this.flash('Abrindo o login do Progesty'),
+      requestNew: () => this.flash('Pedido de novo convite enviado'),
+
+      toastStyle: (mobile
+        ? 'position:absolute;left:50%;bottom:44px;max-width:300px;'
+        : 'position:fixed;left:50%;bottom:26px;max-width:calc(100vw - 32px);') +
+        'transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:11px;padding:13px 18px;border-radius:13px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 24px 46px -22px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1)',
+      toast: s.toast,
+
+      demos: [
+        { name: 'Inicial', run: () => this.setState({ status: 'idle', statusSet: true, touched: false, alias: '', pass: '', pass2: '', terms: false }) },
+        { name: 'Obrigatórios', run: () => this.setState({ status: 'required', statusSet: true, touched: true, alias: '', pass: '', pass2: '' }) },
+        { name: 'Senha fraca', run: () => this.setState({ status: 'weak', statusSet: true, touched: true, alias: 'carlos.mendes', pass: 'carlos', pass2: 'carlos' }) },
+        { name: 'Senhas diferentes', run: () => this.setState({ status: 'mismatch', statusSet: true, touched: true, alias: 'carlos.mendes', pass: 'Obra2026!', pass2: 'Obra2026' }) },
+        { name: 'Termos', run: () => this.setState({ status: 'terms', statusSet: true, touched: true, alias: 'carlos.mendes', pass: 'Obra2026!', pass2: 'Obra2026!', terms: false }) },
+        { name: 'Ativando', run: () => this.setState({ status: 'saving', statusSet: true, alias: 'carlos.mendes', pass: 'Obra2026!', pass2: 'Obra2026!', terms: true }) },
+        { name: 'Ativado', run: () => this.setState({ status: 'done', statusSet: true, alias: 'carlos.mendes', pass: 'Obra2026!', pass2: 'Obra2026!', terms: true }) },
+        { name: 'Expirado', run: () => this.setState({ status: 'expired', statusSet: true }) },
+        { name: 'Inválido', run: () => this.setState({ status: 'invalid', statusSet: true }) },
+        { name: 'Já utilizado', run: () => this.setState({ status: 'used', statusSet: true }) },
+        { name: 'Erro', run: () => this.setState({ status: 'error', statusSet: true, alias: 'carlos.mendes', pass: 'Obra2026!', pass2: 'Obra2026!', terms: true }) }
+      ].map(d => ({
+        name: d.name, run: d.run,
+        style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B;transition:border-color .16s,color .16s'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
