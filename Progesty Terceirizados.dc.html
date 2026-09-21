@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button>
+      </sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="{{ dashItemStyle }}">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto">
+          <span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span>
+          <span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span>
+        </span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="6">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}">
+                  <span style="{{ it.dotStyle }}"></span>
+                  <span style="flex:1;text-align:left">{{ it.name }}</span>
+                  <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ it.badgeStyle }}">{{ it.badge }}</span>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column">
+        <span style="font-size:13px;font-weight:700;color:#E2E8F0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Carlos Mendes</span>
+        <span style="font-size:11px;color:#94A3B8">Super Usuário</span>
+      </div>
+    </div>
+  </aside>
+</sc-if>
+
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div>
+</sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto">
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+          </button>
+        </sc-if>
+        <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Terceirizados</h1>
+          <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Gerencie as empresas subcontratadas, seus responsáveis e equipes.</p>
+        </div>
+        <button onClick="{{ goNew }}" style="flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:13px 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s,box-shadow .18s" style-hover="transform:translateY(-1px);box-shadow:0 20px 34px -14px rgba(109,93,251,1)">
+          <span style="font-size:17px;line-height:1">+</span>Novo terceirizado
+        </button>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="{{ kpiGrid }}">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <button onClick="{{ k.go }}" style="{{ k.style }}">
+              <span style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span>
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">{{ k.label }}</span>
+              </span>
+              <span style="font-size:clamp(21px,2.3vw,28px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ k.value }}</span>
+              <span style="font-size:11.5px;font-weight:600;color:#64748B">{{ k.hint }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;transition:border-color .18s" style-hover="border-color:#C7C3FB">
+            <span style="width:14px;height:14px;border-radius:50%;border:2px solid #64748B;flex:0 0 auto"></span>
+            <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Pesquisar por empresa, número fiscal ou responsável..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clearQuery }}" aria-label="Limpar" style="width:22px;height:22px;border-radius:7px;background:#F1F5F9;color:#64748B;font-size:12px;line-height:1">✕</button>
+            </sc-if>
+          </div>
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+            <div style="position:relative;flex:0 0 auto">
+              <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}">
+                <span style="color:#64748B;font-weight:600">{{ f.label }}</span>{{ f.value }}<span style="font-size:9px;color:#64748B">▼</span>
+              </button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div class="pg-scroll" style="position:absolute;top:calc(100% + 8px);left:0;min-width:210px;max-height:280px;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                  <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4">
+                    <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Filtros ativos:</span>
+            <sc-for list="{{ activeChips }}" as="c" hint-placeholder-count="2">
+              <button onClick="{{ c.clear }}" style="display:flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:12.5px;font-weight:700">{{ c.t }}<span style="font-size:11px;opacity:.7">✕</span></button>
+            </sc-for>
+            <button onClick="{{ clearAll }}" style="font-size:12.5px;font-weight:700;color:#64748B">Limpar tudo</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:14px;padding:12px 6px">
+                <div class="pg-sk" style="width:40px;height:40px;border-radius:12px;flex:0 0 auto"></div>
+                <div style="flex:1 1 180px;display:flex;flex-direction:column;gap:7px"><div class="pg-sk" style="height:12px;width:46%"></div><div class="pg-sk" style="height:10px;width:30%"></div></div>
+                <div class="pg-sk" style="width:110px;height:11px;flex:0 0 auto"></div>
+                <div class="pg-sk" style="width:90px;height:24px;border-radius:999px;flex:0 0 auto"></div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stError }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #FECACA;border-radius:20px;padding:clamp(28px,4vw,52px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:52px;height:52px;border-radius:16px;background:#FEF2F2;border:1px solid #FECACA;display:flex;align-items:center;justify-content:center;color:#B91C1C;font-size:24px;font-weight:800">!</span>
+            <span style="font-size:19px;font-weight:800;letter-spacing:-.02em">Não foi possível carregar os terceirizados</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:44ch;text-wrap:pretty">Verifique a sua conexão e tente novamente. Se o problema continuar, entre em contato com o suporte.</span>
+            <button onClick="{{ retry }}" style="margin-top:4px;padding:13px 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700">Tentar novamente</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#FFF7ED;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#F59E0B,#F97316)"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Você ainda não possui terceirizados</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Cadastre a primeira empresa subcontratada para vincular equipes e acompanhar as obras.</span>
+            <button onClick="{{ goNew }}" style="margin-top:4px;display:flex;align-items:center;gap:9px;padding:13px 21px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)"><span style="font-size:17px;line-height:1">+</span>Novo terceirizado</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stNoResults }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:50%;border:3px solid #64748B"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhum terceirizado encontrado</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Tente alterar os filtros ou realizar uma nova busca.</span>
+            <button onClick="{{ clearAll }}" style="margin-top:4px;padding:13px 21px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Limpar filtros</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px">
+              <div style="{{ headRowStyle }}">
+                <span style="{{ thStyle }}">Empresa</span>
+                <sc-if value="{{ colVat }}" hint-placeholder-val="{{ true }}"><span style="{{ thStyle }}">Número fiscal</span></sc-if>
+                <span style="{{ thStyle }}">Responsável</span>
+                <sc-if value="{{ colPhone }}" hint-placeholder-val="{{ true }}"><span style="{{ thStyle }}">Telefone</span></sc-if>
+                <span style="{{ thStyle }}">Equipe</span>
+                <span style="{{ thStyle }}">Obras ativas</span>
+                <span style="{{ thStyle }}">Status</span>
+                <span style="{{ thStyle }}"></span>
+              </div>
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+                <div style="{{ r.rowStyle }}">
+                  <button onClick="{{ r.open }}" style="display:flex;align-items:center;gap:12px;min-width:0;text-align:left">
+                    <span style="{{ r.avatarStyle }}">{{ r.initials }}</span>
+                    <span style="min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.trade }}</span>
+                      <span style="font-size:11.5px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.specLabel }}</span>
+                    </span>
+                  </button>
+                  <sc-if value="{{ colVat }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#475569;white-space:nowrap">{{ r.vat }}</span>
+                  </sc-if>
+                  <span style="font-size:13px;font-weight:600;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.lead }}</span>
+                  <sc-if value="{{ colPhone }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B;white-space:nowrap">{{ r.phone }}</span>
+                  </sc-if>
+                  <span style="{{ r.crewStyle }}">{{ r.crew }}</span>
+                  <span style="font-size:13px;font-weight:600;color:#475569;white-space:nowrap">{{ r.works }}</span>
+                  <span style="{{ r.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.statusDot }};flex:0 0 auto"></span>{{ r.status }}</span>
+                  <div style="position:relative;display:flex;justify-content:flex-end">
+                    <button onClick="{{ r.toggleMenu }}" aria-label="Ações" style="{{ r.menuBtnStyle }}">⋯</button>
+                    <sc-if value="{{ r.menuOpen }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;top:calc(100% + 6px);right:0;min-width:200px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                        <sc-for list="{{ r.actions }}" as="a" hint-placeholder-count="4">
+                          <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isCards }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+                <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px">
+                  <div style="display:flex;align-items:flex-start;gap:12px">
+                    <button onClick="{{ r.open }}" style="display:flex;align-items:flex-start;gap:12px;min-width:0;flex:1;text-align:left">
+                      <span style="{{ r.avatarStyle }}">{{ r.initials }}</span>
+                      <span style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ r.trade }}</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ r.vat }}</span>
+                        <span style="font-size:12.5px;color:#475569">{{ r.specLabel }}</span>
+                      </span>
+                    </button>
+                    <div style="position:relative;flex:0 0 auto">
+                      <button onClick="{{ r.toggleMenu }}" aria-label="Ações" style="{{ r.menuBtnStyle }}">⋯</button>
+                      <sc-if value="{{ r.menuOpen }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:absolute;top:calc(100% + 6px);right:0;min-width:200px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                          <sc-for list="{{ r.actions }}" as="a" hint-placeholder-count="4">
+                            <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px">
+                    <span style="{{ r.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.statusDot }};flex:0 0 auto"></span>{{ r.status }}</span>
+                    <span style="{{ r.crewStyle }}">{{ r.crew }}</span>
+                    <span style="display:inline-flex;align-items:center;padding:5px 11px;border-radius:999px;background:#F1F5F9;color:#475569;font-size:12px;font-weight:700">{{ r.works }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid #F1F5F9">
+                    <span style="font-size:11.5px;font-weight:600;color:#64748B">{{ r.lead }}</span>
+                    <div style="flex:1"></div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#475569">{{ r.phone }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <span style="font-size:12.5px;color:#64748B">{{ countLabel }}</span>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+        <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,34px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+          <button onClick="{{ goList }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+          <span style="{{ cur.avatarStyle }}">{{ cur.initials }}</span>
+          <div style="min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:5px">
+            <h1 style="margin:0;font-size:clamp(19px,2.1vw,26px);font-weight:800;letter-spacing:-.03em">{{ cur.trade }}</h1>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+              <span style="{{ cur.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ cur.statusDot }};flex:0 0 auto"></span>{{ cur.status }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B">{{ cur.vat }}</span>
+              <span style="font-size:13px;color:#64748B">{{ cur.specLabel }}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:9px;flex:0 0 auto">
+            <button onClick="{{ goEdit }}" style="padding:12px 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700">Editar</button>
+            <div style="position:relative">
+              <button onClick="{{ toggleDetailMenu }}" style="display:flex;align-items:center;gap:8px;padding:12px 17px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14px;font-weight:700;box-shadow:0 14px 26px -14px rgba(109,93,251,1)">Ações<span style="font-size:9px;opacity:.85">▼</span></button>
+              <sc-if value="{{ detailMenuOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 8px);right:0;min-width:210px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                  <sc-for list="{{ cur.actions }}" as="a" hint-placeholder-count="4">
+                    <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+        <div class="pg-scroll" style="padding:14px clamp(16px,2.4vw,34px) 0;display:flex;gap:4px;overflow-x:auto">
+          <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="6">
+            <button onClick="{{ tb.pick }}" style="{{ tb.style }}">
+              {{ tb.name }}
+              <sc-if value="{{ tb.badge }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ tb.badgeStyle }}">{{ tb.badge }}</span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="{{ kpiGrid }}">
+          <sc-for list="{{ cur.summary }}" as="k" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px">
+              <span style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span>
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">{{ k.label }}</span>
+              </span>
+              <span style="font-size:clamp(19px,2.1vw,25px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ k.value }}</span>
+              <span style="font-size:11.5px;font-weight:600;color:#64748B">{{ k.hint }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ tabGeral }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.5vw,16px);align-items:flex-start">
+            <div style="flex:1 1 380px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Dados da empresa</span>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ cur.company }}" as="i" hint-placeholder-count="6">
+                  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9">
+                    <span style="flex:0 0 140px;font-size:12.5px;font-weight:600;color:#64748B">{{ i.k }}</span>
+                    <span style="{{ i.style }}">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Contato e endereço</span>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <sc-for list="{{ cur.contact }}" as="i" hint-placeholder-count="4">
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9">
+                      <span style="flex:0 0 120px;font-size:12.5px;font-weight:600;color:#64748B">{{ i.k }}</span>
+                      <span style="{{ i.style }}">{{ i.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:14px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Especialidades</span>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ cur.specs }}" as="sp" hint-placeholder-count="2">
+                    <span style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#FFF7ED;color:#C2410C;font-size:13px;font-weight:700">
+                      <span style="width:7px;height:7px;border-radius:50%;background:#F97316"></span>{{ sp }}
+                    </span>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ cur.notes }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:13px;color:#475569;line-height:1.5;padding-top:14px;border-top:1px solid #F1F5F9;text-wrap:pretty">{{ cur.notes }}</span>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabLeads }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Responsáveis</span>
+              <span style="padding:3px 9px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ cur.leadCount }}</span>
+              <div style="flex:1;min-width:10px"></div>
+              <button onClick="{{ goEdit }}" style="padding:11px 16px;border-radius:11px;border:1px solid #C7C3FB;background:#fff;color:#4338CA;font-size:13.5px;font-weight:700">Gerenciar responsáveis</button>
+            </div>
+            <div style="{{ leadGrid }}">
+              <sc-for list="{{ cur.leads }}" as="l" hint-placeholder-count="2">
+                <div style="border:1px solid #E2E8F0;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:13px;background:#FCFDFE">
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <span style="{{ l.avatarStyle }}">{{ l.initials }}</span>
+                    <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                      <span style="font-size:14.5px;font-weight:700;letter-spacing:-.02em">{{ l.name }}</span>
+                      <span style="{{ l.roleStyle }}">{{ l.role }}</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid #F1F5F9">
+                    <span style="font-size:12.5px;color:#475569;word-break:break-all">{{ l.mail }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B">{{ l.phone }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabEquipe }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+            <div style="display:flex;align-items:flex-start;gap:13px;padding:15px;border-radius:16px;background:#ECFEFF;border:1px solid #A5F3FC">
+              <span style="width:30px;height:30px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:11px;height:11px;border-radius:3px;background:#06B6D4"></span></span>
+              <div style="min-width:0;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:13.5px;font-weight:700;color:#155E75">Funcionários vinculados, não duplicados</span>
+                <span style="font-size:12.5px;color:#0E7490;line-height:1.45;text-wrap:pretty">Cada pessoa continua sendo um registro individual no módulo Funcionários. Aqui você define apenas o vínculo com este terceirizado.</span>
+              </div>
+            </div>
+
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px;padding:clamp(16px,1.8vw,20px)">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Equipe</span>
+                <span style="padding:3px 9px;border-radius:999px;background:#ECFEFF;color:#0E7490;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ cur.crewCount }}</span>
+                <div style="flex:1;min-width:10px"></div>
+                <button onClick="{{ openPicker }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 12px 24px -14px rgba(109,93,251,1)"><span style="font-size:15px;line-height:1">+</span>Adicionar funcionário</button>
+              </div>
+
+              <sc-if value="{{ cur.hasCrew }}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+                  <div style="{{ crewHeadStyle }}">
+                    <span style="{{ thStyle }}">Funcionário</span>
+                    <span style="{{ thStyle }}">Função</span>
+                    <sc-if value="{{ colPhone }}" hint-placeholder-val="{{ true }}"><span style="{{ thStyle }}">Telefone</span></sc-if>
+                    <span style="{{ thStyle }}">Valor/hora</span>
+                    <span style="{{ thStyle }}">Veículo</span>
+                    <span style="{{ thStyle }}">Status</span>
+                    <span style="{{ thStyle }}"></span>
+                  </div>
+                </sc-if>
+                <sc-for list="{{ cur.crew }}" as="c" hint-placeholder-count="3">
+                  <div style="{{ c.rowStyle }}">
+                    <div style="display:flex;align-items:center;gap:12px;min-width:0">
+                      <span style="{{ c.avatarStyle }}">{{ c.initials }}</span>
+                      <span style="min-width:0;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+                    </div>
+                    <span style="font-size:13px;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.role }}</span>
+                    <sc-if value="{{ colPhone }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B;white-space:nowrap">{{ c.phone }}</span>
+                    </sc-if>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;white-space:nowrap">{{ c.rate }}</span>
+                    <span style="{{ c.vehicleStyle }}">{{ c.vehicle }}</span>
+                    <span style="{{ c.statusStyle }}">{{ c.status }}</span>
+                    <div style="display:flex;justify-content:flex-end">
+                      <button onClick="{{ c.unlink }}" aria-label="Desvincular" style="width:32px;height:32px;border-radius:9px;background:transparent;color:#64748B;font-size:13px;flex:0 0 auto;transition:background .16s,color .16s" style-hover="background:#FEF2F2;color:#B91C1C">✕</button>
+                    </div>
+                  </div>
+                </sc-for>
+              </sc-if>
+              <sc-if value="{{ cur.noCrew }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 clamp(16px,1.8vw,20px) clamp(16px,1.8vw,20px);padding:30px 20px;border-radius:15px;background:#F8FAFC;border:1px dashed #CBD5E1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px">
+                  <span style="font-size:15px;font-weight:700">Nenhum funcionário vinculado</span>
+                  <span style="font-size:13px;color:#64748B;line-height:1.45;max-width:40ch;text-wrap:pretty">Vincule funcionários já cadastrados para que possam ser alocados no planejamento das obras.</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabComercial }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.5vw,16px);align-items:flex-start">
+            <div style="flex:1 1 360px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Dados comerciais</span>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ cur.commercial }}" as="i" hint-placeholder-count="5">
+                  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9">
+                    <span style="flex:0 0 150px;font-size:12.5px;font-weight:600;color:#64748B">{{ i.k }}</span>
+                    <span style="{{ i.style }}">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+                <span style="width:28px;height:28px;border-radius:9px;background:#fff;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:10px;height:10px;border-radius:3px;background:#64748B"></span></span>
+                <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">O valor/hora aqui é a referência do contrato. Medições e custos reais serão lançados no módulo Financeiro.</span>
+              </div>
+            </div>
+            <div style="flex:1 1 300px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:14px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Obras relacionadas</span>
+              <sc-if value="{{ cur.hasWorks }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ cur.worksList }}" as="ob" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0">
+                      <span style="width:4px;align-self:stretch;min-height:30px;border-radius:99px;background:{{ ob.color }};flex:0 0 auto"></span>
+                      <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px">
+                        <span style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ob.name }}</span>
+                        <span style="font-size:12px;color:#64748B">{{ ob.role }}</span>
+                      </div>
+                      <span style="{{ ob.statusStyle }}">{{ ob.status }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ cur.noWorks }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:24px 16px;border-radius:14px;background:#F8FAFC;border:1px dashed #CBD5E1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px">
+                  <span style="font-size:14px;font-weight:700">Nenhuma obra ativa</span>
+                  <span style="font-size:12.5px;color:#64748B;line-height:1.45;max-width:32ch;text-wrap:pretty">Este terceirizado não está alocado em frentes de trabalho no momento.</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabDocs }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Documentação</span>
+              <span style="padding:3px 9px;border-radius:999px;background:#EFF6FF;color:#1D4ED8;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ cur.docCount }}</span>
+              <div style="flex:1;min-width:10px"></div>
+              <button onClick="{{ addDoc }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:#475569" style-hover="border-color:#C7C3FB;color:#4338CA"><span style="font-size:15px;line-height:1">+</span>Adicionar documento</button>
+            </div>
+            <sc-if value="{{ cur.hasDocs }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ cur.docs }}" as="dc" hint-placeholder-count="4">
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;padding:14px 15px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0;transition:background .18s,border-color .18s" style-hover="background:#fff;border-color:#C7C3FB">
+                    <span style="width:36px;height:36px;border-radius:11px;background:{{ dc.bg }};display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:{{ dc.color }};flex:0 0 auto">PDF</span>
+                    <div style="min-width:0;flex:1 1 200px;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:14px;font-weight:700">{{ dc.name }}</span>
+                      <span style="font-size:12px;color:#64748B">{{ dc.kind }} · {{ dc.size }}</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end">
+                      <span style="font-size:11px;font-weight:600;color:#64748B">Válido até</span>
+                      <span style="{{ dc.validStyle }}">{{ dc.valid }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ cur.noDocs }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:30px 20px;border-radius:15px;background:#F8FAFC;border:1px dashed #CBD5E1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px">
+                <span style="font-size:15px;font-weight:700">Nenhum documento anexado</span>
+                <span style="font-size:13px;color:#64748B;line-height:1.45;max-width:42ch;text-wrap:pretty">Anexe contrato, certificados, documentação fiscal e seguros para manter o cadastro completo.</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabHist }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ cur.history }}" as="h" hint-placeholder-count="3">
+              <div style="display:flex;gap:16px">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto">
+                  <span style="width:32px;height:32px;border-radius:11px;background:{{ h.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                    <span style="width:11px;height:11px;border-radius:3.5px;background:{{ h.color }}"></span>
+                  </span>
+                  <span style="flex:1;width:2px;border-radius:99px;background:#F1F5F9;min-height:14px"></span>
+                </div>
+                <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:4px;padding-bottom:20px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#64748B">{{ h.when }}</span>
+                  <span style="font-size:14.5px;font-weight:700;letter-spacing:-.015em;line-height:1.35">{{ h.t }}</span>
+                  <span style="font-size:12.5px;color:#64748B">por {{ h.who }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isForm }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <button onClick="{{ tryCancel }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(19px,2vw,25px);font-weight:800;letter-spacing:-.03em">{{ formTitle }}</h1>
+          <p style="margin:0;font-size:13.5px;color:#64748B;text-wrap:pretty">{{ formSub }}</p>
+        </div>
+        <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}">
+          <span style="display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:#FFFBEB;border:1px solid #FDE68A;color:#B45309;font-size:12.5px;font-weight:700;flex:0 0 auto">
+            <span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span>Alterações não salvas
+          </span>
+        </sc-if>
+        <div style="display:flex;gap:10px;flex:0 0 auto">
+          <button onClick="{{ tryCancel }}" style="padding:13px 19px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+          <button onClick="{{ save }}" style="{{ saveBtnStyle }}">
+            <sc-if value="{{ isSaving }}" hint-placeholder-val="{{ false }}">
+              <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+            </sc-if>
+            {{ saveLabel }}
+          </button>
+        </div>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px)">
+        <div style="max-width:960px;display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+          <sc-if value="{{ formBanner }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ formBannerStyle }}">
+              <span style="{{ formBannerIconStyle }}">!</span>
+              <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                <span style="font-size:13.5px;font-weight:700;line-height:1.35;color:{{ formBannerTitleColor }}">{{ formBannerTitle }}</span>
+                <span style="font-size:12.5px;line-height:1.45;color:{{ formBannerTextColor }};text-wrap:pretty">{{ formBannerText }}</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-for list="{{ formSections }}" as="sec" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:18px">
+              <div style="display:flex;align-items:center;gap:11px">
+                <span style="{{ sec.numStyle }}">{{ sec.num }}</span>
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">{{ sec.title }}</span>
+              </div>
+              <div style="{{ fieldGrid }}">
+                <sc-for list="{{ sec.fields }}" as="f" hint-placeholder-count="6">
+                  <div style="{{ f.wrapStyle }}">
+                    <span style="font-size:12.5px;font-weight:600;color:#475569">{{ f.label }}<sc-if value="{{ f.req }}" hint-placeholder-val="{{ false }}"><span style="color:#EF4444"> *</span></sc-if></span>
+                    <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                      <input value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+                    </sc-if>
+                    <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                      <select value="{{ f.value }}" onChange="{{ f.onInput }}" style="{{ f.selectStyle }}">
+                        <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4"><option>{{ o }}</option></sc-for>
+                      </select>
+                    </sc-if>
+                    <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}">
+                      <textarea rows="2" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.areaStyle }}" style-focus="border-color:#6D5DFB;background:#fff"></textarea>
+                    </sc-if>
+                    <sc-if value="{{ f.error }}" hint-placeholder-val="{{ false }}">
+                      <span style="{{ errTextStyle }}"><span style="{{ errDotStyle }}"></span>{{ f.error }}</span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="width:28px;height:28px;border-radius:9px;background:#FFF7ED;color:#C2410C;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex:0 0 auto">04</span>
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Especialidades</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ specChips }}" as="sp" hint-placeholder-count="9">
+                <button onClick="{{ sp.toggle }}" style="{{ sp.style }}"><span style="{{ sp.boxStyle }}">{{ sp.mark }}</span>{{ sp.name }}</button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ errSpecs }}" hint-placeholder-val="{{ false }}">
+              <span style="{{ errTextStyle }}"><span style="{{ errDotStyle }}"></span>{{ errSpecs }}</span>
+            </sc-if>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:11px">
+              <span style="width:28px;height:28px;border-radius:9px;background:#FDF2F8;color:#BE185D;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;flex:0 0 auto">05</span>
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Responsáveis</span>
+              <div style="flex:1;min-width:10px"></div>
+              <button onClick="{{ addLead }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;border:1px solid #C7C3FB;background:#fff;color:#4338CA;font-size:13.5px;font-weight:700"><span style="font-size:15px;line-height:1">+</span>Adicionar responsável</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ leadRows }}" as="l" hint-placeholder-count="2">
+                <div style="border:1px solid #E2E8F0;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px;background:#FCFDFE">
+                  <div style="display:flex;align-items:center;gap:11px">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#64748B">Responsável {{ l.num }}</span>
+                    <div style="flex:1"></div>
+                    <sc-if value="{{ l.canRemove }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ l.remove }}" aria-label="Remover" style="width:30px;height:30px;border-radius:9px;background:transparent;color:#64748B;font-size:13px;flex:0 0 auto;transition:background .16s,color .16s" style-hover="background:#FEF2F2;color:#B91C1C">✕</button>
+                    </sc-if>
+                  </div>
+                  <div style="{{ fieldGrid }}">
+                    <sc-for list="{{ l.fields }}" as="f" hint-placeholder-count="4">
+                      <div style="display:flex;flex-direction:column;gap:7px">
+                        <span style="font-size:12.5px;font-weight:600;color:#475569">{{ f.label }}<sc-if value="{{ f.req }}" hint-placeholder-val="{{ false }}"><span style="color:#EF4444"> *</span></sc-if></span>
+                        <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                          <input value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+                        </sc-if>
+                        <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                          <select value="{{ f.value }}" onChange="{{ f.onInput }}" style="{{ f.selectStyle }}">
+                            <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4"><option>{{ o }}</option></sc-for>
+                          </select>
+                        </sc-if>
+                        <sc-if value="{{ f.error }}" hint-placeholder-val="{{ false }}">
+                          <span style="{{ errTextStyle }}"><span style="{{ errDotStyle }}"></span>{{ f.error }}</span>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+            <button onClick="{{ tryCancel }}" style="padding:14px 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Cancelar</button>
+            <button onClick="{{ save }}" style="{{ saveBtnStyle }}">
+              <sc-if value="{{ isSaving }}" hint-placeholder-val="{{ false }}">
+                <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+              </sc-if>
+              {{ saveLabel }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="padding:0 clamp(16px,2.4vw,34px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="8">
+      <button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button>
+    </sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ picker }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:91;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closePicker }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(540px,100%);max-height:84vh;background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:16px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">Vincular funcionário</span>
+          <span style="font-size:13px;color:#64748B">Escolha entre os funcionários já cadastrados.</span>
+        </div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closePicker }}" aria-label="Fechar" style="width:38px;height:38px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B">✕</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0">
+        <span style="width:14px;height:14px;border-radius:50%;border:2px solid #64748B;flex:0 0 auto"></span>
+        <input value="{{ pickerQuery }}" onInput="{{ onPickerQuery }}" placeholder="Pesquisar funcionário..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;color:#0F172A">
+      </div>
+      <div class="pg-scroll" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ pickerList }}" as="p" hint-placeholder-count="4">
+          <button onClick="{{ p.add }}" style="{{ p.style }}">
+            <span style="{{ p.avatarStyle }}">{{ p.initials }}</span>
+            <span style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px;text-align:left">
+              <span style="font-size:14px;font-weight:700">{{ p.name }}</span>
+              <span style="font-size:12px;color:#64748B">{{ p.meta }}</span>
+            </span>
+            <sc-if value="{{ p.linked }}" hint-placeholder-val="{{ false }}">
+              <span style="padding:4px 10px;border-radius:999px;background:#ECFEFF;color:#0E7490;font-size:11px;font-weight:700;white-space:nowrap">{{ p.linkedLabel }}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+        <sc-if value="{{ noPickerResults }}" hint-placeholder-val="{{ false }}">
+          <span style="padding:16px;border-radius:12px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#64748B;text-align:center">Nenhum funcionário encontrado.</span>
+        </sc-if>
+      </div>
+      <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">Um funcionário pertence a um empregador por vez. Ao vincular aqui, o vínculo anterior é encerrado com registro no histórico.</span>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ confirm }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:92;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeConfirm }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(470px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <span style="{{ confirmIconStyle }}">{{ confirmIcon }}</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ confirmTitle }}</span>
+          <span style="font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">{{ confirmText }}</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+        <span style="{{ confirmTargetStyle }}">{{ confirmInitials }}</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ confirmName }}</span>
+          <span style="font-size:12px;color:#64748B">{{ confirmMeta }}</span>
+        </div>
+      </div>
+      <sc-if value="{{ confirmError }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:flex-start;gap:11px;padding:13px;border-radius:13px;background:#FEF2F2;border:1px solid #FECACA">
+          <span style="width:24px;height:24px;border-radius:8px;background:#FEE2E2;color:#B91C1C;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 auto">!</span>
+          <span style="font-size:12.5px;font-weight:600;color:#B91C1C;line-height:1.45;text-wrap:pretty">Não foi possível concluir a ação. Verifique a conexão e tente novamente.</span>
+        </div>
+      </sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeConfirm }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+        <button onClick="{{ runConfirm }}" style="{{ confirmBtnStyle }}">
+          <sc-if value="{{ confirmBusy }}" hint-placeholder-val="{{ false }}">
+            <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+          </sc-if>
+          {{ confirmCta }}
+        </button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ confirmLeave }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:93;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ keepEditing }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(450px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <span style="width:44px;height:44px;border-radius:14px;background:#FFFBEB;border:1px solid #FDE68A;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex:0 0 auto">!</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em;line-height:1.25">Alterações não salvas</span>
+          <span style="font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">Você possui alterações que ainda não foram salvas. Deseja sair sem salvar?</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ keepEditing }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Continuar editando</button>
+        <button onClick="{{ discard }}" style="display:flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:linear-gradient(135deg,#EF4444,#DC2626);box-shadow:0 14px 28px -14px rgba(239,68,68,.9)">Sair sem salvar</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>
+    {{ toast }}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;list&quot;,&quot;detail&quot;,&quot;new&quot;,&quot;edit&quot;],&quot;default&quot;:&quot;list&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;listState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;empty&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;failConfirm&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'list', viewSet: false, w: 1400, navOpen: false, active: 'Terceirizados',
+    open: { Comercial: false, Clientes: false, Projetos: false, Pessoas: true, Financeiro: false, 'Configurações': false },
+    query: '', filters: { Status: 'Todos', Especialidade: 'Todas', Equipe: 'Todas' }, openFilter: '',
+    dataState: 'ready', stateSet: false,
+    curId: 0, rowMenu: -1, detailMenu: false, tab: 'geral',
+    form: null, dirty: false, formStatus: 'idle', saving: false,
+    confirm: null, confirmBusy: false, confirmError: false, confirmLeave: false,
+    picker: false, pickerQuery: '',
+    data: null, toast: ''
+  };
+
+  NAV = [
+    { name: 'Comercial', dot: '#EC4899', items: [{ name: 'CRM' }, { name: 'Leads' }, { name: 'Oportunidades' }] },
+    { name: 'Clientes', dot: '#3B82F6', items: [{ name: 'Clientes' }, { name: 'Contatos' }] },
+    { name: 'Projetos', dot: '#F97316', items: [{ name: 'Projetos / Obras' }, { name: 'Tarefas' }, { name: 'Documentos' }] },
+    { name: 'Pessoas', dot: '#06B6D4', items: [{ name: 'Funcionários' }, { name: 'Terceirizados', count: true }, { name: 'Veículos' }] },
+    { name: 'Financeiro', dot: '#10B981', items: [{ name: 'Contas a Receber' }, { name: 'Contas a Pagar' }, { name: 'Faturas' }, { name: 'Fluxo de Caixa' }] },
+    { name: 'Configurações', dot: '#64748B', items: [{ name: 'Empresa' }, { name: 'Usuários' }, { name: 'Gestão de Acessos' }] }
+  ];
+
+  SPECS = ['Alvenaria', 'Eletricidade', 'Canalização', 'Pintura', 'Carpintaria', 'Estruturas', 'Demolição', 'Terraplanagem', 'Outros'];
+
+  ROLES = ['Gestor', 'Responsável operacional', 'Responsável administrativo', 'Financeiro'];
+
+  DOC_TYPES = ['Contrato', 'Certificado', 'Documentação fiscal', 'Seguro', 'Outro'];
+
+  CREW = [
+    { id: 'f1', name: 'Tiago Nunes', role: 'Eletricista', phone: '+32 470 88 99 00', rate: 24.5, status: 'Ativo', vehicle: 'Van 1-ABC-234', firm: 'EletroSul', av: 'linear-gradient(135deg,#06B6D4,#3B82F6)' },
+    { id: 'f2', name: 'Alice Moreira', role: 'Eletricista', phone: '+32 470 01 23 45', rate: 23.0, status: 'Ativo', vehicle: '—', firm: 'EletroSul', av: 'linear-gradient(135deg,#EC4899,#8B5CF6)' },
+    { id: 'f3', name: 'Hugo Teixeira', role: 'Pintor', phone: '+32 470 11 44 55', rate: 19.5, status: 'Ativo', vehicle: '—', firm: 'Pinturas Nova', av: 'linear-gradient(135deg,#F59E0B,#EC4899)' },
+    { id: 'f4', name: 'João Silva', role: 'Encarregado', phone: '+32 470 55 66 77', rate: 28.0, status: 'Ativo', vehicle: 'Carrinha 2-XYZ-871', firm: 'Construtora Alpha', av: 'linear-gradient(135deg,#3B82F6,#06B6D4)' },
+    { id: 'f5', name: 'Nuno Ferreira', role: 'Servente', phone: '+32 470 78 90 12', rate: 17.0, status: 'Afastado', vehicle: '—', firm: 'Construtora Alpha', av: 'linear-gradient(135deg,#F97316,#F59E0B)' },
+    { id: 'f6', name: 'Marcos Pereira', role: 'Canalizador', phone: '+32 470 66 77 88', rate: 25.0, status: 'Ativo', vehicle: '—', firm: 'Serviços Beta', av: 'linear-gradient(135deg,#F97316,#EC4899)' },
+    { id: 'f7', name: 'Ricardo Sá', role: 'Canalizador', phone: '+32 470 56 78 90', rate: 22.5, status: 'Inativo', vehicle: '—', firm: 'Serviços Beta', av: 'linear-gradient(135deg,#EF4444,#F97316)' },
+    { id: 'f8', name: 'Diana Costa', role: 'Soldadora', phone: '+32 470 23 45 67', rate: 26.0, status: 'Ativo', vehicle: '—', firm: 'HidroTec', av: 'linear-gradient(135deg,#06B6D4,#10B981)' },
+    { id: 'f9', name: 'Sérgio Matos', role: 'Operador de máquina', phone: '+32 470 34 78 12', rate: 27.5, status: 'Ativo', vehicle: 'Escavadora E-220', firm: 'Terra Forte', av: 'linear-gradient(135deg,#8B5CF6,#3B82F6)' },
+    { id: 'f10', name: 'Paulo Mendes', role: 'Carpinteiro', phone: '+32 470 90 12 34', rate: 21.0, status: 'Ativo', vehicle: '—', firm: null, av: 'linear-gradient(135deg,#10B981,#06B6D4)' },
+    { id: 'f11', name: 'Rita Lopes', role: 'Pintora', phone: '+32 470 45 67 89', rate: 19.0, status: 'Ativo', vehicle: '—', firm: null, av: 'linear-gradient(135deg,#EC4899,#F59E0B)' }
+  ];
+
+  seed() {
+    return [
+      {
+        id: 't1', legal: 'EletroSul Instalações BV', trade: 'EletroSul', vat: 'BE 0741.220.118', reg: 'RPM Bruxelas 0741.220.118',
+        type: 'Sociedade limitada (BV)', status: 'Ativo', since: '14/03/2025', specs: ['Eletricidade'],
+        mail: 'contato@eletrosul.be', phone: '+32 2 512 44 10', site: 'eletrosul.be',
+        street: 'Rue de Birmingham', number: '88', extra: 'Unidade 3', zip: '1070', city: 'Anderlecht', region: 'Bruxelas-Capital', country: 'Bélgica',
+        leads: [
+          { name: 'Tiago Nunes', role: 'Responsável operacional', mail: 'tiago@eletrosul.be', phone: '+32 470 88 99 00' },
+          { name: 'Sandra Beco', role: 'Responsável administrativo', mail: 'sandra@eletrosul.be', phone: '+32 2 512 44 12' }
+        ],
+        rate: 24.0, terms: 'Faturação mensal por medição, 30 dias', start: '14/03/2025', end: '', rel: 'Em vigor',
+        notes: 'Equipe habitual das instalações elétricas nas obras residenciais.',
+        works: 2,
+        docs: [
+          { name: 'Contrato de subcontratação 2026', kind: 'Contrato', date: '02/01/2026', size: '318 KB', valid: '31/12/2026' },
+          { name: 'Certificado de conformidade elétrica', kind: 'Certificado', date: '14/03/2025', size: '124 KB', valid: '14/03/2027' },
+          { name: 'Apólice de seguro de responsabilidade', kind: 'Seguro', date: '10/01/2026', size: '206 KB', valid: '10/01/2027' },
+          { name: 'Atestado fiscal', kind: 'Documentação fiscal', date: '05/09/2026', size: '88 KB', valid: '05/12/2026' }
+        ],
+        history: [
+          { when: '18/09/2026 — 14:30', t: 'Funcionária Alice Moreira vinculada à equipe', who: 'Carlos Mendes', color: '#06B6D4', bg: '#ECFEFF' },
+          { when: '02/01/2026 — 09:15', t: 'Contrato de subcontratação renovado', who: 'Ana Duarte', color: '#6D5DFB', bg: '#EEF0FE' },
+          { when: '14/03/2025 — 11:00', t: 'Terceirizado cadastrado', who: 'Carlos Mendes', color: '#64748B', bg: '#F1F5F9' }
+        ]
+      },
+      {
+        id: 't2', legal: 'Construtora Alpha BV', trade: 'Construtora Alpha', vat: 'BE 0688.451.902', reg: 'RPM Gante 0688.451.902',
+        type: 'Sociedade limitada (BV)', status: 'Ativo', since: '09/01/2026', specs: ['Alvenaria', 'Estruturas'],
+        mail: 'obras@construtoraalpha.be', phone: '+32 9 224 18 70', site: 'construtoraalpha.be',
+        street: 'Korenmarkt', number: '14', extra: '', zip: '9000', city: 'Gante', region: 'Flandres Oriental', country: 'Bélgica',
+        leads: [
+          { name: 'João Silva', role: 'Gestor', mail: 'joao@construtoraalpha.be', phone: '+32 470 55 66 77' }
+        ],
+        rate: 26.5, terms: 'Medição quinzenal, pagamento a 45 dias', start: '09/01/2026', end: '', rel: 'Em vigor',
+        notes: 'Executa estrutura e alvenaria no Edifício Central.',
+        works: 3,
+        docs: [
+          { name: 'Contrato de subcontratação', kind: 'Contrato', date: '09/01/2026', size: '402 KB', valid: '31/03/2027' },
+          { name: 'Apólice de seguro', kind: 'Seguro', date: '09/01/2026', size: '198 KB', valid: '09/01/2027' }
+        ],
+        history: [
+          { when: '11/09/2026 — 16:40', t: 'Valor/hora padrão atualizado para € 26,50', who: 'Sofia Martins', color: '#10B981', bg: '#ECFDF5' },
+          { when: '09/01/2026 — 10:20', t: 'Terceirizado cadastrado', who: 'Carlos Mendes', color: '#64748B', bg: '#F1F5F9' }
+        ]
+      },
+      {
+        id: 't3', legal: 'Serviços Beta BV', trade: 'Serviços Beta', vat: 'BE 0712.883.441', reg: 'RPM Liège 0712.883.441',
+        type: 'Sociedade limitada (BV)', status: 'Ativo', since: '22/04/2026', specs: ['Canalização'],
+        mail: 'geral@servicosbeta.be', phone: '+32 4 221 66 30', site: 'servicosbeta.be',
+        street: 'Rue Saint-Gilles', number: '120', extra: 'Piso 1', zip: '4000', city: 'Liège', region: 'Valónia', country: 'Bélgica',
+        leads: [
+          { name: 'Marcos Pereira', role: 'Responsável operacional', mail: 'marcos@servicosbeta.be', phone: '+32 470 66 77 88' }
+        ],
+        rate: 23.5, terms: 'Faturação por obra concluída', start: '22/04/2026', end: '', rel: 'Em vigor',
+        notes: '',
+        works: 1,
+        docs: [
+          { name: 'Contrato de prestação', kind: 'Contrato', date: '22/04/2026', size: '276 KB', valid: '22/04/2027' }
+        ],
+        history: [
+          { when: '22/04/2026 — 15:05', t: 'Terceirizado cadastrado', who: 'Ana Duarte', color: '#64748B', bg: '#F1F5F9' }
+        ]
+      },
+      {
+        id: 't4', legal: 'Pinturas Nova BV', trade: 'Pinturas Nova', vat: 'BE 0755.190.267', reg: 'RPM Antuérpia 0755.190.267',
+        type: 'Empresário individual', status: 'Ativo', since: '30/08/2026', specs: ['Pintura'],
+        mail: 'nova@pinturasnova.be', phone: '+32 3 226 77 41', site: '',
+        street: 'Meir', number: '54', extra: '', zip: '2000', city: 'Antuérpia', region: 'Antuérpia', country: 'Bélgica',
+        leads: [
+          { name: 'Hugo Teixeira', role: 'Gestor', mail: 'hugo@pinturasnova.be', phone: '+32 470 11 44 55' }
+        ],
+        rate: 19.5, terms: 'Pagamento a 30 dias', start: '30/08/2026', end: '', rel: 'Em vigor',
+        notes: '',
+        works: 1,
+        docs: [],
+        history: [
+          { when: '30/08/2026 — 09:50', t: 'Terceirizado cadastrado', who: 'Carlos Mendes', color: '#64748B', bg: '#F1F5F9' }
+        ]
+      },
+      {
+        id: 't5', legal: 'HidroTec Soluções BV', trade: 'HidroTec', vat: 'BE 0699.312.554', reg: 'RPM Bruxelas 0699.312.554',
+        type: 'Sociedade limitada (BV)', status: 'Inativo', since: '06/08/2025', specs: ['Canalização', 'Estruturas'],
+        mail: 'contato@hidrotec.be', phone: '+32 2 640 90 12', site: 'hidrotec.be',
+        street: 'Avenue Louise', number: '210', extra: '', zip: '1050', city: 'Bruxelas', region: 'Bruxelas-Capital', country: 'Bélgica',
+        leads: [
+          { name: 'Diana Costa', role: 'Responsável operacional', mail: 'diana@hidrotec.be', phone: '+32 470 23 45 67' }
+        ],
+        rate: 26.0, terms: 'Faturação mensal', start: '06/08/2025', end: '31/07/2026', rel: 'Encerrada',
+        notes: 'Relação encerrada após a conclusão do Galpão Logístico Sul.',
+        works: 0,
+        docs: [
+          { name: 'Contrato encerrado 2025/2026', kind: 'Contrato', date: '06/08/2025', size: '341 KB', valid: '31/07/2026' }
+        ],
+        history: [
+          { when: '31/07/2026 — 17:20', t: 'Relação comercial encerrada', who: 'Sofia Martins', color: '#EF4444', bg: '#FEF2F2' },
+          { when: '06/08/2025 — 10:00', t: 'Terceirizado cadastrado', who: 'Carlos Mendes', color: '#64748B', bg: '#F1F5F9' }
+        ]
+      },
+      {
+        id: 't6', legal: 'Terra Forte Movimentação BV', trade: 'Terra Forte', vat: 'BE 0768.004.319', reg: 'RPM Namur 0768.004.319',
+        type: 'Sociedade limitada (BV)', status: 'Ativo', since: '17/02/2026', specs: ['Terraplanagem', 'Demolição'],
+        mail: 'operacoes@terraforte.be', phone: '+32 81 220 44 05', site: 'terraforte.be',
+        street: 'Chaussée de Marche', number: '301', extra: '', zip: '5000', city: 'Namur', region: 'Valónia', country: 'Bélgica',
+        leads: [
+          { name: 'Sérgio Matos', role: 'Responsável operacional', mail: 'sergio@terraforte.be', phone: '+32 470 34 78 12' },
+          { name: 'Luís Prado', role: 'Financeiro', mail: 'financeiro@terraforte.be', phone: '+32 81 220 44 08' }
+        ],
+        rate: 31.0, terms: 'Aluguer de máquina com operador, faturação semanal', start: '17/02/2026', end: '', rel: 'Em vigor',
+        notes: 'Traz máquina própria. Confirmar seguro antes de cada mobilização.',
+        works: 2,
+        docs: [
+          { name: 'Contrato de movimentação de terras', kind: 'Contrato', date: '17/02/2026', size: '388 KB', valid: '17/02/2027' },
+          { name: 'Seguro de equipamentos', kind: 'Seguro', date: '17/02/2026', size: '212 KB', valid: '30/11/2026' }
+        ],
+        history: [
+          { when: '05/09/2026 — 08:30', t: 'Seguro de equipamentos próximo do vencimento', who: 'Sistema', color: '#F59E0B', bg: '#FFFBEB' },
+          { when: '17/02/2026 — 14:10', t: 'Terceirizado cadastrado', who: 'Ana Duarte', color: '#64748B', bg: '#F1F5F9' }
+        ]
+      }
+    ];
+  }
+
+  ST = { 'Ativo': ['#ECFDF5', '#047857', '#10B981'], 'Inativo': ['#F1F5F9', '#475569', '#94A3B8'] };
+  CST = { 'Ativo': ['#ECFDF5', '#047857'], 'Afastado': ['#FFFBEB', '#B45309'], 'Inativo': ['#F1F5F9', '#475569'] };
+
+  TONES = {
+    red: { bg: '#FEF2F2', bd: '#FECACA', color: '#B91C1C', btn: 'linear-gradient(135deg,#EF4444,#DC2626)', shadow: 'rgba(239,68,68,.9)' },
+    amber: { bg: '#FFFBEB', bd: '#FDE68A', color: '#B45309', btn: 'linear-gradient(135deg,#F59E0B,#D97706)', shadow: 'rgba(245,158,11,.9)' },
+    green: { bg: '#ECFDF5', bd: '#A7F3D0', color: '#047857', btn: 'linear-gradient(135deg,#10B981,#059669)', shadow: 'rgba(16,185,129,.9)' },
+    violet: { bg: '#EEF0FE', bd: '#DDD9FD', color: '#4338CA', btn: 'linear-gradient(135deg,#6D5DFB,#5145CD)', shadow: 'rgba(109,93,251,.95)' }
+  };
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  onDocClick = (ev) => {
+    if ((this.state.rowMenu >= 0 || this.state.detailMenu || this.state.openFilter) && !ev.target.closest('button')) {
+      this.setState({ rowMenu: -1, detailMenu: false, openFilter: '' });
+    }
+  };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    document.addEventListener('click', this.onDocClick);
+    this.setState({ w: window.innerWidth });
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('click', this.onDocClick);
+    clearTimeout(this.tTimer); clearTimeout(this.sTimer);
+  }
+
+  get data() { if (!this._seed) this._seed = this.seed(); return this.state.data || this._seed; }
+  get view() { return this.state.viewSet ? this.state.view : (this.props.initialView || 'list'); }
+  get dataState() { return this.state.stateSet ? this.state.dataState : (this.props.listState || 'ready'); }
+
+  initials(n) { return n.split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase(); }
+  eur(v) { return '€ ' + v.toFixed(2).replace('.', ','); }
+  crewOf(trade) { return this.CREW.filter(c => c.firm === trade); }
+
+  flash(msg) {
+    clearTimeout(this.tTimer);
+    this.setState({ toast: msg });
+    this.tTimer = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  pill(bg, fg) { return 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;white-space:nowrap'; }
+
+  navBtn(active, extra) {
+    return 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:' + (active ? '700' : '500') +
+      ';color:' + (active ? '#fff' : '#CBD5E1') + ';background:' + (active ? 'rgba(109,93,251,.26)' : 'transparent') +
+      ';transition:background .16s,color .16s;' + (extra || '');
+  }
+
+  avatar(t, size) {
+    const s = size || 40;
+    return 'width:' + s + 'px;height:' + s + 'px;border-radius:' + (s >= 46 ? 14 : 12) + 'px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:' +
+      (s >= 46 ? 16 : 13) + 'px;font-weight:700;letter-spacing:.02em;background:' + (t.status === 'Ativo' ? 'linear-gradient(135deg,#6D5DFB,#06B6D4)' : 'linear-gradient(135deg,#94A3B8,#64748B)');
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, view = this.view, st = this.dataState;
+    const isMobile = w < 1024, wide = w >= 1400, mid = w >= 1180;
+    const F = s.filters;
+    const q = s.query.trim().toLowerCase();
+    const data = this.data;
+
+    const filtered = data.filter(t => {
+      const lead = t.leads[0] ? t.leads[0].name : '';
+      if (q && !(t.trade + ' ' + t.legal + ' ' + t.vat + ' ' + lead).toLowerCase().includes(q)) return false;
+      if (F.Status !== 'Todos' && t.status !== F.Status) return false;
+      if (F.Especialidade !== 'Todas' && t.specs.indexOf(F.Especialidade) < 0) return false;
+      const n = this.crewOf(t.trade).length;
+      if (F.Equipe === 'Sem equipe' && n > 0) return false;
+      if (F.Equipe === '1 a 2' && (n < 1 || n > 2)) return false;
+      if (F.Equipe === '3 ou mais' && n < 3) return false;
+      return true;
+    });
+    const anyFilter = q !== '' || F.Status !== 'Todos' || F.Especialidade !== 'Todas' || F.Equipe !== 'Todas';
+
+    const mkFilter = (key, title, options) => ({
+      title: title, label: title + ':', value: F[key], open: s.openFilter === key,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === key ? '' : key })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' +
+        (F[key] === options[0] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s',
+      options: options.map(o => ({
+        name: o,
+        pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [key]: o }), openFilter: '' })),
+        style: 'padding:9px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (F[key] === o ? '700' : '500') +
+          ';color:' + (F[key] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[key] === o ? '#EEF0FE' : 'transparent') + ';transition:background .15s'
+      }))
+    });
+
+    const chips = [];
+    if (q) chips.push({ t: 'Busca: ' + s.query, clear: () => this.setState({ query: '' }) });
+    [['Status', 'Status', 'Todos'], ['Especialidade', 'Especialidade', 'Todas'], ['Equipe', 'Equipe', 'Todas']].forEach(([k, lbl, base]) => {
+      if (F[k] !== base) chips.push({ t: lbl + ': ' + F[k], clear: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [k]: base }) })) });
+    });
+
+    const cols = wide ? '1.7fr 1.1fr 1.2fr 1.1fr .9fr .9fr .9fr 52px'
+      : (mid ? '1.7fr 1.1fr 1.2fr .9fr .9fr .9fr 52px' : '1.7fr 1.2fr .9fr .9fr .9fr 52px');
+
+    const totalCrew = data.reduce((a, t) => a + this.crewOf(t.trade).length, 0);
+    const actives = data.filter(t => t.status === 'Ativo');
+
+    const rowActions = (t, i) => {
+      const acts = ['Visualizar', 'Editar', 'Adicionar funcionário'].concat([t.status === 'Ativo' ? 'Desativar' : 'Ativar']);
+      return acts.map(a => ({
+        name: a,
+        run: () => {
+          if (a === 'Visualizar') { this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'geral', rowMenu: -1, detailMenu: false }); return; }
+          if (a === 'Editar') { this.setState({ view: 'edit', viewSet: true, curId: i, form: this.fromItem(t), dirty: false, formStatus: 'idle', rowMenu: -1, detailMenu: false }); return; }
+          if (a === 'Adicionar funcionário') { this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'equipe', rowMenu: -1, detailMenu: false, picker: true, pickerQuery: '' }); return; }
+          this.setState({ confirm: { kind: a, id: i }, confirmBusy: false, confirmError: false, rowMenu: -1, detailMenu: false });
+        },
+        style: 'padding:10px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:600;transition:background .15s;color:' +
+          (a === 'Desativar' ? '#B91C1C' : (a === 'Ativar' ? '#047857' : '#0F172A'))
+      }));
+    };
+
+    const innerW = w - (isMobile ? 0 : 258) - 68;
+    const crewCols = wide ? '1.6fr 1.1fr 1.1fr .8fr 1.1fr .9fr 46px' : '1.6fr 1.1fr .8fr 1.1fr .9fr 46px';
+    const mono0 = 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right;word-break:break-word';
+    const monoV = 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right;word-break:break-word';
+
+    const cur = data[s.curId] || data[0];
+    const curCrew = this.crewOf(cur.trade);
+
+    const pq = s.pickerQuery.trim().toLowerCase();
+    const pickerPool = this.CREW.filter(p => !pq || (p.name + ' ' + p.role).toLowerCase().includes(pq));
+
+    const f = this.form;
+    const fs = s.formStatus;
+    const req = fs === 'required';
+
+    const FB = {
+      required: { title: 'Preencha os campos obrigatórios', text: 'Razão social, nome comercial, número fiscal, e-mail, valor/hora e ao menos uma especialidade são necessários.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+      mail: { title: 'E-mail em formato inválido', text: 'Use um endereço completo, como contato@empresa.be.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+      vat: { title: 'Número fiscal inválido', text: 'Use o padrão europeu, como BE 0000.000.000.', bg: '#FEF2F2', bd: '#FECACA', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' },
+      dupvat: { title: 'Número fiscal já cadastrado', text: 'Outro terceirizado já usa este número fiscal.', bg: '#FEF2F2', bd: '#FECACA', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' },
+      lead: { title: 'Responsável sem nome', text: 'Informe o nome de cada responsável ou remova a linha em branco.', bg: '#FEF2F2', bd: '#FECACA', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' }
+    };
+    const fb = FB[fs];
+
+    const fieldBox = (bad) => 'height:46px;padding:0 13px;border-radius:12px;border:1px solid ' + (bad ? '#FCA5A5' : '#E2E8F0') +
+      ';background:' + (bad ? '#FEF2F2' : '#F8FAFC') + ';font-size:14.5px;outline:none;color:#0F172A;transition:border-color .18s,background .18s';
+
+    const mkF = (key, label, o) => {
+      const op = o || {};
+      const missing = req && op.req && !String(f[key] || '').trim();
+      const bad = missing || (key === 'mail' && fs === 'mail') || (key === 'vat' && (fs === 'vat' || fs === 'dupvat'));
+      return {
+        label: label, req: !!op.req, ph: op.ph || '', value: f[key],
+        isText: !op.options && !op.area, isSelect: !!op.options, isArea: !!op.area,
+        options: op.options || [],
+        onInput: (e) => this.patch({ [key]: e.target.value }),
+        inputStyle: fieldBox(bad),
+        selectStyle: 'height:46px;padding:0 11px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;color:#0F172A',
+        areaStyle: 'padding:12px 13px;border-radius:12px;border:1px solid ' + (bad ? '#FCA5A5' : '#E2E8F0') + ';background:' + (bad ? '#FEF2F2' : '#F8FAFC') + ';font-size:14.5px;outline:none;resize:vertical;color:#0F172A;transition:border-color .18s,background .18s',
+        error: missing ? 'Este campo é obrigatório.' : (key === 'mail' && fs === 'mail' ? 'Endereço de e-mail inválido.' : (key === 'vat' && fs === 'vat' ? 'Formato inválido. Use BE 0000.000.000.' : (key === 'vat' && fs === 'dupvat' ? 'Este número fiscal já está cadastrado.' : ''))),
+        wrapStyle: 'display:flex;flex-direction:column;gap:7px' + (op.span && w >= 900 ? ';grid-column:span 2' : '')
+      };
+    };
+
+    const mkL = (i, key, label, o) => {
+      const op = o || {};
+      const lead = (f.leads || [])[i] || {};
+      const missing = (req || fs === 'lead') && op.req && !String(lead[key] || '').trim();
+      return {
+        label: label, req: !!op.req, ph: op.ph || '', value: lead[key],
+        isText: !op.options, isSelect: !!op.options, options: op.options || [],
+        onInput: (e) => {
+          const list = (f.leads || []).map((x, k) => k === i ? Object.assign({}, x, { [key]: e.target.value }) : x);
+          this.patch({ leads: list });
+        },
+        inputStyle: fieldBox(missing),
+        selectStyle: 'height:46px;padding:0 11px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;color:#0F172A',
+        error: missing ? 'Informe o nome do responsável.' : ''
+      };
+    };
+
+    const c = s.confirm;
+    const cTarget = c ? data[c.id] : cur;
+    const CSPEC = {
+      'Desativar': { title: 'Desativar terceirizado?', text: 'A empresa deixa de aparecer para novas alocações. Os funcionários vinculados permanecem cadastrados e o histórico é preservado.', cta: 'Desativar', tone: 'red' },
+      'Ativar': { title: 'Ativar terceirizado?', text: 'A empresa volta a estar disponível para alocação em obras e planejamento.', cta: 'Ativar', tone: 'green' },
+      'Desvincular': { title: 'Desvincular funcionário?', text: 'O funcionário deixa esta equipe, mas continua cadastrado no módulo Funcionários. O vínculo anterior fica registrado no histórico.', cta: 'Desvincular', tone: 'amber' }
+    };
+    const cSpec = c ? CSPEC[c.kind] : null;
+    const cTone = cSpec ? this.TONES[cSpec.tone] : this.TONES.violet;
+
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile
+        ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);'
+        : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') +
+        'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }),
+      closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      dashItemStyle: this.navBtn(s.active === 'Dashboard'),
+      groups: this.NAV.map(g => ({
+        name: g.name, dot: g.dot, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: this.navBtn(false, 'color:#CBD5E1;font-weight:600;'),
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(it => ({
+          name: it.name, badge: it.count ? String(data.length) : '',
+          pick: () => this.setState({ active: it.name, navOpen: false }),
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === it.name ? '700' : '500') +
+            ';color:' + (s.active === it.name ? '#fff' : '#CBD5E1') + ';background:' + (s.active === it.name ? 'rgba(109,93,251,.26)' : 'transparent') + ';transition:background .16s,color .16s',
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === it.name ? '#6D5DFB' : '#64748B'),
+          badgeStyle: 'padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);color:#CBD5E1;font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:600'
+        }))
+      })),
+
+      isList: view === 'list',
+      goNew: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), dirty: false, formStatus: 'idle' }),
+
+      kpiGrid: 'display:grid;grid-template-columns:repeat(' + ((w - (isMobile ? 0 : 258) - 68) >= 860 ? 4 : 2) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)',
+      kpis: [
+        { label: 'Terceirizados', value: String(data.length), hint: 'Total cadastrado', color: '#6D5DFB', apply: null },
+        { label: 'Ativos', value: String(actives.length), hint: 'Ver ativos', color: '#10B981', apply: 'Ativo' },
+        { label: 'Equipe vinculada', value: String(totalCrew), hint: 'Funcionários de terceiros', color: '#06B6D4', apply: null },
+        { label: 'Obras ativas', value: String(data.reduce((a, t) => a + t.works, 0)), hint: 'Frentes em execução', color: '#F97316', apply: null }
+      ].map(k => ({
+        label: k.label, value: k.value, hint: k.hint, color: k.color,
+        style: 'text-align:left;background:#fff;border:1px solid ' + (k.apply && F.Status === k.apply ? '#C7C3FB' : '#E2E8F0') +
+          ';border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;transition:transform .2s,box-shadow .2s,border-color .2s',
+        go: () => { if (k.apply) this.setState(x => ({ filters: Object.assign({}, x.filters, { Status: k.apply }) })); }
+      })),
+
+      query: s.query, hasQuery: s.query !== '',
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      clearQuery: () => this.setState({ query: '' }),
+      filters: [
+        mkFilter('Status', 'Status', ['Todos', 'Ativo', 'Inativo']),
+        mkFilter('Especialidade', 'Especialidade', ['Todas'].concat(this.SPECS)),
+        mkFilter('Equipe', 'Equipe', ['Todas', 'Sem equipe', '1 a 2', '3 ou mais'])
+      ],
+      anyFilter, activeChips: chips,
+      clearAll: () => this.setState({ query: '', filters: { Status: 'Todos', Especialidade: 'Todas', Equipe: 'Todas' }, openFilter: '' }),
+
+      stLoading: st === 'loading', stError: st === 'error', stEmpty: st === 'empty',
+      stNoResults: st === 'ready' && filtered.length === 0,
+      stReady: st === 'ready' && filtered.length > 0,
+      skeletons: [1, 2, 3, 4, 5],
+      retry: () => { this.setState({ dataState: 'loading', stateSet: true }); clearTimeout(this.sTimer); this.sTimer = setTimeout(() => this.setState({ dataState: 'ready', stateSet: true }), 1100); },
+
+      isTable: !isMobile, isCards: isMobile, colVat: mid, colPhone: wide,
+      headRowStyle: 'display:grid;grid-template-columns:' + cols + ';gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0;border-radius:20px 20px 0 0',
+      thStyle: 'font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B',
+      countLabel: filtered.length + (filtered.length === 1 ? ' terceirizado' : ' terceirizados') + (anyFilter ? (filtered.length === 1 ? ' encontrado' : ' encontrados') : ''),
+
+      rows: filtered.map(t => {
+        const i = data.indexOf(t);
+        const col = this.ST[t.status];
+        const n = this.crewOf(t.trade).length;
+        return {
+          trade: t.trade, vat: t.vat, phone: t.phone,
+          lead: t.leads[0] ? t.leads[0].name : '—',
+          specLabel: t.specs.join(' · '),
+          initials: this.initials(t.trade), avatarStyle: this.avatar(t),
+          crew: n === 1 ? '1 pessoa' : n + ' pessoas',
+          crewStyle: n === 0 ? this.pill('#F1F5F9', '#475569') : this.pill('#ECFEFF', '#0E7490'),
+          works: t.works === 1 ? '1 obra' : t.works + ' obras',
+          status: t.status, statusDot: col[2], statusStyle: this.pill(col[0], col[1]),
+          open: () => this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'geral' }),
+          menuOpen: s.rowMenu === i,
+          toggleMenu: () => this.setState(x => ({ rowMenu: x.rowMenu === i ? -1 : i })),
+          menuBtnStyle: 'width:34px;height:34px;border-radius:10px;font-size:17px;line-height:1;color:#64748B;background:' +
+            (s.rowMenu === i ? '#EEF0FE' : 'transparent') + ';border:1px solid ' + (s.rowMenu === i ? '#DDD9FD' : 'transparent') + ';transition:background .16s',
+          actions: rowActions(t, i),
+          rowStyle: 'display:grid;grid-template-columns:' + cols + ';gap:14px;padding:13px 20px;align-items:center;border-bottom:1px solid #F1F5F9;transition:background .16s'
+        };
+      }),
+
+      isDetail: view === 'detail', isForm: view === 'new' || view === 'edit', isNew: view === 'new',
+      goList: () => this.setState({ view: 'list', viewSet: true, form: null, dirty: false, formStatus: 'idle', detailMenu: false }),
+      goEdit: () => this.setState({ view: 'edit', viewSet: true, form: this.fromItem(cur), dirty: false, formStatus: 'idle', detailMenu: false }),
+      detailMenuOpen: s.detailMenu,
+      toggleDetailMenu: () => this.setState(x => ({ detailMenu: !x.detailMenu })),
+
+      leadGrid: 'display:grid;grid-template-columns:repeat(' + (innerW >= 780 ? 2 : 1) + ',minmax(0,1fr));gap:12px',
+      crewHeadStyle: 'display:grid;grid-template-columns:' + crewCols + ';gap:14px;padding:13px clamp(16px,1.8vw,20px);background:#F8FAFC;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0',
+
+      tabs: [
+        { key: 'geral', name: 'Visão geral', badge: '' },
+        { key: 'leads', name: 'Responsáveis', badge: String(cur.leads.length) },
+        { key: 'equipe', name: 'Funcionários', badge: String(curCrew.length) },
+        { key: 'comercial', name: 'Comercial', badge: '' },
+        { key: 'docs', name: 'Documentação', badge: String(cur.docs.length) },
+        { key: 'hist', name: 'Histórico', badge: '' }
+      ].map(t => {
+        const on = s.tab === t.key;
+        return {
+          name: t.name, badge: t.badge, pick: () => this.setState({ tab: t.key }),
+          style: 'flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:11px 11px 0 0;font-size:14px;font-weight:' + (on ? '700' : '600') +
+            ';color:' + (on ? '#4338CA' : '#64748B') + ';background:' + (on ? '#fff' : 'transparent') +
+            ';border:1px solid ' + (on ? '#E2E8F0' : 'transparent') + ';border-bottom:1px solid ' + (on ? '#fff' : 'transparent') +
+            ';margin-bottom:-1px;white-space:nowrap;transition:background .16s,color .16s',
+          badgeStyle: 'padding:2px 7px;border-radius:999px;background:' + (on ? '#EEF0FE' : '#F1F5F9') + ';color:' + (on ? '#4338CA' : '#64748B') + ';font-family:\'JetBrains Mono\',monospace;font-size:10.5px;font-weight:600'
+        };
+      }),
+      tabGeral: s.tab === 'geral', tabLeads: s.tab === 'leads', tabEquipe: s.tab === 'equipe',
+      tabComercial: s.tab === 'comercial', tabDocs: s.tab === 'docs', tabHist: s.tab === 'hist',
+
+      cur: {
+        trade: cur.trade, vat: cur.vat, status: cur.status, notes: cur.notes,
+        initials: this.initials(cur.trade), avatarStyle: this.avatar(cur, 46),
+        statusDot: this.ST[cur.status][2], statusStyle: this.pill(this.ST[cur.status][0], this.ST[cur.status][1]),
+        specLabel: cur.specs.join(' · '), specs: cur.specs,
+        summary: [
+          { label: 'Equipe vinculada', value: String(curCrew.length), hint: curCrew.length === 1 ? '1 funcionário' : 'funcionários ativos e afastados', color: '#06B6D4' },
+          { label: 'Obras ativas', value: String(cur.works), hint: 'frentes em execução', color: '#F97316' },
+          { label: 'Valor/hora padrão', value: this.eur(cur.rate), hint: 'referência de contrato', color: '#10B981' },
+          { label: 'Relação', value: cur.rel, hint: 'desde ' + cur.start, color: cur.rel === 'Em vigor' ? '#6D5DFB' : '#EF4444' }
+        ],
+        company: [
+          { k: 'Razão social', v: cur.legal, style: mono0 },
+          { k: 'Nome comercial', v: cur.trade, style: mono0 },
+          { k: 'Número fiscal', v: cur.vat, style: monoV },
+          { k: 'Registro', v: cur.reg, style: monoV },
+          { k: 'Tipo de empresa', v: cur.type, style: mono0 },
+          { k: 'Cadastrado em', v: cur.since, style: monoV }
+        ],
+        contact: [
+          { k: 'E-mail', v: cur.mail, style: mono0 },
+          { k: 'Telefone', v: cur.phone, style: monoV },
+          { k: 'Website', v: cur.site || '—', style: mono0 },
+          { k: 'Endereço', v: [cur.street, cur.number].filter(Boolean).join(', ') + (cur.extra ? ' · ' + cur.extra : ''), style: mono0 },
+          { k: 'Localidade', v: cur.zip + ' ' + cur.city + ' · ' + cur.country, style: mono0 }
+        ],
+        commercial: [
+          { k: 'Valor/hora padrão', v: this.eur(cur.rate), style: monoV },
+          { k: 'Condições comerciais', v: cur.terms, style: mono0 },
+          { k: 'Início da relação', v: cur.start, style: monoV },
+          { k: 'Fim da relação', v: cur.end || '—', style: monoV },
+          { k: 'Status da relação', v: cur.rel, style: mono0 }
+        ],
+        leadCount: String(cur.leads.length),
+        leads: cur.leads.map(l => ({
+          name: l.name, role: l.role, mail: l.mail, phone: l.phone,
+          initials: this.initials(l.name),
+          avatarStyle: 'width:38px;height:38px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;background:linear-gradient(135deg,#6D5DFB,#EC4899)',
+          roleStyle: this.pill('#FDF2F8', '#BE185D')
+        })),
+        crewCount: String(curCrew.length),
+        hasCrew: curCrew.length > 0, noCrew: curCrew.length === 0,
+        crew: curCrew.map(c => ({
+          name: c.name, role: c.role, phone: c.phone, rate: this.eur(c.rate), status: c.status,
+          initials: this.initials(c.name),
+          avatarStyle: 'width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;background:' + c.av,
+          vehicle: c.vehicle,
+          vehicleStyle: c.vehicle === '—' ? 'font-size:12.5px;color:#64748B' : 'font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;color:#1D4ED8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis',
+          statusStyle: this.pill(this.CST[c.status][0], this.CST[c.status][1]),
+          unlink: () => this.setState({ confirm: { kind: 'Desvincular', id: s.curId, who: c.name }, confirmBusy: false, confirmError: false }),
+          rowStyle: (isMobile ? 'display:flex;flex-wrap:wrap;align-items:center;' : 'display:grid;grid-template-columns:' + crewCols + ';align-items:center;') +
+            'gap:14px;padding:13px clamp(16px,1.8vw,20px);border-bottom:1px solid #F1F5F9'
+        })),
+        docCount: String(cur.docs.length),
+        hasDocs: cur.docs.length > 0, noDocs: cur.docs.length === 0,
+        docs: cur.docs.map(dc => {
+          const soon = dc.valid === '05/12/2026' || dc.valid === '30/11/2026';
+          const past = dc.valid === '31/07/2026';
+          return {
+            name: dc.name, kind: dc.kind, size: dc.size, valid: dc.valid,
+            bg: past ? '#FEF2F2' : (soon ? '#FFFBEB' : '#EEF0FE'),
+            color: past ? '#B91C1C' : (soon ? '#B45309' : '#4338CA'),
+            validStyle: 'font-family:\'JetBrains Mono\',monospace;font-size:12.5px;font-weight:600;color:' + (past ? '#B91C1C' : (soon ? '#B45309' : '#047857'))
+          };
+        }),
+        hasWorks: cur.works > 0, noWorks: cur.works === 0,
+        worksList: this.worksOf(cur).map(ob => ({
+          name: ob.name, role: ob.role, status: ob.status, color: ob.color,
+          statusStyle: this.pill(ob.status === 'Em andamento' ? '#ECFDF5' : '#FFFBEB', ob.status === 'Em andamento' ? '#047857' : '#B45309')
+        })),
+        history: cur.history,
+        actions: rowActions(cur, s.curId)
+      },
+
+      addDoc: () => this.flash('Selecione um arquivo PDF, PNG ou JPG'),
+
+      picker: s.picker,
+      openPicker: () => this.setState({ picker: true, pickerQuery: '' }),
+      closePicker: () => this.setState({ picker: false }),
+      pickerQuery: s.pickerQuery,
+      onPickerQuery: (e) => this.setState({ pickerQuery: e.target.value }),
+      pickerList: pickerPool.map(p => {
+        const here = p.firm === cur.trade;
+        return {
+          name: p.name, initials: this.initials(p.name), linked: !!p.firm,
+          linkedLabel: here ? 'Nesta equipe' : p.firm,
+          meta: p.role + ' · ' + this.eur(p.rate) + '/h' + (p.firm ? '' : ' · quadro próprio'),
+          avatarStyle: 'width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;background:' + p.av,
+          add: () => {
+            if (here) return;
+            this.setState({ picker: false });
+            this.flash(p.name + ' vinculado a ' + cur.trade);
+          },
+          style: 'display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:13px;border:1px solid ' +
+            (here ? '#A5F3FC' : '#E2E8F0') + ';background:' + (here ? '#ECFEFF' : '#fff') + ';transition:background .16s,border-color .16s' +
+            (here ? ';pointer-events:none;opacity:.85' : '')
+        };
+      }),
+      noPickerResults: pickerPool.length === 0,
+
+      formTitle: view === 'new' ? 'Novo terceirizado' : 'Editar terceirizado',
+      formSub: view === 'new' ? 'Cadastre a empresa subcontratada e seus responsáveis.' : 'Altere os dados de ' + (f.trade || cur.trade) + '.',
+      dirty: s.dirty,
+      fieldGrid: 'display:grid;grid-template-columns:repeat(' + (w >= 900 ? 2 : 1) + ',minmax(0,1fr));gap:14px',
+      errTextStyle: 'display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#B91C1C',
+      errDotStyle: 'width:5px;height:5px;border-radius:50%;background:#EF4444;flex:0 0 auto',
+
+      formBanner: !!fb, formBannerTitle: fb ? fb.title : '', formBannerText: fb ? fb.text : '',
+      formBannerTitleColor: fb ? fb.titleColor : '', formBannerTextColor: fb ? fb.textColor : '',
+      formBannerStyle: 'display:flex;align-items:flex-start;gap:12px;padding:15px;border-radius:16px;animation:pgFade .26s cubic-bezier(.22,.7,.2,1);background:' + (fb ? fb.bg : '#fff') + ';border:1px solid ' + (fb ? fb.bd : '#E2E8F0'),
+      formBannerIconStyle: 'width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:' + (fb ? fb.iconBg : '#F1F5F9') + ';color:' + (fb ? fb.iconColor : '#64748B'),
+
+      formSections: [
+        {
+          num: '01', title: 'Dados da empresa', numBg: '#EEF0FE', numColor: '#4338CA',
+          fields: [
+            mkF('legal', 'Razão social', { req: true, ph: 'Razão social registrada' }),
+            mkF('trade', 'Nome comercial', { req: true, ph: 'Nome usado no dia a dia' }),
+            mkF('vat', 'Número fiscal', { req: true, ph: 'BE 0000.000.000' }),
+            mkF('reg', 'Registro da empresa', { ph: 'RPM / registro comercial' }),
+            mkF('type', 'Tipo de empresa', { options: this.TYPES }),
+            mkF('status', 'Status', { options: ['Ativo', 'Inativo'] })
+          ]
+        },
+        {
+          num: '02', title: 'Contato e endereço', numBg: '#EFF6FF', numColor: '#1D4ED8',
+          fields: [
+            mkF('mail', 'E-mail principal', { req: true, ph: 'contato@empresa.be' }),
+            mkF('phone', 'Telefone', { ph: '+32 0 000 00 00' }),
+            mkF('site', 'Website', { ph: 'empresa.be' }),
+            mkF('street', 'Endereço', { ph: 'Rua, avenida ou praça' }),
+            mkF('number', 'Número', { ph: '000' }),
+            mkF('extra', 'Complemento', { ph: 'Unidade, piso' }),
+            mkF('zip', 'Código postal', { ph: '0000' }),
+            mkF('city', 'Cidade', { ph: 'Cidade' }),
+            mkF('region', 'Estado / região', { ph: 'Região ou província' }),
+            mkF('country', 'País', { options: this.COUNTRIES })
+          ]
+        },
+        {
+          num: '03', title: 'Dados comerciais', numBg: '#ECFDF5', numColor: '#047857',
+          fields: [
+            mkF('rate', 'Valor/hora padrão', { req: true, ph: '0,00' }),
+            mkF('rel', 'Status da relação', { options: ['Em vigor', 'Suspensa', 'Encerrada'] }),
+            mkF('start', 'Início da relação', { ph: 'dd/mm/aaaa' }),
+            mkF('end', 'Fim da relação', { ph: 'dd/mm/aaaa' }),
+            mkF('terms', 'Condições comerciais', { ph: 'Faturação, prazos, retenções', area: true, span: true }),
+            mkF('notes', 'Observações', { ph: 'Informação complementar', area: true, span: true })
+          ]
+        }
+      ].map(sec => Object.assign({}, sec, {
+        numStyle: 'width:28px;height:28px;border-radius:9px;background:' + sec.numBg + ';color:' + sec.numColor +
+          ';display:flex;align-items:center;justify-content:center;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;flex:0 0 auto'
+      })),
+
+      specChips: this.SPECS.map(sp => {
+        const on = (f.specs || []).indexOf(sp) >= 0;
+        return {
+          name: sp, mark: on ? '✓' : '',
+          toggle: () => {
+            const list = (f.specs || []).slice();
+            const i = list.indexOf(sp);
+            if (i >= 0) list.splice(i, 1); else list.push(sp);
+            this.patch({ specs: list });
+          },
+          boxStyle: 'width:17px;height:17px;border-radius:5px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;border:2px solid ' +
+            (on ? '#6D5DFB' : '#CBD5E1') + ';background:' + (on ? '#6D5DFB' : '#fff'),
+          style: 'display:flex;align-items:center;gap:9px;padding:11px 15px;border-radius:12px;font-size:13.5px;font-weight:700;border:1px solid ' +
+            (on ? '#C7C3FB' : '#E2E8F0') + ';background:' + (on ? '#EEF0FE' : '#fff') + ';color:' + (on ? '#4338CA' : '#475569') + ';transition:background .16s,border-color .16s'
+        };
+      }),
+      errSpecs: fs === 'required' && !(f.specs || []).length ? 'Selecione ao menos uma especialidade.' : '',
+
+      leadRows: (f.leads || []).map((l, i) => ({
+        num: String(i + 1),
+        canRemove: (f.leads || []).length > 1,
+        remove: () => {
+          const list = (f.leads || []).filter((x, k) => k !== i);
+          this.patch({ leads: list });
+        },
+        fields: [
+          mkL(i, 'name', 'Nome', { req: true, ph: 'Nome e sobrenome' }),
+          mkL(i, 'role', 'Tipo de contato', { options: this.ROLES }),
+          mkL(i, 'mail', 'E-mail', { ph: 'nome@empresa.be' }),
+          mkL(i, 'phone', 'Telefone', { ph: '+32 000 000 000' })
+        ]
+      })),
+      addLead: () => this.patch({ leads: (f.leads || []).concat([{ name: '', role: 'Gestor', mail: '', phone: '' }]) }),
+
+      isSaving: s.saving,
+      saveLabel: s.saving ? 'Salvando...' : (view === 'new' ? 'Criar terceirizado' : 'Salvar alterações'),
+      saveBtnStyle: 'display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 21px;border-radius:12px;background:' +
+        (s.saving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);' + (s.saving ? 'pointer-events:none;' : ''),
+      save: this.save,
+      tryCancel: () => { if (s.dirty) { this.setState({ confirmLeave: true }); return; } this.setState({ view: view === 'edit' ? 'detail' : 'list', viewSet: true, form: null, formStatus: 'idle' }); },
+      confirmLeave: s.confirmLeave,
+      keepEditing: () => this.setState({ confirmLeave: false }),
+      discard: () => { this.setState({ confirmLeave: false, view: view === 'edit' ? 'detail' : 'list', viewSet: true, form: null, dirty: false, formStatus: 'idle' }); this.flash('Alterações descartadas'); },
+
+      confirm: !!c,
+      confirmTitle: cSpec ? cSpec.title : '',
+      confirmText: cSpec ? cSpec.text : '',
+      confirmCta: s.confirmBusy ? 'Processando...' : (cSpec ? cSpec.cta : ''),
+      confirmIcon: cSpec && cSpec.tone === 'green' ? '✓' : '!',
+      confirmIconStyle: 'width:44px;height:44px;border-radius:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;background:' +
+        cTone.bg + ';border:1px solid ' + cTone.bd + ';color:' + cTone.color,
+      confirmName: c && c.who ? c.who : cTarget.trade,
+      confirmMeta: c && c.who ? 'Funcionário de ' + cTarget.trade : cTarget.vat,
+      confirmInitials: this.initials(c && c.who ? c.who : cTarget.trade),
+      confirmTargetStyle: 'width:34px;height:34px;border-radius:' + (c && c.who ? '50%' : '11px') + ';flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;background:linear-gradient(135deg,#6D5DFB,#06B6D4)',
+      confirmBtnStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' +
+        (s.confirmBusy ? '#A5B4FC' : cTone.btn) + ';box-shadow:0 14px 28px -14px ' + cTone.shadow + ';' + (s.confirmBusy ? 'pointer-events:none;' : ''),
+      confirmBusy: s.confirmBusy, confirmError: s.confirmError,
+      closeConfirm: () => this.setState({ confirm: null, confirmBusy: false, confirmError: false }),
+      runConfirm: this.runConfirm,
+
+      demos: [
+        { name: 'Lista', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, query: '', filters: { Status: 'Todos', Especialidade: 'Todas', Equipe: 'Todas' } }) },
+        { name: 'Carregando', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'loading', stateSet: true }) },
+        { name: 'Vazio', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'empty', stateSet: true }) },
+        { name: 'Erro', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'error', stateSet: true }) },
+        { name: 'Sem resultado', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, query: 'zzz' }) },
+        { name: 'Visualizar', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'geral' }) },
+        { name: 'Equipe', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'equipe' }) },
+        { name: 'Equipe vazia', run: () => this.setState({ view: 'detail', viewSet: true, curId: 4, tab: 'equipe' }) },
+        { name: 'Vincular funcionário', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'equipe', picker: true, pickerQuery: '' }) },
+        { name: 'Documentação', run: () => this.setState({ view: 'detail', viewSet: true, curId: 5, tab: 'docs' }) },
+        { name: 'Sem documentos', run: () => this.setState({ view: 'detail', viewSet: true, curId: 3, tab: 'docs' }) },
+        { name: 'Novo', run: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), dirty: false, formStatus: 'idle' }) },
+        { name: 'Validação', run: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), formStatus: 'required' }) },
+        { name: 'Salvando', run: () => this.setState({ view: 'new', viewSet: true, saving: true, formStatus: 'saving', form: Object.assign(this.blank(), { legal: 'Coberturas Vale BV', trade: 'Coberturas Vale', vat: 'BE 0777.111.222', mail: 'geral@coberturasvale.be', rate: '22,00', specs: ['Estruturas'] }) }) },
+        { name: 'Desativar', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, confirm: { kind: 'Desativar', id: 1 }, confirmBusy: false, confirmError: false }) },
+        { name: 'Desvincular', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'equipe', confirm: { kind: 'Desvincular', id: 0, who: 'Alice Moreira' }, confirmBusy: false, confirmError: false }) },
+        { name: 'Erro na ação', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, confirm: { kind: 'Desativar', id: 1 }, confirmBusy: false, confirmError: true }) },
+        { name: 'Sair sem salvar', run: () => this.setState({ view: 'edit', viewSet: true, curId: 0, form: Object.assign(this.fromItem(this.data[0]), { trade: 'EletroSul Instalações' }), dirty: true, confirmLeave: true }) }
+      ].map(x => ({
+        name: x.name, run: x.run,
+        style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B;transition:border-color .16s,color .16s'
+      })),
+
+      toast: s.toast
+    };
+  }
+
+  TYPES = ['Sociedade limitada (BV)', 'Sociedade anónima (NV)', 'Empresário individual', 'Cooperativa', 'Outro'];
+  COUNTRIES = ['Bélgica', 'França', 'Países Baixos', 'Luxemburgo', 'Portugal', 'Alemanha', 'Espanha'];
+
+  WORKS = {
+    't1': [{ name: 'Residencial Jardim Europa', role: 'Instalações elétricas', status: 'Em andamento', color: '#6D5DFB' }, { name: 'Edifício Central', role: 'Instalações elétricas', status: 'Em andamento', color: '#3B82F6' }],
+    't2': [{ name: 'Edifício Central', role: 'Estrutura e alvenaria', status: 'Em andamento', color: '#3B82F6' }, { name: 'Casa Oliveira', role: 'Alvenaria', status: 'Em andamento', color: '#10B981' }, { name: 'Reforma Comercial Delta', role: 'Alvenaria', status: 'Atenção', color: '#F59E0B' }],
+    't3': [{ name: 'Residencial Jardim Europa', role: 'Canalização', status: 'Em andamento', color: '#6D5DFB' }],
+    't4': [{ name: 'Casa Oliveira', role: 'Pintura interior', status: 'Em andamento', color: '#10B981' }],
+    't5': [],
+    't6': [{ name: 'Galpão Logístico Sul', role: 'Terraplanagem', status: 'Em andamento', color: '#06B6D4' }, { name: 'Reforma Comercial Delta', role: 'Demolição', status: 'Atenção', color: '#F59E0B' }]
+  };
+
+  worksOf(t) { return this.WORKS[t.id] || []; }
+
+  get form() { return this.state.form || this.blank(); }
+
+  patch(p) {
+    const f = Object.assign({}, this.form, p);
+    const clears = ['required', 'mail', 'vat', 'dupvat', 'lead'].indexOf(this.state.formStatus) >= 0;
+    this.setState(Object.assign({ form: f, dirty: true }, clears ? { formStatus: 'idle' } : null));
+  }
+
+  save = () => {
+    const f = this.form, view = this.view;
+    if (!f.legal.trim() || !f.trade.trim() || !f.vat.trim() || !f.mail.trim() || !String(f.rate).trim() || !(f.specs || []).length) {
+      this.setState({ formStatus: 'required' }); return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.mail.trim())) { this.setState({ formStatus: 'mail' }); return; }
+    if (!/^[A-Z]{2}\s?[\d.\s]{8,}$/.test(String(f.vat).toUpperCase())) { this.setState({ formStatus: 'vat' }); return; }
+    if (this.data.filter(t => t.vat.replace(/\s/g, '') === f.vat.replace(/\s/g, '') && t.id !== f.id).length) { this.setState({ formStatus: 'dupvat' }); return; }
+    if ((f.leads || []).filter(l => !String(l.name || '').trim()).length) { this.setState({ formStatus: 'lead' }); return; }
+
+    this.setState({ saving: true, formStatus: 'saving' });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      const list = this.data.slice();
+      const rate = parseFloat(String(f.rate).replace(',', '.')) || 0;
+      if (view === 'new') {
+        list.unshift(Object.assign({}, f, {
+          id: 't' + Date.now(), rate: rate, since: '21/09/2026', works: 0, docs: [],
+          history: [{ when: '21/09/2026 — 11:20', t: 'Terceirizado cadastrado', who: 'Carlos Mendes', color: '#64748B', bg: '#F1F5F9' }]
+        }));
+        this.setState({ data: list, saving: false, view: 'detail', viewSet: true, curId: 0, tab: 'geral', form: null, dirty: false, formStatus: 'idle' });
+        this.flash('Terceirizado criado');
+      } else {
+        const i = list.map(t => t.id).indexOf(f.id);
+        list[i] = Object.assign({}, list[i], f, { rate: rate });
+        this.setState({ data: list, saving: false, view: 'detail', viewSet: true, curId: i, form: null, dirty: false, formStatus: 'idle' });
+        this.flash('Alterações salvas');
+      }
+    }, 1100);
+  };
+
+  runConfirm = () => {
+    const c = this.state.confirm;
+    if (!c) return;
+    this.setState({ confirmBusy: true, confirmError: false });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      if (this.props.failConfirm === true) { this.setState({ confirmBusy: false, confirmError: true }); return; }
+      if (c.kind === 'Desvincular') {
+        this.CREW = this.CREW.map(p => p.name === c.who ? Object.assign({}, p, { firm: null, vehicle: '—' }) : p);
+        this.setState({ confirm: null, confirmBusy: false });
+        this.flash(c.who + ' desvinculado da equipe');
+        return;
+      }
+      const list = this.data.slice();
+      list[c.id] = Object.assign({}, list[c.id], { status: c.kind === 'Ativar' ? 'Ativo' : 'Inativo' });
+      this.setState({ data: list, confirm: null, confirmBusy: false });
+      this.flash(c.kind === 'Ativar' ? 'Terceirizado ativado' : 'Terceirizado desativado');
+    }, 900);
+  };
+
+  blank() {
+    return {
+      legal: '', trade: '', vat: '', reg: '', type: 'Sociedade limitada (BV)', status: 'Ativo', specs: [],
+      mail: '', phone: '', site: '', street: '', number: '', extra: '', zip: '', city: '', region: '', country: 'Bélgica',
+      leads: [{ name: '', role: 'Gestor', mail: '', phone: '' }],
+      rate: '', terms: '', start: '', end: '', rel: 'Em vigor', notes: ''
+    };
+  }
+
+  fromItem(t) {
+    return Object.assign({}, t, {
+      specs: t.specs.slice(),
+      leads: t.leads.map(l => Object.assign({}, l)),
+      rate: String(t.rate).replace('.', ',')
+    });
+  }
+}
+</script>
+</body>
+</html>
