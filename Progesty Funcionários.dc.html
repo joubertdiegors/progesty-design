@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pgSheet{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button>
+      </sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="{{ dashItemStyle }}">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto">
+          <span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span>
+          <span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span>
+        </span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="6">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}">
+                  <span style="{{ it.dotStyle }}"></span>
+                  <span style="flex:1;text-align:left">{{ it.name }}</span>
+                  <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ it.badgeStyle }}">{{ it.badge }}</span>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column">
+        <span style="font-size:13px;font-weight:700;color:#E2E8F0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Carlos Mendes</span>
+        <span style="font-size:11px;color:#94A3B8">Super Usuário</span>
+      </div>
+    </div>
+  </aside>
+</sc-if>
+
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div>
+</sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto">
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+            <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+          </button>
+        </sc-if>
+        <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Funcionários</h1>
+          <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Gerencie os funcionários e colaboradores que participam das operações.</p>
+        </div>
+        <button onClick="{{ goNew }}" style="flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:13px 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s,box-shadow .18s" style-hover="transform:translateY(-1px);box-shadow:0 20px 34px -14px rgba(109,93,251,1)">
+          <span style="font-size:17px;line-height:1">+</span>Novo funcionário
+        </button>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <div style="{{ kpiGrid }}">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <button onClick="{{ k.go }}" style="{{ k.style }}">
+              <span style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span>
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">{{ k.label }}</span>
+              </span>
+              <span style="font-size:clamp(21px,2.3vw,28px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ k.value }}</span>
+              <span style="font-size:11.5px;font-weight:600;color:#64748B">{{ k.hint }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="flex:1 1 240px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;transition:border-color .18s" style-hover="border-color:#C7C3FB">
+            <span style="width:14px;height:14px;border-radius:50%;border:2px solid #64748B;flex:0 0 auto"></span>
+            <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Pesquisar por nome, função ou documento..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clearQuery }}" aria-label="Limpar" style="width:22px;height:22px;border-radius:7px;background:#F1F5F9;color:#475569;font-size:12px;line-height:1">✕</button>
+            </sc-if>
+          </div>
+          <sc-if value="{{ inlineFilters }}" hint-placeholder-val="{{ true }}">
+            <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+              <div style="position:relative;flex:0 0 auto">
+                <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}">
+                  <span style="color:#64748B;font-weight:600">{{ f.label }}</span>{{ f.value }}<span style="font-size:9px;color:#64748B">▼</span>
+                </button>
+                <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                  <div class="pg-scroll" style="position:absolute;top:calc(100% + 8px);left:0;min-width:210px;max-height:280px;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                    <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4">
+                      <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </sc-if>
+          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ openFilterSheet }}" style="{{ filterSheetBtnStyle }}">
+              <span style="display:flex;flex-direction:column;gap:2.5px;flex:0 0 auto">
+                <span style="width:13px;height:2px;border-radius:2px;background:currentColor"></span>
+                <span style="width:9px;height:2px;border-radius:2px;background:currentColor"></span>
+                <span style="width:5px;height:2px;border-radius:2px;background:currentColor"></span>
+              </span>
+              Filtros
+              <sc-if value="{{ filterCount }}" hint-placeholder-val="{{ false }}">
+                <span style="padding:2px 7px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600">{{ filterCount }}</span>
+              </sc-if>
+            </button>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Filtros ativos:</span>
+            <sc-for list="{{ activeChips }}" as="c" hint-placeholder-count="2">
+              <button onClick="{{ c.clear }}" style="display:flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:12.5px;font-weight:700">{{ c.t }}<span style="font-size:11px;opacity:.7">✕</span></button>
+            </sc-for>
+            <button onClick="{{ clearAll }}" style="font-size:12.5px;font-weight:700;color:#475569">Limpar tudo</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ skeletons }}" as="sk" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:14px;padding:12px 6px">
+                <div class="pg-sk" style="width:40px;height:40px;border-radius:50%;flex:0 0 auto"></div>
+                <div style="flex:1 1 160px;display:flex;flex-direction:column;gap:7px"><div class="pg-sk" style="height:12px;width:48%"></div><div class="pg-sk" style="height:10px;width:30%"></div></div>
+                <div class="pg-sk" style="flex:1 1 110px;height:11px"></div>
+                <div class="pg-sk" style="width:92px;height:24px;border-radius:999px;flex:0 0 auto"></div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stError }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #FECACA;border-radius:20px;padding:clamp(28px,4vw,52px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:52px;height:52px;border-radius:16px;background:#FEF2F2;border:1px solid #FECACA;display:flex;align-items:center;justify-content:center;color:#B91C1C;font-size:24px;font-weight:800">!</span>
+            <span style="font-size:19px;font-weight:800;letter-spacing:-.02em">Não foi possível carregar os funcionários</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:44ch;text-wrap:pretty">Verifique a sua conexão e tente novamente. Se o problema continuar, entre em contato com o suporte.</span>
+            <button onClick="{{ retry }}" style="margin-top:4px;padding:13px 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700">Tentar novamente</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#6D5DFB,#3B82F6)"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhum funcionário cadastrado</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Cadastre o primeiro funcionário para começar a montar as equipes das obras.</span>
+            <button onClick="{{ goNew }}" style="margin-top:4px;display:flex;align-items:center;gap:9px;padding:13px 21px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)"><span style="font-size:17px;line-height:1">+</span>Novo funcionário</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stNoResults }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:50%;border:3px solid #64748B"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhum funcionário encontrado</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Tente alterar os filtros ou realizar uma nova busca.</span>
+            <button onClick="{{ clearAll }}" style="margin-top:4px;padding:13px 21px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Limpar filtros</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px">
+              <div style="{{ headRowStyle }}">
+                <button onClick="{{ sortName }}" style="{{ sortNameStyle }}">Nome{{ sortNameMark }}</button>
+                <span style="{{ thStyle }}">Função</span>
+                <sc-if value="{{ colCompany }}" hint-placeholder-val="{{ true }}"><span style="{{ thStyle }}">Empresa</span></sc-if>
+                <span style="{{ thStyle }}">Vínculo</span>
+                <sc-if value="{{ colPhone }}" hint-placeholder-val="{{ true }}"><span style="{{ thStyle }}">Telefone</span></sc-if>
+                <span style="{{ thStyle }}">Status</span>
+                <sc-if value="{{ colSince }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ sortSince }}" style="{{ sortSinceStyle }}">Cadastro{{ sortSinceMark }}</button>
+                </sc-if>
+                <span style="{{ thStyle }}"></span>
+              </div>
+              <sc-for list="{{ rows }}" as="p" hint-placeholder-count="8">
+                <div style="{{ p.rowStyle }}">
+                  <button onClick="{{ p.open }}" style="display:flex;align-items:center;gap:12px;min-width:0;text-align:left">
+                    <span style="{{ p.avatarStyle }}">{{ p.initials }}</span>
+                    <span style="min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span>
+                      <span style="font-size:11.5px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.dept }}</span>
+                    </span>
+                  </button>
+                  <span style="font-size:13px;font-weight:600;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.role }}</span>
+                  <sc-if value="{{ colCompany }}" hint-placeholder-val="{{ true }}">
+                    <span style="{{ p.companyStyle }}">{{ p.company }}</span>
+                  </sc-if>
+                  <span style="font-size:12.5px;color:#64748B;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.bond }}</span>
+                  <sc-if value="{{ colPhone }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#475569;white-space:nowrap">{{ p.phone }}</span>
+                  </sc-if>
+                  <span style="{{ p.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ p.statusDot }};flex:0 0 auto"></span>{{ p.status }}</span>
+                  <sc-if value="{{ colSince }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B;white-space:nowrap">{{ p.since }}</span>
+                  </sc-if>
+                  <div style="position:relative;display:flex;justify-content:flex-end">
+                    <button onClick="{{ p.toggleMenu }}" aria-label="Ações" style="{{ p.menuBtnStyle }}">⋯</button>
+                    <sc-if value="{{ p.menuOpen }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;top:calc(100% + 6px);right:0;min-width:196px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                        <sc-for list="{{ p.actions }}" as="a" hint-placeholder-count="4">
+                          <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isCards }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ rows }}" as="p" hint-placeholder-count="8">
+                <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px">
+                  <div style="display:flex;align-items:flex-start;gap:12px">
+                    <button onClick="{{ p.open }}" style="display:flex;align-items:center;gap:12px;min-width:0;flex:1;text-align:left">
+                      <span style="{{ p.avatarStyle }}">{{ p.initials }}</span>
+                      <span style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ p.name }}</span>
+                        <span style="font-size:12.5px;color:#475569">{{ p.role }}</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ p.phone }}</span>
+                      </span>
+                    </button>
+                    <div style="position:relative;flex:0 0 auto">
+                      <button onClick="{{ p.toggleMenu }}" aria-label="Ações" style="{{ p.menuBtnStyle }}">⋯</button>
+                      <sc-if value="{{ p.menuOpen }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:absolute;top:calc(100% + 6px);right:0;min-width:196px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                          <sc-for list="{{ p.actions }}" as="a" hint-placeholder-count="4">
+                            <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px">
+                    <span style="{{ p.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ p.statusDot }};flex:0 0 auto"></span>{{ p.status }}</span>
+                    <span style="{{ p.companyStyle }}">{{ p.company }}</span>
+                    <span style="display:inline-flex;align-items:center;padding:5px 11px;border-radius:999px;background:#F1F5F9;color:#475569;font-size:12px;font-weight:700">{{ p.bond }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid #F1F5F9">
+                    <span style="font-size:11.5px;font-weight:600;color:#64748B">Valor/hora atual</span>
+                    <div style="flex:1"></div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">{{ p.rate }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:4px 2px">
+            <span style="font-size:12.5px;color:#64748B">{{ pageLabel }}</span>
+            <div style="flex:1;min-width:10px"></div>
+            <sc-if value="{{ showPager }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:6px">
+                <button onClick="{{ prevPage }}" style="{{ prevStyle }}">Anterior</button>
+                <sc-for list="{{ pages }}" as="pg" hint-placeholder-count="2">
+                  <button onClick="{{ pg.go }}" style="{{ pg.style }}">{{ pg.n }}</button>
+                </sc-for>
+                <button onClick="{{ nextPage }}" style="{{ nextStyle }}">Próximo</button>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+        <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,34px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+          <button onClick="{{ goList }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+          <span style="{{ cur.avatarLg }}">{{ cur.initials }}</span>
+          <div style="min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:5px">
+            <h1 style="margin:0;font-size:clamp(19px,2.1vw,26px);font-weight:800;letter-spacing:-.03em">{{ cur.name }}</h1>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+              <span style="font-size:13.5px;font-weight:600;color:#475569">{{ cur.role }}</span>
+              <span style="{{ cur.statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ cur.statusDot }};flex:0 0 auto"></span>{{ cur.status }}</span>
+              <span style="{{ cur.companyStyle }}">{{ cur.company }}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:9px;flex:0 0 auto">
+            <button onClick="{{ goEdit }}" style="padding:12px 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700">Editar</button>
+            <div style="position:relative">
+              <button onClick="{{ toggleDetailMenu }}" style="display:flex;align-items:center;gap:8px;padding:12px 17px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14px;font-weight:700;box-shadow:0 14px 26px -14px rgba(109,93,251,1)">Ações<span style="font-size:9px;opacity:.85">▼</span></button>
+              <sc-if value="{{ detailMenuOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:55">
+                  <sc-for list="{{ cur.actions }}" as="a" hint-placeholder-count="4">
+                    <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+        <div class="pg-scroll" style="padding:14px clamp(16px,2.4vw,34px) 0;display:flex;gap:4px;overflow-x:auto">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+            <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.name }}</button>
+          </sc-for>
+        </div>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+        <sc-if value="{{ cur.alert }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ cur.alertStyle }}">
+            <span style="{{ cur.alertIconStyle }}">!</span>
+            <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+              <span style="font-size:13.5px;font-weight:700;color:{{ cur.alertTitleColor }}">{{ cur.alertTitle }}</span>
+              <span style="font-size:12.5px;line-height:1.45;color:{{ cur.alertTextColor }};text-wrap:pretty">{{ cur.alert }}</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabGeral }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.5vw,16px);align-items:flex-start">
+            <div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+              <div style="{{ cardStyle }}">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Dados pessoais</span>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <sc-for list="{{ cur.personal }}" as="i" hint-placeholder-count="5">
+                    <div style="{{ rowInfoStyle }}">
+                      <span style="{{ kStyle }}">{{ i.k }}</span><span style="{{ i.vStyle }}">{{ i.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="{{ cardStyle }}">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Contato</span>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <sc-for list="{{ cur.contact }}" as="i" hint-placeholder-count="5">
+                    <div style="{{ rowInfoStyle }}">
+                      <span style="{{ kStyle }}">{{ i.k }}</span><span style="{{ i.vStyle }}">{{ i.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+            <div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+              <div style="{{ cardStyle }}">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Dados profissionais</span>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <sc-for list="{{ cur.professional }}" as="i" hint-placeholder-count="6">
+                    <div style="{{ rowInfoStyle }}">
+                      <span style="{{ kStyle }}">{{ i.k }}</span><span style="{{ i.vStyle }}">{{ i.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+                  <span style="width:28px;height:28px;border-radius:9px;background:#fff;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:10px;height:10px;border-radius:3px;background:#64748B"></span></span>
+                  <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">{{ cur.userHint }}</span>
+                </div>
+              </div>
+              <div style="{{ cardStyle }}">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Utilização operacional</span>
+                <div style="{{ opsGrid }}">
+                  <sc-for list="{{ cur.ops }}" as="o" hint-placeholder-count="4">
+                    <div style="display:flex;flex-direction:column;gap:6px;padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0">
+                      <span style="font-size:11.5px;font-weight:600;color:#64748B">{{ o.k }}</span>
+                      <span style="font-size:13.5px;font-weight:700;line-height:1.35">{{ o.v }}</span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#64748B">{{ o.w }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">Informações consolidadas a partir das obras, do planning e do controle de horas.</span>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabTrabalho }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.5vw,16px);align-items:flex-start">
+            <div style="flex:1 1 340px;min-width:0;{{ cardStyle }}">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Configurações de trabalho</span>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ cur.work }}" as="i" hint-placeholder-count="8">
+                  <div style="{{ rowInfoStyle }}">
+                    <span style="{{ kStyle }}">{{ i.k }}</span><span style="{{ i.vStyle }}">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:9px;padding-top:16px;border-top:1px solid #F1F5F9">
+                <span style="font-size:12.5px;font-weight:600;color:#64748B">Dias de trabalho</span>
+                <div style="display:flex;flex-wrap:wrap;gap:7px">
+                  <sc-for list="{{ cur.days }}" as="dd" hint-placeholder-count="7">
+                    <span style="{{ dd.style }}">{{ dd.name }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+
+            <div style="flex:1 1 380px;min-width:0;{{ cardStyle }}">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Histórico de valores/hora</span>
+                <div style="flex:1;min-width:10px"></div>
+                <button onClick="{{ openRate }}" style="display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;border:1px solid #C7C3FB;background:#fff;color:#4338CA;font-size:13.5px;font-weight:700"><span style="font-size:15px;line-height:1">+</span>Novo valor</button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ cur.rates }}" as="r" hint-placeholder-count="3">
+                  <div style="{{ r.cardStyle }}">
+                    <span style="width:4px;align-self:stretch;min-height:44px;border-radius:99px;background:{{ r.color }};flex:0 0 auto"></span>
+                    <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:4px">
+                      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">{{ r.value }}</span>
+                        <sc-if value="{{ r.current }}" hint-placeholder-val="{{ false }}">
+                          <span style="padding:4px 10px;border-radius:999px;background:#ECFDF5;color:#047857;font-size:11.5px;font-weight:700">Atual</span>
+                        </sc-if>
+                      </div>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ r.period }}</span>
+                      <span style="font-size:12.5px;color:#475569">{{ r.reason }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">Um novo valor encerra a vigência do anterior sem apagá-lo — o custo de mão de obra de cada obra continua calculado pelo valor vigente na data do lançamento.</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabDocs }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.5vw,16px);align-items:flex-start">
+            <div style="flex:1 1 360px;min-width:0;{{ cardStyle }}">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Documentação profissional</span>
+                <div style="flex:1;min-width:10px"></div>
+                <span style="{{ cur.licenceStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ cur.licenceDot }}"></span>{{ cur.licenceLabel }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ cur.licence }}" as="i" hint-placeholder-count="5">
+                  <div style="{{ rowInfoStyle }}">
+                    <span style="{{ kStyle }}">{{ i.k }}</span><span style="{{ i.vStyle }}">{{ i.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;padding-top:14px;border-top:1px solid #F1F5F9">
+                <sc-for list="{{ cur.categories }}" as="c" hint-placeholder-count="3">
+                  <span style="display:inline-flex;align-items:center;padding:7px 13px;border-radius:10px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">{{ c }}</span>
+                </sc-for>
+              </div>
+              <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">A validade e as categorias serão consideradas ao atribuir veículos no planning.</span>
+            </div>
+
+            <div style="flex:1 1 340px;min-width:0;{{ cardStyle }}">
+              <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Veículo sob responsabilidade</span>
+              <sc-if value="{{ cur.hasVehicle }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;align-items:center;gap:13px;padding:14px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+                  <span style="width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#3B82F6,#06B6D4);flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800">{{ cur.vehicleTag }}</span>
+                  <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:14px;font-weight:700">{{ cur.vehicle }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ cur.vehiclePlate }}</span>
+                  </div>
+                  <span style="display:inline-flex;align-items:center;padding:5px 11px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:12px;font-weight:700;white-space:nowrap">{{ cur.vehicleKind }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <sc-for list="{{ cur.vehicleInfo }}" as="i" hint-placeholder-count="2">
+                    <div style="{{ rowInfoStyle }}">
+                      <span style="{{ kStyle }}">{{ i.k }}</span><span style="{{ i.vStyle }}">{{ i.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ cur.noVehicle }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:24px 16px;border-radius:14px;background:#F8FAFC;border:1px dashed #CBD5E1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+                  <span style="font-size:14px;font-weight:700">Nenhum veículo atribuído</span>
+                  <span style="font-size:12.5px;color:#64748B;line-height:1.45;max-width:34ch;text-wrap:pretty">A atribuição é feita no módulo Veículos e fica registrada com data de início e fim.</span>
+                </div>
+              </sc-if>
+              <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:#FFFBEB;border:1px solid #FDE68A">
+                <span style="width:26px;height:26px;border-radius:9px;background:#FEF3C7;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 auto">!</span>
+                <span style="font-size:12.5px;color:#B45309;line-height:1.45;text-wrap:pretty">A relação funcionário ↔ veículo é temporária e mantém histórico. Um veículo não pertence permanentemente a um funcionário.</span>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabHist }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ cardStyle }}">
+            <span style="font-size:16px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px">Histórico</span>
+            <sc-for list="{{ cur.history }}" as="h" hint-placeholder-count="6">
+              <div style="display:flex;gap:14px">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto">
+                  <span style="width:30px;height:30px;border-radius:10px;background:{{ h.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                    <span style="width:10px;height:10px;border-radius:3px;background:{{ h.color }}"></span>
+                  </span>
+                  <span style="flex:1;width:2px;border-radius:99px;background:#F1F5F9;min-height:12px"></span>
+                </div>
+                <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:3px;padding-bottom:18px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#64748B">{{ h.when }}</span>
+                  <span style="font-size:14px;font-weight:700;letter-spacing:-.015em;line-height:1.35">{{ h.t }}</span>
+                  <sc-if value="{{ h.meta }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12px;color:#64748B">{{ h.meta }}</span>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isForm }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;flex:1">
+      <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+        <button onClick="{{ tryCancel }}" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:17px;color:#0F172A;flex:0 0 auto" style-hover="border-color:#C7C3FB">‹</button>
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:3px">
+          <h1 style="margin:0;font-size:clamp(19px,2vw,25px);font-weight:800;letter-spacing:-.03em">{{ formTitle }}</h1>
+          <p style="margin:0;font-size:13.5px;color:#64748B;text-wrap:pretty">{{ formSub }}</p>
+        </div>
+        <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}">
+          <span style="display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:#FFFBEB;border:1px solid #FDE68A;color:#B45309;font-size:12.5px;font-weight:700;flex:0 0 auto">
+            <span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span>Alterações não salvas
+          </span>
+        </sc-if>
+        <div style="display:flex;gap:10px;flex:0 0 auto">
+          <button onClick="{{ tryCancel }}" style="padding:13px 19px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+          <button onClick="{{ save }}" style="{{ saveBtnStyle }}">
+            <sc-if value="{{ isSaving }}" hint-placeholder-val="{{ false }}">
+              <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+            </sc-if>
+            {{ saveLabel }}
+          </button>
+        </div>
+      </header>
+
+      <div class="pg-scroll" style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(20px,2.4vw,30px)">
+        <div style="max-width:960px;display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px)">
+
+          <sc-if value="{{ formBanner }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ formBannerStyle }}">
+              <span style="{{ formBannerIconStyle }}">!</span>
+              <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                <span style="font-size:13.5px;font-weight:700;line-height:1.35;color:{{ formBannerTitleColor }}">{{ formBannerTitle }}</span>
+                <span style="font-size:12.5px;line-height:1.45;color:{{ formBannerTextColor }};text-wrap:pretty">{{ formBannerText }}</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-for list="{{ sections }}" as="sec" hint-placeholder-count="4">
+            <div style="{{ cardStyle }}">
+              <div style="display:flex;align-items:center;gap:11px">
+                <span style="{{ sec.numStyle }}">{{ sec.num }}</span>
+                <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">{{ sec.title }}</span>
+              </div>
+              <div style="{{ fieldGrid }}">
+                <sc-for list="{{ sec.fields }}" as="f" hint-placeholder-count="6">
+                  <div style="{{ f.wrapStyle }}">
+                    <span style="font-size:12.5px;font-weight:600;color:#64748B">{{ f.label }}<sc-if value="{{ f.req }}" hint-placeholder-val="{{ false }}"><span style="color:#EF4444"> *</span></sc-if></span>
+                    <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                      <input value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+                    </sc-if>
+                    <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                      <select value="{{ f.value }}" onChange="{{ f.onInput }}" style="{{ f.selectStyle }}">
+                        <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4"><option>{{ o }}</option></sc-for>
+                      </select>
+                    </sc-if>
+                    <sc-if value="{{ f.error }}" hint-placeholder-val="{{ false }}">
+                      <span style="{{ errTextStyle }}"><span style="{{ errDotStyle }}"></span>{{ f.error }}</span>
+                    </sc-if>
+                    <sc-if value="{{ f.hint }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:11.5px;color:#64748B;line-height:1.4">{{ f.hint }}</span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ sec.isDays }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:9px;padding-top:16px;border-top:1px solid #F1F5F9">
+                  <span style="font-size:12.5px;font-weight:600;color:#64748B">Dias de trabalho</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:7px">
+                    <sc-for list="{{ dayToggles }}" as="dd" hint-placeholder-count="7">
+                      <button onClick="{{ dd.toggle }}" style="{{ dd.style }}">{{ dd.name }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ sec.isRate }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:11px;padding-top:16px;border-top:1px solid #F1F5F9">
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                    <span style="font-size:13.5px;font-weight:700;color:#334155">Histórico de valores/hora</span>
+                    <div style="flex:1;min-width:10px"></div>
+                    <button onClick="{{ openRate }}" style="display:flex;align-items:center;gap:8px;padding:10px 15px;border-radius:11px;border:1px solid #C7C3FB;background:#fff;color:#4338CA;font-size:13px;font-weight:700"><span style="font-size:15px;line-height:1">+</span>Novo valor</button>
+                  </div>
+                  <sc-for list="{{ formRates }}" as="r" hint-placeholder-count="2">
+                    <div style="{{ r.cardStyle }}">
+                      <span style="width:4px;align-self:stretch;min-height:38px;border-radius:99px;background:{{ r.color }};flex:0 0 auto"></span>
+                      <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:3px">
+                        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px">
+                          <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600">{{ r.value }}</span>
+                          <sc-if value="{{ r.current }}" hint-placeholder-val="{{ false }}">
+                            <span style="padding:3px 9px;border-radius:999px;background:#ECFDF5;color:#047857;font-size:11px;font-weight:700">Atual</span>
+                          </sc-if>
+                        </div>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ r.period }}</span>
+                      </div>
+                      <span style="font-size:12px;color:#64748B;text-align:right;max-width:40%">{{ r.reason }}</span>
+                    </div>
+                  </sc-for>
+                  <span style="font-size:11.5px;color:#64748B;line-height:1.45;text-wrap:pretty">Alterar o valor/hora cria um novo período de vigência. O histórico anterior é preservado.</span>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+            <button onClick="{{ tryCancel }}" style="padding:14px 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Cancelar</button>
+            <button onClick="{{ save }}" style="{{ saveBtnStyle }}">
+              <sc-if value="{{ isSaving }}" hint-placeholder-val="{{ false }}">
+                <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+              </sc-if>
+              {{ saveLabel }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="padding:0 clamp(16px,2.4vw,34px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="8">
+      <button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button>
+    </sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ filterSheet }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center">
+    <div onClick="{{ closeFilterSheet }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(560px,100%);max-height:88vh;overflow-y:auto;background:#fff;border-radius:24px 24px 0 0;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:20px;box-shadow:0 -30px 70px -30px rgba(15,23,42,.6);animation:pgSheet .3s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">Filtros</span>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeFilterSheet }}" aria-label="Fechar" style="width:38px;height:38px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#475569">✕</button>
+      </div>
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#64748B">{{ f.title }}</span>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.pick }}" style="{{ o.chipStyle }}">{{ o.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+      <div style="display:flex;gap:10px;padding-top:4px">
+        <button onClick="{{ clearAll }}" style="flex:1;min-height:50px;border-radius:13px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Limpar</button>
+        <button onClick="{{ closeFilterSheet }}" style="flex:1;min-height:50px;border-radius:13px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:15px;font-weight:700">{{ applyLabel }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ rateSheet }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:91;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeRate }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(480px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:17px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">Novo valor/hora</span>
+          <span style="font-size:13px;color:#64748B">{{ cur.name }}</span>
+        </div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeRate }}" aria-label="Fechar" style="width:38px;height:38px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#475569">✕</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+        <span style="font-size:12.5px;font-weight:600;color:#64748B">Valor atual</span>
+        <div style="flex:1"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600">{{ cur.currentRate }}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+        <label style="display:flex;flex-direction:column;gap:7px">
+          <span style="font-size:12.5px;font-weight:600;color:#64748B">Novo valor<span style="color:#EF4444"> *</span></span>
+          <input value="{{ rateValue }}" onInput="{{ onRateValue }}" inputmode="decimal" placeholder="0,00" style="{{ rateValueStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:7px">
+          <span style="font-size:12.5px;font-weight:600;color:#64748B">Início da vigência<span style="color:#EF4444"> *</span></span>
+          <input type="date" value="{{ rateDate }}" onInput="{{ onRateDate }}" style="{{ rateDateStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+        </label>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:7px">
+        <span style="font-size:12.5px;font-weight:600;color:#64748B">Motivo da alteração</span>
+        <select value="{{ rateReason }}" onChange="{{ onRateReason }}" style="height:46px;padding:0 11px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;color:#0F172A">
+          <sc-for list="{{ rateReasons }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for>
+        </select>
+      </label>
+      <sc-if value="{{ rateError }}" hint-placeholder-val="{{ false }}">
+        <span style="{{ errTextStyle }}"><span style="{{ errDotStyle }}"></span>{{ rateError }}</span>
+      </sc-if>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:#EEF0FE;border:1px solid #DDD9FD">
+        <span style="width:26px;height:26px;border-radius:9px;background:#fff;color:#4338CA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 auto">i</span>
+        <span style="font-size:12.5px;color:#4338CA;line-height:1.45;text-wrap:pretty">O valor anterior será encerrado no dia anterior a esta data e permanece no histórico.</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeRate }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+        <button onClick="{{ saveRate }}" style="{{ rateSaveStyle }}">{{ rateSaveLabel }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ confirm }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:92;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeConfirm }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(470px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <span style="{{ confirmIconStyle }}">{{ confirmIcon }}</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ confirmTitle }}</span>
+          <span style="font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">{{ confirmText }}</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+        <span style="{{ confirmAvatarStyle }}">{{ confirmInitials }}</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ confirmName }}</span>
+          <span style="font-size:12px;color:#64748B">{{ confirmMeta }}</span>
+        </div>
+      </div>
+      <sc-if value="{{ confirmError }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:flex-start;gap:11px;padding:13px;border-radius:13px;background:#FEF2F2;border:1px solid #FECACA">
+          <span style="width:24px;height:24px;border-radius:8px;background:#FEE2E2;color:#B91C1C;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 auto">!</span>
+          <span style="font-size:12.5px;font-weight:600;color:#B91C1C;line-height:1.45;text-wrap:pretty">Não foi possível concluir a ação. Verifique a conexão e tente novamente.</span>
+        </div>
+      </sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeConfirm }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+        <button onClick="{{ runConfirm }}" style="{{ confirmBtnStyle }}">
+          <sc-if value="{{ confirmBusy }}" hint-placeholder-val="{{ false }}">
+            <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+          </sc-if>
+          {{ confirmCta }}
+        </button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ confirmLeave }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:93;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ keepEditing }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(450px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <span style="width:44px;height:44px;border-radius:14px;background:#FFFBEB;border:1px solid #FDE68A;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex:0 0 auto">!</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em;line-height:1.25">Alterações não salvas</span>
+          <span style="font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">Você possui alterações que ainda não foram salvas. Deseja sair sem salvar?</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ keepEditing }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Continuar editando</button>
+        <button onClick="{{ discard }}" style="display:flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:linear-gradient(135deg,#EF4444,#DC2626);box-shadow:0 14px 28px -14px rgba(239,68,68,.9)">Sair sem salvar</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>
+    {{ toast }}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;list&quot;,&quot;detail&quot;,&quot;new&quot;,&quot;edit&quot;],&quot;default&quot;:&quot;list&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;listState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;empty&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;failConfirm&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'list', viewSet: false, w: 1400, navOpen: false, active: 'Funcionários',
+    open: { Comercial: false, Clientes: false, Projetos: false, Pessoas: true, Financeiro: false, 'Configurações': false },
+    query: '', filters: { Status: 'Todos', 'Função': 'Todas', Empresa: 'Todas', 'Vínculo': 'Todos' },
+    openFilter: '', filterSheet: false, sort: 'name', sortDir: 1, page: 1,
+    dataState: 'ready', stateSet: false, tab: 'geral',
+    curId: 0, rowMenu: -1, detailMenu: false,
+    form: null, dirty: false, formStatus: 'idle', saving: false,
+    confirm: null, confirmBusy: false, confirmError: false, confirmLeave: false,
+    rateSheet: false, rateValue: '', rateDate: '', rateReason: 'Revisão anual', rateError: '', rateSaving: false,
+    data: null, toast: ''
+  };
+
+  NAV = [
+    { name: 'Comercial', dot: '#EC4899', items: [{ name: 'CRM' }, { name: 'Leads' }, { name: 'Oportunidades' }] },
+    { name: 'Clientes', dot: '#3B82F6', items: [{ name: 'Clientes' }, { name: 'Contatos' }] },
+    { name: 'Projetos', dot: '#F97316', items: [{ name: 'Projetos / Obras' }, { name: 'Tarefas' }, { name: 'Documentos' }] },
+    { name: 'Pessoas', dot: '#06B6D4', items: [{ name: 'Funcionários', count: true }, { name: 'Terceirizados' }, { name: 'Veículos' }] },
+    { name: 'Financeiro', dot: '#10B981', items: [{ name: 'Contas a Receber' }, { name: 'Contas a Pagar' }, { name: 'Faturas' }, { name: 'Fluxo de Caixa' }] },
+    { name: 'Configurações', dot: '#64748B', items: [{ name: 'Empresa' }, { name: 'Usuários' }, { name: 'Gestão de Acessos' }] }
+  ];
+
+  MAIN = 'Construtora Horizonte';
+  THIRD = ['Construtora Alpha', 'Serviços Beta', 'EletroSul', 'HidroTec'];
+
+  ROLES = ['Diretor de obras', 'Engenheiro civil', 'Encarregado de obra', 'Mestre de obras', 'Pedreiro', 'Eletricista', 'Canalizador', 'Pintor', 'Carpinteiro', 'Operador de máquinas', 'Motorista', 'Administrativo'];
+  DEPTS = ['Direção', 'Engenharia', 'Obras', 'Instalações', 'Logística', 'Administrativo', 'Financeiro'];
+  BONDS = ['Efetivo', 'Prazo determinado', 'Interino', 'Estágio', 'Prestador'];
+  UNITS = ['Hora', 'Dia', 'Mês'];
+
+  DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+
+  RATE_REASONS = ['Revisão anual', 'Promoção', 'Mudança de função', 'Acordo coletivo', 'Correção', 'Outro'];
+
+  ST = {
+    'Ativo': ['#ECFDF5', '#047857', '#10B981'],
+    'Afastado': ['#FFFBEB', '#B45309', '#F59E0B'],
+    'Inativo': ['#F1F5F9', '#475569', '#94A3B8'],
+    'Encerrado': ['#FEF2F2', '#B91C1C', '#EF4444']
+  };
+
+  TONES = {
+    red: { bg: '#FEF2F2', bd: '#FECACA', color: '#B91C1C', btn: 'linear-gradient(135deg,#EF4444,#DC2626)', shadow: 'rgba(239,68,68,.9)' },
+    amber: { bg: '#FFFBEB', bd: '#FDE68A', color: '#B45309', btn: 'linear-gradient(135deg,#F59E0B,#D97706)', shadow: 'rgba(245,158,11,.9)' },
+    green: { bg: '#ECFDF5', bd: '#A7F3D0', color: '#047857', btn: 'linear-gradient(135deg,#10B981,#059669)', shadow: 'rgba(16,185,129,.9)' },
+    violet: { bg: '#EEF0FE', bd: '#DDD9FD', color: '#4338CA', btn: 'linear-gradient(135deg,#6D5DFB,#5145CD)', shadow: 'rgba(109,93,251,.95)' }
+  };
+
+  CONFIRMS = {
+    'Desativar': { title: 'Desativar funcionário?', text: 'O funcionário deixa de aparecer nas equipes e no planning. O cadastro e o histórico são preservados.', cta: 'Desativar', tone: 'amber', to: 'Inativo', done: 'Funcionário desativado' },
+    'Afastar': { title: 'Registrar afastamento?', text: 'O funcionário fica indisponível para o planning até o retorno, mantendo o vínculo ativo.', cta: 'Registrar afastamento', tone: 'amber', to: 'Afastado', done: 'Afastamento registrado' },
+    'Reativar': { title: 'Reativar funcionário?', text: 'O funcionário volta a estar disponível para as equipes e o planning.', cta: 'Reativar', tone: 'green', to: 'Ativo', done: 'Funcionário reativado' },
+    'Encerrar': { title: 'Encerrar vínculo?', text: 'O vínculo é encerrado definitivamente. O cadastro permanece para consulta histórica de horas e custos já lançados.', cta: 'Encerrar vínculo', tone: 'red', to: 'Encerrado', done: 'Vínculo encerrado' }
+  };
+
+  seed() {
+    const mk = (o) => o;
+    return [
+      mk({
+        id: 'f1', name: 'Carlos Mendes', pref: 'Carlos', born: '14/03/1978', doc: 'BE 780314-115-22', fiscal: 'BE 78.03.14-115.22', sex: 'Masculino',
+        role: 'Diretor de obras', dept: 'Direção', bond: 'Efetivo', company: 'Construtora Horizonte', third: false,
+        status: 'Ativo', since: '12/01/2024', entry: '12/01/2024', exit: '—',
+        mail: 'carlos@horizonte.be', phone: '+32 2 640 11 22', mobile: '+32 470 11 22 33',
+        street: 'Avenue Louise', number: '143', extra: 'Bloco B', zip: '1050', city: 'Bruxelas', region: 'Bruxelas-Capital', country: 'Bélgica',
+        role2: 'Engenheiro civil', unit: 'Hora', shift: '40h semanais', start: '08:00', end: '17:00', lunch: '60 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [
+          { v: 32.00, from: '01/01/2026', to: '', reason: 'Revisão anual' },
+          { v: 29.50, from: '01/01/2025', to: '31/12/2025', reason: 'Promoção' },
+          { v: 27.00, from: '12/01/2024', to: '31/12/2024', reason: 'Contratação' }
+        ],
+        lic: { no: 'B-1145882', cats: ['B', 'BE'], issued: '22/05/2019', expires: '22/05/2029', notes: 'Sem restrições' },
+        vehicle: { name: 'Ford Ranger', plate: '1-ABC-234', kind: 'Uso permanente', from: '01/06/2026', to: '' },
+        ops: { projects: 'Residencial Jardim Europa', last: 'Edifício Central', plan: 'Semana 38/2026', hours: '20/09/2026 · 8h' },
+        av: 'linear-gradient(135deg,#6D5DFB,#3B82F6)'
+      }),
+      mk({
+        id: 'f2', name: 'Ana Duarte', pref: 'Ana', born: '02/09/1985', doc: 'BE 850902-224-41', fiscal: 'BE 85.09.02-224.41', sex: 'Feminino',
+        role: 'Engenheiro civil', dept: 'Engenharia', bond: 'Efetivo', company: 'Construtora Horizonte', third: false,
+        status: 'Ativo', since: '03/02/2024', entry: '03/02/2024', exit: '—',
+        mail: 'ana@horizonte.be', phone: '+32 2 640 11 25', mobile: '+32 470 22 33 44',
+        street: 'Rue du Congrès', number: '35', extra: '', zip: '1000', city: 'Bruxelas', region: 'Bruxelas-Capital', country: 'Bélgica',
+        role2: 'Fiscalização', unit: 'Hora', shift: '40h semanais', start: '08:30', end: '17:30', lunch: '60 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [{ v: 28.00, from: '01/01/2026', to: '', reason: 'Revisão anual' }, { v: 26.00, from: '03/02/2024', to: '31/12/2025', reason: 'Contratação' }],
+        lic: { no: 'B-2298114', cats: ['B'], issued: '10/04/2010', expires: '10/04/2026', notes: 'Renovação em andamento' },
+        vehicle: null,
+        ops: { projects: 'Edifício Central', last: 'Casa Oliveira', plan: 'Semana 38/2026', hours: '19/09/2026 · 8h' },
+        av: 'linear-gradient(135deg,#10B981,#06B6D4)'
+      }),
+      mk({
+        id: 'f3', name: 'Rafael Lima', pref: 'Rafa', born: '27/11/1990', doc: 'BE 901127-331-08', fiscal: 'BE 90.11.27-331.08', sex: 'Masculino',
+        role: 'Encarregado de obra', dept: 'Obras', bond: 'Efetivo', company: 'Construtora Horizonte', third: false,
+        status: 'Afastado', since: '20/03/2024', entry: '20/03/2024', exit: '—',
+        mail: 'rafael@horizonte.be', phone: '—', mobile: '+32 470 33 44 55',
+        street: 'Chaussée de Mons', number: '208', extra: 'Ap. 12', zip: '1070', city: 'Anderlecht', region: 'Bruxelas-Capital', country: 'Bélgica',
+        role2: 'Mestre de obras', unit: 'Hora', shift: '40h semanais', start: '07:00', end: '16:00', lunch: '60 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [{ v: 24.50, from: '01/01/2026', to: '', reason: 'Acordo coletivo' }, { v: 23.00, from: '20/03/2024', to: '31/12/2025', reason: 'Contratação' }],
+        lic: { no: 'C-3341207', cats: ['B', 'C', 'CE'], issued: '03/08/2015', expires: '03/08/2025', notes: 'Renovação pendente' },
+        vehicle: { name: 'Iveco Daily', plate: '1-KLM-882', kind: 'Uso em obra', from: '01/03/2026', to: '' },
+        ops: { projects: '—', last: 'Residencial Jardim Europa', plan: 'Semana 31/2026', hours: '08/08/2026 · 8h' },
+        av: 'linear-gradient(135deg,#F59E0B,#F97316)'
+      }),
+      mk({
+        id: 'f4', name: 'Sofia Martins', pref: 'Sofia', born: '19/06/1992', doc: 'BE 920619-442-17', fiscal: 'BE 92.06.19-442.17', sex: 'Feminino',
+        role: 'Administrativo', dept: 'Financeiro', bond: 'Efetivo', company: 'Construtora Horizonte', third: false,
+        status: 'Ativo', since: '08/05/2025', entry: '08/05/2025', exit: '—',
+        mail: 'sofia@horizonte.be', phone: '+32 2 640 11 30', mobile: '+32 470 44 55 66',
+        street: 'Meir', number: '22', extra: '', zip: '2000', city: 'Antuérpia', region: 'Antuérpia', country: 'Bélgica',
+        role2: '—', unit: 'Mês', shift: '38h semanais', start: '09:00', end: '17:30', lunch: '30 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [{ v: 21.00, from: '08/05/2025', to: '', reason: 'Contratação' }],
+        lic: { no: '—', cats: [], issued: '—', expires: '—', notes: 'Não possui' },
+        vehicle: null,
+        ops: { projects: '—', last: '—', plan: '—', hours: '—' },
+        av: 'linear-gradient(135deg,#EC4899,#6D5DFB)'
+      }),
+      mk({
+        id: 'f5', name: 'Bruno Alves', pref: 'Bruno', born: '05/02/1988', doc: 'BE 880205-553-26', fiscal: 'BE 88.02.05-553.26', sex: 'Masculino',
+        role: 'Operador de máquinas', dept: 'Obras', bond: 'Prazo determinado', company: 'Construtora Horizonte', third: false,
+        status: 'Ativo', since: '05/02/2026', entry: '05/02/2026', exit: '31/12/2026',
+        mail: 'bruno@horizonte.be', phone: '—', mobile: '+32 470 12 34 56',
+        street: 'Rue de Birmingham', number: '62', extra: '', zip: '1070', city: 'Anderlecht', region: 'Bruxelas-Capital', country: 'Bélgica',
+        role2: 'Motorista', unit: 'Hora', shift: '40h semanais', start: '07:00', end: '16:00', lunch: '60 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+        rates: [{ v: 23.50, from: '05/02/2026', to: '', reason: 'Contratação' }],
+        lic: { no: 'C-4482991', cats: ['B', 'C', 'CE'], issued: '14/09/2020', expires: '14/09/2030', notes: 'Habilitado para máquinas' },
+        vehicle: { name: 'Caterpillar 320', plate: 'MAQ-004', kind: 'Uso em obra', from: '10/02/2026', to: '' },
+        ops: { projects: 'Residencial Jardim Europa', last: 'Galpão Logístico Sul', plan: 'Semana 38/2026', hours: '20/09/2026 · 9h' },
+        av: 'linear-gradient(135deg,#8B5CF6,#EC4899)'
+      }),
+      mk({
+        id: 'f6', name: 'João Silva', pref: 'João', born: '30/07/1983', doc: 'BE 830730-664-35', fiscal: 'BE 83.07.30-664.35', sex: 'Masculino',
+        role: 'Eletricista', dept: 'Instalações', bond: 'Prestador', company: 'Construtora Alpha', third: true,
+        status: 'Ativo', since: '18/09/2026', entry: '18/09/2026', exit: '—',
+        mail: 'joao@construtoraalpha.be', phone: '—', mobile: '+32 470 55 66 77',
+        street: 'Rue Saint-Gilles', number: '51', extra: '', zip: '4000', city: 'Liège', region: 'Liège', country: 'Bélgica',
+        role2: '—', unit: 'Hora', shift: '40h semanais', start: '08:00', end: '17:00', lunch: '60 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [{ v: 26.00, from: '18/09/2026', to: '', reason: 'Contratação' }],
+        lic: { no: 'B-5573882', cats: ['B'], issued: '18/02/2008', expires: '18/02/2028', notes: '' },
+        vehicle: null,
+        ops: { projects: 'Edifício Central', last: '—', plan: 'Semana 38/2026', hours: '20/09/2026 · 8h' },
+        av: 'linear-gradient(135deg,#3B82F6,#06B6D4)'
+      }),
+      mk({
+        id: 'f7', name: 'Tiago Nunes', pref: 'Tiago', born: '11/12/1995', doc: 'BE 951211-775-44', fiscal: 'BE 95.12.11-775.44', sex: 'Masculino',
+        role: 'Canalizador', dept: 'Instalações', bond: 'Prestador', company: 'HidroTec', third: true,
+        status: 'Ativo', since: '11/03/2026', entry: '11/03/2026', exit: '—',
+        mail: 'tiago@hidrotec.be', phone: '—', mobile: '+32 470 88 99 00',
+        street: 'Korenmarkt', number: '8', extra: '', zip: '9000', city: 'Gante', region: 'Flandres Oriental', country: 'Bélgica',
+        role2: '—', unit: 'Hora', shift: '40h semanais', start: '08:00', end: '17:00', lunch: '60 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [{ v: 25.00, from: '11/03/2026', to: '', reason: 'Contratação' }],
+        lic: { no: 'B-6684991', cats: ['B'], issued: '20/01/2014', expires: '20/01/2027', notes: '' },
+        vehicle: null,
+        ops: { projects: 'Casa Oliveira', last: 'Reforma Comercial Delta', plan: 'Semana 37/2026', hours: '18/09/2026 · 6h' },
+        av: 'linear-gradient(135deg,#06B6D4,#3B82F6)'
+      }),
+      mk({
+        id: 'f8', name: 'Helena Rocha', pref: 'Helena', born: '08/04/1975', doc: 'BE 750408-886-53', fiscal: 'BE 75.04.08-886.53', sex: 'Feminino',
+        role: 'Administrativo', dept: 'Administrativo', bond: 'Efetivo', company: 'Construtora Horizonte', third: false,
+        status: 'Encerrado', since: '22/09/2024', entry: '22/09/2024', exit: '30/06/2026',
+        mail: 'helena@horizonte.be', phone: '—', mobile: '+32 470 77 88 99',
+        street: 'Rue Royale', number: '112', extra: '', zip: '1000', city: 'Bruxelas', region: 'Bruxelas-Capital', country: 'Bélgica',
+        role2: '—', unit: 'Mês', shift: '38h semanais', start: '09:00', end: '17:00', lunch: '30 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [{ v: 20.00, from: '22/09/2024', to: '30/06/2026', reason: 'Contratação' }],
+        lic: { no: '—', cats: [], issued: '—', expires: '—', notes: 'Não possui' },
+        vehicle: null,
+        ops: { projects: '—', last: '—', plan: '—', hours: '30/06/2026 · 7h' },
+        av: 'linear-gradient(135deg,#64748B,#94A3B8)'
+      }),
+      mk({
+        id: 'f9', name: 'Marcos Pereira', pref: 'Marcos', born: '16/05/1981', doc: 'BE 810516-997-62', fiscal: 'BE 81.05.16-997.62', sex: 'Masculino',
+        role: 'Pintor', dept: 'Obras', bond: 'Prestador', company: 'Serviços Beta', third: true,
+        status: 'Inativo', since: '14/06/2025', entry: '14/06/2025', exit: '—',
+        mail: 'marcos@servicosbeta.be', phone: '—', mobile: '+32 470 66 77 88',
+        street: 'Avenue de Tervueren', number: '77', extra: '', zip: '1150', city: 'Bruxelas', region: 'Bruxelas-Capital', country: 'Bélgica',
+        role2: '—', unit: 'Hora', shift: '40h semanais', start: '08:00', end: '17:00', lunch: '60 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [{ v: 22.00, from: '14/06/2025', to: '', reason: 'Contratação' }],
+        lic: { no: 'B-7796114', cats: ['B'], issued: '05/06/2006', expires: '05/06/2026', notes: '' },
+        vehicle: null,
+        ops: { projects: '—', last: 'Reforma Comercial Delta', plan: 'Semana 30/2026', hours: '02/08/2026 · 8h' },
+        av: 'linear-gradient(135deg,#F97316,#EC4899)'
+      }),
+      mk({
+        id: 'f10', name: 'Alice Moreira', pref: 'Alice', born: '23/10/1993', doc: 'BE 931023-118-71', fiscal: 'BE 93.10.23-118.71', sex: 'Feminino',
+        role: 'Eletricista', dept: 'Instalações', bond: 'Prestador', company: 'EletroSul', third: true,
+        status: 'Ativo', since: '25/05/2026', entry: '25/05/2026', exit: '—',
+        mail: 'alice@eletrosul.be', phone: '—', mobile: '+32 470 01 23 45',
+        street: 'Bondgenotenlaan', number: '44', extra: '', zip: '3000', city: 'Leuven', region: 'Brabante Flamengo', country: 'Bélgica',
+        role2: '—', unit: 'Hora', shift: '40h semanais', start: '08:00', end: '17:00', lunch: '60 min',
+        days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+        rates: [{ v: 26.50, from: '25/05/2026', to: '', reason: 'Contratação' }],
+        lic: { no: 'B-8807221', cats: ['B'], issued: '12/11/2012', expires: '12/11/2027', notes: '' },
+        vehicle: { name: 'Renault Kangoo', plate: '1-XYZ-119', kind: 'Uso permanente', from: '01/07/2026', to: '' },
+        ops: { projects: 'Edifício Central', last: 'Casa Oliveira', plan: 'Semana 38/2026', hours: '19/09/2026 · 8h' },
+        av: 'linear-gradient(135deg,#EC4899,#8B5CF6)'
+      })
+    ];
+  }
+
+  PER_PAGE = 8;
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  onDocClick = (ev) => {
+    if ((this.state.rowMenu >= 0 || this.state.detailMenu || this.state.openFilter) && !ev.target.closest('button')) {
+      this.setState({ rowMenu: -1, detailMenu: false, openFilter: '' });
+    }
+  };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    document.addEventListener('click', this.onDocClick);
+    this.setState({ w: window.innerWidth });
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('click', this.onDocClick);
+    clearTimeout(this.tTimer); clearTimeout(this.sTimer);
+  }
+
+  get data() { if (!this._seed) this._seed = this.seed(); return this.state.data || this._seed; }
+  get view() { return this.state.viewSet ? this.state.view : (this.props.initialView || 'list'); }
+  get dataState() { return this.state.stateSet ? this.state.dataState : (this.props.listState || 'ready'); }
+
+  initials(n) { return n.split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase(); }
+  eur(v) { return '€ ' + Number(v).toFixed(2).replace('.', ',') + '/h'; }
+  dmy(s) { const p = String(s).split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : s; }
+  ymd(s) { const p = String(s).split('/'); return p.length === 3 ? p[2] + '-' + p[1] + '-' + p[0] : ''; }
+  dnum(s) { const p = String(s).split('/'); return p.length === 3 ? +(p[2] + p[1] + p[0]) : 0; }
+
+  flash(msg) {
+    clearTimeout(this.tTimer);
+    this.setState({ toast: msg });
+    this.tTimer = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  pill(bg, fg) { return 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;white-space:nowrap'; }
+  statusStyle(s) { const c = this.ST[s] || this.ST['Inativo']; return this.pill(c[0], c[1]); }
+  companyStyle(third) { return third ? this.pill('#FDF2F8', '#BE185D') : this.pill('#EEF0FE', '#4338CA'); }
+  avatar(p, size) {
+    const s = size || 40;
+    return 'width:' + s + 'px;height:' + s + 'px;border-radius:' + (s >= 46 ? '14px' : '50%') + ';flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:' +
+      (s >= 46 ? 16 : 13) + 'px;font-weight:700;background:' + p.av;
+  }
+
+  navBtn(active, extra) {
+    return 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:' + (active ? '700' : '500') +
+      ';color:' + (active ? '#fff' : '#94A3B8') + ';background:' + (active ? 'rgba(109,93,251,.26)' : 'transparent') +
+      ';transition:background .16s,color .16s;' + (extra || '');
+  }
+
+  licenceState(p) {
+    if (!p.lic.no || p.lic.no === '—') return { label: 'Sem carta registrada', tone: this.TONES.violet, dot: '#94A3B8', bad: false, none: true };
+    const exp = this.dnum(p.lic.expires);
+    const today = 20260921;
+    if (exp < today) return { label: 'Carta expirada', tone: this.TONES.red, dot: '#EF4444', bad: true };
+    if (exp < 20270321) return { label: 'Expira em breve', tone: this.TONES.amber, dot: '#F59E0B', bad: false, soon: true };
+    return { label: 'Carta válida', tone: this.TONES.green, dot: '#10B981', bad: false };
+  }
+
+  blank() {
+    return {
+      name: '', pref: '', born: '', doc: '', fiscal: '', sex: '—',
+      role: '', dept: this.DEPTS[2], bond: this.BONDS[0], company: this.MAIN, third: false,
+      status: 'Ativo', entry: '', exit: '',
+      mail: '', phone: '', mobile: '',
+      street: '', number: '', extra: '', zip: '', city: '', region: '', country: 'Bélgica',
+      role2: '', unit: 'Hora', shift: '40h semanais', start: '08:00', end: '17:00', lunch: '60 min',
+      days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+      rate: '', rates: [],
+      lic: { no: '', cats: [], issued: '', expires: '', notes: '' }
+    };
+  }
+
+  fromPerson(p) {
+    return Object.assign({}, p, {
+      rate: p.rates.length ? String(p.rates[0].v).replace('.', ',') : '',
+      days: p.days.slice(), rates: p.rates.slice(), lic: Object.assign({}, p.lic, { cats: p.lic.cats.slice() })
+    });
+  }
+
+  get form() { return this.state.form || this.blank(); }
+
+  patch(p) {
+    const f = Object.assign({}, this.form, p);
+    const clears = ['required', 'mail', 'rate', 'error'].indexOf(this.state.formStatus) >= 0;
+    this.setState(Object.assign({ form: f, dirty: true }, clears ? { formStatus: 'idle' } : null));
+  }
+
+  patchLic(p) { this.patch({ lic: Object.assign({}, this.form.lic, p) }); }
+
+  save = () => {
+    const f = this.form, view = this.view;
+    if (!f.name.trim() || !f.role.trim() || !f.company || !String(f.rate).trim()) { this.setState({ formStatus: 'required' }); return; }
+    if (f.mail && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.mail)) { this.setState({ formStatus: 'mail' }); return; }
+    const num = parseFloat(String(f.rate).replace(',', '.'));
+    if (isNaN(num) || num <= 0) { this.setState({ formStatus: 'rate' }); return; }
+
+    this.setState({ saving: true, formStatus: 'saving' });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      const list = this.data.slice();
+      const third = this.THIRD.indexOf(f.company) >= 0;
+      if (view === 'new') {
+        list.unshift(Object.assign({}, f, {
+          id: 'f' + Date.now(), third: third, since: '21/09/2026',
+          rates: [{ v: num, from: f.entry || '21/09/2026', to: '', reason: 'Contratação' }],
+          vehicle: null,
+          ops: { projects: '—', last: '—', plan: '—', hours: '—' },
+          av: 'linear-gradient(135deg,#6D5DFB,#06B6D4)'
+        }));
+        this.setState({ data: list, saving: false, view: 'detail', viewSet: true, curId: 0, dirty: false, form: null, formStatus: 'idle', tab: 'geral' });
+        this.flash('Funcionário cadastrado');
+      } else {
+        const i = list.map(x => x.id).indexOf(f.id);
+        const prev = list[i];
+        let rates = prev.rates.slice();
+        if (num !== prev.rates[0].v) {
+          rates = [{ v: num, from: '21/09/2026', to: '', reason: 'Correção' }].concat(
+            rates.map((r, k) => k === 0 ? Object.assign({}, r, { to: '20/09/2026' }) : r)
+          );
+        }
+        list[i] = Object.assign({}, prev, f, { third: third, rates: rates });
+        this.setState({ data: list, saving: false, view: 'detail', viewSet: true, curId: i, dirty: false, form: null, formStatus: 'idle' });
+        this.flash('Alterações salvas');
+      }
+    }, 1100);
+  };
+
+  ask(kind, id) { this.setState({ confirm: { kind: kind, id: id }, confirmBusy: false, confirmError: false, rowMenu: -1, detailMenu: false }); }
+
+  runConfirm = () => {
+    const c = this.state.confirm;
+    if (!c) return;
+    const spec = this.CONFIRMS[c.kind];
+    this.setState({ confirmBusy: true, confirmError: false });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      if (this.props.failConfirm === true) { this.setState({ confirmBusy: false, confirmError: true }); return; }
+      const list = this.data.slice();
+      list[c.id] = Object.assign({}, list[c.id], { status: spec.to });
+      this.setState({ data: list, confirm: null, confirmBusy: false });
+      this.flash(spec.done);
+    }, 900);
+  };
+
+  saveRate = () => {
+    const v = parseFloat(String(this.state.rateValue).replace(',', '.'));
+    if (isNaN(v) || v <= 0) { this.setState({ rateError: 'Informe um valor válido maior que zero.' }); return; }
+    if (!this.state.rateDate) { this.setState({ rateError: 'Informe a data de início da vigência.' }); return; }
+    this.setState({ rateSaving: true, rateError: '' });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      const list = this.data.slice();
+      const i = this.state.curId;
+      const from = this.dmy(this.state.rateDate);
+      const rates = [{ v: v, from: from, to: '', reason: this.state.rateReason }].concat(
+        list[i].rates.map((r, k) => k === 0 ? Object.assign({}, r, { to: this.prevDay(from) }) : r)
+      );
+      list[i] = Object.assign({}, list[i], { rates: rates });
+      this.setState({ data: list, rateSheet: false, rateSaving: false, rateValue: '', rateDate: '' });
+      this.flash('Novo valor/hora registrado');
+    }, 900);
+  };
+
+  prevDay(dmy) {
+    const p = dmy.split('/');
+    const d = new Date(+p[2], +p[1] - 1, +p[0] - 1);
+    const pad = (n) => (n < 10 ? '0' : '') + n;
+    return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, view = this.view, st = this.dataState;
+    const isMobile = w < 1024, wide = w >= 1440, mid = w >= 1200;
+    const F = s.filters;
+    const q = s.query.trim().toLowerCase();
+    const data = this.data;
+
+    const filtered = data.filter(p => {
+      if (q && !(p.name + ' ' + p.role + ' ' + p.doc + ' ' + p.mail).toLowerCase().includes(q)) return false;
+      if (F.Status !== 'Todos' && p.status !== F.Status) return false;
+      if (F['Função'] !== 'Todas' && p.role !== F['Função']) return false;
+      if (F.Empresa !== 'Todas' && p.company !== F.Empresa) return false;
+      if (F['Vínculo'] !== 'Todos' && p.bond !== F['Vínculo']) return false;
+      return true;
+    }).slice().sort((a, b) => {
+      const dir = s.sortDir;
+      if (s.sort === 'since') return (this.dnum(a.since) - this.dnum(b.since)) * dir;
+      return a.name.localeCompare(b.name) * dir;
+    });
+
+    const anyFilter = q !== '' || F.Status !== 'Todos' || F['Função'] !== 'Todas' || F.Empresa !== 'Todas' || F['Vínculo'] !== 'Todos';
+    const filterCount = ['Status', 'Função', 'Empresa', 'Vínculo'].filter(k => F[k] !== 'Todos' && F[k] !== 'Todas').length;
+
+    const mkFilter = (key, title, all, options) => ({
+      title: title, label: title + ':', value: F[key], open: s.openFilter === key,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === key ? '' : key })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' +
+        (F[key] === all ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s',
+      options: [all].concat(options).map(o => ({
+        name: o,
+        pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [key]: o }), openFilter: '', page: 1 })),
+        style: 'padding:9px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (F[key] === o ? '700' : '500') +
+          ';color:' + (F[key] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[key] === o ? '#EEF0FE' : 'transparent') + ';transition:background .15s',
+        chipStyle: 'padding:11px 15px;border-radius:12px;font-size:13.5px;font-weight:700;border:1px solid ' +
+          (F[key] === o ? '#C7C3FB' : '#E2E8F0') + ';background:' + (F[key] === o ? '#EEF0FE' : '#fff') + ';color:' + (F[key] === o ? '#4338CA' : '#475569')
+      }))
+    });
+
+    const chips = [];
+    if (q) chips.push({ t: 'Busca: ' + s.query, clear: () => this.setState({ query: '' }) });
+    [['Status', 'Status', 'Todos'], ['Função', 'Função', 'Todas'], ['Empresa', 'Empresa', 'Todas'], ['Vínculo', 'Vínculo', 'Todos']].forEach(([k, lbl, all]) => {
+      if (F[k] !== all) chips.push({ t: lbl + ': ' + F[k], clear: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [k]: all }) })) });
+    });
+
+    const cols = wide ? '1.6fr 1.1fr 1.2fr .9fr 1.1fr .9fr .8fr 52px'
+      : (mid ? '1.6fr 1.1fr 1.2fr .9fr .9fr .8fr 52px' : '1.6fr 1.1fr .9fr .9fr .8fr 52px');
+
+    const pageCount = Math.max(1, Math.ceil(filtered.length / this.PER_PAGE));
+    const page = Math.min(s.page, pageCount);
+    const start = (page - 1) * this.PER_PAGE;
+    const pageRows = filtered.slice(start, start + this.PER_PAGE);
+
+    const counts = {
+      total: data.length,
+      ativos: data.filter(p => p.status === 'Ativo').length,
+      afast: data.filter(p => p.status === 'Afastado').length,
+      inativos: data.filter(p => p.status === 'Inativo' || p.status === 'Encerrado').length
+    };
+
+    const actionsFor = (p, i) => {
+      const base = ['Visualizar', 'Editar'];
+      const extra = p.status === 'Ativo' ? ['Afastar', 'Desativar', 'Encerrar']
+        : (p.status === 'Afastado' ? ['Reativar', 'Desativar', 'Encerrar']
+          : (p.status === 'Inativo' ? ['Reativar', 'Encerrar'] : ['Reativar']));
+      return base.concat(extra).map(a => ({
+        name: a,
+        run: () => {
+          if (a === 'Visualizar') { this.setState({ view: 'detail', viewSet: true, curId: i, rowMenu: -1, detailMenu: false, tab: 'geral' }); return; }
+          if (a === 'Editar') { this.setState({ view: 'edit', viewSet: true, curId: i, form: this.fromPerson(data[i]), dirty: false, formStatus: 'idle', rowMenu: -1, detailMenu: false }); return; }
+          this.ask(a, i);
+        },
+        style: 'padding:10px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:600;transition:background .15s;color:' +
+          (a === 'Encerrar' || a === 'Desativar' ? '#B91C1C' : (a === 'Afastar' ? '#C2410C' : (a === 'Reativar' ? '#047857' : '#0F172A')))
+      }));
+    };
+
+    const cur = data[s.curId] || data[0];
+    const lic = this.licenceState(cur);
+    const curRate = cur.rates[0];
+
+    const f = this.form;
+    const fs = s.formStatus;
+    const req = fs === 'required';
+    const input = (bad) => 'height:46px;padding:0 13px;border-radius:12px;border:1px solid ' + (bad ? '#FCA5A5' : '#E2E8F0') +
+      ';background:' + (bad ? '#FEF2F2' : '#F8FAFC') + ';font-size:14.5px;outline:none;color:#0F172A;transition:border-color .18s,background .18s';
+    const select = 'height:46px;padding:0 11px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;color:#0F172A';
+
+    const fld = (key, label, o) => {
+      const op = o || {};
+      const get = op.lic ? f.lic[key] : f[key];
+      const bad = (req && op.req && !String(get || '').trim()) || (op.key === fs);
+      return {
+        label: label, req: !!op.req, ph: op.ph || '', hint: op.hint || '',
+        value: get, error: op.key === fs ? op.msg : ((req && op.req && !String(get || '').trim()) ? 'Este campo é obrigatório.' : ''),
+        isText: !op.options, isSelect: !!op.options, options: op.options || [],
+        onInput: (e) => { if (op.lic) this.patchLic({ [key]: e.target.value }); else this.patch({ [key]: e.target.value }); },
+        inputStyle: input(bad), selectStyle: select,
+        wrapStyle: 'display:flex;flex-direction:column;gap:7px' + (op.span && w >= 900 ? ';grid-column:span 2' : '')
+      };
+    };
+
+    const FB = {
+      required: { title: 'Preencha os campos obrigatórios', text: 'Nome, função, empresa e valor/hora são necessários para cadastrar o funcionário.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+      mail: { title: 'E-mail em formato inválido', text: 'Use um endereço completo, como nome@empresa.com.', bg: '#FFFBEB', bd: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+      rate: { title: 'Valor/hora inválido', text: 'Informe um valor numérico maior que zero, como 24,50.', bg: '#FEF2F2', bd: '#FECACA', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' },
+      error: { title: 'Não foi possível salvar', text: 'Houve uma falha ao gravar o cadastro. Verifique a conexão e tente novamente.', bg: '#FEF2F2', bd: '#FECACA', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' }
+    };
+    const fb = FB[fs];
+
+    const c = s.confirm;
+    const cSpec = c ? this.CONFIRMS[c.kind] : null;
+    const cTone = cSpec ? this.TONES[cSpec.tone] : this.TONES.violet;
+    const cTarget = c ? data[c.id] : cur;
+
+    const rateList = (arr) => arr.map((r, k) => ({
+      value: this.eur(r.v), current: k === 0 && !r.to,
+      period: r.to ? r.from + ' — ' + r.to : 'desde ' + r.from,
+      reason: r.reason, color: k === 0 && !r.to ? '#10B981' : '#CBD5E1',
+      cardStyle: 'display:flex;align-items:center;gap:13px;padding:13px 14px;border-radius:13px;border:1px solid ' +
+        (k === 0 && !r.to ? '#A7F3D0' : '#E2E8F0') + ';background:' + (k === 0 && !r.to ? '#F6FEFB' : '#F8FAFC')
+    }));
+
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile
+        ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);'
+        : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') +
+        'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }),
+      closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      dashItemStyle: this.navBtn(s.active === 'Dashboard'),
+      groups: this.NAV.map(g => ({
+        name: g.name, dot: g.dot, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: this.navBtn(false, 'color:#CBD5E1;font-weight:600;'),
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(it => ({
+          name: it.name, badge: it.count ? String(data.length) : '',
+          pick: () => this.setState({ active: it.name, navOpen: false }),
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === it.name ? '700' : '500') +
+            ';color:' + (s.active === it.name ? '#fff' : '#94A3B8') + ';background:' + (s.active === it.name ? 'rgba(109,93,251,.26)' : 'transparent') + ';transition:background .16s,color .16s',
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === it.name ? '#6D5DFB' : '#475569'),
+          badgeStyle: 'padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);color:#CBD5E1;font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:600'
+        }))
+      })),
+
+      isList: view === 'list', isDetail: view === 'detail', isForm: view === 'new' || view === 'edit', isNew: view === 'new',
+      goList: () => this.setState({ view: 'list', viewSet: true, form: null, dirty: false, formStatus: 'idle', detailMenu: false }),
+      goNew: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), dirty: false, formStatus: 'idle' }),
+      goEdit: () => this.setState({ view: 'edit', viewSet: true, form: this.fromPerson(cur), dirty: false, formStatus: 'idle', detailMenu: false }),
+      tryCancel: () => { if (s.dirty) { this.setState({ confirmLeave: true }); return; } this.setState({ view: view === 'edit' ? 'detail' : 'list', viewSet: true, form: null, dirty: false, formStatus: 'idle' }); },
+      confirmLeave: s.confirmLeave,
+      keepEditing: () => this.setState({ confirmLeave: false }),
+      discard: () => { this.setState({ confirmLeave: false, view: view === 'edit' ? 'detail' : 'list', viewSet: true, form: null, dirty: false, formStatus: 'idle' }); this.flash('Alterações descartadas'); },
+
+      kpiGrid: 'display:grid;grid-template-columns:repeat(' + ((w - (isMobile ? 0 : 258) - 68) >= 860 ? 4 : 2) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)',
+      kpis: [
+        { label: 'Funcionários', value: String(counts.total), hint: 'Total cadastrado', color: '#6D5DFB', apply: 'Todos' },
+        { label: 'Ativos', value: String(counts.ativos), hint: 'Disponíveis para obras', color: '#10B981', apply: 'Ativo' },
+        { label: 'Afastados', value: String(counts.afast), hint: 'Temporariamente fora', color: '#F59E0B', apply: 'Afastado' },
+        { label: 'Inativos', value: String(counts.inativos), hint: 'Inativos e encerrados', color: '#94A3B8', apply: null }
+      ].map(k => ({
+        label: k.label, value: k.value, hint: k.hint, color: k.color,
+        style: 'text-align:left;background:#fff;border:1px solid ' + (k.apply && k.apply !== 'Todos' && F.Status === k.apply ? '#C7C3FB' : '#E2E8F0') +
+          ';border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;transition:transform .2s,box-shadow .2s,border-color .2s',
+        go: () => { if (k.apply) this.setState(x => ({ filters: Object.assign({}, x.filters, { Status: k.apply }), page: 1 })); }
+      })),
+
+      query: s.query, hasQuery: s.query !== '',
+      onQuery: (e) => this.setState({ query: e.target.value, page: 1 }),
+      clearQuery: () => this.setState({ query: '' }),
+      inlineFilters: !isMobile,
+      filters: [
+        mkFilter('Status', 'Status', 'Todos', ['Ativo', 'Afastado', 'Inativo', 'Encerrado']),
+        mkFilter('Função', 'Função', 'Todas', this.ROLES),
+        mkFilter('Empresa', 'Empresa', 'Todas', [this.MAIN].concat(this.THIRD)),
+        mkFilter('Vínculo', 'Vínculo', 'Todos', this.BONDS)
+      ],
+      anyFilter, activeChips: chips,
+      filterCount: filterCount ? String(filterCount) : '',
+      filterSheet: s.filterSheet,
+      openFilterSheet: () => this.setState({ filterSheet: true }),
+      closeFilterSheet: () => this.setState({ filterSheet: false }),
+      filterSheetBtnStyle: 'display:flex;align-items:center;gap:9px;height:46px;padding:0 16px;border-radius:12px;border:1px solid ' +
+        (filterCount ? '#C7C3FB' : '#E2E8F0') + ';background:#fff;font-size:13.5px;font-weight:700;color:' + (filterCount ? '#4338CA' : '#475569'),
+      applyLabel: filtered.length === 1 ? 'Ver 1 funcionário' : 'Ver ' + filtered.length + ' funcionários',
+      clearAll: () => this.setState({ query: '', filters: { Status: 'Todos', 'Função': 'Todas', Empresa: 'Todas', 'Vínculo': 'Todos' }, openFilter: '', page: 1 }),
+
+      stLoading: st === 'loading', stError: st === 'error', stEmpty: st === 'empty',
+      stNoResults: st === 'ready' && filtered.length === 0,
+      stReady: st === 'ready' && filtered.length > 0,
+      skeletons: [1, 2, 3, 4, 5, 6],
+      retry: () => { this.setState({ dataState: 'loading', stateSet: true }); clearTimeout(this.sTimer); this.sTimer = setTimeout(() => this.setState({ dataState: 'ready', stateSet: true }), 1100); },
+
+      isTable: !isMobile, isCards: isMobile, colCompany: mid, colPhone: wide, colSince: !isMobile,
+      headRowStyle: 'display:grid;grid-template-columns:' + cols + ';gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0;border-radius:20px 20px 0 0;align-items:center',
+      thStyle: 'font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B',
+      sortNameStyle: 'font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:' + (s.sort === 'name' ? '#4338CA' : '#64748B') + ';text-align:left',
+      sortSinceStyle: 'font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:' + (s.sort === 'since' ? '#4338CA' : '#64748B') + ';text-align:left',
+      sortNameMark: s.sort === 'name' ? (s.sortDir === 1 ? ' ↑' : ' ↓') : '',
+      sortSinceMark: s.sort === 'since' ? (s.sortDir === 1 ? ' ↑' : ' ↓') : '',
+      sortName: () => this.setState(x => ({ sort: 'name', sortDir: x.sort === 'name' ? -x.sortDir : 1 })),
+      sortSince: () => this.setState(x => ({ sort: 'since', sortDir: x.sort === 'since' ? -x.sortDir : 1 })),
+
+      rows: pageRows.map(p => {
+        const i = data.indexOf(p);
+        const col = this.ST[p.status];
+        return {
+          name: p.name, role: p.role, dept: p.dept, company: p.company, bond: p.bond, phone: p.mobile, since: p.since,
+          initials: this.initials(p.name), avatarStyle: this.avatar(p),
+          status: p.status, statusDot: col[2], statusStyle: this.statusStyle(p.status),
+          companyStyle: this.companyStyle(p.third),
+          rate: this.eur(p.rates[0].v),
+          open: () => this.setState({ view: 'detail', viewSet: true, curId: i, tab: 'geral' }),
+          menuOpen: s.rowMenu === i,
+          toggleMenu: () => this.setState(x => ({ rowMenu: x.rowMenu === i ? -1 : i })),
+          menuBtnStyle: 'width:34px;height:34px;border-radius:10px;font-size:17px;line-height:1;color:#475569;background:' +
+            (s.rowMenu === i ? '#EEF0FE' : 'transparent') + ';border:1px solid ' + (s.rowMenu === i ? '#DDD9FD' : 'transparent') + ';transition:background .16s',
+          actions: actionsFor(p, i),
+          rowStyle: 'display:grid;grid-template-columns:' + cols + ';gap:14px;padding:13px 20px;align-items:center;border-bottom:1px solid #F1F5F9;transition:background .16s'
+        };
+      }),
+      pageLabel: 'Mostrando ' + (filtered.length ? start + 1 : 0) + '–' + (start + pageRows.length) + ' de ' + filtered.length + (filtered.length === 1 ? ' funcionário' : ' funcionários'),
+      showPager: pageCount > 1,
+      pages: Array.apply(null, { length: pageCount }).map((_, k) => ({
+        n: String(k + 1), go: () => this.setState({ page: k + 1 }),
+        style: 'min-width:38px;height:38px;border-radius:11px;font-size:13.5px;font-weight:700;border:1px solid ' +
+          (page === k + 1 ? '#C7C3FB' : '#E2E8F0') + ';background:' + (page === k + 1 ? '#EEF0FE' : '#fff') + ';color:' + (page === k + 1 ? '#4338CA' : '#475569')
+      })),
+      prevPage: () => this.setState(x => ({ page: Math.max(1, x.page - 1) })),
+      nextPage: () => this.setState(x => ({ page: Math.min(pageCount, x.page + 1) })),
+      prevStyle: 'padding:0 14px;height:38px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:' + (page <= 1 ? '#94A3B8' : '#475569') + (page <= 1 ? ';pointer-events:none' : ''),
+      nextStyle: 'padding:0 14px;height:38px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:' + (page >= pageCount ? '#94A3B8' : '#475569') + (page >= pageCount ? ';pointer-events:none' : ''),
+
+      cardStyle: 'background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px',
+      rowInfoStyle: 'display:flex;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #F1F5F9',
+      kStyle: 'flex:0 0 140px;font-size:12.5px;font-weight:600;color:#64748B',
+      opsGrid: 'display:grid;grid-template-columns:repeat(' + (w >= 1200 ? 2 : 1) + ',minmax(0,1fr));gap:10px',
+      fieldGrid: 'display:grid;grid-template-columns:repeat(' + (w >= 900 ? 2 : 1) + ',minmax(0,1fr));gap:14px',
+      errTextStyle: 'display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#B91C1C',
+      errDotStyle: 'width:5px;height:5px;border-radius:50%;background:#EF4444;flex:0 0 auto',
+
+      tabs: [
+        { k: 'geral', n: 'Visão geral' }, { k: 'trabalho', n: 'Trabalho e valores' },
+        { k: 'docs', n: 'Documentação e veículo' }, { k: 'hist', n: 'Histórico' }
+      ].map(t => ({
+        name: t.n, pick: () => this.setState({ tab: t.k }),
+        style: 'flex:0 0 auto;padding:12px 16px;border-radius:11px 11px 0 0;font-size:14px;font-weight:' + (s.tab === t.k ? '700' : '600') +
+          ';color:' + (s.tab === t.k ? '#4338CA' : '#64748B') + ';background:' + (s.tab === t.k ? '#fff' : 'transparent') +
+          ';border:1px solid ' + (s.tab === t.k ? '#E2E8F0' : 'transparent') + ';border-bottom:1px solid ' + (s.tab === t.k ? '#fff' : 'transparent') +
+          ';margin-bottom:-1px;white-space:nowrap;transition:background .16s,color .16s'
+      })),
+      tabGeral: s.tab === 'geral', tabTrabalho: s.tab === 'trabalho', tabDocs: s.tab === 'docs', tabHist: s.tab === 'hist',
+
+      cur: {
+        name: cur.name, role: cur.role, company: cur.company, initials: this.initials(cur.name),
+        avatarLg: this.avatar(cur, 46),
+        status: cur.status, statusDot: this.ST[cur.status][2], statusStyle: this.statusStyle(cur.status),
+        companyStyle: this.companyStyle(cur.third),
+        currentRate: this.eur(curRate.v),
+        alert: lic.bad ? 'A carta de condução venceu em ' + cur.lic.expires + '. Este funcionário não pode ser atribuído a veículos no planning até a renovação.'
+          : (cur.status === 'Afastado' ? 'Funcionário afastado desde 08/08/2026. Indisponível para o planning até o retorno.' : ''),
+        alertTitle: lic.bad ? 'Carta de condução expirada' : 'Funcionário afastado',
+        alertStyle: 'display:flex;align-items:flex-start;gap:12px;padding:15px;border-radius:16px;background:' + (lic.bad ? '#FEF2F2' : '#FFFBEB') + ';border:1px solid ' + (lic.bad ? '#FECACA' : '#FDE68A'),
+        alertIconStyle: 'width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:' +
+          (lic.bad ? '#FEE2E2' : '#FEF3C7') + ';color:' + (lic.bad ? '#B91C1C' : '#B45309'),
+        alertTitleColor: lic.bad ? '#991B1B' : '#92400E',
+        alertTextColor: lic.bad ? '#B91C1C' : '#B45309',
+        personal: [
+          { k: 'Nome completo', v: cur.name, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Nome preferencial', v: cur.pref, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Data de nascimento', v: cur.born, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Documento', v: cur.doc, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Número fiscal', v: cur.fiscal, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Sexo', v: cur.sex, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' }
+        ],
+        contact: [
+          { k: 'E-mail', v: cur.mail, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right;word-break:break-all' },
+          { k: 'Telefone', v: cur.phone, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Telemóvel', v: cur.mobile, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Endereço', v: cur.street + ', ' + cur.number + (cur.extra ? ' · ' + cur.extra : ''), vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Localidade', v: cur.zip + ' ' + cur.city, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Região / País', v: cur.region + ' · ' + cur.country, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' }
+        ],
+        professional: [
+          { k: 'Cargo / função', v: cur.role, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Departamento', v: cur.dept, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Tipo de vínculo', v: cur.bond, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Empresa', v: cur.company, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Data de entrada', v: cur.entry, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Data de saída', v: cur.exit, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' }
+        ],
+        userHint: cur.third
+          ? 'Funcionário de terceirizado. O cadastro é individual e permanece vinculado a ' + cur.company + '. Ter acesso ao sistema é opcional e se faz em Usuários.'
+          : 'Funcionário não é usuário do sistema. Para conceder acesso ao Progesty, crie uma conta em Configurações → Usuários e vincule-a a este cadastro.',
+        ops: [
+          { k: 'Obras atuais', v: cur.ops.projects, w: 'em andamento' },
+          { k: 'Última obra', v: cur.ops.last, w: 'concluída' },
+          { k: 'Último planejamento', v: cur.ops.plan, w: 'planning' },
+          { k: 'Último registro de horas', v: cur.ops.hours, w: 'controle de horas' }
+        ],
+        work: [
+          { k: 'Função principal', v: cur.role, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Função secundária', v: cur.role2, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Valor/hora atual', v: this.eur(curRate.v), vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:14px;font-weight:600;text-align:right;color:#4338CA' },
+          { k: 'Unidade do custo', v: cur.unit, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Jornada padrão', v: cur.shift, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' },
+          { k: 'Horário', v: cur.start + ' — ' + cur.end, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Intervalo', v: cur.lunch, vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' }
+        ],
+        days: this.DAYS.map(dd => {
+          const on = cur.days.indexOf(dd) >= 0;
+          return {
+            name: dd,
+            style: 'display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:9px 12px;border-radius:11px;font-size:13px;font-weight:700;border:1px solid ' +
+              (on ? '#DDD9FD' : '#E2E8F0') + ';background:' + (on ? '#EEF0FE' : '#F8FAFC') + ';color:' + (on ? '#4338CA' : '#94A3B8')
+          };
+        }),
+        rates: rateList(cur.rates),
+        licenceLabel: lic.label,
+        licenceDot: lic.dot,
+        licenceStyle: this.pill(lic.tone.bg, lic.tone.color),
+        licence: [
+          { k: 'Número da carta', v: cur.lic.no, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Emissão', v: cur.lic.issued, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Validade', v: cur.lic.expires, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right;color:' + (lic.bad ? '#B91C1C' : '#0F172A') },
+          { k: 'Observações', v: cur.lic.notes || '—', vStyle: 'flex:1;min-width:0;font-size:13.5px;font-weight:600;text-align:right' }
+        ],
+        categories: cur.lic.cats.length ? cur.lic.cats : ['—'],
+        hasVehicle: !!cur.vehicle, noVehicle: !cur.vehicle,
+        vehicle: cur.vehicle ? cur.vehicle.name : '',
+        vehiclePlate: cur.vehicle ? cur.vehicle.plate : '',
+        vehicleKind: cur.vehicle ? cur.vehicle.kind : '',
+        vehicleTag: cur.vehicle ? cur.vehicle.plate.slice(0, 3) : '',
+        vehicleInfo: cur.vehicle ? [
+          { k: 'Início', v: cur.vehicle.from, vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' },
+          { k: 'Fim', v: cur.vehicle.to || 'Atual', vStyle: 'flex:1;min-width:0;font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:600;text-align:right' }
+        ] : [],
+        actions: actionsFor(cur, s.curId),
+        history: [
+          { when: '21/09/2026 — 09:20', t: 'Valor/hora atualizado para ' + this.eur(curRate.v), meta: curRate.reason, color: '#6D5DFB', bg: '#EEF0FE' },
+          { when: cur.vehicle ? cur.vehicle.from + ' — 08:00' : '10/06/2026 — 08:00', t: cur.vehicle ? 'Veículo ' + cur.vehicle.plate + ' atribuído' : 'Sem atribuição de veículo', meta: cur.vehicle ? cur.vehicle.kind : '', color: '#3B82F6', bg: '#EFF6FF' },
+          { when: '14/04/2026 — 11:32', t: 'Documentação profissional atualizada', meta: 'Carta de condução', color: '#06B6D4', bg: '#ECFEFF' },
+          { when: '02/02/2026 — 15:10', t: 'Alocado em Residencial Jardim Europa', meta: 'Planning · semana 06/2026', color: '#F59E0B', bg: '#FFFBEB' },
+          { when: cur.entry + ' — 09:00', t: 'Funcionário cadastrado', meta: 'por Carlos Mendes', color: '#64748B', bg: '#F1F5F9' }
+        ]
+      },
+      detailMenuOpen: s.detailMenu,
+      toggleDetailMenu: () => this.setState(x => ({ detailMenu: !x.detailMenu })),
+
+      formTitle: view === 'new' ? 'Novo funcionário' : 'Editar funcionário',
+      formSub: view === 'new' ? 'O funcionário poderá ser usado no planning e no controle de horas.' : 'Altere o cadastro de ' + (f.name || cur.name) + '.',
+      dirty: s.dirty,
+      formBanner: !!fb, formBannerTitle: fb ? fb.title : '', formBannerText: fb ? fb.text : '',
+      formBannerTitleColor: fb ? fb.titleColor : '', formBannerTextColor: fb ? fb.textColor : '',
+      formBannerStyle: 'display:flex;align-items:flex-start;gap:12px;padding:15px;border-radius:16px;animation:pgFade .26s cubic-bezier(.22,.7,.2,1);background:' + (fb ? fb.bg : '#fff') + ';border:1px solid ' + (fb ? fb.bd : '#E2E8F0'),
+      formBannerIconStyle: 'width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:' + (fb ? fb.iconBg : '#F1F5F9') + ';color:' + (fb ? fb.iconColor : '#64748B'),
+
+      sections: [
+        {
+          num: '01', title: 'Dados pessoais',
+          numStyle: 'width:28px;height:28px;border-radius:9px;background:#EEF0FE;color:#4338CA;display:flex;align-items:center;justify-content:center;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;flex:0 0 auto',
+          fields: [
+            fld('name', 'Nome completo', { req: true, ph: 'Nome e sobrenome' }),
+            fld('pref', 'Nome preferencial', { ph: 'Como é chamado' }),
+            fld('born', 'Data de nascimento', { ph: 'dd/mm/aaaa' }),
+            fld('sex', 'Sexo', { options: ['—', 'Masculino', 'Feminino', 'Prefere não informar'] }),
+            fld('doc', 'Documento de identificação', { ph: 'Número do documento' }),
+            fld('fiscal', 'Número fiscal', { ph: 'BE 00.00.00-000.00' })
+          ]
+        },
+        {
+          num: '02', title: 'Contato e endereço',
+          numStyle: 'width:28px;height:28px;border-radius:9px;background:#ECFEFF;color:#0E7490;display:flex;align-items:center;justify-content:center;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;flex:0 0 auto',
+          fields: [
+            fld('mail', 'E-mail', { ph: 'nome@empresa.com', key: 'mail', msg: 'Endereço de e-mail inválido.' }),
+            fld('mobile', 'Telemóvel', { ph: '+32 470 00 00 00' }),
+            fld('phone', 'Telefone', { ph: '+32 0 000 00 00' }),
+            fld('country', 'País', { options: ['Bélgica', 'França', 'Países Baixos', 'Luxemburgo', 'Portugal'] }),
+            fld('street', 'Endereço', { ph: 'Rua ou avenida', span: true }),
+            fld('number', 'Número', { ph: '000' }),
+            fld('extra', 'Complemento', { ph: 'Bloco, andar' }),
+            fld('zip', 'Código postal', { ph: '0000' }),
+            fld('city', 'Cidade', { ph: 'Cidade' }),
+            fld('region', 'Estado / região', { ph: 'Região ou província' })
+          ]
+        },
+        {
+          num: '03', title: 'Dados profissionais',
+          numStyle: 'width:28px;height:28px;border-radius:9px;background:#FFF7ED;color:#C2410C;display:flex;align-items:center;justify-content:center;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;flex:0 0 auto',
+          fields: [
+            fld('role', 'Cargo / função', { req: true, options: [''].concat(this.ROLES) }),
+            fld('dept', 'Departamento', { options: this.DEPTS }),
+            fld('bond', 'Tipo de vínculo', { options: this.BONDS }),
+            fld('company', 'Empresa', { req: true, options: [this.MAIN].concat(this.THIRD), hint: 'Empresa principal ou um terceirizado já cadastrado.' }),
+            fld('entry', 'Data de entrada', { ph: 'dd/mm/aaaa' }),
+            fld('exit', 'Data de saída', { ph: 'dd/mm/aaaa ou —' }),
+            fld('status', 'Status', { options: ['Ativo', 'Afastado', 'Inativo', 'Encerrado'] })
+          ]
+        },
+        {
+          num: '04', title: 'Configurações de trabalho', isDays: true, isRate: true,
+          numStyle: 'width:28px;height:28px;border-radius:9px;background:#ECFDF5;color:#047857;display:flex;align-items:center;justify-content:center;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;flex:0 0 auto',
+          fields: [
+            fld('role2', 'Função secundária', { options: [''].concat(this.ROLES) }),
+            fld('rate', 'Valor/hora atual', { req: true, ph: '0,00', key: 'rate', msg: 'Informe um valor maior que zero.', hint: 'Alterar aqui cria um novo período de vigência.' }),
+            fld('unit', 'Unidade do custo', { options: this.UNITS }),
+            fld('shift', 'Jornada padrão', { ph: '40h semanais' }),
+            fld('start', 'Horário de entrada', { ph: '08:00' }),
+            fld('end', 'Horário de saída', { ph: '17:00' }),
+            fld('lunch', 'Intervalo', { ph: '60 min' })
+          ]
+        },
+        {
+          num: '05', title: 'Documentação profissional',
+          numStyle: 'width:28px;height:28px;border-radius:9px;background:#FDF2F8;color:#BE185D;display:flex;align-items:center;justify-content:center;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600;flex:0 0 auto',
+          fields: [
+            fld('no', 'Número da carta de condução', { lic: true, ph: 'B-0000000' }),
+            fld('issued', 'Data de emissão', { lic: true, ph: 'dd/mm/aaaa' }),
+            fld('expires', 'Data de validade', { lic: true, ph: 'dd/mm/aaaa', hint: 'Usada para validar a atribuição de veículos.' }),
+            fld('notes', 'Observações', { lic: true, ph: 'Restrições, habilitações especiais', span: true })
+          ]
+        }
+      ],
+      dayToggles: this.DAYS.map(dd => {
+        const on = (f.days || []).indexOf(dd) >= 0;
+        return {
+          name: dd,
+          toggle: () => {
+            const days = (f.days || []).slice();
+            const k = days.indexOf(dd);
+            if (k >= 0) days.splice(k, 1); else days.push(dd);
+            this.patch({ days: days });
+          },
+          style: 'display:inline-flex;align-items:center;justify-content:center;min-width:52px;padding:11px 14px;border-radius:11px;font-size:13.5px;font-weight:700;border:1px solid ' +
+            (on ? '#C7C3FB' : '#E2E8F0') + ';background:' + (on ? '#EEF0FE' : '#fff') + ';color:' + (on ? '#4338CA' : '#475569') + ';transition:background .16s,border-color .16s'
+        };
+      }),
+      formRates: rateList(f.rates || []),
+
+      isSaving: s.saving,
+      saveLabel: s.saving ? 'Salvando...' : (view === 'new' ? 'Cadastrar funcionário' : 'Salvar alterações'),
+      saveBtnStyle: 'display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 21px;border-radius:12px;background:' +
+        (s.saving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);' + (s.saving ? 'pointer-events:none;' : ''),
+      save: this.save,
+
+      rateSheet: s.rateSheet,
+      openRate: () => this.setState({ rateSheet: true, rateValue: '', rateDate: '', rateReason: 'Revisão anual', rateError: '' }),
+      closeRate: () => this.setState({ rateSheet: false, rateError: '' }),
+      rateValue: s.rateValue, rateDate: s.rateDate, rateReason: s.rateReason, rateReasons: this.RATE_REASONS,
+      onRateValue: (e) => this.setState({ rateValue: e.target.value, rateError: '' }),
+      onRateDate: (e) => this.setState({ rateDate: e.target.value, rateError: '' }),
+      onRateReason: (e) => this.setState({ rateReason: e.target.value }),
+      rateValueStyle: input(!!s.rateError && !s.rateValue),
+      rateDateStyle: input(!!s.rateError && !s.rateDate),
+      rateError: s.rateError,
+      rateSaveLabel: s.rateSaving ? 'Registrando...' : 'Registrar valor',
+      rateSaveStyle: 'display:flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' +
+        (s.rateSaving ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';box-shadow:0 14px 28px -14px rgba(109,93,251,1);' + (s.rateSaving ? 'pointer-events:none;' : ''),
+      saveRate: this.saveRate,
+
+      confirm: !!c,
+      confirmTitle: cSpec ? cSpec.title : '',
+      confirmText: cSpec ? cSpec.text : '',
+      confirmCta: s.confirmBusy ? 'Processando...' : (cSpec ? cSpec.cta : ''),
+      confirmIcon: cSpec && cSpec.tone === 'green' ? '✓' : '!',
+      confirmIconStyle: 'width:44px;height:44px;border-radius:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;background:' +
+        cTone.bg + ';border:1px solid ' + cTone.bd + ';color:' + cTone.color,
+      confirmName: cTarget.name, confirmMeta: cTarget.role + ' · ' + cTarget.company,
+      confirmInitials: this.initials(cTarget.name), confirmAvatarStyle: this.avatar(cTarget, 34),
+      confirmBtnStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' +
+        (s.confirmBusy ? '#A5B4FC' : cTone.btn) + ';box-shadow:0 14px 28px -14px ' + cTone.shadow + ';' + (s.confirmBusy ? 'pointer-events:none;' : ''),
+      confirmBusy: s.confirmBusy, confirmError: s.confirmError,
+      closeConfirm: () => this.setState({ confirm: null, confirmBusy: false, confirmError: false }),
+      runConfirm: this.runConfirm,
+
+      toast: s.toast,
+
+      demos: [
+        { name: 'Lista', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, query: '', filters: { Status: 'Todos', 'Função': 'Todas', Empresa: 'Todas', 'Vínculo': 'Todos' } }) },
+        { name: 'Carregando', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'loading', stateSet: true }) },
+        { name: 'Vazio', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'empty', stateSet: true }) },
+        { name: 'Erro', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'error', stateSet: true }) },
+        { name: 'Sem resultado', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, query: 'zzz' }) },
+        { name: 'Novo', run: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), dirty: false, formStatus: 'idle' }) },
+        { name: 'Validação', run: () => this.setState({ view: 'new', viewSet: true, form: this.blank(), formStatus: 'required' }) },
+        { name: 'Salvando', run: () => this.setState({ view: 'new', viewSet: true, saving: true, formStatus: 'saving', form: Object.assign(this.blank(), { name: 'Pedro Vasco', role: 'Pedreiro', rate: '22,00' }) }) },
+        { name: 'Visualizar', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'geral' }) },
+        { name: 'Valores/hora', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'trabalho' }) },
+        { name: 'Novo valor', run: () => this.setState({ view: 'detail', viewSet: true, curId: 0, tab: 'trabalho', rateSheet: true, rateValue: '', rateDate: '', rateError: '' }) },
+        { name: 'Carta expirada', run: () => this.setState({ view: 'detail', viewSet: true, curId: 2, tab: 'docs' }) },
+        { name: 'Confirmar', run: () => this.setState({ view: 'list', viewSet: true, dataState: 'ready', stateSet: true, confirm: { kind: 'Encerrar', id: 0 }, confirmBusy: false, confirmError: false }) },
+        { name: 'Alterações não salvas', run: () => this.setState({ view: 'edit', viewSet: true, curId: 0, form: Object.assign(this.fromPerson(this.data[0]), { role: 'Engenheiro civil' }), dirty: true, confirmLeave: true }) }
+      ].map(d => ({
+        name: d.name, run: d.run,
+        style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#475569;transition:border-color .16s,color .16s'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
