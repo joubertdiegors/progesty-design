@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+  <sc-if value="{{ showAside }}" hint-placeholder-val="{{ true }}">
+    <aside style="flex:0 0 46%;max-width:620px;position:relative;overflow:hidden;background:linear-gradient(150deg,#0F172A,#1E1B4B 62%,#312E81);padding:clamp(34px,4vw,56px);display:flex;flex-direction:column;gap:28px">
+      <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(620px 340px at 82% 8%,rgba(109,93,251,.32),transparent 68%),radial-gradient(520px 300px at 12% 88%,rgba(6,182,212,.22),transparent 70%)"></div>
+      <div style="position:relative;display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:19px;box-shadow:0 10px 22px -10px rgba(109,93,251,1)">P</div>
+        <span style="font-size:18px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      </div>
+      <div style="position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px">
+        <h2 style="margin:0;font-size:clamp(26px,2.8vw,38px);font-weight:800;letter-spacing:-.035em;line-height:1.12;color:#fff;max-width:16ch;text-wrap:balance">Recupere o acesso em poucos minutos.</h2>
+        <p style="margin:0;font-size:clamp(14.5px,1.2vw,16.5px);line-height:1.6;color:#A5B4FC;max-width:44ch;text-wrap:pretty">Enviamos um link seguro para o e-mail cadastrado. O link expira em 30 minutos e só pode ser usado uma vez.</p>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-top:6px">
+          <sc-for list="{{ steps }}" as="p" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)">
+              <span style="width:24px;height:24px;border-radius:8px;background:rgba(109,93,251,.35);display:flex;align-items:center;justify-content:center;color:#C7D2FE;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;flex:0 0 auto">{{ p.n }}</span>
+              <span style="font-size:13.5px;font-weight:600;color:#E2E8F0">{{ p.t }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="position:relative;display:flex;align-items:center;gap:10px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1)">
+        <span style="width:7px;height:7px;border-radius:50%;background:#10B981;flex:0 0 auto"></span>
+        <span style="font-size:12.5px;color:#94A3B8">Por segurança, não informamos se um e-mail está cadastrado</span>
+      </div>
+    </aside>
+  </sc-if>
+
+  <main style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(24px,4vw,56px) clamp(16px,3vw,40px);gap:22px">
+    <div style="width:100%;max-width:412px;display:flex;flex-direction:column;gap:22px">
+
+      <sc-if value="{{ showLogo }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:11px;align-self:center">
+          <div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;box-shadow:0 10px 22px -10px rgba(109,93,251,1)">P</div>
+          <span style="font-size:19px;font-weight:800;letter-spacing:.06em">PROGESTY</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSent }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #A7F3D0;border-radius:22px;padding:clamp(24px,3vw,34px);display:flex;flex-direction:column;gap:18px;box-shadow:0 30px 60px -44px rgba(15,23,42,.55);animation:pgFade .3s cubic-bezier(.22,.7,.2,1)">
+          <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:56px;height:56px;border-radius:18px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;color:#047857;font-size:26px;font-weight:800">✓</span>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Link enviado</span>
+              <span style="font-size:14.5px;color:#64748B;line-height:1.5;text-wrap:pretty">Se existir uma conta com este e-mail, enviamos o link de recuperação.</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;background:#F8FAFC;border:1px solid #E2E8F0">
+            <span style="width:30px;height:30px;border-radius:10px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:13px;height:10px;border-radius:2px;border:1.5px solid #6D5DFB"></span>
+            </span>
+            <span style="min-width:0;font-size:14px;font-weight:700;word-break:break-all">{{ sentTo }}</span>
+          </div>
+          <span style="font-size:13px;color:#64748B;line-height:1.55;text-wrap:pretty">Verifique a sua caixa de entrada e a pasta de spam. O link expira em 30 minutos.</span>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <button onClick="{{ resend }}" style="{{ resendStyle }}">{{ resendLabel }}</button>
+            <button onClick="{{ backToLogin }}" style="padding:14px;border-radius:13px;font-size:14.5px;font-weight:700;color:#5145CD">Voltar para o login</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isForm }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(24px,3vw,34px);display:flex;flex-direction:column;gap:20px;box-shadow:0 30px 60px -44px rgba(15,23,42,.55)">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <h1 style="margin:0;font-size:clamp(22px,2.2vw,26px);font-weight:800;letter-spacing:-.03em">Recuperar senha</h1>
+            <p style="margin:0;font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">Informe o e-mail cadastrado e enviaremos um link para você definir uma nova senha.</p>
+          </div>
+
+          <sc-if value="{{ banner }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ bannerStyle }}">
+              <span style="{{ bannerIconStyle }}">{{ bannerIcon }}</span>
+              <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+                <span style="font-size:13.5px;font-weight:700;line-height:1.35;color:{{ bannerTitleColor }}">{{ bannerTitle }}</span>
+                <span style="font-size:12.5px;line-height:1.45;color:{{ bannerTextColor }};text-wrap:pretty">{{ bannerText }}</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <label for="pg-mail" style="font-size:12.5px;font-weight:600;color:#475569">E-mail</label>
+            <input id="pg-mail" type="email" value="{{ mail }}" onInput="{{ onMail }}" onKeyDown="{{ onKey }}" autocomplete="email" placeholder="nome@empresa.com" style="{{ mailInputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+            <sc-if value="{{ mailError }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#B91C1C">
+                <span style="width:5px;height:5px;border-radius:50%;background:#EF4444;flex:0 0 auto"></span>{{ mailError }}
+              </span>
+            </sc-if>
+          </div>
+
+          <button onClick="{{ submit }}" style="{{ submitStyle }}">
+            <sc-if value="{{ isSending }}" hint-placeholder-val="{{ false }}">
+              <span style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+            </sc-if>
+            {{ submitLabel }}
+          </button>
+
+          <button onClick="{{ backToLogin }}" style="padding:13px;border-radius:13px;font-size:14.5px;font-weight:700;color:#5145CD">Voltar para o login</button>
+
+          <div style="display:flex;align-items:center;gap:11px;padding-top:18px;border-top:1px solid #F1F5F9">
+            <span style="width:30px;height:30px;border-radius:10px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:11px;height:11px;border-radius:3px;background:#6D5DFB"></span>
+            </span>
+            <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">Se não reconhecer este pedido, ignore o e-mail. A sua senha atual continua válida.</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px">
+        <span style="font-size:12px;color:#94A3B8">Estados:</span>
+        <sc-for list="{{ demos }}" as="d" hint-placeholder-count="6">
+          <button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button>
+        </sc-for>
+      </div>
+
+      <span style="align-self:center;font-size:11.5px;color:#94A3B8">© 2026 Progesty · Gestão para empresas da construção civil</span>
+    </div>
+  </main>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)">
+      <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>
+      {{ toast }}
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;idle&quot;,&quot;required&quot;,&quot;format&quot;,&quot;sending&quot;,&quot;sent&quot;,&quot;notfound&quot;,&quot;error&quot;],&quot;default&quot;:&quot;idle&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Estado&quot;},&quot;disclosePublicly&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Segurança&quot;}}">
+class Component extends DCLogic {
+  state = { mail: '', status: 'idle', touched: false, toast: '', w: 1400, statusSet: false, sentTo: '', cooldown: 0 };
+
+  KNOWN = ['carlos@progesty.com', 'ana@progesty.com', 'rafael@progesty.com'];
+
+  BANNERS = {
+    required: { title: 'Informe o seu e-mail', text: 'Precisamos do e-mail cadastrado para enviar o link de recuperação.', bg: '#FFFBEB', bd: '#FDE68A', icon: '!', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+    format: { title: 'E-mail em formato inválido', text: 'Use um endereço completo, como nome@empresa.com.', bg: '#FFFBEB', bd: '#FDE68A', icon: '!', iconBg: '#FEF3C7', iconColor: '#B45309', titleColor: '#92400E', textColor: '#B45309' },
+    notfound: { title: 'E-mail não encontrado', text: 'Nenhuma conta ativa usa este endereço. Confira o e-mail ou fale com o administrador da sua empresa.', bg: '#FEF2F2', bd: '#FECACA', icon: '!', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' },
+    error: { title: 'Não foi possível enviar', text: 'Houve uma falha ao enviar o e-mail. Verifique a sua conexão e tente novamente em instantes.', bg: '#FEF2F2', bd: '#FECACA', icon: '!', iconBg: '#FEE2E2', iconColor: '#B91C1C', titleColor: '#991B1B', textColor: '#B91C1C' }
+  };
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() { window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth }); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tTimer); clearTimeout(this.sTimer); clearInterval(this.cTimer); }
+
+  get status() { return this.state.statusSet ? this.state.status : (this.props.initialState || 'idle'); }
+  get discloses() { return this.props.disclosePublicly === true; }
+
+  flash(msg) {
+    clearTimeout(this.tTimer);
+    this.setState({ toast: msg });
+    this.tTimer = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  setStatus(v, extra) { this.setState(Object.assign({ status: v, statusSet: true }, extra || {})); }
+
+  edit(patch) {
+    const clears = ['required', 'format', 'notfound', 'error'].indexOf(this.status) >= 0;
+    this.setState(Object.assign({}, patch, clears ? { status: 'idle', statusSet: true, touched: false } : null));
+  }
+
+  startCooldown() {
+    clearInterval(this.cTimer);
+    this.setState({ cooldown: 30 });
+    this.cTimer = setInterval(() => {
+      this.setState(x => {
+        if (x.cooldown <= 1) { clearInterval(this.cTimer); return { cooldown: 0 }; }
+        return { cooldown: x.cooldown - 1 };
+      });
+    }, 1000);
+  }
+
+  send = () => {
+    const m = this.state.mail.trim();
+    if (!m) { this.setStatus('required', { touched: true }); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)) { this.setStatus('format', { touched: true }); return; }
+    this.setStatus('sending', { touched: true });
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(() => {
+      if (/falha|erro/.test(m.toLowerCase())) { this.setStatus('error'); return; }
+      const known = this.KNOWN.indexOf(m.toLowerCase()) >= 0;
+      if (!known && this.discloses) { this.setStatus('notfound'); return; }
+      this.setStatus('sent', { sentTo: m });
+      this.startCooldown();
+    }, 1200);
+  };
+
+  renderVals() {
+    const s = this.state, st = this.status, w = s.w;
+    const sending = st === 'sending', sent = st === 'sent';
+    const b = this.BANNERS[st];
+    const bad = st === 'required' || st === 'format' || st === 'notfound';
+    const cooling = s.cooldown > 0;
+
+    return {
+      showAside: w >= 940, showLogo: w < 940,
+      steps: [{ n: '01', t: 'Informe o e-mail cadastrado' }, { n: '02', t: 'Abra o link que enviamos' }, { n: '03', t: 'Defina a sua nova senha' }],
+
+      isForm: !sent, isSent: sent, isSending: sending,
+      sentTo: s.sentTo || s.mail,
+
+      banner: !!b, bannerTitle: b ? b.title : '', bannerText: b ? b.text : '', bannerIcon: b ? b.icon : '',
+      bannerTitleColor: b ? b.titleColor : '', bannerTextColor: b ? b.textColor : '',
+      bannerStyle: 'display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;animation:pgFade .26s cubic-bezier(.22,.7,.2,1);background:' + (b ? b.bg : '#fff') + ';border:1px solid ' + (b ? b.bd : '#E2E8F0'),
+      bannerIconStyle: 'width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:' + (b ? b.iconBg : '#F1F5F9') + ';color:' + (b ? b.iconColor : '#64748B'),
+
+      mail: s.mail,
+      onMail: (e) => this.edit({ mail: e.target.value }),
+      onKey: (e) => { if (e.key === 'Enter' && !sending) this.send(); },
+      mailInputStyle: 'height:46px;padding:0 13px;border-radius:12px;border:1px solid ' + (bad ? '#FCA5A5' : '#E2E8F0') +
+        ';background:' + (bad ? '#FEF2F2' : '#F8FAFC') + ';font-size:14.5px;outline:none;color:#0F172A;transition:border-color .18s,background .18s',
+      mailError: st === 'required' ? 'Informe o e-mail cadastrado.' : (st === 'format' ? 'Endereço de e-mail inválido.' : ''),
+
+      submitLabel: sending ? 'Enviando...' : 'Enviar link de recuperação',
+      submitStyle: 'display:flex;align-items:center;justify-content:center;gap:10px;padding:15px;border-radius:13px;font-size:15.5px;font-weight:700;color:#fff;background:' +
+        (sending ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') +
+        ';box-shadow:0 16px 30px -16px rgba(109,93,251,1);transition:transform .18s,box-shadow .18s;' + (sending ? 'pointer-events:none;' : ''),
+      submit: this.send,
+
+      resendLabel: cooling ? 'Reenviar em ' + s.cooldown + 's' : 'Enviar novamente',
+      resendStyle: 'padding:14px;border-radius:13px;font-size:14.5px;font-weight:700;border:1px solid ' + (cooling ? '#E2E8F0' : '#C7C3FB') +
+        ';background:' + (cooling ? '#F8FAFC' : '#fff') + ';color:' + (cooling ? '#94A3B8' : '#4338CA') + ';transition:border-color .18s;' + (cooling ? 'pointer-events:none;' : ''),
+      resend: () => { this.startCooldown(); this.flash('Link reenviado para ' + (this.state.sentTo || this.state.mail)); },
+      backToLogin: () => this.flash('Voltando para o login'),
+
+      demos: [
+        { name: 'Inicial', run: () => this.setState({ mail: '', status: 'idle', statusSet: true, touched: false }) },
+        { name: 'Obrigatório', run: () => this.setState({ mail: '', status: 'required', statusSet: true, touched: true }) },
+        { name: 'Formato', run: () => this.setState({ mail: 'carlos@progesty', status: 'format', statusSet: true, touched: true }) },
+        { name: 'Enviando', run: () => this.setState({ mail: 'carlos@progesty.com', status: 'sending', statusSet: true, touched: true }) },
+        { name: 'Enviado', run: () => { this.startCooldown(); this.setState({ mail: 'carlos@progesty.com', sentTo: 'carlos@progesty.com', status: 'sent', statusSet: true }); } },
+        { name: 'Não encontrado', run: () => this.setState({ mail: 'desconhecido@empresa.com', status: 'notfound', statusSet: true, touched: true }) },
+        { name: 'Erro no envio', run: () => this.setState({ mail: 'carlos@progesty.com', status: 'error', statusSet: true, touched: true }) }
+      ].map(d => ({
+        name: d.name, run: d.run,
+        style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B;transition:border-color .16s,color .16s'
+      })),
+
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
