@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+.pg-print{display:none}
+.pg-rm{opacity:0;transition:opacity .14s}
+.pg-row:hover .pg-rm{opacity:1}
+@media print{
+  @page{size:A4 landscape;margin:9mm}
+  .pg-noprint,.pg-screen{display:none !important}
+  body{background:#fff}
+  .pg-print{display:block !important}
+  .pg-root{background:#fff !important}
+  .pg-page{break-after:page;page-break-after:always}
+  .pg-page:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div class="pg-root" style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll pg-noprint" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button>
+      </sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="{{ dashItemStyle }}">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto">
+          <span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span>
+          <span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span>
+        </span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="6">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}">
+                  <span style="{{ it.dotStyle }}"></span>
+                  <span style="flex:1;text-align:left">{{ it.name }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column">
+        <span style="font-size:13px;font-weight:700;color:#E2E8F0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Carlos Mendes</span>
+        <span style="font-size:11px;color:#94A3B8">Super Usuário</span>
+      </div>
+    </div>
+  </aside>
+</sc-if>
+
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeNav }}" class="pg-noprint" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div>
+</sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+
+  <header class="pg-noprint" style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,30px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto">
+          <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+          <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+          <span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span>
+        </button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:3px">
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Planning</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Monte a operação do dia: obras, equipes, terceirizados e veículos.</p>
+      </div>
+      <span style="{{ statusStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ statusDot }}"></span>{{ statusLabel }}</span>
+      <div style="display:flex;flex-wrap:wrap;gap:9px;flex:0 0 auto">
+        <sc-if value="{{ showResourcesBtn }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openResources }}" style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid #C7C3FB;background:#fff;color:#4338CA;font-size:13.5px;font-weight:700">Recursos</button>
+        </sc-if>
+        <div style="position:relative">
+          <button onClick="{{ toggleActions }}" style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700">Ações<span style="font-size:9px;color:#64748B">▼</span></button>
+          <sc-if value="{{ actionsOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:calc(100% + 8px);right:0;min-width:226px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:56">
+              <sc-for list="{{ boardActions }}" as="a" hint-placeholder-count="7">
+                <button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.name }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <button onClick="{{ validate }}" style="{{ validateStyle }}">
+          <sc-if value="{{ saving }}" hint-placeholder-val="{{ false }}">
+            <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+          </sc-if>
+          {{ validateLabel }}
+        </button>
+      </div>
+    </div>
+
+    <div style="padding:14px clamp(16px,2.4vw,30px);display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+      <div style="display:flex;gap:4px;padding:4px;border-radius:12px;background:#fff;border:1px solid #E2E8F0;flex:0 0 auto">
+        <sc-for list="{{ modes }}" as="m" hint-placeholder-count="4">
+          <button onClick="{{ m.pick }}" style="{{ m.style }}">{{ m.name }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex:0 0 auto">
+        <button onClick="{{ prev }}" aria-label="Anterior" style="width:40px;height:40px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:16px;color:#475569" style-hover="border-color:#C7C3FB;color:#4338CA">‹</button>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:2px;padding:0 6px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:clamp(14px,1.5vw,16px);font-weight:600;letter-spacing:-.01em;white-space:nowrap">{{ periodLabel }}</span>
+          <span style="font-size:11.5px;color:#64748B;white-space:nowrap">{{ periodSub }}</span>
+        </div>
+        <button onClick="{{ next }}" aria-label="Próximo" style="width:40px;height:40px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:16px;color:#475569" style-hover="border-color:#C7C3FB;color:#4338CA">›</button>
+        <button onClick="{{ today }}" style="padding:0 14px;height:40px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#475569;white-space:nowrap" style-hover="border-color:#C7C3FB;color:#4338CA">Hoje</button>
+      </div>
+      <div style="flex:1;min-width:10px"></div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <sc-for list="{{ boardStats }}" as="b" hint-placeholder-count="3">
+          <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:#fff;border:1px solid #E2E8F0;font-size:12.5px;font-weight:600;color:#475569">
+            <span style="width:8px;height:8px;border-radius:2px;background:{{ b.color }}"></span>{{ b.t }}
+          </span>
+        </sc-for>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;display:flex;min-width:0">
+
+    <div class="pg-scroll pg-screen" style="{{ boardWrapStyle }}">
+
+      <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ cardGridStyle }}">
+          <sc-for list="{{ skeletons }}" as="k" hint-placeholder-count="4">
+            <div style="{{ skeletonCardStyle }}">
+              <div class="pg-sk" style="height:14px;width:62%"></div>
+              <div class="pg-sk" style="height:10px;width:44%;margin-top:8px"></div>
+              <div class="pg-sk" style="height:1px;width:100%;margin:14px 0"></div>
+              <div class="pg-sk" style="height:10px;width:70%;margin-bottom:8px"></div>
+              <div class="pg-sk" style="height:10px;width:56%;margin-bottom:8px"></div>
+              <div class="pg-sk" style="height:10px;width:64%"></div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDayView }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ boardEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(32px,4.5vw,58px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+            <span style="width:60px;height:60px;border-radius:19px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <span style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#6D5DFB,#06B6D4)"></span>
+            </span>
+            <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nada planejado para este dia</span>
+            <span style="font-size:14.5px;color:#64748B;max-width:48ch;text-wrap:pretty">Arraste uma obra do painel de recursos para um card, ou adicione o primeiro card do dia.</span>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px">
+              <button onClick="{{ addCard }}" style="display:flex;align-items:center;gap:9px;padding:13px 21px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)"><span style="font-size:17px;line-height:1">+</span>Adicionar card</button>
+              <button onClick="{{ copyPrev }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Copiar dia anterior</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ boardReady }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ cardGridStyle }}">
+            <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+              <div style="{{ c.wrapStyle }}">
+                <div style="display:flex;align-items:stretch;gap:6px;min-width:0">
+                <div onDragOver="{{ c.onDragOver }}" onDragLeave="{{ c.onDragLeave }}" onDrop="{{ c.onDrop }}" onClick="{{ c.select }}" style="{{ c.cardStyle }}">
+
+                  <div style="{{ c.headStyle }}">
+                    <div style="{{ c.headTopStyle }}">
+                      <span style="{{ c.titleStyle }}">{{ c.title }}</span>
+                      <sc-if value="{{ c.isCont }}" hint-placeholder-val="{{ false }}">
+                        <span style="flex:0 0 auto;padding:1px 6px;border-radius:6px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;white-space:nowrap">{{ c.contIndex }}</span>
+                      </sc-if>
+                      <span style="{{ c.clientStyle }}">{{ c.client }}</span>
+                    </div>
+                    <div style="{{ c.headLineStyle }}">
+                      <span style="{{ c.placeStyle }}">{{ c.place }}</span>
+                    </div>
+                    <div style="{{ c.headLineStyle }}">
+                      <span style="{{ c.ciawStyle }}">{{ c.ciaw }}</span>
+                      <sc-if value="{{ c.hasVehicles }}" hint-placeholder-val="{{ false }}">
+                        <div style="flex:0 1 auto;min-width:0;display:flex;align-items:center;justify-content:flex-end;gap:4px">
+                          <sc-for list="{{ c.vehicleChips }}" as="vc" hint-placeholder-count="1">
+                            <button onClick="{{ vc.openDriver }}" title="Condutor e remoção" style="{{ vc.style }}">{{ vc.plate }}</button>
+                          </sc-for>
+                          <sc-if value="{{ c.moreVehicles }}" hint-placeholder-val="{{ false }}">
+                            <button onClick="{{ c.openVehicleList }}" title="Ver todos os veículos" style="flex:0 0 auto;padding:2px 6px;border-radius:6px;background:#EFF6FF;color:#1D4ED8;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;white-space:nowrap">{{ c.moreVehiclesLabel }}</button>
+                          </sc-if>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+
+                  <div style="{{ c.bodyStyle }}">
+                    <sc-for list="{{ c.rows }}" as="r" hint-placeholder-count="8">
+                      <div class="pg-row" style="{{ r.style }}">
+                        <sc-if value="{{ r.isDriver }}" hint-placeholder-val="{{ false }}">
+                          <span style="{{ r.vanStyle }}"></span>
+                        </sc-if>
+                        <span style="{{ r.labelStyle }}">{{ r.label }}</span>
+                        <sc-if value="{{ r.canRemove }}" hint-placeholder-val="{{ true }}">
+                          <button onClick="{{ r.remove }}" aria-label="Remover" class="pg-noprint pg-rm" style="position:absolute;top:1px;right:0;width:17px;height:16px;border-radius:4px;background:#fff;box-shadow:-5px 0 5px #fff;color:#64748B;font-size:9px;line-height:1;transition:opacity .14s,color .14s" style-hover="color:#B91C1C">✕</button>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{ c.isEmpty }}" hint-placeholder-val="{{ false }}">
+                      <div style="grid-column:1/-1;grid-row:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:10px">
+                        <span style="width:30px;height:30px;border-radius:10px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;color:#475569;font-size:15px;font-weight:700">+</span>
+                        <span style="font-size:11.5px;font-weight:600;color:#475569;line-height:1.4">Arraste uma obra<br>para este card</span>
+                      </div>
+                    </sc-if>
+                  </div>
+
+                  <sc-if value="{{ c.hasNote }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ c.noteStyle }}">{{ c.note }}</span>
+                  </sc-if>
+
+                  <div style="flex:0 0 auto;display:flex;align-items:center;gap:8px;min-height:18px">
+                    <sc-if value="{{ c.overflow }}" hint-placeholder-val="{{ false }}">
+                      <span style="display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:#4338CA">
+                        <span style="width:5px;height:5px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>continua no próximo card
+                      </span>
+                    </sc-if>
+                    <div style="flex:1"></div>
+                    <sc-if value="{{ c.hasPencil }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ c.openNote }}" aria-label="Adicionar informação" title="Adicionar informação" class="pg-noprint" style="flex:0 0 auto;display:flex;align-items:center;gap:5px;padding:2px 6px;border-radius:6px;background:transparent;color:#64748B;font-size:10px;font-weight:700;transition:background .14s,color .14s" style-hover="background:#EEF0FE;color:#4338CA">
+                        <span style="font-size:12px;line-height:1">✎</span>
+                        <span style="font-size:9.5px;font-weight:700">info</span>
+                      </button>
+                    </sc-if>
+                  </div>
+                </div>
+
+                <div class="pg-noprint" style="flex:0 0 auto;display:flex;flex-direction:column;gap:5px;justify-content:flex-start">
+                  <button onClick="{{ c.insertAfter }}" aria-label="Inserir card depois" title="Inserir card depois" style="width:26px;height:26px;border-radius:8px;border:1px dashed #CBD5E1;background:transparent;font-size:13px;font-weight:700;color:#64748B;line-height:1;transition:border-color .16s,color .16s,background .16s" style-hover="border-color:#C7C3FB;color:#4338CA;background:#F8F8FE">+</button>
+                  <sc-if value="{{ c.canDelete }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ c.askDelete }}" aria-label="Remover card" title="Remover card" style="width:26px;height:26px;border-radius:8px;background:transparent;color:#64748B;font-size:10px;line-height:1;transition:background .16s,color .16s" style-hover="background:#FEF2F2;color:#B91C1C">✕</button>
+                  </sc-if>
+                </div>
+                </div>
+              </div>
+            </sc-for>
+
+            <button onClick="{{ addCard }}" class="pg-noprint" style="{{ addCardStyle }}">
+              <span style="width:34px;height:34px;border-radius:11px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;color:#4338CA;font-size:17px;font-weight:700">+</span>
+              <span style="font-size:13px;font-weight:700;color:#4338CA">Adicionar card</span>
+            </button>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ isWeekView }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ weekGridStyle }}">
+          <sc-for list="{{ weekDays }}" as="d" hint-placeholder-count="7">
+            <div style="{{ d.colStyle }}">
+              <button onClick="{{ d.open }}" style="display:flex;flex-direction:column;gap:3px;padding:12px 13px;text-align:left;border-bottom:1px solid #F1F5F9">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="{{ d.dowStyle }}">{{ d.dow }}</span>
+                  <div style="flex:1"></div>
+                  <sc-if value="{{ d.isToday }}" hint-placeholder-val="{{ false }}">
+                    <span style="padding:2px 7px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:9.5px;font-weight:800;text-transform:uppercase">Hoje</span>
+                  </sc-if>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600">{{ d.date }}</span>
+                <span style="{{ d.countStyle }}">{{ d.count }}</span>
+              </button>
+              <div class="pg-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:7px">
+                <sc-for list="{{ d.items }}" as="it" hint-placeholder-count="2">
+                  <button onClick="{{ d.open }}" style="{{ it.style }}">
+                    <span style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px;text-align:left">
+                      <span style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.title }}</span>
+                      <span style="font-size:10.5px;color:#64748B">{{ it.meta }}</span>
+                    </span>
+                  </button>
+                </sc-for>
+                <sc-if value="{{ d.isEmpty }}" hint-placeholder-val="{{ false }}">
+                  <span style="padding:14px 10px;border-radius:10px;border:1px dashed #CBD5E1;font-size:11px;color:#64748B;text-align:center;line-height:1.4">Sem planejamento</span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMonthView }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(14px,1.6vw,20px);display:flex;flex-direction:column;gap:10px">
+          <div style="{{ monthHeadStyle }}">
+            <sc-for list="{{ dowNames }}" as="dn" hint-placeholder-count="7">
+              <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B;text-align:center">{{ dn }}</span>
+            </sc-for>
+          </div>
+          <div style="{{ monthGridStyle }}">
+            <sc-for list="{{ monthCells }}" as="mc" hint-placeholder-count="35">
+              <button onClick="{{ mc.open }}" style="{{ mc.style }}">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="{{ mc.numStyle }}">{{ mc.num }}</span>
+                  <div style="flex:1"></div>
+                  <sc-if value="{{ mc.dot }}" hint-placeholder-val="{{ false }}">
+                    <span style="width:6px;height:6px;border-radius:50%;background:{{ mc.dotColor }};flex:0 0 auto"></span>
+                  </sc-if>
+                </div>
+                <sc-if value="{{ mc.count }}" hint-placeholder-val="{{ false }}">
+                  <span style="{{ mc.countStyle }}">{{ mc.count }}</span>
+                </sc-if>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ showResourcePanel }}" hint-placeholder-val="{{ true }}">
+      <aside class="pg-noprint" style="{{ resourceStyle }}">
+        <div style="display:flex;align-items:center;gap:11px;padding:0 0 4px">
+          <span style="font-size:15px;font-weight:800;letter-spacing:-.02em">Recursos</span>
+          <div style="flex:1"></div>
+          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ closeResources }}" aria-label="Fechar" style="width:34px;height:34px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:14px;color:#64748B">✕</button>
+          </sc-if>
+        </div>
+        <span style="font-size:11.5px;color:#64748B;line-height:1.45;text-wrap:pretty">Arraste para um card ou selecione o card e clique no recurso.</span>
+
+        <sc-if value="{{ selectedCardLabel }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD">
+            <span style="width:8px;height:8px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>
+            <span style="min-width:0;flex:1;font-size:12px;font-weight:700;color:#312E81;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ selectedCardLabel }}</span>
+            <button onClick="{{ clearSelection }}" aria-label="Limpar" style="width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.7);color:#4338CA;font-size:10px;flex:0 0 auto">✕</button>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:0 12px;height:42px;border-radius:11px;background:#fff;border:1px solid #E2E8F0">
+          <span style="width:13px;height:13px;border-radius:50%;border:2px solid #64748B;flex:0 0 auto"></span>
+          <input value="{{ resQuery }}" onInput="{{ onResQuery }}" placeholder="Pesquisar recurso..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:13.5px;color:#0F172A">
+          <sc-if value="{{ hasResQuery }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ clearResQuery }}" aria-label="Limpar" style="width:20px;height:20px;border-radius:6px;background:#F1F5F9;color:#64748B;font-size:11px;flex:0 0 auto">✕</button>
+          </sc-if>
+        </div>
+
+        <div class="pg-scroll" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-right:2px">
+          <sc-for list="{{ resourceGroups }}" as="rg" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <button onClick="{{ rg.toggle }}" style="display:flex;align-items:center;gap:9px;padding:2px 0;text-align:left">
+                <span style="{{ rg.caretStyle }}">▾</span>
+                <span style="width:8px;height:8px;border-radius:2px;background:{{ rg.color }};flex:0 0 auto"></span>
+                <span style="flex:1;font-size:12.5px;font-weight:700;letter-spacing:-.01em">{{ rg.name }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:#64748B">{{ rg.count }}</span>
+              </button>
+              <sc-if value="{{ rg.open }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;gap:2px;padding:2px;border-radius:9px;background:#F1F5F9;border:1px solid #E2E8F0">
+                  <sc-for list="{{ rg.filters }}" as="gf" hint-placeholder-count="3">
+                    <button onClick="{{ gf.pick }}" style="{{ gf.style }}">{{ gf.name }}<span style="{{ gf.countStyle }}">{{ gf.count }}</span></button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ rg.items }}" as="ri" hint-placeholder-count="4">
+                    <div draggable="true" onDragStart="{{ ri.onDragStart }}" onDragEnd="{{ ri.onDragEnd }}" onClick="{{ ri.click }}" style="{{ ri.style }}">
+                      <span style="{{ ri.iconStyle }}">{{ ri.icon }}</span>
+                      <span style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px">
+                        <span style="font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ri.name }}</span>
+                        <span style="font-size:10.5px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ri.meta }}</span>
+                      </span>
+                      <sc-if value="{{ ri.used }}" hint-placeholder-val="{{ false }}">
+                        <span style="{{ ri.usedStyle }}">{{ ri.usedLabel }}</span>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ rg.isEmpty }}" hint-placeholder-val="{{ false }}">
+                    <span style="padding:11px;border-radius:10px;border:1px dashed #CBD5E1;font-size:11.5px;color:#64748B;text-align:center;line-height:1.4">{{ rg.emptyLabel }}</span>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+
+          <div style="display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid #E2E8F0">
+            <span style="font-size:12.5px;font-weight:700;letter-spacing:-.01em">Provisórios</span>
+            <span style="font-size:11px;color:#64748B;line-height:1.45;text-wrap:pretty">Quando o cadastro ainda não existe ou a equipe não está definida.</span>
+            <sc-for list="{{ provisionalItems }}" as="pv" hint-placeholder-count="3">
+              <div draggable="true" onDragStart="{{ pv.onDragStart }}" onDragEnd="{{ pv.onDragEnd }}" onClick="{{ pv.click }}" style="{{ pv.style }}">
+                <span style="{{ pv.iconStyle }}">{{ pv.icon }}</span>
+                <span style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px">
+                  <span style="font-size:12.5px;font-weight:700">{{ pv.name }}</span>
+                  <span style="font-size:10.5px;color:#B45309;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ pv.meta }}</span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </aside>
+    </sc-if>
+  </div>
+
+  <div class="pg-print" style="width:100%">
+    <sc-for list="{{ printPages }}" as="pp" hint-placeholder-count="1">
+      <div class="pg-page" style="display:flex;flex-direction:column;gap:5mm">
+        <div style="display:flex;align-items:flex-end;gap:12px;padding-bottom:3mm;border-bottom:1.5px solid #0F172A">
+          <div style="display:flex;align-items:center;gap:9px">
+            <span style="width:22px;height:22px;border-radius:7px;background:#0F172A;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px">P</span>
+            <span style="font-size:13px;font-weight:800;letter-spacing:.06em">PROGESTY</span>
+          </div>
+          <span style="font-size:13px;font-weight:700;color:#475569">Planning</span>
+          <div style="flex:1"></div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600">{{ printDate }}</span>
+            <span style="font-size:10.5px;color:#475569">{{ printDow }}</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#475569;padding-left:10px;border-left:1px solid #CBD5E1">{{ pp.pageLabel }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,54mm);gap:3mm">
+          <sc-for list="{{ pp.cards }}" as="pc" hint-placeholder-count="12">
+            <div style="{{ pc.style }}">
+              <div style="{{ pc.headStyle }}">
+                <div style="display:flex;align-items:baseline;gap:1.5mm;min-width:0;height:4.6mm">
+                  <span style="{{ pc.titleStyle }}">{{ pc.title }}</span>
+                  <sc-if value="{{ pc.tag }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ pc.tagStyle }}">{{ pc.tag }}</span>
+                  </sc-if>
+                  <span style="{{ pc.subStyle }}">{{ pc.sub }}</span>
+                </div>
+                <span style="height:3.4mm;font-size:6pt;line-height:3.4mm;color:#0F172A;border-top:0.4pt solid #CBD5E1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ pc.place }}</span>
+                <div style="display:flex;align-items:baseline;gap:2mm;min-width:0;height:3.6mm;border-top:0.4pt solid #CBD5E1">
+                  <span style="flex:1;min-width:0;font-family:'JetBrains Mono',monospace;font-size:6pt;font-weight:600;line-height:3.6mm;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ pc.ciaw }}</span>
+                  <sc-if value="{{ pc.hasVehicles }}" hint-placeholder-val="{{ false }}">
+                    <span style="flex:0 1 auto;min-width:0;font-family:'JetBrains Mono',monospace;font-size:6pt;font-weight:600;line-height:3.6mm;color:#0F172A;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ pc.plates }}</span>
+                  </sc-if>
+                </div>
+              </div>
+              <div style="{{ pc.bodyStyle }}">
+                <sc-for list="{{ pc.rows }}" as="pr" hint-placeholder-count="8">
+                  <div style="{{ pr.style }}">
+                    <span style="{{ pr.labelStyle }}">{{ pr.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+                <sc-if value="{{ pc.hasNote }}" hint-placeholder-val="{{ false }}">
+                  <span style="{{ pc.noteStyle }}">{{ pc.note }}</span>
+                </sc-if>
+              <sc-if value="{{ pc.overflow }}" hint-placeholder-val="{{ false }}">
+                <span style="flex:0 0 auto;height:3.4mm;padding-top:1mm;border-top:0.4pt solid #94A3B8;font-size:6pt;font-weight:700;line-height:3.4mm;color:#4338CA">continua no próximo card</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div class="pg-noprint" style="padding:0 clamp(16px,2.4vw,30px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="8">
+      <button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button>
+    </sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ noteEditing }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;inset:0;z-index:94;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeNote }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(480px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(20px,2.4vw,26px);display:flex;flex-direction:column;gap:16px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:17px;font-weight:800;letter-spacing:-.025em">Informação do card</span>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeNote }}" aria-label="Fechar" style="width:36px;height:36px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:14px;color:#64748B">✕</button>
+      </div>
+      <textarea rows="3" value="{{ noteDraft }}" onInput="{{ onNoteDraft }}" placeholder="Ex.: levar material, acesso somente após 08:30, cliente presente" style="padding:12px 13px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;resize:vertical;color:#0F172A;transition:border-color .18s,background .18s" style-focus="border-color:#6D5DFB;background:#fff"></textarea>
+      <span style="font-size:11.5px;color:#64748B;line-height:1.45;text-wrap:pretty">O texto aparece no fim do card, ocupando as duas colunas, e reduz o espaço disponível para nomes.</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeNote }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+        <button onClick="{{ saveNote }}" style="display:flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:linear-gradient(135deg,#6D5DFB,#5145CD);box-shadow:0 14px 28px -14px rgba(109,93,251,1)">Salvar</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ pickDriver }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;inset:0;z-index:93;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeDriverPick }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(440px,100%);max-height:80vh;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(20px,2.4vw,26px);display:flex;flex-direction:column;gap:16px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+          <span style="font-size:17px;font-weight:800;letter-spacing:-.025em">Quem conduz?</span>
+          <span style="font-size:12.5px;color:#64748B"><span style="font-family:'JetBrains Mono',monospace;font-weight:600">{{ driverPickTitle }}</span> · {{ driverPickSub }}</span>
+        </div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeDriverPick }}" aria-label="Fechar" style="width:36px;height:36px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:14px;color:#64748B">✕</button>
+      </div>
+      <sc-if value="{{ noDriverOptions }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:22px 16px;border-radius:14px;background:#FFFBEB;border:1px solid #FDE68A;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <span style="font-size:14px;font-weight:700;color:#92400E">Nenhuma pessoa neste card</span>
+          <span style="font-size:12.5px;color:#B45309;line-height:1.45;max-width:36ch;text-wrap:pretty">Aloque funcionários no card para poder escolher o condutor. O veículo fica como "condutor a definir".</span>
+        </div>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ driverOptions }}" as="dop" hint-placeholder-count="4">
+          <button onClick="{{ dop.pick }}" style="{{ dop.style }}">
+            <span style="{{ dop.avatarStyle }}">{{ dop.initials }}</span>
+            <span style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px;text-align:left">
+              <span style="font-size:14px;font-weight:700">{{ dop.name }}</span>
+              <span style="font-size:11.5px;color:#64748B">{{ dop.role }}</span>
+            </span>
+            <sc-if value="{{ dop.on }}" hint-placeholder-val="{{ false }}">
+              <span style="flex:0 0 auto;padding:4px 10px;border-radius:999px;background:#EFF6FF;color:#1D4ED8;font-size:10.5px;font-weight:800;text-transform:uppercase">Condutor</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding-top:14px;border-top:1px solid #F1F5F9">
+        <span style="min-width:0;flex:1 1 180px;font-size:11.5px;color:#64748B;line-height:1.45;text-wrap:pretty">O condutor aparece com o ícone do veículo ao lado do nome, no corpo do card.</span>
+        <button onClick="{{ removeVehicle }}" style="flex:0 0 auto;padding:11px 16px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#475569;transition:border-color .16s,color .16s" style-hover="border-color:#FCA5A5;color:#B91C1C">Remover veículo do card</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;inset:0;z-index:91;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeEdit }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(600px,100%);max-height:88vh;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">Editar card</span>
+          <span style="font-size:13px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ editTitle }}</span>
+        </div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeEdit }}" aria-label="Fechar" style="width:38px;height:38px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B">✕</button>
+      </div>
+
+      <div style="{{ editGrid }}">
+        <sc-for list="{{ editFields }}" as="f" hint-placeholder-count="5">
+          <div style="{{ f.wrapStyle }}">
+            <span style="font-size:12.5px;font-weight:600;color:#475569">{{ f.label }}</span>
+            <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+              <input value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inputStyle }}" style-focus="border-color:#6D5DFB;background:#fff">
+            </sc-if>
+            <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}">
+              <textarea rows="2" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.areaStyle }}" style-focus="border-color:#6D5DFB;background:#fff"></textarea>
+            </sc-if>
+            <sc-if value="{{ f.hint }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:11px;color:#64748B;line-height:1.4">{{ f.hint }}</span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ hasEditDrivers }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px;padding-top:16px;border-top:1px solid #F1F5F9">
+          <span style="font-size:13.5px;font-weight:700;color:#334155">Condutores</span>
+          <sc-for list="{{ editDrivers }}" as="dv" hint-placeholder-count="2">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 13px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0">
+              <div style="min-width:0;flex:1 1 150px;display:flex;flex-direction:column;gap:2px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600">{{ dv.plate }}</span>
+                <span style="font-size:11.5px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dv.name }}</span>
+              </div>
+              <select value="{{ dv.value }}" onChange="{{ dv.onChange }}" style="{{ dv.selectStyle }}">
+                <sc-for list="{{ dv.options }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for>
+              </select>
+            </div>
+          </sc-for>
+          <span style="font-size:11.5px;color:#64748B;line-height:1.45;text-wrap:pretty">O condutor é escolhido entre as pessoas já alocadas neste card.</span>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeEdit }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+        <button onClick="{{ saveEdit }}" style="display:flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:linear-gradient(135deg,#6D5DFB,#5145CD);box-shadow:0 14px 28px -14px rgba(109,93,251,1)">Salvar card</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ confirm }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;inset:0;z-index:92;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ closeConfirm }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(470px,100%);background:#fff;border:1px solid #E2E8F0;border-radius:22px;padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 80px -30px rgba(15,23,42,.65);animation:pgFade .26s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <span style="{{ confirmIconStyle }}">!</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ confirmTitle }}</span>
+          <span style="font-size:14px;color:#64748B;line-height:1.5;text-wrap:pretty">{{ confirmText }}</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeConfirm }}" style="padding:13px 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button>
+        <button onClick="{{ runConfirm }}" style="{{ confirmBtnStyle }}">
+          <sc-if value="{{ confirmBusy }}" hint-placeholder-val="{{ false }}">
+            <span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span>
+          </sc-if>
+          {{ confirmCta }}
+        </button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>
+    {{ toast }}
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;cardCapacity&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:24,&quot;min&quot;:8,&quot;max&quot;:32,&quot;step&quot;:2,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Cards&quot;}}">
+class Component extends DCLogic {
+  get CAP() { return this.props.cardCapacity || 24; }
+  get PER_COL() { return Math.ceil(this.CAP / 2); }
+
+  state = {
+    w: 1400, navOpen: false, active: 'Planning',
+    open: { Comercial: false, Clientes: false, Projetos: true, Pessoas: false, Financeiro: false, 'Configurações': false },
+    mode: 'dia', cursor: '21/09/2026',
+    plan: null, resQuery: '', resFilters: {}, resOpen: { Obras: true, 'Funcionários': true, Terceirizados: false, 'Veículos': false },
+    dragging: null, dragOver: -1, selected: -1,
+    actionsOpen: false, resourcesOpen: false,
+    loading: false, loadingSet: false, saving: false,
+    editing: null, editForm: null, pickDriver: null, noteEdit: null, noteDraft: '',
+    confirm: null, confirmBusy: false,
+    toast: ''
+  };
+
+  NAV = [
+    { name: 'Comercial', dot: '#EC4899', items: ['CRM', 'Leads', 'Oportunidades'] },
+    { name: 'Clientes', dot: '#3B82F6', items: ['Clientes', 'Contatos'] },
+    { name: 'Projetos', dot: '#F97316', items: ['Projetos / Obras', 'Planning', 'Tarefas', 'Documentos'] },
+    { name: 'Pessoas', dot: '#06B6D4', items: ['Funcionários', 'Terceirizados', 'Veículos'] },
+    { name: 'Financeiro', dot: '#10B981', items: ['Contas a Receber', 'Contas a Pagar', 'Faturas', 'Fluxo de Caixa'] },
+    { name: 'Configurações', dot: '#64748B', items: ['Empresa', 'Usuários', 'Gestão de Acessos'] }
+  ];
+
+  OBRAS = [
+    { id: 'o1', name: 'Residencial Jardim Europa', client: 'Construtora Horizonte', ciaw: '2026/0114-BE', place: 'Avenue Louise 143, Bruxelas', color: '#6D5DFB' },
+    { id: 'o2', name: 'Edifício Central', client: 'Grupo Central Engenharia', ciaw: '2026/0218-BE', place: 'Korenmarkt 8, Gante', color: '#3B82F6' },
+    { id: 'o3', name: 'Casa Oliveira', client: 'Maria Oliveira', ciaw: '2026/0087-BE', place: 'Meir 22, Antuérpia', color: '#10B981' },
+    { id: 'o4', name: 'Reforma Comercial Delta', client: 'Reformas Delta', ciaw: '2026/0331-BE', place: 'Rue Saint-Gilles 51, Liège', color: '#F59E0B' },
+    { id: 'o5', name: 'Galpão Logístico Sul', client: 'LogPar', ciaw: '2026/0402-BE', place: 'Chaussée de Marche 301, Namur', color: '#06B6D4' },
+    { id: 'o6', name: 'Ampliação Sede Horizonte', client: 'Construtora Horizonte', ciaw: '', place: 'Avenue Louise 210, Bruxelas', color: '#EC4899' }
+  ];
+
+  PEOPLE = [
+    { id: 'p1', name: 'Carlos Mendes', role: 'Encarregado', firm: '' },
+    { id: 'p2', name: 'Ana Duarte', role: 'Engenheira', firm: '' },
+    { id: 'p3', name: 'Rafael Lima', role: 'Mestre de obras', firm: '' },
+    { id: 'p4', name: 'Bruno Alves', role: 'Alvenaria', firm: '' },
+    { id: 'p5', name: 'Paulo Mendes', role: 'Carpinteiro', firm: '' },
+    { id: 'p6', name: 'Rita Lopes', role: 'Pintora', firm: '' },
+    { id: 'p7', name: 'Helena Rocha', role: 'Apontadora', firm: '' },
+    { id: 'p8', name: 'Vítor Pinto', role: 'Servente', firm: '' },
+    { id: 'p9', name: 'Marta Antunes', role: 'Alvenaria', firm: '' },
+    { id: 'p10', name: 'Pedro Vasco', role: 'Armador', firm: '' },
+    { id: 'p11', name: 'Tiago Nunes', role: 'Eletricista', firm: 'EletroSul' },
+    { id: 'p12', name: 'Alice Moreira', role: 'Eletricista', firm: 'EletroSul' },
+    { id: 'p13', name: 'Hugo Teixeira', role: 'Pintor', firm: 'Pinturas Nova' },
+    { id: 'p14', name: 'João Silva', role: 'Encarregado', firm: 'Construtora Alpha' },
+    { id: 'p15', name: 'Marcos Pereira', role: 'Canalizador', firm: 'Serviços Beta' },
+    { id: 'p16', name: 'Sérgio Matos', role: 'Operador de máquina', firm: 'Terra Forte' },
+    { id: 'p17', name: 'Diana Costa', role: 'Soldadora', firm: 'HidroTec' },
+    { id: 'p18', name: 'Nuno Ferreira', role: 'Servente', firm: 'Construtora Alpha' },
+    { id: 'p19', name: 'Inês Barbosa', role: 'Apontadora', firm: '' },
+    { id: 'p20', name: 'Ricardo Sá', role: 'Canalizador', firm: 'Serviços Beta' }
+  ];
+
+  FIRMS = [
+    { id: 't1', name: 'EletroSul', spec: 'Eletricidade' },
+    { id: 't2', name: 'Construtora Alpha', spec: 'Alvenaria e estruturas' },
+    { id: 't3', name: 'Serviços Beta', spec: 'Canalização' },
+    { id: 't4', name: 'Pinturas Nova', spec: 'Pintura' },
+    { id: 't5', name: 'Terra Forte', spec: 'Terraplanagem' }
+  ];
+
+  VEHICLES = [
+    { id: 'v1', name: 'Ford Transit Custom', plate: '1-ABC-234', kind: 'Van' },
+    { id: 'v2', name: 'Renault Master L3H2', plate: '2-XYZ-871', kind: 'Carrinha' },
+    { id: 'v3', name: 'VW Caddy Cargo', plate: '1-KLM-009', kind: 'Van' },
+    { id: 'v4', name: 'Caterpillar 320 GC', plate: 'E-220-BE', kind: 'Máquina' },
+    { id: 'v5', name: 'Reboque Humbaur HT 3500', plate: 'R-118-BE', kind: 'Reboque' }
+  ];
+
+  seed() {
+    return {
+      '21/09/2026': [
+        {
+          id: 'a1', obraId: 'o1', prov: '', team: ['p1', 'p3', 'p4', 'p9', 'p10', 'p8', 'p5'],
+          firm: 't1', firmCrew: ['p11', 'p12'],
+          vehicles: [{ id: 'v1', driver: 'p1' }, { id: 'v3', driver: '' }],
+          note: 'Betonagem da laje do bloco B. Acesso liberado a partir das 08:30.',
+          entry: '08:00', exit: '17:00', status: 'Planejado'
+        },
+        {
+          id: 'a2', obraId: 'o3', prov: '', team: ['p6', 'p19'],
+          firm: 't4', firmCrew: [],
+          vehicles: [{ id: 'v2', driver: 'p14' }],
+          note: 'Cliente estará presente à tarde.',
+          entry: '08:30', exit: '16:30', status: 'Planejado'
+        },
+        {
+          id: 'a3', obraId: '', prov: 'Obra nova — Rua Central, 100', team: [],
+          firm: '', firmCrew: [], vehicles: [],
+          note: 'Visita técnica antes do cadastro da obra.',
+          entry: '', exit: '', status: 'Rascunho', teamNote: 'Equipe: 2 funcionários — definir posteriormente'
+        },
+        {
+          id: 'a4', obraId: 'o5', prov: '', team: ['p16'],
+          firm: 't5', firmCrew: [],
+          vehicles: [{ id: 'v4', driver: 'p16' }, { id: 'v5', driver: '' }],
+          note: 'Movimentação de terras — confirmar seguro da máquina.',
+          entry: '07:30', exit: '16:00', status: 'Planejado', firmNote: 'Terra Forte — equipe a definir'
+        }
+      ],
+      '22/09/2026': [
+        {
+          id: 'b1', obraId: 'o2', prov: '', team: ['p2', 'p14', 'p18'],
+          firm: 't2', firmCrew: ['p14', 'p18'],
+          vehicles: [{ id: 'v2', driver: 'p14' }],
+          note: '', entry: '08:00', exit: '17:00', status: 'Rascunho'
+        },
+        {
+          id: 'b2', obraId: 'o4', prov: '', team: ['p15', 'p20'],
+          firm: 't3', firmCrew: ['p15', 'p20'],
+          vehicles: [], note: 'Levar material de canalização.', entry: '', exit: '', status: 'Rascunho'
+        }
+      ],
+      '23/09/2026': [
+        {
+          id: 'c1', obraId: 'o1', prov: '', team: ['p1', 'p3', 'p4'],
+          firm: '', firmCrew: [], vehicles: [{ id: 'v1', driver: 'p1' }],
+          note: '', entry: '08:00', exit: '17:00', status: 'Validado'
+        }
+      ],
+      '24/09/2026': [
+        {
+          id: 'd1', obraId: 'o6', prov: '', team: ['p1', 'p7'],
+          firm: '', firmCrew: [], vehicles: [], note: 'Medição com o cliente.', entry: '09:00', exit: '12:00', status: 'Rascunho'
+        }
+      ]
+    };
+  }
+
+  DOW = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+  DOW_SHORT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  onDocClick = (ev) => {
+    if (this.state.actionsOpen && !ev.target.closest('button')) this.setState({ actionsOpen: false });
+  };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    document.addEventListener('click', this.onDocClick);
+    this.setState({ w: window.innerWidth });
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('click', this.onDocClick);
+    clearTimeout(this.tTimer); clearTimeout(this.sTimer);
+  }
+
+  get plan() { if (!this._seed) this._seed = this.seed(); return this.state.plan || this._seed; }
+  get loading() { return this.state.loadingSet ? this.state.loading : (this.props.initialState === 'loading'); }
+
+  key(d) {
+    const p = (n) => (n < 10 ? '0' : '') + n;
+    return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+  toDate(k) { const p = k.split('/'); return new Date(+p[2], +p[1] - 1, +p[0]); }
+  addDays(k, n) { const d = this.toDate(k); d.setDate(d.getDate() + n); return this.key(d); }
+
+  obra(id) { return this.OBRAS.filter(o => o.id === id)[0]; }
+  person(id) { return this.PEOPLE.filter(p => p.id === id)[0]; }
+  firmOf(id) { return this.FIRMS.filter(f => f.id === id)[0]; }
+  vehicle(id) { return this.VEHICLES.filter(v => v.id === id)[0]; }
+
+  dayList(k) { return this.plan[k] || []; }
+
+  flash(msg) {
+    clearTimeout(this.tTimer);
+    this.setState({ toast: msg });
+    this.tTimer = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  setDay(k, list) {
+    const plan = Object.assign({}, this.plan);
+    if (list.length) plan[k] = list; else delete plan[k];
+    this.setState({ plan: plan });
+  }
+
+  blankAssignment() {
+    return { id: 'n' + Date.now() + Math.round(Math.random() * 999), obraId: '', prov: '', team: [], firm: '', firmCrew: [], vehicles: [], note: '', entry: '', exit: '', status: 'Rascunho' };
+  }
+
+  seqOf(a) {
+    if (a.seq) return a.seq;
+    const seq = a.team.map(pid => ({ kind: 'person', id: pid }));
+    if (a.teamNote) seq.push({ kind: 'note', id: 'teamNote' });
+    if (a.firm) seq.push({ kind: 'firm', id: a.firm });
+    if (a.firmNote) seq.push({ kind: 'note', id: 'firmNote' });
+    (a.firmCrew || []).forEach(pid => seq.push({ kind: 'crew', id: pid }));
+    return seq;
+  }
+
+  rowsFor(a) {
+    const rows = [];
+    this.seqOf(a).forEach(t => {
+      if (t.kind === 'person' || t.kind === 'crew') {
+        const p = this.person(t.id);
+        if (p) rows.push({ kind: t.kind, id: t.id, label: p.name, prov: false });
+      } else if (t.kind === 'firm') {
+        const fm = this.firmOf(t.id);
+        if (fm) rows.push({ kind: 'firm', id: t.id, label: fm.name, prov: false });
+      } else if (t.kind === 'note') {
+        const txt = t.id === 'firmNote' ? a.firmNote : a.teamNote;
+        if (txt) rows.push({ kind: 'note', id: t.id, label: txt, prov: true });
+      }
+    });
+    return rows;
+  }
+
+  weightOf(r) { return r.lines || 1; }
+
+  PRINT_PER_COL = 7;
+
+  CARD_H = 328; CARD_PAD = 22; HEAD_H = 60; HEAD_GAP = 4; FOOT_H = 18; ROW_H = 19;
+  PRINT_CARD_MM = 54; PRINT_PAD_MM = 4; PRINT_HEAD_MM = 13.6; PRINT_FOOT_MM = 4.4; PRINT_ROW_MM = 3.9;
+
+  noteLines(a) {
+    if (!a.note) return 0;
+    return Math.min(3, Math.max(1, Math.ceil(a.note.length / 58)));
+  }
+
+  rowsAvail(nl) {
+    const notePx = nl ? nl * 14.2 + 10 : 0;
+    const free = this.CARD_H - this.CARD_PAD - this.HEAD_H - this.HEAD_GAP - this.FOOT_H - notePx;
+    return Math.max(2, Math.floor(free / this.ROW_H));
+  }
+
+  printRowsAvail(nl) {
+    const noteMm = nl ? nl * 2.4 + 2 : 0;
+    const free = this.PRINT_CARD_MM - this.PRINT_PAD_MM - this.PRINT_HEAD_MM - this.PRINT_FOOT_MM - noteMm;
+    return Math.max(2, Math.floor(free / this.PRINT_ROW_MM));
+  }
+
+  chunks(a, cap) {
+    const limit = cap || this.CAP;
+    const rows = this.rowsFor(a);
+    if (!rows.length) return [[]];
+    const out = [];
+    let cur = [], used = 0;
+    rows.forEach(r => {
+      const wgt = this.weightOf(r);
+      if (used > 0 && used + wgt > limit) { out.push(cur); cur = []; used = 0; }
+      cur.push(r);
+      used += wgt;
+    });
+    if (cur.length) out.push(cur);
+    return out;
+  }
+
+  usedOf(rows) { return rows.reduce((n, r) => n + this.weightOf(r), 0); }
+
+  addTo(aIdx, kind, id) {
+    const k = this.state.cursor;
+    const list = this.dayList(k).map(x => Object.assign({}, x));
+    const a = list[aIdx];
+    if (!a) return;
+    if (kind === 'obra') {
+      a.obraId = id; a.prov = '';
+      this.flash(this.obra(id).name + ' colocada no card');
+    } else if (kind === 'person') {
+      if (a.team.indexOf(id) >= 0 || (a.firmCrew || []).indexOf(id) >= 0) { this.flash(this.person(id).name + ' já está nesta obra'); return; }
+      const p = this.person(id);
+      a.seq = this.seqOf(a).concat([{ kind: p.firm ? 'crew' : 'person', id: id }]);
+      if (p.firm) a.firmCrew = (a.firmCrew || []).concat([id]);
+      else a.team = a.team.concat([id]);
+      this.flash(p.name + ' alocado');
+    } else if (kind === 'firm') {
+      if (a.firm === id) { this.flash(this.firmOf(id).name + ' já está neste card'); return; }
+      const seq = this.seqOf(a).filter(t => t.kind !== 'firm');
+      a.firm = id;
+      a.seq = seq.concat([{ kind: 'firm', id: id }]);
+      this.flash(this.firmOf(id).name + ' vinculado ao card');
+    } else if (kind === 'vehicle') {
+      if (a.vehicles.filter(v => v.id === id).length) { this.flash('Veículo já alocado'); return; }
+      a.vehicles = a.vehicles.concat([{ id: id, driver: '' }]);
+      if (a.team.length || (a.firmCrew || []).length) {
+        this.setState({ pickDriver: { ai: aIdx, vid: id } });
+        this.flash(this.vehicle(id).plate + ' alocado · escolha o condutor');
+      } else {
+        this.flash(this.vehicle(id).plate + ' alocado · aloque pessoas para definir o condutor');
+      }
+    } else if (kind === 'provObra') {
+      a.prov = 'Obra a confirmar'; a.obraId = '';
+      this.flash('Obra provisória adicionada');
+    } else if (kind === 'provTeam') {
+      a.teamNote = 'Equipe a confirmar — definir posteriormente';
+      if (!this.seqOf(a).filter(t => t.id === 'teamNote').length) a.seq = this.seqOf(a).concat([{ kind: 'note', id: 'teamNote' }]);
+      this.flash('Equipe provisória registrada');
+    } else if (kind === 'provFirm') {
+      a.firmNote = 'Terceirizado a confirmar';
+      if (!this.seqOf(a).filter(t => t.id === 'firmNote').length) a.seq = this.seqOf(a).concat([{ kind: 'note', id: 'firmNote' }]);
+      this.flash('Terceirizado provisório registrado');
+    }
+    if (a.status === 'Validado') a.status = 'Planejado';
+    list[aIdx] = a;
+    this.setDay(k, list);
+  }
+
+  removeRow(aIdx, row) {
+    const k = this.state.cursor;
+    const list = this.dayList(k).map(x => Object.assign({}, x));
+    const a = list[aIdx];
+    if (!a) return;
+    const seq = this.seqOf(a);
+    if (row.kind === 'person') {
+      a.team = a.team.filter(p => p !== row.id);
+      a.seq = seq.filter(t => !(t.kind === 'person' && t.id === row.id));
+    } else if (row.kind === 'crew') {
+      a.firmCrew = (a.firmCrew || []).filter(p => p !== row.id);
+      a.seq = seq.filter(t => !(t.kind === 'crew' && t.id === row.id));
+    } else if (row.kind === 'firm') {
+      a.firm = ''; a.firmCrew = []; delete a.firmNote;
+      a.seq = seq.filter(t => t.kind !== 'firm' && t.kind !== 'crew' && t.id !== 'firmNote');
+    } else if (row.kind === 'note') {
+      if (row.id === 'firmNote') delete a.firmNote; else delete a.teamNote;
+      a.seq = seq.filter(t => !(t.kind === 'note' && t.id === row.id));
+    } else if (row.kind === 'vehicle') {
+      a.vehicles = a.vehicles.filter(v => v.id !== row.id);
+    }
+    if (a.status === 'Validado') a.status = 'Planejado';
+    list[aIdx] = a;
+    this.setDay(k, list);
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w;
+    const isMobile = w < 1024;
+    const k = s.cursor;
+    const list = this.dayList(k);
+    const loading = this.loading;
+    const dd = this.toDate(k);
+
+    const boardW = w - (isMobile ? 0 : 258) - (isMobile || s.mode !== 'dia' ? 0 : 296) - 60;
+    const cardCols = Math.max(1, Math.min(4, Math.floor(boardW / 268)));
+
+    const cards = [];
+    list.forEach((a, ai) => {
+      const nl = this.noteLines(a);
+      const rowsAvail = this.rowsAvail(nl);
+      const chunks = this.chunks(a, rowsAvail * 2);
+      const ob = this.obra(a.obraId);
+      chunks.forEach((rows, ci) => {
+        cards.push({ a: a, ai: ai, ci: ci, rows: rows, total: chunks.length, ob: ob, nl: nl, rowsAvail: rowsAvail });
+      });
+    });
+
+    const statuses = list.map(a => a.status);
+    const dayStatus = !list.length ? 'Vazio' : (statuses.filter(x => x === 'Validado').length === list.length ? 'Validado' : (statuses.filter(x => x === 'Rascunho').length ? 'Rascunho' : 'Planejado'));
+    const SC = { 'Vazio': ['#F1F5F9', '#475569', '#94A3B8'], 'Rascunho': ['#FFFBEB', '#B45309', '#F59E0B'], 'Planejado': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Validado': ['#ECFDF5', '#047857', '#10B981'] };
+
+    const totalPeople = list.reduce((n, a) => n + a.team.length + (a.firmCrew || []).length, 0);
+    const totalVehicles = list.reduce((n, a) => n + a.vehicles.length, 0);
+    const pending = list.reduce((n, a) => n + (a.prov ? 1 : 0) + (a.teamNote ? 1 : 0) + (a.firmNote ? 1 : 0) + a.vehicles.filter(v => !v.driver).length, 0);
+
+    const rq = s.resQuery.trim().toLowerCase();
+    const RF = s.resFilters || {};
+    const rfOf = (g) => RF[g] || 'todos';
+    const keep = (g, used) => { const f = rfOf(g); return f === 'todos' || (f === 'quadro' ? used : !used); };
+    const usedPeople = {};
+    list.forEach(a => { a.team.forEach(p => { usedPeople[p] = true; }); (a.firmCrew || []).forEach(p => { usedPeople[p] = true; }); });
+    const usedVehicles = {};
+    list.forEach(a => a.vehicles.forEach(v => { usedVehicles[v.id] = true; }));
+    const usedObras = {};
+    list.forEach(a => { if (a.obraId) usedObras[a.obraId] = true; });
+    const usedFirms = {};
+    list.forEach(a => { if (a.firm) usedFirms[a.firm] = true; });
+
+    const target = s.selected >= 0 && s.selected < list.length ? s.selected : -1;
+
+    const dragItem = (kind, id, name) => ({
+      onDragStart: (e) => {
+        this.setState({ dragging: { kind: kind, id: id, name: name } });
+        if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'copy'; try { e.dataTransfer.setData('text/plain', kind + ':' + id); } catch (err) {} }
+      },
+      onDragEnd: () => this.setState({ dragging: null, dragOver: -1 }),
+      click: () => {
+        if (target < 0) { this.flash('Selecione um card antes de clicar no recurso'); return; }
+        this.addTo(target, kind, id);
+      }
+    });
+
+    const resItemStyle = (used, tone) => 'display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:11px;background:#fff;border:1px solid ' +
+      (used ? '#DDD9FD' : '#E2E8F0') + ';cursor:grab;transition:border-color .16s,box-shadow .16s,transform .16s;' +
+      (tone === 'prov' ? 'border-style:dashed;border-color:#FDE68A;background:#FFFDF7;' : '');
+
+    const mkGroup = (name, color, items, total, inBoard) => {
+      const f = rfOf(name);
+      return {
+        name: name, color: color, count: String(items.length),
+        open: !!s.resOpen[name], isEmpty: items.length === 0,
+        emptyLabel: f === 'quadro' ? 'Nada deste tipo no quadro' : (f === 'fora' ? 'Tudo já está no quadro' : 'Nenhum resultado'),
+        toggle: () => this.setState(x => ({ resOpen: Object.assign({}, x.resOpen, { [name]: !x.resOpen[name] }) })),
+        caretStyle: 'font-size:9px;color:#64748B;flex:0 0 auto;transition:transform .2s;transform:rotate(' + (s.resOpen[name] ? 0 : -90) + 'deg)',
+        filters: [
+          { key: 'todos', name: 'Todos', n: total },
+          { key: 'quadro', name: 'No quadro', n: inBoard },
+          { key: 'fora', name: 'Fora', n: total - inBoard }
+        ].map(o => ({
+          name: o.name, count: String(o.n),
+          pick: () => this.setState(x => ({ resFilters: Object.assign({}, x.resFilters, { [name]: o.key }) })),
+          style: 'flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 5px;border-radius:8px;font-size:10.5px;font-weight:700;white-space:nowrap;background:' +
+            (f === o.key ? '#EEF0FE' : 'transparent') + ';color:' + (f === o.key ? '#4338CA' : '#64748B') + ';transition:background .16s,color .16s',
+          countStyle: 'font-family:\'JetBrains Mono\',monospace;font-size:9.5px;font-weight:600;opacity:.75'
+        })),
+        items: items
+      };
+    };
+
+    const obraItems = this.OBRAS.filter(o => !rq || (o.name + ' ' + o.client).toLowerCase().includes(rq)).filter(o => keep('Obras', !!usedObras[o.id])).map(o => Object.assign({
+      name: o.name, meta: o.client, icon: 'OB',
+      used: !!usedObras[o.id], usedLabel: 'no quadro',
+      usedStyle: 'flex:0 0 auto;padding:3px 8px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-size:9.5px;font-weight:800;text-transform:uppercase',
+      iconStyle: 'flex:0 0 auto;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:\'JetBrains Mono\',monospace;font-size:9.5px;font-weight:600;background:' + o.color,
+      style: resItemStyle(!!usedObras[o.id])
+    }, dragItem('obra', o.id, o.name)));
+
+    const peopleItems = this.PEOPLE.filter(p => !rq || (p.name + ' ' + p.role + ' ' + p.firm).toLowerCase().includes(rq)).filter(p => keep('Funcionários', !!usedPeople[p.id])).map(p => Object.assign({
+      name: p.name, meta: p.role + (p.firm ? ' · ' + p.firm : ''), icon: p.name.split(' ').map(x => x[0]).slice(0, 2).join(''),
+      used: !!usedPeople[p.id], usedLabel: 'alocado',
+      usedStyle: 'flex:0 0 auto;padding:3px 8px;border-radius:999px;background:#ECFDF5;color:#047857;font-size:9.5px;font-weight:800;text-transform:uppercase',
+      iconStyle: 'flex:0 0 auto;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;font-weight:700;background:' +
+        (p.firm ? 'linear-gradient(135deg,#EC4899,#F97316)' : 'linear-gradient(135deg,#6D5DFB,#06B6D4)'),
+      style: resItemStyle(!!usedPeople[p.id])
+    }, dragItem('person', p.id, p.name)));
+
+    const firmItems = this.FIRMS.filter(f => !rq || (f.name + ' ' + f.spec).toLowerCase().includes(rq)).filter(f => keep('Terceirizados', !!usedFirms[f.id])).map(f => Object.assign({
+      name: f.name, meta: f.spec, icon: 'TC',
+      used: !!usedFirms[f.id], usedLabel: 'no quadro',
+      usedStyle: 'flex:0 0 auto;padding:3px 8px;border-radius:999px;background:#FDF2F8;color:#BE185D;font-size:9.5px;font-weight:800;text-transform:uppercase',
+      iconStyle: 'flex:0 0 auto;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#BE185D;font-family:\'JetBrains Mono\',monospace;font-size:9.5px;font-weight:600;background:#FDF2F8',
+      style: resItemStyle(!!usedFirms[f.id])
+    }, dragItem('firm', f.id, f.name)));
+
+    const vehItems = this.VEHICLES.filter(v => !rq || (v.name + ' ' + v.plate).toLowerCase().includes(rq)).filter(v => keep('Veículos', !!usedVehicles[v.id])).map(v => Object.assign({
+      name: v.plate, meta: v.name + ' · ' + v.kind, icon: 'VE',
+      used: !!usedVehicles[v.id], usedLabel: 'alocado',
+      usedStyle: 'flex:0 0 auto;padding:3px 8px;border-radius:999px;background:#EFF6FF;color:#1D4ED8;font-size:9.5px;font-weight:800;text-transform:uppercase',
+      iconStyle: 'flex:0 0 auto;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#1D4ED8;font-family:\'JetBrains Mono\',monospace;font-size:9.5px;font-weight:600;background:#EFF6FF',
+      style: resItemStyle(!!usedVehicles[v.id])
+    }, dragItem('vehicle', v.id, v.plate)));
+
+    const weekStart = (() => { const d = this.toDate(k); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d; })();
+
+    const ef = s.editForm;
+    const pd = s.pickDriver;
+    const c = s.confirm;
+    const TONES = {
+      red: { bg: '#FEF2F2', bd: '#FECACA', color: '#B91C1C', btn: 'linear-gradient(135deg,#EF4444,#DC2626)', shadow: 'rgba(239,68,68,.9)' },
+      violet: { bg: '#EEF0FE', bd: '#DDD9FD', color: '#4338CA', btn: 'linear-gradient(135deg,#6D5DFB,#5145CD)', shadow: 'rgba(109,93,251,.95)' }
+    };
+    const CSPEC = {
+      clear: { title: 'Limpar o dia?', text: 'Todos os cards de ' + k + ' serão removidos, com as equipes, veículos e observações deste dia. Os cadastros de obras, funcionários e veículos não são afetados.', cta: 'Limpar dia', tone: 'red' },
+      card: { title: 'Remover card?', text: 'O card e as alocações registradas nele serão removidos deste dia. Se a obra continuava em outro card, os demais permanecem.', cta: 'Remover card', tone: 'red' },
+      week: { title: 'Replicar nos dias úteis?', text: 'O planejamento de ' + k + ' será copiado para os próximos dias úteis desta semana como rascunho, substituindo o que já existir neles.', cta: 'Replicar planejamento', tone: 'violet' }
+    };
+    const cSpec = c ? CSPEC[c.kind] : { title: '', text: '', cta: '', tone: 'violet' };
+    const cTone = TONES[cSpec.tone];
+
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile
+        ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);'
+        : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') +
+        'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }),
+      closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      dashItemStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:' +
+        (s.active === 'Dashboard' ? '700' : '500') + ';color:' + (s.active === 'Dashboard' ? '#fff' : '#CBD5E1') +
+        ';background:' + (s.active === 'Dashboard' ? 'rgba(109,93,251,.26)' : 'transparent'),
+      groups: this.NAV.map(g => ({
+        name: g.name, dot: g.dot, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1;background:transparent',
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(name => ({
+          name: name, pick: () => this.setState({ active: name, navOpen: false }),
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === name ? '700' : '500') +
+            ';color:' + (s.active === name ? '#fff' : '#CBD5E1') + ';background:' + (s.active === name ? 'rgba(109,93,251,.26)' : 'transparent'),
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === name ? '#6D5DFB' : '#64748B')
+        }))
+      })),
+
+      statusLabel: dayStatus, statusDot: SC[dayStatus][2],
+      statusStyle: 'display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;flex:0 0 auto;font-size:12.5px;font-weight:700;background:' +
+        SC[dayStatus][0] + ';color:' + SC[dayStatus][1],
+
+      modes: [
+        { key: 'dia', name: 'Dia' }, { key: 'semana', name: 'Semana' }, { key: 'mes', name: 'Mês' }
+      ].map(m => ({
+        name: m.name, pick: () => this.setState({ mode: m.key, selected: -1 }),
+        style: 'padding:9px 15px;border-radius:9px;font-size:13px;font-weight:700;white-space:nowrap;background:' +
+          (s.mode === m.key ? '#EEF0FE' : 'transparent') + ';color:' + (s.mode === m.key ? '#4338CA' : '#64748B') + ';transition:background .16s'
+      })),
+      isDayView: s.mode === 'dia' && !loading,
+      isWeekView: s.mode === 'semana' && !loading,
+      isMonthView: s.mode === 'mes' && !loading,
+      isLoading: loading,
+      skeletons: [1, 2, 3, 4],
+
+      periodLabel: s.mode === 'dia' ? k : (s.mode === 'semana' ? this.key(weekStart) + ' → ' + this.addDays(this.key(weekStart), 6) : this.MONTHS[dd.getMonth()] + ' ' + dd.getFullYear()),
+      periodSub: s.mode === 'dia' ? this.DOW[dd.getDay()] : (s.mode === 'semana' ? 'Semana' : 'Mês completo'),
+      prev: () => this.setState({ cursor: s.mode === 'dia' ? this.addDays(k, -1) : (s.mode === 'semana' ? this.addDays(k, -7) : this.addDays(k, -30)), selected: -1 }),
+      next: () => this.setState({ cursor: s.mode === 'dia' ? this.addDays(k, 1) : (s.mode === 'semana' ? this.addDays(k, 7) : this.addDays(k, 30)), selected: -1 }),
+      today: () => this.setState({ cursor: '21/09/2026', selected: -1 }),
+
+      boardStats: [
+        { t: list.length === 1 ? '1 obra planejada' : list.length + ' obras planejadas', color: '#6D5DFB' },
+        { t: totalPeople === 1 ? '1 pessoa' : totalPeople + ' pessoas', color: '#06B6D4' },
+        { t: totalVehicles === 1 ? '1 veículo' : totalVehicles + ' veículos', color: '#3B82F6' },
+        { t: pending === 0 ? 'nada a definir' : (pending === 1 ? '1 item a definir' : pending + ' itens a definir'), color: pending ? '#F59E0B' : '#10B981' }
+      ],
+
+      boardWrapStyle: 'flex:1;min-width:0;padding:clamp(14px,2vw,22px) clamp(16px,2.4vw,30px) clamp(18px,2.4vw,26px);overflow-y:auto',
+      cardGridStyle: 'display:grid;grid-template-columns:repeat(' + cardCols + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px);align-items:start',
+      skeletonCardStyle: 'height:328px;background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:16px',
+      addCardStyle: 'height:328px;border-radius:16px;border:1.5px dashed #CBD5E1;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;transition:border-color .18s,background .18s',
+      boardEmpty: list.length === 0, boardReady: list.length > 0,
+
+      cards: cards.map((c, ci) => {
+        const a = c.a, ob = c.ob;
+        const over = s.dragOver === ci;
+        const isSel = s.selected === c.ai;
+        const usedRows = this.usedOf(c.rows);
+        const full = usedRows >= this.CAP;
+        const driverIds = {};
+        a.vehicles.forEach(v => { if (v.driver) driverIds[v.driver] = true; });
+        const hasObra = !!(a.obraId || a.prov);
+        return {
+          title: ob ? ob.name : (a.prov || 'Card vazio'),
+          titleStyle: 'flex:1 1 auto;min-width:0;font-size:12.5px;font-weight:800;letter-spacing:-.015em;line-height:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:' +
+            (hasObra ? '#0F172A' : '#64748B'),
+          client: ob ? ob.client : (a.prov ? 'Cliente a confirmar' : '—'),
+          clientStyle: 'flex:0 1 auto;min-width:0;max-width:44%;font-size:10.5px;font-weight:600;line-height:16px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:' +
+            (ob ? '#0F172A' : '#B45309'),
+          place: ob ? ob.place : 'Endereço a confirmar',
+          placeStyle: 'min-width:0;flex:1;font-size:10px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:' +
+            (ob ? '#0F172A' : '#B45309'),
+          ciaw: ob && ob.ciaw ? ob.ciaw : 'Sem check-in',
+          ciawStyle: 'flex:1 1 auto;min-width:62px;font-size:10px;font-weight:' + (ob && ob.ciaw ? '600' : '500') +
+            ';font-style:' + (ob && ob.ciaw ? 'normal' : 'italic') + ';overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#0F172A' +
+            (ob && ob.ciaw ? ';font-family:\'JetBrains Mono\',monospace' : ''),
+          hasVehicles: a.vehicles.length > 0,
+          vehicleChips: a.vehicles.slice(0, 2).map(v => {
+            const veh = this.vehicle(v.id);
+            const dr = v.driver ? this.person(v.driver) : null;
+            return {
+              plate: veh ? veh.plate : '—',
+              openDriver: () => this.setState({ pickDriver: { ai: c.ai, vid: v.id } }),
+              remove: () => this.removeRow(c.ai, { kind: 'vehicle', id: v.id }),
+              style: 'flex:0 0 auto;display:inline-flex;align-items:center;padding:2px 5px;border-radius:6px;white-space:nowrap;font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:600;transition:background .14s;background:' +
+                (dr ? 'transparent' : '#FFFBEB') + ';color:' + (dr ? '#0F172A' : '#B45309')
+            };
+          }),
+          moreVehicles: a.vehicles.length > 2,
+          moreVehiclesLabel: '+' + (a.vehicles.length - 2),
+          openVehicleList: () => this.setState({ pickDriver: { ai: c.ai, vid: a.vehicles[2].id } }),
+          provisional: !!a.prov && c.ci === 0,
+          isCont: c.ci > 0, contIndex: (c.ci + 1) + '/' + c.total,
+
+          hasObra: hasObra, isEmpty: c.rows.length === 0 && !hasObra,
+          overflow: c.ci < c.total - 1, noOverflow: c.ci === c.total - 1,
+          capLabel: usedRows + '/' + this.CAP,
+          headStyle: 'display:flex;flex-direction:column;padding:0 0 0 8px;margin:0 0 4px -3px;border-left:3px solid ' +
+            (ob ? ob.color : (a.prov ? '#F59E0B' : '#E2E8F0')),
+          headLineStyle: 'display:flex;align-items:center;gap:8px;min-width:0;min-height:20px;border-bottom:1px solid #EEF2F7',
+          headTopStyle: 'display:flex;align-items:baseline;gap:8px;min-width:0;height:20px;padding-bottom:4px;border-bottom:1px solid #E2E8F0',
+          cardStyle: 'flex:1;min-width:0;height:328px;display:flex;flex-direction:column;overflow:hidden;background:#fff;border-radius:14px;padding:11px;transition:border-color .16s,box-shadow .16s,transform .16s;border:' +
+            (over ? '2px solid #6D5DFB' : (isSel ? '1.5px solid #C7C3FB' : '1px solid #E2E8F0')) +
+            (over ? ';box-shadow:0 18px 36px -20px rgba(109,93,251,.7);transform:translateY(-2px)' : (isSel ? ';box-shadow:0 14px 30px -22px rgba(109,93,251,.5)' : '')) +
+            '',
+          wrapStyle: 'display:flex;flex-direction:column;gap:7px;min-width:0',
+          select: () => this.setState({ selected: c.ai }),
+          onDragOver: (e) => { e.preventDefault(); if (s.dragOver !== ci) this.setState({ dragOver: ci }); },
+          onDragLeave: () => { if (s.dragOver === ci) this.setState({ dragOver: -1 }); },
+          onDrop: (e) => {
+            e.preventDefault();
+            const d = s.dragging;
+            this.setState({ dragOver: -1, dragging: null, selected: c.ai });
+            if (d) this.addTo(c.ai, d.kind, d.id);
+          },
+          insertAfter: () => {
+            const nl = this.dayList(k).slice();
+            nl.splice(c.ai + 1, 0, this.blankAssignment());
+            this.setDay(k, nl);
+            this.flash('Card inserido');
+          },
+          canDelete: true,
+          askDelete: () => this.setState({ confirm: { kind: 'card', ai: c.ai, label: ob ? ob.name : (a.prov || 'Card vazio') }, confirmBusy: false }),
+          edit: () => this.setState({ editing: c.ai, editForm: Object.assign({}, a) }),
+          bodyStyle: 'flex:1;min-height:0;display:grid;grid-template-columns:' + (usedRows > c.rowsAvail ? '1fr 1fr' : '1fr') +
+            ';grid-template-rows:repeat(' + c.rowsAvail + ',' + this.ROW_H + 'px);grid-auto-flow:column;column-gap:8px;align-content:start;overflow:hidden',
+          hasNote: !!a.note && c.ci === c.total - 1,
+          note: a.note,
+          noteStyle: 'flex:0 0 auto;margin-top:5px;padding-top:5px;border-top:1px solid #E2E8F0;font-size:10.5px;line-height:1.35;color:#0F172A;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:' +
+            Math.max(1, c.nl) + ';overflow:hidden',
+          openNote: () => this.setState({ noteEdit: c.ai, noteDraft: a.note || '' }),
+          hasPencil: c.ci === c.total - 1 && (a.obraId || a.prov),
+          rows: c.rows.map(r => {
+            const prov = !!r.prov;
+            const multi = r.kind === 'obs' || r.kind === 'note';
+            const lines = this.weightOf(r);
+            const isDriver = r.kind === 'person' || r.kind === 'crew' ? driverIds[r.id] : false;
+            return {
+              isDriver: !!isDriver,
+              label: r.label,
+              vanStyle: 'flex:0 0 auto;width:11px;height:8px;border-radius:2px 3px 2px 2px;background:#1D4ED8;box-shadow:-3px 2px 0 -1px #1D4ED8',
+              labelStyle: 'min-width:0;flex:1;font-size:11px;font-weight:' + (multi ? '500' : '600') + ';line-height:1.25;color:' +
+                (prov ? '#B45309' : (r.kind === 'firm' ? '#1D4ED8' : '#0F172A')) + (multi
+                  ? ';white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:' + lines + ';overflow:hidden'
+                  : ';overflow:hidden;text-overflow:ellipsis;white-space:nowrap'),
+              canRemove: r.kind !== 'obs',
+              remove: () => this.removeRow(c.ai, r),
+              style: 'position:relative;display:flex;align-items:' + (multi ? 'flex-start' : 'center') + ';gap:4px;min-width:0;padding:0 2px;border-bottom:1px solid #EEF2F7;' +
+                (multi ? 'grid-row:span ' + lines + ';padding-top:3px;align-content:flex-start' : '')
+            };
+          })
+        };
+      }),
+
+      addCard: () => { const nl = this.dayList(k).concat([this.blankAssignment()]); this.setDay(k, nl); this.flash('Card adicionado'); },
+      copyPrev: () => {
+        const prevK = this.addDays(k, -1);
+        const src = this.dayList(prevK);
+        if (!src.length) { this.flash('O dia anterior também está vazio'); return; }
+        this.setDay(k, src.map((a, i) => Object.assign({}, a, { id: 'cp' + Date.now() + i, status: 'Rascunho' })));
+        this.flash('Planejamento de ' + prevK + ' copiado');
+      },
+
+      showResourcePanel: (!isMobile && s.mode === 'dia') || s.resourcesOpen,
+      showResourcesBtn: isMobile || s.mode !== 'dia',
+      openResources: () => this.setState({ resourcesOpen: true }),
+      closeResources: () => this.setState({ resourcesOpen: false }),
+      resourceStyle: ((!isMobile && s.mode === 'dia' && !s.resourcesOpen)
+        ? 'position:sticky;top:0;align-self:flex-start;flex:0 0 296px;max-height:100vh;border-left:1px solid #E2E8F0;'
+        : 'position:fixed;top:0;right:0;bottom:0;z-index:82;width:min(340px,92vw);box-shadow:-20px 0 50px -20px rgba(15,23,42,.4);border-left:1px solid #E2E8F0;') +
+        'background:#FCFDFE;padding:clamp(16px,1.8vw,20px);display:flex;flex-direction:column;gap:12px;overflow:hidden',
+
+      resQuery: s.resQuery, hasResQuery: s.resQuery !== '',
+      onResQuery: (e) => this.setState({ resQuery: e.target.value }),
+      clearResQuery: () => this.setState({ resQuery: '' }),
+      selectedCardLabel: target >= 0 ? (this.obra(list[target].obraId) ? this.obra(list[target].obraId).name : (list[target].prov || 'Card vazio')) : '',
+      clearSelection: () => this.setState({ selected: -1 }),
+
+      resourceGroups: [
+        mkGroup('Obras', '#6D5DFB', obraItems, this.OBRAS.length, Object.keys(usedObras).length),
+        mkGroup('Funcionários', '#06B6D4', peopleItems, this.PEOPLE.length, Object.keys(usedPeople).length),
+        mkGroup('Terceirizados', '#EC4899', firmItems, this.FIRMS.length, Object.keys(usedFirms).length),
+        mkGroup('Veículos', '#3B82F6', vehItems, this.VEHICLES.length, Object.keys(usedVehicles).length)
+      ],
+
+      provisionalItems: [
+        { kind: 'provObra', name: 'Obra provisória', meta: 'escrever direto no card', icon: 'OB' },
+        { kind: 'provTeam', name: 'Equipe a definir', meta: 'funcionários a confirmar', icon: 'EQ' },
+        { kind: 'provFirm', name: 'Terceirizado a definir', meta: 'empresa a confirmar', icon: 'TC' }
+      ].map(p => Object.assign({
+        name: p.name, meta: p.meta, icon: p.icon,
+        iconStyle: 'flex:0 0 auto;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#B45309;font-family:\'JetBrains Mono\',monospace;font-size:9.5px;font-weight:600;background:#FEF3C7',
+        style: resItemStyle(false, 'prov')
+      }, dragItem(p.kind, p.kind, p.name))),
+
+      dowNames: this.DOW_SHORT.slice(1).concat([this.DOW_SHORT[0]]),
+      weekGridStyle: 'display:grid;grid-template-columns:repeat(' + (w >= 1200 ? 7 : (w >= 780 ? 4 : (w >= 520 ? 2 : 1))) + ',minmax(0,1fr));gap:clamp(10px,1.2vw,14px);align-items:start',
+      weekDays: Array.apply(null, { length: 7 }).map((x, i) => {
+        const dk = this.addDays(this.key(weekStart), i);
+        const dl = this.dayList(dk);
+        const dt = this.toDate(dk);
+        const isToday = dk === '21/09/2026';
+        return {
+          dow: this.DOW_SHORT[dt.getDay()], date: dk.slice(0, 5), isToday: isToday,
+          dowStyle: 'font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:' + (isToday ? '#4338CA' : '#64748B'),
+          count: dl.length === 0 ? 'Sem planejamento' : (dl.length === 1 ? '1 obra' : dl.length + ' obras'),
+          countStyle: 'font-size:11px;font-weight:600;color:' + (dl.length ? '#047857' : '#94A3B8'),
+          isEmpty: dl.length === 0,
+          colStyle: 'display:flex;flex-direction:column;min-height:220px;max-height:340px;background:#fff;border:1px solid ' +
+            (isToday ? '#C7C3FB' : '#E2E8F0') + ';border-radius:16px;overflow:hidden',
+          open: () => this.setState({ mode: 'dia', cursor: dk, selected: -1 }),
+          items: dl.map(a => {
+            const ob = this.obra(a.obraId);
+            return {
+              title: ob ? ob.name : (a.prov || 'Card vazio'),
+              meta: (a.team.length + (a.firmCrew || []).length) + ' pess. · ' + a.vehicles.length + ' veíc.',
+              style: 'display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:#F8FAFC;border-left:3px solid ' +
+                (ob ? ob.color : '#F59E0B') + ';border-top:1px solid #E2E8F0;border-right:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0;text-align:left'
+            };
+          })
+        };
+      }),
+
+      monthHeadStyle: 'display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(6px,.8vw,9px)',
+      monthGridStyle: 'display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(6px,.8vw,9px)',
+      monthCells: (() => {
+        const first = new Date(dd.getFullYear(), dd.getMonth(), 1);
+        const lead = (first.getDay() + 6) % 7;
+        const days = new Date(dd.getFullYear(), dd.getMonth() + 1, 0).getDate();
+        const cells = [];
+        for (let i = 0; i < lead; i++) cells.push(null);
+        for (let i = 1; i <= days; i++) cells.push(i);
+        while (cells.length % 7) cells.push(null);
+        return cells.map(n => {
+          if (!n) return { num: '', count: '', dot: false, dotColor: '', open: () => {}, numStyle: 'font-size:12px;color:transparent', countStyle: '', style: 'min-height:' + (w >= 760 ? 78 : 58) + 'px;border-radius:12px;background:transparent;border:0' };
+          const dk = this.key(new Date(dd.getFullYear(), dd.getMonth(), n));
+          const dl = this.dayList(dk);
+          const isToday = dk === '21/09/2026';
+          const isCur = dk === k;
+          const allValid = dl.length && dl.filter(a => a.status === 'Validado').length === dl.length;
+          return {
+            num: String(n), dot: dl.length > 0, dotColor: allValid ? '#10B981' : (dl.filter(a => a.status === 'Rascunho').length ? '#F59E0B' : '#3B82F6'),
+            count: dl.length ? (dl.length === 1 ? '1 obra' : dl.length + ' obras') : '',
+            countStyle: 'font-size:10.5px;font-weight:600;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis',
+            numStyle: 'font-family:\'JetBrains Mono\',monospace;font-size:12.5px;font-weight:600;color:' + (isToday ? '#4338CA' : '#0F172A'),
+            open: () => this.setState({ mode: 'dia', cursor: dk, selected: -1 }),
+            style: 'min-height:' + (w >= 760 ? 78 : 58) + 'px;padding:9px;border-radius:12px;display:flex;flex-direction:column;gap:5px;text-align:left;background:' +
+              (isCur ? '#EEF0FE' : (dl.length ? '#F8FAFC' : '#fff')) + ';border:1px solid ' + (isCur ? '#C7C3FB' : (isToday ? '#DDD9FD' : '#E2E8F0')) +
+              ';transition:background .16s,border-color .16s'
+          };
+        });
+      })(),
+
+      actionsOpen: s.actionsOpen,
+      toggleActions: () => this.setState(x => ({ actionsOpen: !x.actionsOpen })),
+      boardActions: [
+        { name: 'Atualizar', run: () => { this.setState({ actionsOpen: false, loading: true, loadingSet: true }); clearTimeout(this.sTimer); this.sTimer = setTimeout(() => this.setState({ loading: false }), 900); } },
+        { name: 'Adicionar card', run: () => { this.setState({ actionsOpen: false }); const nl = this.dayList(k).concat([this.blankAssignment()]); this.setDay(k, nl); this.flash('Card adicionado'); } },
+        { name: 'Duplicar dia', run: () => { this.setState({ actionsOpen: false }); const nk = this.addDays(k, 1); this.setDay(nk, this.dayList(k).map((a, i) => Object.assign({}, a, { id: 'dp' + Date.now() + i, status: 'Rascunho' }))); this.flash('Dia duplicado para ' + nk); } },
+        { name: 'Duplicar para a semana', run: () => { this.setState({ actionsOpen: false, confirm: { kind: 'week' }, confirmBusy: false }); } },
+        { name: 'Copiar dia anterior', run: () => { this.setState({ actionsOpen: false }); const prevK = this.addDays(k, -1); const src = this.dayList(prevK); if (!src.length) { this.flash('O dia anterior está vazio'); return; } this.setDay(k, src.map((a, i) => Object.assign({}, a, { id: 'cp' + Date.now() + i, status: 'Rascunho' }))); this.flash('Planejamento de ' + prevK + ' copiado'); } },
+        { name: 'Limpar dia', run: () => this.setState({ actionsOpen: false, confirm: { kind: 'clear' }, confirmBusy: false }) },
+        { name: 'Imprimir', run: () => { this.setState({ actionsOpen: false }); this.flash('Abrindo a impressão do quadro'); setTimeout(() => { try { window.print(); } catch (e) {} }, 400); } }
+      ].map(a => ({
+        name: a.name, run: a.run,
+        style: 'padding:10px 11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:600;transition:background .15s;color:' +
+          (a.name === 'Limpar dia' ? '#B91C1C' : '#0F172A')
+      })),
+
+      saving: s.saving,
+      validateLabel: s.saving ? 'Validando...' : (dayStatus === 'Validado' ? 'Reabrir planejamento' : 'Validar planejamento'),
+      validateStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 18px;border-radius:12px;font-size:13.5px;font-weight:700;color:#fff;background:' +
+        (s.saving ? '#A5B4FC' : (dayStatus === 'Validado' ? 'linear-gradient(135deg,#64748B,#475569)' : 'linear-gradient(135deg,#6D5DFB,#5145CD)')) +
+        ';box-shadow:0 14px 26px -14px rgba(109,93,251,.9);' + (s.saving || !list.length ? 'pointer-events:none;opacity:' + (list.length ? '1' : '.5') + ';' : ''),
+      validate: () => {
+        if (!list.length) return;
+        this.setState({ saving: true });
+        clearTimeout(this.sTimer);
+        this.sTimer = setTimeout(() => {
+          const to = dayStatus === 'Validado' ? 'Planejado' : 'Validado';
+          this.setDay(k, this.dayList(k).map(a => Object.assign({}, a, { status: to })));
+          this.setState({ saving: false });
+          this.flash(to === 'Validado' ? 'Planejamento validado' : 'Planejamento reaberto');
+        }, 1000);
+      },
+
+      noteEditing: s.noteEdit !== null,
+      noteDraft: s.noteDraft,
+      onNoteDraft: (e) => this.setState({ noteDraft: e.target.value }),
+      closeNote: () => this.setState({ noteEdit: null, noteDraft: '' }),
+      saveNote: () => {
+        const idx = s.noteEdit;
+        const nl2 = this.dayList(k).map((x, i) => i === idx ? Object.assign({}, x, { note: s.noteDraft.trim() }) : x);
+        this.setDay(k, nl2);
+        this.setState({ noteEdit: null, noteDraft: '' });
+        this.flash(s.noteDraft.trim() ? 'Informação adicionada ao card' : 'Informação removida');
+      },
+
+      pickDriver: !!s.pickDriver,
+      driverPickTitle: pd ? ((this.vehicle(pd.vid) || {}).plate || '') : '',
+      driverPickSub: pd ? ((this.vehicle(pd.vid) || {}).name || '') : '',
+      closeDriverPick: () => this.setState({ pickDriver: null }),
+      driverOptions: pd ? (() => {
+        const av = (this.dayList(k)[pd.ai] || { team: [], firmCrew: [], vehicles: [] });
+        const ids = av.team.concat(av.firmCrew || []);
+        const curV = (av.vehicles.filter(v => v.id === pd.vid)[0] || {});
+        const opts = ids.map(pid => {
+          const p = this.person(pid);
+          const on = curV.driver === pid;
+          return {
+            name: p ? p.name : '', role: p ? p.role : '', on: on,
+            initials: p ? p.name.split(' ').map(x => x[0]).slice(0, 2).join('') : '',
+            avatarStyle: 'flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;background:' +
+              (p && p.firm ? 'linear-gradient(135deg,#EC4899,#F97316)' : 'linear-gradient(135deg,#6D5DFB,#06B6D4)'),
+            pick: () => {
+              const nl = this.dayList(k).map((x, i) => i === pd.ai
+                ? Object.assign({}, x, { vehicles: x.vehicles.map(v => v.id === pd.vid ? Object.assign({}, v, { driver: on ? '' : pid }) : v) })
+                : x);
+              this.setDay(k, nl);
+              this.setState({ pickDriver: null });
+              this.flash(on ? 'Condutor removido' : (p.name + ' definido como condutor'));
+            },
+            style: 'display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:12px;border:1px solid ' +
+              (on ? '#C7C3FB' : '#E2E8F0') + ';background:' + (on ? '#EEF0FE' : '#fff') + ';transition:background .16s,border-color .16s'
+          };
+        });
+        return opts;
+      })() : [],
+      noDriverOptions: pd ? (() => {
+        const av = (this.dayList(k)[pd.ai] || { team: [], firmCrew: [] });
+        return av.team.concat(av.firmCrew || []).length === 0;
+      })() : false,
+      removeVehicle: () => {
+        if (!pd) return;
+        const plate = (this.vehicle(pd.vid) || {}).plate || '';
+        this.removeRow(pd.ai, { kind: 'vehicle', id: pd.vid });
+        this.setState({ pickDriver: null });
+        this.flash(plate + ' removido do card');
+      },
+
+      printDate: k, printDow: this.DOW[dd.getDay()],
+      printPages: (() => {
+        const per = 12;
+        const printCards = [];
+        list.forEach((a, ai) => {
+          const ob = this.obra(a.obraId);
+          const pnl = this.noteLines(a);
+          const pra = this.printRowsAvail(pnl);
+          const ch = this.chunks(a, pra * 2);
+          ch.forEach((rows, ci) => printCards.push({ a: a, ai: ai, ci: ci, rows: rows, total: ch.length, ob: ob, nl: pnl, pra: pra }));
+        });
+        const pages = [];
+        const total = Math.max(1, Math.ceil(printCards.length / per));
+        for (let p = 0; p < total; p++) {
+          const slice = printCards.slice(p * per, p * per + per);
+          const pcap = this.PRINT_PER_COL;
+          pages.push({
+            pageLabel: 'Página ' + (p + 1) + ' de ' + total,
+            cards: slice.map(c => {
+              const a = c.a, ob = c.ob;
+              return {
+                title: ob ? ob.name : (a.prov || 'Card vazio'),
+                titleStyle: 'flex:1 1 auto;min-width:0;font-size:8pt;font-weight:800;letter-spacing:-.01em;line-height:4.6mm;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#0F172A',
+                sub: ob ? ob.client : (a.prov ? 'Obra não cadastrada' : '—'),
+                subStyle: 'flex:0 1 auto;min-width:0;max-width:44%;font-size:6.5pt;line-height:4.6mm;text-align:right;color:#475569;overflow:hidden;text-overflow:ellipsis;white-space:nowrap',
+                place: ob ? ob.place : 'Endereço a confirmar',
+                tag: c.ci > 0 ? (c.ci + 1) + '/' + c.total : '',
+                tagStyle: 'flex:0 0 auto;font-family:\'JetBrains Mono\',monospace;font-size:6pt;font-weight:600;color:#4338CA;white-space:nowrap',
+                headStyle: 'flex:0 0 auto;display:flex;flex-direction:column;padding:0 0 1mm 1.5mm;margin-bottom:1mm;border-bottom:0.5pt solid #64748B;border-left:2pt solid ' +
+                  (ob ? ob.color : (a.prov ? '#F59E0B' : '#CBD5E1')),
+                overflow: c.ci < c.total - 1,
+                ciaw: ob && ob.ciaw ? 'CIAW ' + ob.ciaw : 'Sem check-in',
+                plates: a.vehicles.slice(0, 2).map(v => {
+                  const veh = this.vehicle(v.id);
+                  return veh ? veh.plate : '—';
+                }).join('  ') + (a.vehicles.length > 2 ? '  +' + (a.vehicles.length - 2) : ''),
+                hasVehicles: a.vehicles.length > 0,
+                hasNote: !!a.note && c.ci === c.total - 1,
+                note: a.note,
+                noteStyle: 'flex:0 0 auto;margin-top:1mm;padding-top:1mm;border-top:0.4pt solid #94A3B8;font-size:6.5pt;line-height:1.3;color:#0F172A;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:' +
+                  Math.max(1, c.nl) + ';overflow:hidden',
+                bodyStyle: 'flex:1;min-height:0;display:grid;grid-template-columns:' + (this.usedOf(c.rows) > c.pra ? '1fr 1fr' : '1fr') +
+                  ';grid-template-rows:repeat(' + c.pra + ',' + this.PRINT_ROW_MM + 'mm);grid-auto-flow:column;column-gap:2mm;align-content:start;overflow:hidden',
+                style: 'height:100%;display:flex;flex-direction:column;overflow:hidden;border:0.75pt solid #64748B;border-radius:1.5mm;padding:2mm;background:#fff',
+                rows: c.rows.map(r => {
+                  const multi = r.kind === 'note';
+                  const lines = this.weightOf(r);
+                  return {
+                    label: r.label,
+                    labelStyle: 'min-width:0;flex:1;font-size:7pt;font-weight:' + (multi ? '400' : '600') + ';line-height:3.9mm;color:' +
+                      (r.prov ? '#B45309' : (r.kind === 'firm' ? '#1D4ED8' : '#0F172A')) +
+                      (multi ? ';white-space:normal;line-height:1.25;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:' + lines + ';overflow:hidden' : ';overflow:hidden;text-overflow:ellipsis;white-space:nowrap'),
+                    style: 'display:flex;align-items:center;min-width:0;padding:0 .5mm;border-bottom:0.4pt solid #E2E8F0;' +
+                      (multi ? 'grid-row:span ' + lines + ';align-items:flex-start' : '')
+                  };
+                })
+              };
+            })
+          });
+        }
+        return pages;
+      })(),
+
+      editing: false,
+      editTitle: '',
+      editFields: ef ? [].map(fd => ({
+        label: fd.label, value: fd.value, ph: fd.ph, hint: fd.hint || '',
+        isArea: !!fd.area, isText: !fd.area,
+        onInput: (e) => this.setState(x => ({ editForm: Object.assign({}, x.editForm, { [fd.key]: e.target.value }) })),
+        inputStyle: 'height:46px;padding:0 13px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;color:#0F172A;transition:border-color .18s,background .18s',
+        areaStyle: 'padding:12px 13px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;resize:vertical;color:#0F172A;transition:border-color .18s,background .18s',
+        wrapStyle: 'display:flex;flex-direction:column;gap:7px' + (fd.span && w >= 660 ? ';grid-column:span 2' : '')
+      })) : [],
+      editGrid: 'display:grid;grid-template-columns:repeat(' + (w >= 660 ? 2 : 1) + ',minmax(0,1fr));gap:14px',
+      editDrivers: ef ? (ef.vehicles || []).map((v, vi) => {
+        const veh = this.vehicle(v.id);
+        const pool = [''].concat(ef.team.concat(ef.firmCrew || []));
+        return {
+          plate: veh ? veh.plate : '', name: veh ? veh.name : '',
+          value: v.driver ? (this.person(v.driver) ? this.person(v.driver).name : '') : '',
+          options: pool.map(pid => pid ? (this.person(pid) ? this.person(pid).name : '') : 'A definir'),
+          onChange: (e) => {
+            const name = e.target.value;
+            const hit = this.PEOPLE.filter(p => p.name === name)[0];
+            this.setState(x => ({
+              editForm: Object.assign({}, x.editForm, {
+                vehicles: x.editForm.vehicles.map((vv, kk) => kk === vi ? Object.assign({}, vv, { driver: hit ? hit.id : '' }) : vv)
+              })
+            }));
+          },
+          selectStyle: 'height:42px;padding:0 11px;border-radius:11px;border:1px solid ' + (v.driver ? '#E2E8F0' : '#FDE68A') +
+            ';background:' + (v.driver ? '#F8FAFC' : '#FFFDF7') + ';font-size:13.5px;outline:none;color:#0F172A'
+        };
+      }) : [],
+      hasEditDrivers: ef ? (ef.vehicles || []).length > 0 : false,
+      closeEdit: () => this.setState({ editing: null, editForm: null }),
+      saveEdit: () => {
+        const idx = s.editing;
+        const nl = this.dayList(k).slice();
+        nl[idx] = Object.assign({}, s.editForm, { status: s.editForm.status === 'Validado' ? 'Planejado' : s.editForm.status });
+        if (!nl[idx].teamNote) delete nl[idx].teamNote;
+        this.setDay(k, nl);
+        this.setState({ editing: null, editForm: null });
+        this.flash('Card atualizado');
+      },
+
+      confirm: !!c,
+      confirmTitle: cSpec.title, confirmText: cSpec.text, confirmCta: s.confirmBusy ? 'Processando...' : cSpec.cta,
+      confirmIconStyle: 'width:44px;height:44px;border-radius:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;background:' +
+        cTone.bg + ';border:1px solid ' + cTone.bd + ';color:' + cTone.color,
+      confirmBtnStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 20px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' +
+        (s.confirmBusy ? '#A5B4FC' : cTone.btn) + ';box-shadow:0 14px 28px -14px ' + cTone.shadow + ';' + (s.confirmBusy ? 'pointer-events:none;' : ''),
+      confirmBusy: s.confirmBusy,
+      closeConfirm: () => this.setState({ confirm: null, confirmBusy: false }),
+      runConfirm: () => {
+        const cc = s.confirm;
+        if (!cc) return;
+        this.setState({ confirmBusy: true });
+        clearTimeout(this.sTimer);
+        this.sTimer = setTimeout(() => {
+          if (cc.kind === 'clear') { this.setDay(k, []); this.flash('Dia limpo'); }
+          else if (cc.kind === 'card') {
+            const nl = this.dayList(k).filter((x, i) => i !== cc.ai);
+            this.setDay(k, nl);
+            this.flash('Card removido');
+          } else if (cc.kind === 'week') {
+            const plan = Object.assign({}, this.plan);
+            const src = this.dayList(k);
+            for (let i = 1; i <= 4; i++) {
+              const dk = this.addDays(k, i);
+              const dt = this.toDate(dk);
+              if (dt.getDay() === 0 || dt.getDay() === 6) continue;
+              plan[dk] = src.map((a, j) => Object.assign({}, a, { id: 'wk' + Date.now() + i + j, status: 'Rascunho' }));
+            }
+            this.setState({ plan: plan });
+            this.flash('Planejamento replicado nos dias úteis');
+          }
+          this.setState({ confirm: null, confirmBusy: false });
+        }, 900);
+      },
+
+      toast: s.toast,
+
+      demos: [
+        { name: 'Quadro do dia', run: () => this.setState({ mode: 'dia', cursor: '21/09/2026', loading: false, loadingSet: true, selected: -1 }) },
+        { name: 'Continuação automática', run: () => this.setState({ mode: 'dia', cursor: '21/09/2026', loading: false, loadingSet: true, selected: 0 }) },
+        { name: 'Carregando', run: () => this.setState({ loading: true, loadingSet: true }) },
+        { name: 'Dia vazio', run: () => this.setState({ mode: 'dia', cursor: '25/09/2026', loading: false, loadingSet: true, selected: -1 }) },
+        { name: 'Rascunho', run: () => this.setState({ mode: 'dia', cursor: '22/09/2026', loading: false, loadingSet: true }) },
+        { name: 'Validado', run: () => this.setState({ mode: 'dia', cursor: '23/09/2026', loading: false, loadingSet: true }) },
+        { name: 'Semana', run: () => this.setState({ mode: 'semana', cursor: '21/09/2026', loading: false, loadingSet: true }) },
+        { name: 'Mês', run: () => this.setState({ mode: 'mes', cursor: '21/09/2026', loading: false, loadingSet: true }) },
+        { name: 'Card selecionado', run: () => this.setState({ mode: 'dia', cursor: '21/09/2026', selected: 1, loading: false, loadingSet: true }) },
+        { name: 'Limpar dia', run: () => this.setState({ mode: 'dia', cursor: '21/09/2026', confirm: { kind: 'clear' }, confirmBusy: false, loading: false, loadingSet: true }) }
+      ].map(d => ({
+        name: d.name, run: d.run,
+        style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B;transition:border-color .16s,color .16s'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
