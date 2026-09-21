@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer}
+::selection{background:rgba(109,93,251,.18)}
+@keyframes pgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pgPulse{0%,100%{opacity:.35}50%{opacity:.85}}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div ref="{{ rootRef }}" style="--v:#6D5DFB;--v2:#5145CD;--bl:#3B82F6;--cy:#06B6D4;--em:#10B981;--am:#F59E0B;--or:#F97316;--pk:#EC4899;--rd:#EF4444;--bg:#F8FAFC;--sf:#FFFFFF;--ink:#0F172A;--mut:#64748B;--bd:#E2E8F0;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;overflow-x:hidden">
+
+<header style="position:sticky;top:0;z-index:60;background:rgba(248,250,252,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--bd)">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;gap:20px">
+    <a href="#top" style="display:flex;align-items:center;gap:10px;flex:0 0 auto">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#6D5DFB,#3B82F6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;box-shadow:0 6px 16px -6px rgba(109,93,251,.8)">P</div>
+      <span style="font-size:19px;font-weight:800;letter-spacing:-.025em;color:var(--ink)">Progesty</span>
+    </a>
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex;align-items:center;gap:2px;margin-left:10px">
+        <sc-for list="{{ navItems }}" as="i" hint-placeholder-count="5">
+          <a href="{{ i.h }}" style="padding:9px 13px;border-radius:9px;font-size:14.5px;font-weight:600;color:var(--mut);transition:background .18s,color .18s" style-hover="background:#EEF0FE;color:var(--v2)">{{ i.l }}</a>
+        </sc-for>
+      </nav>
+    </sc-if>
+    <div style="flex:1 1 auto"></div>
+    <div style="position:relative;flex:0 0 auto">
+      <button onClick="{{ toggleLang }}" style="display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:10px;border:1px solid var(--bd);background:var(--sf);font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.02em;transition:border-color .18s,box-shadow .18s" style-hover="border-color:#C7C3FB;box-shadow:0 2px 10px -4px rgba(15,23,42,.18)">
+        <span style="width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#6D5DFB,#06B6D4)"></span>{{ langLabel }}<span style="font-size:9px;color:var(--mut)">▼</span>
+      </button>
+      <sc-if value="{{ langOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:calc(100% + 8px);right:0;min-width:186px;background:var(--sf);border:1px solid var(--bd);border-radius:14px;box-shadow:0 24px 48px -20px rgba(15,23,42,.3);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:70">
+          <sc-for list="{{ langs }}" as="l" hint-placeholder-count="4">
+            <button onClick="{{ l.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 11px;border-radius:9px;text-align:left;font-size:14px;font-weight:600;color:var(--ink);transition:background .15s" style-hover="background:#F1F5F9">
+              {{ l.name }}<span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--mut)">{{ l.code }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:10px;flex:0 0 auto">
+        <a href="#precos" style="padding:10px 14px;border-radius:10px;font-size:14.5px;font-weight:700;color:var(--ink)" style-hover="background:#EEF0FE;color:var(--v2)">{{ t.nav.login }}</a>
+        <a href="#comecar" style="padding:11px 18px;border-radius:11px;font-size:14.5px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6D5DFB,#5145CD);box-shadow:0 10px 24px -12px rgba(109,93,251,.95);transition:transform .18s,box-shadow .18s" style-hover="transform:translateY(-1px);box-shadow:0 16px 30px -12px rgba(109,93,251,.95);color:#fff">{{ t.nav.cta }}</a>
+      </div>
+    </sc-if>
+    <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ toggleMenu }}" aria-label="Menu" style="width:42px;height:42px;border-radius:11px;border:1px solid var(--bd);background:var(--sf);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+        <span style="width:16px;height:2px;border-radius:2px;background:var(--ink)"></span>
+        <span style="width:16px;height:2px;border-radius:2px;background:var(--ink)"></span>
+        <span style="width:16px;height:2px;border-radius:2px;background:var(--ink)"></span>
+      </button>
+    </sc-if>
+  </div>
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="border-top:1px solid var(--bd);background:var(--sf);padding:12px 24px 20px;display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ navItems }}" as="i" hint-placeholder-count="5">
+        <a href="{{ i.h }}" onClick="{{ closeMenu }}" style="padding:13px 10px;border-radius:10px;font-size:16px;font-weight:600;color:var(--ink);border-bottom:1px solid #F1F5F9">{{ i.l }}</a>
+      </sc-for>
+      <a href="#comecar" onClick="{{ closeMenu }}" style="margin-top:12px;padding:15px;border-radius:12px;text-align:center;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6D5DFB,#5145CD)">{{ t.nav.cta }}</a>
+      <a href="#precos" onClick="{{ closeMenu }}" style="padding:14px;border-radius:12px;text-align:center;font-size:16px;font-weight:700;color:var(--ink);border:1px solid var(--bd)">{{ t.nav.login }}</a>
+    </div>
+  </sc-if>
+</header>
+
+<section id="top" style="position:relative;overflow:hidden;padding:clamp(48px,6vw,84px) 0 clamp(56px,7vw,96px)">
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(900px 440px at 50% -10%,rgba(109,93,251,.17),transparent 68%),radial-gradient(680px 360px at 88% 6%,rgba(6,182,212,.13),transparent 70%),radial-gradient(620px 340px at 8% 18%,rgba(59,130,246,.10),transparent 70%)"></div>
+  <div style="position:relative;width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px">
+      <div data-reveal style="display:inline-flex;align-items:center;gap:9px;padding:7px 14px 7px 9px;border-radius:999px;background:var(--sf);border:1px solid var(--bd);box-shadow:0 2px 10px -6px rgba(15,23,42,.25);font-size:13px;font-weight:600;color:var(--ink)">
+        <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,#6D5DFB,#3B82F6);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em">ERP</span>
+        {{ t.hero.badge }}
+      </div>
+      <h1 data-reveal data-delay="60" style="margin:0;font-size:clamp(36px,5.6vw,74px);font-weight:800;letter-spacing:-.04em;line-height:1.04;max-width:14ch;text-wrap:balance">
+        {{ t.hero.t1 }}<br><span style="background:linear-gradient(100deg,#6D5DFB,#3B82F6 52%,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent">{{ t.hero.t2 }}</span>
+      </h1>
+      <p data-reveal data-delay="120" style="margin:0;max-width:640px;font-size:clamp(15.5px,1.4vw,18.5px);line-height:1.6;color:var(--mut);text-wrap:pretty">{{ t.hero.sub }}</p>
+      <div data-reveal data-delay="180" style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:4px">
+        <a href="#comecar" style="padding:15px 26px;border-radius:13px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6D5DFB,#5145CD);box-shadow:0 18px 36px -16px rgba(109,93,251,1);transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-2px);box-shadow:0 24px 44px -16px rgba(109,93,251,1);color:#fff">{{ t.hero.cta1 }}</a>
+        <a href="#produto" style="padding:15px 24px;border-radius:13px;font-size:16px;font-weight:700;color:var(--ink);background:var(--sf);border:1px solid var(--bd);transition:border-color .2s,transform .2s" style-hover="border-color:#C7C3FB;transform:translateY(-2px);color:var(--ink)">{{ t.hero.cta2 }}</a>
+      </div>
+    </div>
+
+    <div data-reveal data-delay="240" style="margin-top:clamp(40px,5vw,66px);border-radius:clamp(14px,1.6vw,22px);border:1px solid var(--bd);background:var(--sf);box-shadow:0 50px 90px -40px rgba(15,23,42,.45),0 2px 6px rgba(15,23,42,.04);overflow:hidden">
+      <div style="height:46px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;padding:0 16px;background:#FCFDFE">
+        <span style="width:10px;height:10px;border-radius:50%;background:#F87171"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:#FBBF24"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:#34D399"></span>
+        <div style="flex:1;display:flex;justify-content:center">
+          <div style="padding:4px 14px;border-radius:999px;background:#F1F5F9;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--mut)">app.progesty.com</div>
+        </div>
+      </div>
+      <div style="display:flex;min-height:clamp(340px,42vw,520px)">
+        <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:0 0 210px;background:#0F172A;padding:18px 12px;display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;align-items:center;gap:9px;padding:4px 8px 16px">
+              <div style="width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,#6D5DFB,#3B82F6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px">P</div>
+              <span style="color:#fff;font-weight:700;font-size:14.5px;letter-spacing:-.02em">Progesty</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:9px;background:rgba(109,93,251,.22);color:#fff;font-size:13.5px;font-weight:600">
+              <span style="width:6px;height:6px;border-radius:2px;background:#6D5DFB"></span>{{ t.ui.dash }}
+            </div>
+            <sc-for list="{{ sideItems }}" as="s" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:9px;color:#94A3B8;font-size:13.5px;font-weight:500">
+                <span style="width:6px;height:6px;border-radius:2px;background:#475569"></span>{{ s }}
+              </div>
+            </sc-for>
+            <div style="flex:1"></div>
+            <div style="display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:10px;background:rgba(255,255,255,.05)">
+              <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316)"></div>
+              <div style="display:flex;flex-direction:column"><span style="color:#E2E8F0;font-size:12.5px;font-weight:600">Carlos Mendes</span><span style="color:#64748B;font-size:11px">{{ t.ui.admin }}</span></div>
+            </div>
+          </div>
+        </sc-if>
+        <div style="flex:1;min-width:0;padding:clamp(14px,1.8vw,22px);background:var(--bg);display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <div style="font-size:clamp(15px,1.5vw,18px);font-weight:700;letter-spacing:-.02em">{{ t.ui.overview }}</div>
+            <div style="flex:1"></div>
+            <div style="padding:7px 12px;border-radius:9px;background:var(--sf);border:1px solid var(--bd);font-size:12px;color:var(--mut);font-weight:600">{{ t.ui.thisMonth }}</div>
+            <div style="padding:7px 12px;border-radius:9px;background:var(--sf);border:1px solid var(--bd);font-size:12px;color:var(--mut);font-weight:600">{{ t.ui.search }}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px">
+            <div style="background:var(--sf);border:1px solid var(--bd);border-radius:13px;padding:13px 14px;display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11.5px;font-weight:600;color:var(--mut)">{{ t.ui.revenue }}</span>
+              <span data-count="428650" data-prefix="R$ " style="font-size:clamp(16px,1.7vw,21px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums"></span>
+              <span style="font-size:11px;font-weight:700;color:var(--em)">+12,4%</span>
+            </div>
+            <div style="background:var(--sf);border:1px solid var(--bd);border-radius:13px;padding:13px 14px;display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11.5px;font-weight:600;color:var(--mut)">{{ t.ui.toReceive }}</span>
+              <span data-count="126400" data-prefix="R$ " style="font-size:clamp(16px,1.7vw,21px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums"></span>
+              <span style="font-size:11px;font-weight:700;color:var(--am)">8 {{ t.ui.invoices }}</span>
+            </div>
+            <div style="background:var(--sf);border:1px solid var(--bd);border-radius:13px;padding:13px 14px;display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11.5px;font-weight:600;color:var(--mut)">{{ t.ui.activeProjects }}</span>
+              <span data-count="18" style="font-size:clamp(16px,1.7vw,21px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums"></span>
+              <span style="font-size:11px;font-weight:700;color:var(--bl)">4 {{ t.ui.starting }}</span>
+            </div>
+            <div style="background:var(--sf);border:1px solid var(--bd);border-radius:13px;padding:13px 14px;display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11.5px;font-weight:600;color:var(--mut)">{{ t.ui.activeClients }}</span>
+              <span data-count="64" style="font-size:clamp(16px,1.7vw,21px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums"></span>
+              <span style="font-size:11px;font-weight:700;color:var(--cy)">+6 {{ t.ui.thisMonthShort }}</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;flex:1">
+            <div style="grid-column:span 2;min-width:0;background:var(--sf);border:1px solid var(--bd);border-radius:15px;padding:16px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <span style="font-size:13.5px;font-weight:700">{{ t.dash.chart }}</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--mut)"><span style="width:8px;height:8px;border-radius:2px;background:#6D5DFB"></span>2026</span>
+              </div>
+              <div style="flex:1;min-height:110px;display:flex;align-items:flex-end;gap:clamp(4px,.8vw,10px)">
+                <div data-bar style="flex:1;height:38%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#C7D2FE,#A5B4FC)"></div>
+                <div data-bar style="flex:1;height:52%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#C7D2FE,#A5B4FC)"></div>
+                <div data-bar style="flex:1;height:44%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#C7D2FE,#A5B4FC)"></div>
+                <div data-bar style="flex:1;height:61%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#A5B4FC,#818CF8)"></div>
+                <div data-bar style="flex:1;height:55%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#A5B4FC,#818CF8)"></div>
+                <div data-bar style="flex:1;height:72%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#8B87FB,#6D5DFB)"></div>
+                <div data-bar style="flex:1;height:64%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#8B87FB,#6D5DFB)"></div>
+                <div data-bar style="flex:1;height:80%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#7C7BFB,#5145CD)"></div>
+                <div data-bar style="flex:1;height:69%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#7C7BFB,#5145CD)"></div>
+                <div data-bar style="flex:1;height:92%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#6D5DFB,#3B82F6)"></div>
+                <div data-bar style="flex:1;height:78%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#4FA3F7,#06B6D4)"></div>
+                <div data-bar style="flex:1;height:86%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#4FA3F7,#06B6D4)"></div>
+              </div>
+              <div style="display:flex;gap:clamp(4px,.8vw,10px)">
+                <sc-for list="{{ t.months }}" as="m" hint-placeholder-count="12">
+                  <span style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#94A3B8;overflow:hidden">{{ m }}</span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="min-width:0;background:var(--sf);border:1px solid var(--bd);border-radius:15px;padding:16px;display:flex;flex-direction:column;gap:13px">
+              <span style="font-size:13.5px;font-weight:700">{{ t.ui.projects }}</span>
+              <sc-for list="{{ projectsMini }}" as="p" hint-placeholder-count="4">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                    <span style="font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.n }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--mut)">{{ p.pct }}</span>
+                  </div>
+                  <div style="height:6px;border-radius:999px;background:#F1F5F9;overflow:hidden">
+                    <div data-prog style="height:100%;width:{{ p.pct }};border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#06B6D4)"></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(64px,8vw,110px) 0">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <h2 data-reveal style="margin:0 0 clamp(32px,4vw,52px);font-size:clamp(27px,3.4vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.1;max-width:20ch;text-wrap:balance">
+      {{ t.problem.t1 }} <span style="color:var(--mut)">{{ t.problem.t2 }}</span>
+    </h2>
+    <div style="display:flex;flex-wrap:wrap;align-items:stretch;gap:clamp(18px,2.4vw,30px)">
+      <div data-reveal style="flex:1 1 380px;min-width:0;border-radius:20px;border:1px dashed #CBD5E1;background:#F1F5F9;padding:clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:18px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#94A3B8">{{ t.problem.before }}</span>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <sc-for list="{{ t.problem.tools }}" as="tool" hint-placeholder-count="5">
+            <span style="padding:11px 15px;border-radius:12px;background:var(--sf);border:1px solid var(--bd);font-size:14px;font-weight:600;color:#475569;box-shadow:0 1px 2px rgba(15,23,42,.05)">{{ tool }}</span>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:6px">
+          <span style="flex:1;height:1px;background:repeating-linear-gradient(90deg,#CBD5E1 0 6px,transparent 6px 12px)"></span>
+          <span style="font-size:12.5px;font-weight:600;color:#94A3B8">{{ t.problem.disconnected }}</span>
+          <span style="flex:1;height:1px;background:repeating-linear-gradient(90deg,#CBD5E1 0 6px,transparent 6px 12px)"></span>
+        </div>
+      </div>
+      <div data-reveal data-delay="120" style="flex:1 1 380px;min-width:0;border-radius:20px;background:linear-gradient(150deg,#0F172A,#1E1B4B 60%,#312E81);padding:clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 40px 70px -40px rgba(49,46,129,.9)">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#A5B4FC">{{ t.problem.after }}</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:9px">
+          <sc-for list="{{ connectedModules }}" as="m" hint-placeholder-count="6">
+            <span style="padding:11px 12px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:13.5px;font-weight:600;color:#E2E8F0;text-align:center">{{ m }}</span>
+          </sc-for>
+        </div>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:12px;padding-top:6px">
+          <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px">P</div>
+          <span style="font-size:15px;font-weight:700;color:#fff;letter-spacing:-.02em">{{ t.problem.result }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="produto" style="scroll-margin-top:88px;padding:clamp(64px,8vw,110px) 0;background:var(--sf);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <div data-reveal style="display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(32px,4vw,52px);max-width:680px">
+      <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--v)">{{ t.nav.produto }}</span>
+      <h2 style="margin:0;font-size:clamp(27px,3.4vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.product.title }}</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:clamp(14px,1.6vw,20px)">
+      <div data-reveal style="border:1px solid var(--bd);border-radius:18px;padding:22px;background:var(--sf);display:flex;flex-direction:column;gap:16px;transition:transform .22s,box-shadow .22s,border-color .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -28px rgba(15,23,42,.45);border-color:#C7C3FB">
+        <div style="height:92px;border-radius:12px;background:#F8FAFC;border:1px solid #EEF2F7;padding:12px;display:flex;flex-direction:column;justify-content:center;gap:8px">
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#6D5DFB,#EC4899)"></span><span style="flex:1;height:7px;border-radius:99px;background:#E2E8F0"></span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#06B6D4)"></span><span style="flex:1;height:7px;border-radius:99px;background:#E8EDF3"></span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#F97316)"></span><span style="flex:1;height:7px;border-radius:99px;background:#EEF2F7"></span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.product.clients.n }}</span>
+          <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.product.clients.d }}</span>
+        </div>
+      </div>
+      <div data-reveal data-delay="60" style="border:1px solid var(--bd);border-radius:18px;padding:22px;background:var(--sf);display:flex;flex-direction:column;gap:16px;transition:transform .22s,box-shadow .22s,border-color .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -28px rgba(15,23,42,.45);border-color:#C7C3FB">
+        <div style="height:92px;border-radius:12px;background:#F8FAFC;border:1px solid #EEF2F7;padding:12px;display:flex;align-items:flex-end;gap:7px">
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px"><span style="height:22px;border-radius:5px;background:#DDD6FE"></span><span style="height:14px;border-radius:5px;background:#EDE9FE"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px"><span style="height:34px;border-radius:5px;background:#C7D2FE"></span><span style="height:14px;border-radius:5px;background:#E0E7FF"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px"><span style="height:46px;border-radius:5px;background:#A5B4FC"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px"><span style="height:26px;border-radius:5px;background:#99F6E4"></span><span style="height:14px;border-radius:5px;background:#CCFBF1"></span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.product.crm.n }}</span>
+          <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.product.crm.d }}</span>
+        </div>
+      </div>
+      <div data-reveal data-delay="120" style="border:1px solid var(--bd);border-radius:18px;padding:22px;background:var(--sf);display:flex;flex-direction:column;gap:16px;transition:transform .22s,box-shadow .22s,border-color .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -28px rgba(15,23,42,.45);border-color:#C7C3FB">
+        <div style="height:92px;border-radius:12px;background:#F8FAFC;border:1px solid #EEF2F7;padding:14px;display:flex;flex-direction:column;justify-content:center;gap:11px">
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="width:60%;height:7px;border-radius:99px;background:#E2E8F0"></span><div style="height:8px;border-radius:99px;background:#EEF2F7;overflow:hidden"><div style="height:100%;width:72%;border-radius:99px;background:linear-gradient(90deg,#6D5DFB,#3B82F6)"></div></div></div>
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="width:44%;height:7px;border-radius:99px;background:#E8EDF3"></span><div style="height:8px;border-radius:99px;background:#EEF2F7;overflow:hidden"><div style="height:100%;width:45%;border-radius:99px;background:linear-gradient(90deg,#3B82F6,#06B6D4)"></div></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.product.projects.n }}</span>
+          <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.product.projects.d }}</span>
+        </div>
+      </div>
+      <div data-reveal style="border:1px solid var(--bd);border-radius:18px;padding:22px;background:var(--sf);display:flex;flex-direction:column;gap:16px;transition:transform .22s,box-shadow .22s,border-color .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -28px rgba(15,23,42,.45);border-color:#C7C3FB">
+        <div style="height:92px;border-radius:12px;background:#F8FAFC;border:1px solid #EEF2F7;padding:12px;display:flex;flex-direction:column;justify-content:center;gap:9px">
+          <div style="display:flex;align-items:center;gap:9px"><span style="width:16px;height:16px;border-radius:5px;background:#10B981"></span><span style="flex:1;height:7px;border-radius:99px;background:#E2E8F0"></span></div>
+          <div style="display:flex;align-items:center;gap:9px"><span style="width:16px;height:16px;border-radius:5px;background:#10B981"></span><span style="flex:1;height:7px;border-radius:99px;background:#E8EDF3"></span></div>
+          <div style="display:flex;align-items:center;gap:9px"><span style="width:16px;height:16px;border-radius:5px;border:2px solid #F59E0B"></span><span style="flex:1;height:7px;border-radius:99px;background:#EEF2F7"></span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.product.tasks.n }}</span>
+          <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.product.tasks.d }}</span>
+        </div>
+      </div>
+      <div data-reveal data-delay="60" style="border:1px solid var(--bd);border-radius:18px;padding:22px;background:var(--sf);display:flex;flex-direction:column;gap:16px;transition:transform .22s,box-shadow .22s,border-color .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -28px rgba(15,23,42,.45);border-color:#C7C3FB">
+        <div style="height:92px;border-radius:12px;background:#F8FAFC;border:1px solid #EEF2F7;padding:12px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="width:38%;height:7px;border-radius:99px;background:#E2E8F0"></span><span style="width:18%;height:7px;border-radius:99px;background:#10B981"></span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="width:52%;height:7px;border-radius:99px;background:#E8EDF3"></span><span style="width:18%;height:7px;border-radius:99px;background:#F59E0B"></span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="width:44%;height:7px;border-radius:99px;background:#EEF2F7"></span><span style="width:18%;height:7px;border-radius:99px;background:#EF4444"></span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.product.finance.n }}</span>
+          <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.product.finance.d }}</span>
+        </div>
+      </div>
+      <div data-reveal data-delay="120" style="border:1px solid var(--bd);border-radius:18px;padding:22px;background:var(--sf);display:flex;flex-direction:column;gap:16px;transition:transform .22s,box-shadow .22s,border-color .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -28px rgba(15,23,42,.45);border-color:#C7C3FB">
+        <div style="height:92px;border-radius:12px;background:#0F172A;padding:12px;display:flex;align-items:flex-end;gap:5px;overflow:hidden">
+          <div style="flex:1;height:34%;border-radius:4px;background:#312E81"></div>
+          <div style="flex:1;height:52%;border-radius:4px;background:#4338CA"></div>
+          <div style="flex:1;height:42%;border-radius:4px;background:#4F46E5"></div>
+          <div style="flex:1;height:68%;border-radius:4px;background:#6D5DFB"></div>
+          <div style="flex:1;height:56%;border-radius:4px;background:#3B82F6"></div>
+          <div style="flex:1;height:84%;border-radius:4px;background:#06B6D4"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.product.dash.n }}</span>
+          <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.product.dash.d }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solucoes" style="scroll-margin-top:88px;padding:clamp(64px,8vw,110px) 0">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <div data-reveal style="display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(30px,4vw,48px);max-width:700px">
+      <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cy)">{{ t.how.kicker }}</span>
+      <h2 style="margin:0;font-size:clamp(27px,3.4vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.how.title }}</h2>
+      <p style="margin:0;font-size:clamp(15px,1.3vw,17.5px);line-height:1.6;color:var(--mut);text-wrap:pretty">{{ t.how.sub }}</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(172px,1fr));gap:clamp(10px,1.2vw,14px)">
+      <div data-reveal style="border-radius:16px;border:1px solid var(--bd);background:var(--sf);padding:18px;display:flex;flex-direction:column;gap:12px;border-top:3px solid #6D5DFB">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#94A3B8">01</span>
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.how.s1.n }}</span>
+        <span style="font-size:13.5px;font-weight:600;color:var(--v2);line-height:1.4">{{ t.how.s1.v }}</span>
+      </div>
+      <div data-reveal data-delay="60" style="border-radius:16px;border:1px solid var(--bd);background:var(--sf);padding:18px;display:flex;flex-direction:column;gap:12px;border-top:3px solid #5B6EF9">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#94A3B8">02</span>
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.how.s2.n }}</span>
+        <span style="font-size:13.5px;font-weight:600;color:#4459E8;line-height:1.4">{{ t.how.s2.v }}</span>
+      </div>
+      <div data-reveal data-delay="120" style="border-radius:16px;border:1px solid var(--bd);background:var(--sf);padding:18px;display:flex;flex-direction:column;gap:12px;border-top:3px solid #3B82F6">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#94A3B8">03</span>
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.how.s3.n }}</span>
+        <span style="font-size:13.5px;font-weight:600;color:#1D68DE;line-height:1.4">{{ t.how.s3.v }}</span>
+      </div>
+      <div data-reveal data-delay="180" style="border-radius:16px;border:1px solid var(--bd);background:var(--sf);padding:18px;display:flex;flex-direction:column;gap:12px;border-top:3px solid #06B6D4">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#94A3B8">04</span>
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.how.s4.n }}</span>
+        <span style="font-size:13.5px;font-weight:600;color:#0891B2;line-height:1.4">{{ t.how.s4.v }}</span>
+      </div>
+      <div data-reveal data-delay="240" style="border-radius:16px;border:1px solid var(--bd);background:var(--sf);padding:18px;display:flex;flex-direction:column;gap:12px;border-top:3px solid #10B981">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#94A3B8">05</span>
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.how.s5.n }}</span>
+        <span style="font-size:13.5px;font-weight:600;color:#059669;line-height:1.4">{{ t.how.s5.v }}</span>
+      </div>
+      <div data-reveal data-delay="300" style="border-radius:16px;border:1px solid transparent;background:linear-gradient(150deg,#0F172A,#312E81);padding:18px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#818CF8">06</span>
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em;color:#fff">{{ t.how.s6.n }}</span>
+        <span style="font-size:13.5px;font-weight:600;color:#A5B4FC;line-height:1.4">{{ t.how.s6.v }}</span>
+      </div>
+    </div>
+    <div data-reveal style="margin-top:clamp(16px,2vw,22px);display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 20px;border-radius:16px;background:var(--sf);border:1px solid var(--bd)">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#6D5DFB);flex:0 0 auto"></div>
+      <span style="font-size:14.5px;font-weight:700">Mariana Costa</span>
+      <span style="font-size:13.5px;color:var(--mut);white-space:nowrap">Construtora Horizonte</span>
+      <div style="flex:1"></div>
+      <span style="padding:6px 12px;border-radius:999px;background:#EEF0FE;color:var(--v2);font-size:12.5px;font-weight:700">Residencial Jardim Europa</span>
+      <span style="padding:6px 12px;border-radius:999px;background:#ECFDF5;color:#047857;font-size:12.5px;font-weight:700">72%</span>
+      <span style="padding:6px 12px;border-radius:999px;background:#FFFBEB;color:#B45309;font-size:12.5px;font-weight:700">R$ 126.400</span>
+    </div>
+  </div>
+</section>
+
+<section id="recursos" style="scroll-margin-top:88px;padding:clamp(64px,8vw,110px) 0;background:var(--sf);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:clamp(30px,4vw,54px)">
+    <div data-reveal style="display:flex;flex-direction:column;gap:14px;max-width:660px">
+      <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--v)">{{ t.feat.kicker }}</span>
+      <h2 style="margin:0;font-size:clamp(27px,3.4vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.feat.title }}</h2>
+    </div>
+
+    <div data-reveal style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(22px,3vw,52px)">
+      <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px">
+        <span style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;background:#EEF0FE;color:var(--v2);font-size:12px;font-weight:700;letter-spacing:.04em">{{ t.feat.gestao.k }}</span>
+        <h3 style="margin:0;font-size:clamp(21px,2.3vw,30px);font-weight:800;letter-spacing:-.03em;line-height:1.15">{{ t.feat.gestao.t }}</h3>
+        <p style="margin:0;font-size:16px;line-height:1.6;color:var(--mut);max-width:44ch;text-wrap:pretty">{{ t.feat.gestao.d }}</p>
+      </div>
+      <div style="flex:1 1 380px;min-width:0;border-radius:18px;border:1px solid var(--bd);background:var(--bg);padding:clamp(14px,1.6vw,20px);box-shadow:0 30px 60px -40px rgba(15,23,42,.6)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="font-size:13.5px;font-weight:700">{{ t.ui.clients }}</span>
+          <span style="padding:3px 9px;border-radius:999px;background:#EEF0FE;color:var(--v2);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">64</span>
+          <div style="flex:1"></div>
+          <span style="padding:6px 11px;border-radius:8px;background:var(--sf);border:1px solid var(--bd);font-size:11.5px;font-weight:600;color:var(--mut)">{{ t.ui.search }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ projectsFull }}" as="p" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:12px;background:var(--sf);border:1px solid var(--bd)">
+              <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);flex:0 0 auto"></div>
+              <div style="min-width:0;display:flex;flex-direction:column">
+                <span style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.c }}</span>
+                <span style="font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.n }}</span>
+              </div>
+              <div style="flex:1"></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--mut)">{{ p.pct }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal style="display:flex;flex-wrap:wrap-reverse;align-items:center;gap:clamp(22px,3vw,52px)">
+      <div style="flex:1 1 380px;min-width:0;border-radius:18px;border:1px solid var(--bd);background:var(--bg);padding:clamp(14px,1.6vw,20px);box-shadow:0 30px 60px -40px rgba(15,23,42,.6);display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:3px">
+          <span style="font-size:13.5px;font-weight:700">{{ t.ui.tasks }}</span>
+          <div style="flex:1"></div>
+          <span style="padding:4px 10px;border-radius:999px;background:#FFFBEB;color:#B45309;font-size:11.5px;font-weight:700">{{ t.ui.thisMonth }}</span>
+        </div>
+        <sc-for list="{{ projTasks }}" as="k" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:12px;background:var(--sf);border:1px solid var(--bd)">
+            <span style="width:9px;height:9px;border-radius:50%;background:{{ k.color }};flex:0 0 auto"></span>
+            <span style="font-size:13.5px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.t }}</span>
+            <div style="flex:1"></div>
+            <span style="font-size:11.5px;color:var(--mut);white-space:nowrap">{{ k.w }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px">
+        <span style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;background:#ECFEFF;color:#0E7490;font-size:12px;font-weight:700;letter-spacing:.04em">{{ t.feat.prod.k }}</span>
+        <h3 style="margin:0;font-size:clamp(21px,2.3vw,30px);font-weight:800;letter-spacing:-.03em;line-height:1.15">{{ t.feat.prod.t }}</h3>
+        <p style="margin:0;font-size:16px;line-height:1.6;color:var(--mut);max-width:44ch;text-wrap:pretty">{{ t.feat.prod.d }}</p>
+      </div>
+    </div>
+
+    <div data-reveal style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(22px,3vw,52px)">
+      <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px">
+        <span style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;background:#ECFDF5;color:#047857;font-size:12px;font-weight:700;letter-spacing:.04em">{{ t.feat.fin.k }}</span>
+        <h3 style="margin:0;font-size:clamp(21px,2.3vw,30px);font-weight:800;letter-spacing:-.03em;line-height:1.15">{{ t.feat.fin.t }}</h3>
+        <p style="margin:0;font-size:16px;line-height:1.6;color:var(--mut);max-width:44ch;text-wrap:pretty">{{ t.feat.fin.d }}</p>
+      </div>
+      <div style="flex:1 1 380px;min-width:0;border-radius:18px;border:1px solid var(--bd);background:var(--bg);padding:clamp(14px,1.6vw,20px);box-shadow:0 30px 60px -40px rgba(15,23,42,.6);display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <div style="flex:1 1 120px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px">
+            <div style="font-size:11.5px;font-weight:600;color:var(--mut);margin-bottom:5px">{{ t.ui.received }}</div>
+            <div data-count="301900" data-prefix="R$ " style="font-size:18px;font-weight:800;letter-spacing:-.03em;color:#047857;font-variant-numeric:tabular-nums"></div>
+          </div>
+          <div style="flex:1 1 120px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px">
+            <div style="font-size:11.5px;font-weight:600;color:var(--mut);margin-bottom:5px">{{ t.ui.toReceive }}</div>
+            <div data-count="126400" data-prefix="R$ " style="font-size:18px;font-weight:800;letter-spacing:-.03em;color:#B45309;font-variant-numeric:tabular-nums"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:12px;font-weight:600;color:var(--mut)">{{ t.fin.split }}</span>
+          <div style="display:flex;height:14px;border-radius:999px;overflow:hidden;background:#F1F5F9">
+            <div data-prog style="width:66%;background:linear-gradient(90deg,#10B981,#34D399)"></div>
+            <div data-prog style="width:29%;background:linear-gradient(90deg,#F59E0B,#FBBF24)"></div>
+            <div data-prog style="width:5%;background:#EF4444"></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:11.5px;font-weight:600;color:var(--mut)">
+            <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:#10B981"></span>{{ t.ui.received }}</span>
+            <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:#F59E0B"></span>{{ t.ui.toReceive }}</span>
+            <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:#EF4444"></span>{{ t.ui.overdue }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal style="display:flex;flex-wrap:wrap-reverse;align-items:center;gap:clamp(22px,3vw,52px)">
+      <div style="flex:1 1 380px;min-width:0;border-radius:18px;background:linear-gradient(150deg,#0F172A,#1E1B4B 70%,#312E81);padding:clamp(16px,1.8vw,22px);box-shadow:0 40px 70px -44px rgba(49,46,129,.95);display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:13.5px;font-weight:700;color:#fff">{{ t.dash.chart }}</span>
+          <div style="flex:1"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A5B4FC">2026</span>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:130px">
+          <div data-bar style="flex:1;height:40%;border-radius:5px;background:#4338CA"></div>
+          <div data-bar style="flex:1;height:56%;border-radius:5px;background:#4F46E5"></div>
+          <div data-bar style="flex:1;height:47%;border-radius:5px;background:#5145CD"></div>
+          <div data-bar style="flex:1;height:70%;border-radius:5px;background:#6D5DFB"></div>
+          <div data-bar style="flex:1;height:60%;border-radius:5px;background:#6D5DFB"></div>
+          <div data-bar style="flex:1;height:83%;border-radius:5px;background:#3B82F6"></div>
+          <div data-bar style="flex:1;height:72%;border-radius:5px;background:#3B82F6"></div>
+          <div data-bar style="flex:1;height:96%;border-radius:5px;background:#06B6D4"></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span style="padding:7px 12px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#E2E8F0;font-size:12px;font-weight:600">{{ t.ui.revenue }} +12,4%</span>
+          <span style="padding:7px 12px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#E2E8F0;font-size:12px;font-weight:600">18 {{ t.ui.projects }}</span>
+          <span style="padding:7px 12px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#E2E8F0;font-size:12px;font-weight:600">64 {{ t.ui.clients }}</span>
+        </div>
+      </div>
+      <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px">
+        <span style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;background:#FDF2F8;color:#BE185D;font-size:12px;font-weight:700;letter-spacing:.04em">{{ t.feat.intel.k }}</span>
+        <h3 style="margin:0;font-size:clamp(21px,2.3vw,30px);font-weight:800;letter-spacing:-.03em;line-height:1.15">{{ t.feat.intel.t }}</h3>
+        <p style="margin:0;font-size:16px;line-height:1.6;color:var(--mut);max-width:44ch;text-wrap:pretty">{{ t.feat.intel.d }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(64px,8vw,110px) 0;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(760px 400px at 80% 0%,rgba(109,93,251,.12),transparent 70%)"></div>
+  <div style="position:relative;width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <div data-reveal style="display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(28px,3.5vw,44px);max-width:700px">
+      <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--v)">{{ t.dash.kicker }}</span>
+      <h2 style="margin:0;font-size:clamp(27px,3.4vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.dash.title }}</h2>
+      <p style="margin:0;font-size:clamp(15px,1.3vw,17.5px);line-height:1.6;color:var(--mut);text-wrap:pretty">{{ t.dash.sub }}</p>
+    </div>
+    <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:clamp(10px,1.2vw,16px);margin-bottom:clamp(10px,1.2vw,16px)">
+      <div style="background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:7px;border-top:3px solid #6D5DFB">
+        <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.ui.revenue }}</span>
+        <span data-count="428650" data-prefix="R$ " style="font-size:clamp(21px,2.4vw,30px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums"></span>
+      </div>
+      <div style="background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:7px;border-top:3px solid #F59E0B">
+        <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.ui.toReceive }}</span>
+        <span data-count="126400" data-prefix="R$ " style="font-size:clamp(21px,2.4vw,30px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums"></span>
+      </div>
+      <div style="background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:7px;border-top:3px solid #3B82F6">
+        <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.ui.activeProjects }}</span>
+        <span data-count="18" style="font-size:clamp(21px,2.4vw,30px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums"></span>
+      </div>
+      <div style="background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:7px;border-top:3px solid #06B6D4">
+        <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.ui.activeClients }}</span>
+        <span data-count="64" style="font-size:clamp(21px,2.4vw,30px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums"></span>
+      </div>
+    </div>
+    <div data-reveal data-delay="80" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(10px,1.2vw,16px)">
+      <div style="grid-column:span 2;min-width:0;background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.dash.chart }}</span>
+          <div style="flex:1"></div>
+          <span style="padding:5px 11px;border-radius:999px;background:#ECFDF5;color:#047857;font-size:12px;font-weight:700">+12,4%</span>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:clamp(4px,.7vw,9px);height:clamp(150px,17vw,210px)">
+          <div data-bar style="flex:1;height:38%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#C7D2FE,#A5B4FC)"></div>
+          <div data-bar style="flex:1;height:52%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#C7D2FE,#A5B4FC)"></div>
+          <div data-bar style="flex:1;height:44%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#C7D2FE,#A5B4FC)"></div>
+          <div data-bar style="flex:1;height:61%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#A5B4FC,#818CF8)"></div>
+          <div data-bar style="flex:1;height:55%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#A5B4FC,#818CF8)"></div>
+          <div data-bar style="flex:1;height:72%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#8B87FB,#6D5DFB)"></div>
+          <div data-bar style="flex:1;height:64%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#8B87FB,#6D5DFB)"></div>
+          <div data-bar style="flex:1;height:80%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#7C7BFB,#5145CD)"></div>
+          <div data-bar style="flex:1;height:69%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#7C7BFB,#5145CD)"></div>
+          <div data-bar style="flex:1;height:92%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#6D5DFB,#3B82F6)"></div>
+          <div data-bar style="flex:1;height:78%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#4FA3F7,#06B6D4)"></div>
+          <div data-bar style="flex:1;height:86%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#4FA3F7,#06B6D4)"></div>
+        </div>
+        <div style="display:flex;gap:clamp(4px,.7vw,9px)">
+          <sc-for list="{{ t.months }}" as="m" hint-placeholder-count="12">
+            <span style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:#94A3B8;overflow:hidden">{{ m }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="min-width:0;background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.ui.projects }}</span>
+        <sc-for list="{{ projectsFull }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+              <span style="font-size:13.5px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.n }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--mut)">{{ p.pct }}</span>
+            </div>
+            <div style="height:7px;border-radius:999px;background:#F1F5F9;overflow:hidden">
+              <div data-prog style="height:100%;width:{{ p.pct }};border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#06B6D4)"></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="min-width:0;background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:13px">
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.dash.activity }}</span>
+        <sc-for list="{{ acts }}" as="a" hint-placeholder-count="4">
+          <div style="display:flex;gap:11px;align-items:flex-start">
+            <span style="width:8px;height:8px;border-radius:50%;background:#6D5DFB;margin-top:6px;flex:0 0 auto"></span>
+            <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:13.5px;font-weight:600;line-height:1.35">{{ a.t }}</span>
+              <span style="font-size:11.5px;color:#94A3B8">{{ a.w }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="min-width:0;background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:15px;font-weight:700;letter-spacing:-.02em">{{ t.dash.alerts }}</span>
+        <sc-for list="{{ alerts }}" as="al" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:12px;background:#F8FAFC;border:1px solid var(--bd)">
+            <span style="width:4px;align-self:stretch;border-radius:99px;background:{{ al.color }};flex:0 0 auto"></span>
+            <span style="font-size:13.5px;font-weight:600;line-height:1.35">{{ al.t }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(64px,8vw,110px) 0;background:var(--sf);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:clamp(24px,3vw,56px);align-items:center">
+    <div data-reveal style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--bl)">{{ t.proj.kicker }}</span>
+      <h2 style="margin:0;font-size:clamp(27px,3.4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.proj.title }}</h2>
+      <p style="margin:0;font-size:clamp(15px,1.3vw,17.5px);line-height:1.6;color:var(--mut);max-width:46ch;text-wrap:pretty">{{ t.proj.note }}</p>
+    </div>
+    <div data-reveal data-delay="100" style="flex:1 1 440px;min-width:0;border-radius:20px;border:1px solid var(--bd);background:var(--bg);padding:clamp(16px,1.8vw,24px);box-shadow:0 40px 70px -46px rgba(15,23,42,.7);display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <span style="font-size:clamp(16px,1.7vw,20px);font-weight:800;letter-spacing:-.025em">Residencial Jardim Europa</span>
+        <span style="padding:5px 11px;border-radius:999px;background:#EEF0FE;color:var(--v2);font-size:12px;font-weight:700">{{ t.ui.inProgress }}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.ui.progress }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600">72%</span>
+        </div>
+        <div style="height:10px;border-radius:999px;background:#E9EEF5;overflow:hidden">
+          <div data-prog style="height:100%;width:72%;border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#3B82F6 60%,#06B6D4)"></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">
+        <div style="background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:11.5px;font-weight:600;color:var(--mut)">{{ t.ui.owner }}</span><span style="font-size:13.5px;font-weight:700">Carlos Mendes</span>
+        </div>
+        <div style="background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:11.5px;font-weight:600;color:var(--mut)">{{ t.ui.start }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">12/08/2026</span>
+        </div>
+        <div style="background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:11.5px;font-weight:600;color:var(--mut)">{{ t.ui.due }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">18/11/2026</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <span style="font-size:12.5px;font-weight:700;color:var(--mut)">{{ t.ui.tasksOf }}</span>
+        <sc-for list="{{ projTasks }}" as="k" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:12px;background:var(--sf);border:1px solid var(--bd)">
+            <span style="width:9px;height:9px;border-radius:50%;background:{{ k.color }};flex:0 0 auto"></span>
+            <span style="font-size:13.5px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.t }}</span>
+            <div style="flex:1"></div>
+            <span style="font-size:11.5px;font-weight:600;color:var(--mut);white-space:nowrap">{{ k.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(64px,8vw,110px) 0">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <div data-reveal style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;margin-bottom:clamp(26px,3vw,40px)">
+      <div style="flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:13px">
+        <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pk)">{{ t.crm.kicker }}</span>
+        <h2 style="margin:0;font-size:clamp(27px,3.4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.crm.title }}</h2>
+      </div>
+      <p style="flex:1 1 300px;margin:0;font-size:clamp(15px,1.3vw,17px);line-height:1.6;color:var(--mut);text-wrap:pretty">{{ t.crm.note }}</p>
+    </div>
+    <div data-reveal data-delay="80" style="display:flex;flex-wrap:wrap;gap:clamp(14px,1.8vw,22px);align-items:stretch">
+      <div style="flex:1 1 280px;min-width:0;border-radius:20px;border:1px solid var(--bd);background:var(--sf);padding:clamp(18px,2vw,24px);display:flex;flex-direction:column;gap:16px;box-shadow:0 30px 60px -46px rgba(15,23,42,.7)">
+        <div style="display:flex;align-items:center;gap:13px">
+          <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#EC4899,#6D5DFB);flex:0 0 auto"></div>
+          <div style="min-width:0;display:flex;flex-direction:column">
+            <span style="font-size:17px;font-weight:800;letter-spacing:-.02em">Mariana Costa</span>
+            <span style="font-size:13px;color:var(--mut)">Construtora Horizonte</span>
+          </div>
+        </div>
+        <div style="height:1px;background:var(--bd)"></div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.ui.projects }}</span>
+            <span style="font-size:13px;font-weight:700;text-align:right">Residencial Jardim Europa</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.ui.value }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">R$ 680.000</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.ui.status }}</span>
+            <span style="padding:5px 11px;border-radius:999px;background:#FFFBEB;color:#B45309;font-size:12px;font-weight:700">{{ t.ui.proposal }}</span>
+          </div>
+        </div>
+      </div>
+      <div style="flex:2 1 520px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+        <sc-for list="{{ pipeline }}" as="st" hint-placeholder-count="5">
+          <div style="min-width:0;border-radius:16px;background:#F1F5F9;border:1px solid var(--bd);padding:12px;display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="font-size:12px;font-weight:700;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ st.name }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--mut)">{{ st.count }}</span>
+            </div>
+            <sc-for list="{{ st.cards }}" as="c" hint-placeholder-count="1">
+              <div style="border-radius:11px;background:var(--sf);border:1px solid var(--bd);padding:11px;display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:12.5px;font-weight:700;line-height:1.3">{{ c.n }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--v2)">{{ c.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(64px,8vw,110px) 0;background:var(--sf);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <div data-reveal style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;margin-bottom:clamp(26px,3vw,40px)">
+      <div style="flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:13px">
+        <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--em)">{{ t.fin.kicker }}</span>
+        <h2 style="margin:0;font-size:clamp(27px,3.4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.fin.title }}</h2>
+      </div>
+      <p style="flex:1 1 300px;margin:0;font-size:clamp(15px,1.3vw,17px);line-height:1.6;color:var(--mut);text-wrap:pretty">{{ t.fin.note }}</p>
+    </div>
+    <div data-reveal data-delay="80" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:clamp(10px,1.2vw,16px);margin-bottom:clamp(12px,1.4vw,18px)">
+      <div style="border-radius:16px;background:var(--bg);border:1px solid var(--bd);padding:18px;display:flex;flex-direction:column;gap:7px">
+        <span style="font-size:12.5px;font-weight:600;color:var(--mut)">{{ t.fin.monthRevenue }}</span>
+        <span data-count="428650" data-prefix="R$ " style="font-size:clamp(20px,2.2vw,28px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums"></span>
+      </div>
+      <div style="border-radius:16px;background:#ECFDF5;border:1px solid #A7F3D0;padding:18px;display:flex;flex-direction:column;gap:7px">
+        <span style="font-size:12.5px;font-weight:600;color:#047857">{{ t.ui.received }}</span>
+        <span data-count="301900" data-prefix="R$ " style="font-size:clamp(20px,2.2vw,28px);font-weight:800;letter-spacing:-.035em;color:#065F46;font-variant-numeric:tabular-nums"></span>
+      </div>
+      <div style="border-radius:16px;background:#FFFBEB;border:1px solid #FDE68A;padding:18px;display:flex;flex-direction:column;gap:7px">
+        <span style="font-size:12.5px;font-weight:600;color:#B45309">{{ t.ui.toReceive }}</span>
+        <span data-count="126400" data-prefix="R$ " style="font-size:clamp(20px,2.2vw,28px);font-weight:800;letter-spacing:-.035em;color:#92400E;font-variant-numeric:tabular-nums"></span>
+      </div>
+      <div style="border-radius:16px;background:#FEF2F2;border:1px solid #FECACA;padding:18px;display:flex;flex-direction:column;gap:7px">
+        <span style="font-size:12.5px;font-weight:600;color:#B91C1C">{{ t.ui.overdue }}</span>
+        <span data-count="18750" data-prefix="R$ " style="font-size:clamp(20px,2.2vw,28px);font-weight:800;letter-spacing:-.035em;color:#991B1B;font-variant-numeric:tabular-nums"></span>
+      </div>
+    </div>
+    <div data-reveal data-delay="140" style="display:flex;flex-wrap:wrap;gap:clamp(10px,1.2vw,16px)">
+      <div style="flex:1 1 420px;min-width:0;border-radius:18px;border:1px solid var(--bd);background:var(--bg);padding:clamp(14px,1.6vw,20px);display:flex;flex-direction:column;gap:9px">
+        <sc-for list="{{ invoices }}" as="iv" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:13px;background:var(--sf);border:1px solid var(--bd)">
+            <span style="width:4px;align-self:stretch;border-radius:99px;background:{{ iv.color }};flex:0 0 auto"></span>
+            <div style="min-width:0;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ iv.c }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--mut)">{{ iv.no }}</span>
+            </div>
+            <div style="flex:1"></div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600">{{ iv.v }}</span>
+              <span style="font-size:11px;font-weight:700;color:{{ iv.color }}">{{ iv.label }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex:1 1 280px;min-width:0;border-radius:18px;border:1px solid var(--bd);background:var(--bg);padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:13.5px;font-weight:700">{{ t.fin.split }}</span>
+        <div style="flex:1;display:flex;align-items:flex-end;gap:10px;min-height:120px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px">
+            <div data-bar style="width:100%;height:88px;border-radius:8px;background:linear-gradient(180deg,#34D399,#10B981)"></div>
+            <span style="font-size:11px;font-weight:600;color:var(--mut);text-align:center">{{ t.ui.received }}</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px">
+            <div data-bar style="width:100%;height:46px;border-radius:8px;background:linear-gradient(180deg,#FBBF24,#F59E0B)"></div>
+            <span style="font-size:11px;font-weight:600;color:var(--mut);text-align:center">{{ t.ui.toReceive }}</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px">
+            <div data-bar style="width:100%;height:16px;border-radius:8px;background:#EF4444"></div>
+            <span style="font-size:11px;font-weight:600;color:var(--mut);text-align:center">{{ t.ui.overdue }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(64px,8vw,110px) 0">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <h2 data-reveal style="margin:0 0 clamp(28px,3.5vw,44px);font-size:clamp(27px,3.4vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.1;max-width:18ch;text-wrap:balance">{{ t.ben.title }}</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:clamp(12px,1.4vw,18px)">
+      <div data-reveal style="display:flex;flex-direction:column;gap:11px;padding:24px;border-radius:18px;background:var(--sf);border:1px solid var(--bd);transition:transform .22s,box-shadow .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -30px rgba(15,23,42,.5)">
+        <span style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD)"></span>
+        <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.ben.b1.n }}</span>
+        <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.ben.b1.d }}</span>
+      </div>
+      <div data-reveal data-delay="60" style="display:flex;flex-direction:column;gap:11px;padding:24px;border-radius:18px;background:var(--sf);border:1px solid var(--bd);transition:transform .22s,box-shadow .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -30px rgba(15,23,42,.5)">
+        <span style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#3B82F6,#06B6D4)"></span>
+        <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.ben.b2.n }}</span>
+        <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.ben.b2.d }}</span>
+      </div>
+      <div data-reveal data-delay="120" style="display:flex;flex-direction:column;gap:11px;padding:24px;border-radius:18px;background:var(--sf);border:1px solid var(--bd);transition:transform .22s,box-shadow .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -30px rgba(15,23,42,.5)">
+        <span style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#10B981,#06B6D4)"></span>
+        <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.ben.b3.n }}</span>
+        <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.ben.b3.d }}</span>
+      </div>
+      <div data-reveal data-delay="180" style="display:flex;flex-direction:column;gap:11px;padding:24px;border-radius:18px;background:var(--sf);border:1px solid var(--bd);transition:transform .22s,box-shadow .22s" style-hover="transform:translateY(-4px);box-shadow:0 24px 44px -30px rgba(15,23,42,.5)">
+        <span style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#F59E0B,#F97316)"></span>
+        <span style="font-size:17.5px;font-weight:700;letter-spacing:-.02em">{{ t.ben.b4.n }}</span>
+        <span style="font-size:14.5px;line-height:1.5;color:var(--mut)">{{ t.ben.b4.d }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(64px,8vw,110px) 0;background:var(--sf);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:clamp(24px,3vw,56px);align-items:center">
+    <div data-reveal style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or)">{{ t.who.kicker }}</span>
+      <h2 style="margin:0;font-size:clamp(27px,3.4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.who.title }}</h2>
+      <p style="margin:0;font-size:clamp(15px,1.3vw,17.5px);line-height:1.6;color:var(--mut);max-width:46ch;text-wrap:pretty">{{ t.who.text }}</p>
+    </div>
+    <div data-reveal data-delay="100" style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ whoItems }}" as="w" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;background:var(--bg);border:1px solid var(--bd);transition:border-color .2s,transform .2s" style-hover="border-color:#C7C3FB;transform:translateX(4px)">
+          <span style="width:10px;height:10px;border-radius:3px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);flex:0 0 auto"></span>
+          <span style="font-size:15.5px;font-weight:600">{{ w }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="precos" style="scroll-margin-top:88px;padding:clamp(64px,8vw,110px) 0">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <div data-reveal style="border-radius:24px;border:1px solid var(--bd);background:var(--sf);padding:clamp(24px,3.4vw,52px);display:flex;flex-wrap:wrap;gap:clamp(24px,3vw,48px);align-items:center;box-shadow:0 40px 80px -60px rgba(15,23,42,.8)">
+      <div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--v)">{{ t.price.kicker }}</span>
+        <h2 style="margin:0;font-size:clamp(27px,3.4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.price.title }}</h2>
+        <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;background:linear-gradient(135deg,#6D5DFB,#3B82F6);color:#fff;font-size:14px;font-weight:700">{{ t.price.badge }}</div>
+        <p style="margin:0;font-size:clamp(15px,1.3vw,17px);line-height:1.6;color:var(--mut);max-width:46ch;text-wrap:pretty">{{ t.price.text }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:4px">
+          <a href="#comecar" style="padding:15px 26px;border-radius:13px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6D5DFB,#5145CD);box-shadow:0 18px 36px -18px rgba(109,93,251,1);transition:transform .2s" style-hover="transform:translateY(-2px);color:#fff">{{ t.price.cta }}</a>
+          <a href="#comecar" style="padding:15px 24px;border-radius:13px;font-size:16px;font-weight:700;color:var(--ink);border:1px solid var(--bd);transition:border-color .2s" style-hover="border-color:#C7C3FB;color:var(--ink)">{{ t.price.talk }}</a>
+        </div>
+      </div>
+      <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ t.price.points }}" as="pt" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:12px;padding:15px 17px;border-radius:14px;background:var(--bg);border:1px solid var(--bd)">
+            <span style="width:20px;height:20px;border-radius:7px;background:#ECFDF5;border:1px solid #A7F3D0;flex:0 0 auto"></span>
+            <span style="font-size:14.5px;font-weight:600;line-height:1.4">{{ pt }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ showPlans }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:6px">
+            <div style="border:1px dashed #CBD5E1;border-radius:14px;padding:22px 14px;text-align:center;font-size:12.5px;font-weight:600;color:#94A3B8">{{ t.price.soon }}</div>
+            <div style="border:1px dashed #CBD5E1;border-radius:14px;padding:22px 14px;text-align:center;font-size:12.5px;font-weight:600;color:#94A3B8">{{ t.price.soon }}</div>
+            <div style="border:1px dashed #CBD5E1;border-radius:14px;padding:22px 14px;text-align:center;font-size:12.5px;font-weight:600;color:#94A3B8">{{ t.price.soon }}</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sobre" style="scroll-margin-top:88px;padding:clamp(64px,8vw,110px) 0;background:var(--sf);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:clamp(24px,3vw,56px);align-items:center">
+    <div data-reveal style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--v)">{{ t.about.kicker }}</span>
+      <h2 style="margin:0;font-size:clamp(27px,3.4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.about.title }}</h2>
+      <p style="margin:0;font-size:clamp(15px,1.3vw,17.5px);line-height:1.6;color:var(--mut);max-width:46ch;text-wrap:pretty">{{ t.about.text }}</p>
+    </div>
+    <div data-reveal data-delay="100" style="flex:1 1 380px;min-width:0;border-radius:22px;background:linear-gradient(150deg,#0F172A,#1E1B4B 60%,#312E81);padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;align-items:center;gap:20px;box-shadow:0 44px 80px -50px rgba(49,46,129,1)">
+      <div style="display:flex;align-items:center;gap:13px">
+        <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:23px">P</div>
+        <span style="font-size:27px;font-weight:800;letter-spacing:-.03em;color:#fff">Progesty</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px">
+        <sc-for list="{{ connectedModules }}" as="m" hint-placeholder-count="6">
+          <span style="padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:#E2E8F0;font-size:13px;font-weight:600">{{ m }}</span>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:6px;align-items:flex-end;height:54px;width:100%;max-width:280px">
+        <div data-bar style="flex:1;height:38%;border-radius:4px;background:#4338CA"></div>
+        <div data-bar style="flex:1;height:58%;border-radius:4px;background:#5145CD"></div>
+        <div data-bar style="flex:1;height:46%;border-radius:4px;background:#6D5DFB"></div>
+        <div data-bar style="flex:1;height:76%;border-radius:4px;background:#6D5DFB"></div>
+        <div data-bar style="flex:1;height:62%;border-radius:4px;background:#3B82F6"></div>
+        <div data-bar style="flex:1;height:92%;border-radius:4px;background:#06B6D4"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:clamp(64px,8vw,110px) 0">
+  <div style="width:100%;max-width:820px;margin:0 auto;padding:0 24px">
+    <h2 data-reveal style="margin:0 0 clamp(24px,3vw,38px);font-size:clamp(27px,3.4vw,44px);font-weight:800;letter-spacing:-.035em;line-height:1.1;text-wrap:balance">{{ t.faq.title }}</h2>
+    <div data-reveal style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ faqItems }}" as="f" hint-placeholder-count="5">
+        <div style="border-radius:16px;background:var(--sf);border:1px solid var(--bd);overflow:hidden">
+          <button onClick="{{ f.toggle }}" style="width:100%;display:flex;align-items:center;gap:16px;padding:19px 22px;text-align:left">
+            <span style="flex:1;font-size:16px;font-weight:700;letter-spacing:-.015em;color:var(--ink);line-height:1.35">{{ f.q }}</span>
+            <span style="width:26px;height:26px;border-radius:8px;background:#EEF0FE;color:var(--v2);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex:0 0 auto">+</span>
+          </button>
+          <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 22px 20px;font-size:15px;line-height:1.6;color:var(--mut);max-width:62ch;text-wrap:pretty">{{ f.a }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="comecar" style="scroll-margin-top:88px;padding:0 0 clamp(56px,7vw,96px)">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px">
+    <div data-reveal style="position:relative;overflow:hidden;border-radius:26px;background:linear-gradient(115deg,#5145CD,#6D5DFB 34%,#3B82F6 68%,#06B6D4);padding:clamp(40px,6vw,86px) clamp(24px,4vw,64px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;box-shadow:0 50px 90px -50px rgba(81,69,205,1)">
+      <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(520px 260px at 18% 8%,rgba(255,255,255,.22),transparent 65%),radial-gradient(420px 220px at 86% 96%,rgba(255,255,255,.16),transparent 65%)"></div>
+      <h2 style="position:relative;margin:0;font-size:clamp(28px,4.2vw,54px);font-weight:800;letter-spacing:-.035em;line-height:1.08;color:#fff;max-width:18ch;text-wrap:balance">{{ t.final.title }}</h2>
+      <p style="position:relative;margin:0;font-size:clamp(15.5px,1.4vw,18.5px);line-height:1.55;color:rgba(255,255,255,.92);max-width:52ch;text-wrap:pretty">{{ t.final.text }}</p>
+      <a href="#top" style="position:relative;margin-top:6px;padding:17px 34px;border-radius:14px;background:#fff;color:#4338CA;font-size:16.5px;font-weight:800;letter-spacing:-.01em;box-shadow:0 20px 40px -20px rgba(15,23,42,.6);transition:transform .2s" style-hover="transform:translateY(-2px);color:#4338CA">{{ t.final.cta }}</a>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#0F172A;padding:clamp(44px,5vw,70px) 0 30px">
+  <div style="width:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,64px)">
+    <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:11px">
+        <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px">P</div>
+        <span style="font-size:19px;font-weight:800;letter-spacing:-.025em;color:#fff">Progesty</span>
+      </div>
+      <p style="margin:0;font-size:14.5px;line-height:1.55;color:#94A3B8;max-width:34ch;text-wrap:pretty">{{ t.foot.tag }}</p>
+    </div>
+    <div style="flex:1 1 180px;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#64748B">{{ t.foot.nav }}</span>
+      <sc-for list="{{ navItems }}" as="i" hint-placeholder-count="5">
+        <a href="{{ i.h }}" style="font-size:14.5px;font-weight:500;color:#CBD5E1" style-hover="color:#fff">{{ i.l }}</a>
+      </sc-for>
+      <a href="#comecar" style="font-size:14.5px;font-weight:500;color:#CBD5E1" style-hover="color:#fff">{{ t.nav.contato }}</a>
+      <a href="#precos" style="font-size:14.5px;font-weight:500;color:#CBD5E1" style-hover="color:#fff">{{ t.nav.login }}</a>
+    </div>
+    <div style="flex:1 1 180px;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#64748B">{{ t.foot.langs }}</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ langs }}" as="l" hint-placeholder-count="4">
+          <button onClick="{{ l.pick }}" style="padding:8px 13px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#CBD5E1;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;transition:background .18s,color .18s" style-hover="background:rgba(109,93,251,.35);color:#fff">{{ l.code }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="flex:1 1 180px;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#64748B">{{ t.foot.legal }}</span>
+      <a href="#sobre" style="font-size:14.5px;font-weight:500;color:#CBD5E1" style-hover="color:#fff">{{ t.foot.privacy }}</a>
+      <a href="#sobre" style="font-size:14.5px;font-weight:500;color:#CBD5E1" style-hover="color:#fff">{{ t.foot.terms }}</a>
+    </div>
+  </div>
+  <div style="width:100%;max-width:1200px;margin:clamp(28px,3.4vw,46px) auto 0;padding:22px 24px 0;border-top:1px solid rgba(255,255,255,.09);display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+    <span style="font-size:13px;color:#64748B">© {{ year }} Progesty. {{ t.foot.rights }}</span>
+    <div style="flex:1"></div>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#475569">{{ langLabel }}</span>
+  </div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultLang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;pt-BR&quot;,&quot;en&quot;,&quot;fr&quot;,&quot;nl&quot;],&quot;default&quot;:&quot;pt-BR&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Idioma&quot;},&quot;animateCounters&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Movimento&quot;},&quot;showPlanSlots&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Preços&quot;}}">
+class Component extends DCLogic {
+  state = { lang: null, menuOpen: false, langOpen: false, wide: true, faq: 0 };
+
+  T = {
+    'pt-BR': {
+      meta: { t: 'Progesty — ERP para empresas da construção civil', d: 'O Progesty conecta clientes, CRM, projetos, tarefas e financeiro em uma única plataforma para empresas da construção civil.' },
+      nav: { produto: 'Produto', solucoes: 'Soluções', recursos: 'Recursos', precos: 'Preços', sobre: 'Sobre', login: 'Entrar', cta: 'Começar agora', contato: 'Contato' },
+      hero: { badge: 'para empresas da construção civil', t1: 'Toda a sua empresa.', t2: 'Um único lugar.', sub: 'O Progesty conecta clientes, projetos, equipes e financeiro em uma única plataforma para você ter mais controle, produtividade e crescimento.', cta1: 'Começar agora', cta2: 'Conhecer o Progesty' },
+      ui: { dash: 'Dashboard', clients: 'Clientes', crm: 'CRM', projects: 'Projetos', tasks: 'Tarefas', finance: 'Financeiro', management: 'Gestão', revenue: 'Receita', toReceive: 'A receber', received: 'Recebido', overdue: 'Em atraso', activeProjects: 'Projetos ativos', activeClients: 'Clientes ativos', progress: 'Progresso', owner: 'Responsável', start: 'Início', due: 'Previsão', status: 'Status', inProgress: 'Em andamento', proposal: 'Proposta enviada', thisMonth: 'Este mês', thisMonthShort: 'no mês', starting: 'iniciando', search: 'Buscar', value: 'Valor', invoices: 'faturas', overview: 'Visão geral', admin: 'Administrador', done: 'Concluída', pending: 'Pendente', late: 'Atrasada', client: 'Cliente', tasksOf: 'Tarefas do projeto' },
+      months: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      problem: { t1: 'Sua empresa não precisa de mais ferramentas.', t2: 'Precisa de conexão.', before: 'Hoje', after: 'Com o Progesty', disconnected: 'informação desconectada', result: 'Tudo conectado em um único lugar.', tools: ['Planilhas', 'Mensagens', 'E-mails', 'Documentos', 'Sistemas diferentes'] },
+      product: { title: 'Tudo o que você precisa para administrar melhor.', clients: { n: 'Clientes', d: 'Relacionamentos organizados.' }, crm: { n: 'CRM', d: 'Oportunidades em movimento.' }, projects: { n: 'Projetos', d: 'Obras sob controle.' }, tasks: { n: 'Tarefas', d: 'Equipe organizada.' }, finance: { n: 'Financeiro', d: 'Contas e recebimentos acompanhados.' }, dash: { n: 'Dashboard', d: 'Uma visão completa da empresa.' } },
+      how: { kicker: 'Como funciona', title: 'Do primeiro contato ao resultado.', sub: 'Uma mesma informação acompanha a sua empresa durante todo o processo.', s1: { n: 'Cliente', v: 'Mariana Costa' }, s2: { n: 'Oportunidade', v: 'R$ 680.000' }, s3: { n: 'Projeto', v: 'Residencial Jardim Europa' }, s4: { n: 'Execução', v: '72% · 12 tarefas' }, s5: { n: 'Financeiro', v: 'R$ 126.400 a receber' }, s6: { n: 'Resultado', v: 'Entrega em 18/11/2026' } },
+      feat: { kicker: 'Recursos', title: 'O essencial, mostrado na prática.', gestao: { k: 'Gestão', t: 'Tenha tudo organizado.', d: 'Clientes, projetos e informações em um único lugar.' }, prod: { k: 'Produtividade', t: 'Saiba o que precisa ser feito.', d: 'Tarefas, atividades e prioridades.' }, fin: { k: 'Financeiro', t: 'Saiba para onde seu dinheiro está indo.', d: 'Receitas, recebimentos e valores a receber.' }, intel: { k: 'Inteligência', t: 'Veja o que está acontecendo.', d: 'Indicadores e informações importantes em uma única visão.' } },
+      dash: { kicker: 'Dashboard', title: 'Veja sua empresa de uma nova perspectiva.', sub: 'Indicadores, projetos, atividades e alertas em uma única tela.', chart: 'Receita por mês', activity: 'Atividades recentes', alerts: 'Alertas', acts: [{ t: 'Proposta enviada para Mariana Costa', w: 'há 12 min' }, { t: 'Tarefa concluída em Jardim Europa', w: 'há 1 h' }, { t: 'Fatura #2041 recebida', w: 'há 3 h' }, { t: 'Novo cliente: Construtora Horizonte', w: 'ontem' }], alertList: [{ t: '3 faturas vencem esta semana', s: 'am' }, { t: '1 fatura em atraso', s: 'rd' }, { t: '2 tarefas atrasadas em Vila Nova', s: 'am' }] },
+      proj: { kicker: 'Projetos', title: 'Cada projeto sob controle.', note: 'Acompanhe projetos, responsáveis, atividades e resultados em um único lugar.', tasks: [{ t: 'Aprovar projeto estrutural', s: 'done', w: 'Carlos Mendes' }, { t: 'Pedido de concreto — Bloco B', s: 'pending', w: 'Ana Duarte' }, { t: 'Vistoria de fundação', s: 'late', w: 'Rafael Lima' }, { t: 'Medição semanal da obra', s: 'pending', w: 'Carlos Mendes' }] },
+      crm: { kicker: 'Clientes e CRM', title: 'Relacionamentos que viram negócios.', note: 'Organize seus clientes e acompanhe cada oportunidade até o fechamento.', stages: ['Novo contato', 'Qualificação', 'Proposta', 'Negociação', 'Fechado'] },
+      fin: { kicker: 'Financeiro', title: 'Mais controle sobre o seu dinheiro.', note: 'Tenha uma visão clara das entradas, recebimentos e valores pendentes.', monthRevenue: 'Receita do mês', invoice: 'Fatura', split: 'Composição do mês' },
+      ben: { title: 'Menos esforço. Mais controle.', b1: { n: 'Organização', d: 'Tudo no lugar certo.' }, b2: { n: 'Produtividade', d: 'Menos tarefas manuais.' }, b3: { n: 'Visibilidade', d: 'Entenda o que acontece na empresa.' }, b4: { n: 'Crescimento', d: 'Tome decisões com mais informação.' } },
+      who: { kicker: 'Para quem é', title: 'Feito para a realidade da construção civil.', text: 'O Progesty foi pensado para empresas que precisam conectar operação, projetos, clientes e financeiro.', items: ['Construtoras', 'Empreiteiras', 'Empresas de reformas', 'Empresas de engenharia', 'Profissionais e equipes de construção'] },
+      price: { kicker: 'Preços', title: 'Comece a organizar sua empresa.', badge: 'Planos sob medida', text: 'Fale conosco para conhecer os planos adequados ao tamanho e à operação da sua empresa.', cta: 'Começar agora', talk: 'Falar com a equipe', points: ['Proposta conforme a sua operação', 'Implantação acompanhada pela equipe', 'Disponível em 4 idiomas'], soon: 'Plano em breve' },
+      about: { kicker: 'Sobre', title: 'Construído para simplificar a gestão.', text: 'O Progesty nasceu para tornar a gestão de empresas da construção civil mais simples, conectada e eficiente.' },
+      faq: { title: 'Perguntas frequentes.', items: [{ q: 'O que é o Progesty?', a: 'Um ERP para empresas da construção civil que conecta clientes, projetos, tarefas e financeiro.' }, { q: 'Para quem o Progesty foi criado?', a: 'Para empresas que atuam na construção civil e precisam centralizar sua gestão.' }, { q: 'O Progesty funciona em diferentes idiomas?', a: 'Sim. A plataforma e o site podem operar em português, inglês, francês e holandês.' }, { q: 'Posso começar mesmo sendo uma empresa pequena?', a: 'Sim. A estrutura atende empresas de diferentes tamanhos.' }, { q: 'Como posso começar?', a: 'Pelo botão “Começar agora” ou entrando em contato com a equipe.' }] },
+      final: { title: 'Pronto para simplificar a gestão da sua empresa?', text: 'Tenha clientes, projetos, equipe e financeiro conectados em um único lugar.', cta: 'Começar agora' },
+      foot: { tag: 'Gestão inteligente para empresas da construção civil.', nav: 'Navegação', langs: 'Idiomas', legal: 'Legal', privacy: 'Política de Privacidade', terms: 'Termos de Uso', rights: 'Todos os direitos reservados.' }
+    },
+    en: {
+      meta: { t: 'Progesty — ERP for construction companies', d: 'Progesty connects clients, CRM, projects, tasks and finance in a single platform built for construction companies.' },
+      nav: { produto: 'Product', solucoes: 'Solutions', recursos: 'Features', precos: 'Pricing', sobre: 'About', login: 'Log in', cta: 'Get started', contato: 'Contact' },
+      hero: { badge: 'for construction companies', t1: 'Your whole company.', t2: 'One single place.', sub: 'Progesty connects clients, projects, teams and finance in a single platform so you gain more control, productivity and growth.', cta1: 'Get started', cta2: 'Explore Progesty' },
+      ui: { dash: 'Dashboard', clients: 'Clients', crm: 'CRM', projects: 'Projects', tasks: 'Tasks', finance: 'Finance', management: 'Management', revenue: 'Revenue', toReceive: 'Receivable', received: 'Received', overdue: 'Overdue', activeProjects: 'Active projects', activeClients: 'Active clients', progress: 'Progress', owner: 'Owner', start: 'Start', due: 'Due', status: 'Status', inProgress: 'In progress', proposal: 'Proposal sent', thisMonth: 'This month', thisMonthShort: 'this month', starting: 'starting', search: 'Search', value: 'Value', invoices: 'invoices', overview: 'Overview', admin: 'Administrator', done: 'Done', pending: 'Pending', late: 'Late', client: 'Client', tasksOf: 'Project tasks' },
+      months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      problem: { t1: 'Your company does not need more tools.', t2: 'It needs connection.', before: 'Today', after: 'With Progesty', disconnected: 'disconnected information', result: 'Everything connected in one place.', tools: ['Spreadsheets', 'Messages', 'E-mails', 'Documents', 'Separate systems'] },
+      product: { title: 'Everything you need to run things better.', clients: { n: 'Clients', d: 'Relationships kept in order.' }, crm: { n: 'CRM', d: 'Opportunities on the move.' }, projects: { n: 'Projects', d: 'Job sites under control.' }, tasks: { n: 'Tasks', d: 'A team that knows what to do.' }, finance: { n: 'Finance', d: 'Bills and payments followed closely.' }, dash: { n: 'Dashboard', d: 'A complete view of the company.' } },
+      how: { kicker: 'How it works', title: 'From first contact to result.', sub: 'The same information follows your company through the entire process.', s1: { n: 'Client', v: 'Mariana Costa' }, s2: { n: 'Opportunity', v: 'R$ 680,000' }, s3: { n: 'Project', v: 'Jardim Europa Residences' }, s4: { n: 'Execution', v: '72% · 12 tasks' }, s5: { n: 'Finance', v: 'R$ 126,400 receivable' }, s6: { n: 'Result', v: 'Delivery on 18/11/2026' } },
+      feat: { kicker: 'Features', title: 'The essentials, shown in practice.', gestao: { k: 'Management', t: 'Keep everything organised.', d: 'Clients, projects and information in a single place.' }, prod: { k: 'Productivity', t: 'Know what needs to be done.', d: 'Tasks, activities and priorities.' }, fin: { k: 'Finance', t: 'Know where your money is going.', d: 'Revenue, payments received and amounts receivable.' }, intel: { k: 'Intelligence', t: 'See what is happening.', d: 'Key indicators and information in a single view.' } },
+      dash: { kicker: 'Dashboard', title: 'See your company from a new perspective.', sub: 'Indicators, projects, activity and alerts on a single screen.', chart: 'Revenue per month', activity: 'Recent activity', alerts: 'Alerts', acts: [{ t: 'Proposal sent to Mariana Costa', w: '12 min ago' }, { t: 'Task completed at Jardim Europa', w: '1 h ago' }, { t: 'Invoice #2041 received', w: '3 h ago' }, { t: 'New client: Construtora Horizonte', w: 'yesterday' }], alertList: [{ t: '3 invoices due this week', s: 'am' }, { t: '1 overdue invoice', s: 'rd' }, { t: '2 late tasks at Vila Nova', s: 'am' }] },
+      proj: { kicker: 'Projects', title: 'Every project under control.', note: 'Follow projects, owners, activities and results in a single place.', tasks: [{ t: 'Approve structural design', s: 'done', w: 'Carlos Mendes' }, { t: 'Concrete order — Block B', s: 'pending', w: 'Ana Duarte' }, { t: 'Foundation inspection', s: 'late', w: 'Rafael Lima' }, { t: 'Weekly site measurement', s: 'pending', w: 'Carlos Mendes' }] },
+      crm: { kicker: 'Clients & CRM', title: 'Relationships that become business.', note: 'Organise your clients and follow every opportunity through to closing.', stages: ['New contact', 'Qualification', 'Proposal', 'Negotiation', 'Closed'] },
+      fin: { kicker: 'Finance', title: 'More control over your money.', note: 'Get a clear view of income, payments received and pending amounts.', monthRevenue: 'Revenue this month', invoice: 'Invoice', split: 'Breakdown of the month' },
+      ben: { title: 'Less effort. More control.', b1: { n: 'Organisation', d: 'Everything in the right place.' }, b2: { n: 'Productivity', d: 'Fewer manual tasks.' }, b3: { n: 'Visibility', d: 'Understand what happens in the company.' }, b4: { n: 'Growth', d: 'Decide with better information.' } },
+      who: { kicker: 'Who it is for', title: 'Built for the reality of construction.', text: 'Progesty was designed for companies that need to connect operations, projects, clients and finance.', items: ['Construction companies', 'Contractors', 'Renovation companies', 'Engineering firms', 'Construction professionals and crews'] },
+      price: { kicker: 'Pricing', title: 'Start organising your company.', badge: 'Tailored plans', text: 'Talk to us to find the plan that fits the size and operation of your company.', cta: 'Get started', talk: 'Talk to the team', points: ['A proposal matched to your operation', 'Onboarding guided by the team', 'Available in 4 languages'], soon: 'Plan coming soon' },
+      about: { kicker: 'About', title: 'Built to simplify management.', text: 'Progesty was created to make managing construction companies simpler, more connected and more efficient.' },
+      faq: { title: 'Frequently asked questions.', items: [{ q: 'What is Progesty?', a: 'An ERP for construction companies that connects clients, projects, tasks and finance.' }, { q: 'Who was Progesty created for?', a: 'For companies working in construction that need to centralise their management.' }, { q: 'Does Progesty work in different languages?', a: 'Yes. The platform and the site can run in Portuguese, English, French and Dutch.' }, { q: 'Can I start even as a small company?', a: 'Yes. The structure supports companies of different sizes.' }, { q: 'How do I get started?', a: 'Through the “Get started” button or by contacting the team.' }] },
+      final: { title: 'Ready to simplify how you run your company?', text: 'Keep clients, projects, team and finance connected in a single place.', cta: 'Get started' },
+      foot: { tag: 'Intelligent management for construction companies.', nav: 'Navigation', langs: 'Languages', legal: 'Legal', privacy: 'Privacy Policy', terms: 'Terms of Use', rights: 'All rights reserved.' }
+    },
+    fr: {
+      meta: { t: 'Progesty — ERP pour les entreprises du bâtiment', d: 'Progesty réunit clients, CRM, projets, tâches et finances sur une seule plateforme pensée pour les entreprises du bâtiment.' },
+      nav: { produto: 'Produit', solucoes: 'Solutions', recursos: 'Fonctionnalités', precos: 'Tarifs', sobre: 'À propos', login: 'Se connecter', cta: 'Commencer', contato: 'Contact' },
+      hero: { badge: 'pour les entreprises du bâtiment', t1: 'Toute votre entreprise.', t2: 'Un seul endroit.', sub: 'Progesty relie clients, projets, équipes et finances sur une seule plateforme pour vous donner plus de contrôle, de productivité et de croissance.', cta1: 'Commencer', cta2: 'Découvrir Progesty' },
+      ui: { dash: 'Tableau de bord', clients: 'Clients', crm: 'CRM', projects: 'Projets', tasks: 'Tâches', finance: 'Finances', management: 'Gestion', revenue: 'Chiffre d’affaires', toReceive: 'À encaisser', received: 'Encaissé', overdue: 'En retard', activeProjects: 'Projets actifs', activeClients: 'Clients actifs', progress: 'Avancement', owner: 'Responsable', start: 'Début', due: 'Échéance', status: 'Statut', inProgress: 'En cours', proposal: 'Devis envoyé', thisMonth: 'Ce mois-ci', thisMonthShort: 'ce mois', starting: 'à démarrer', search: 'Rechercher', value: 'Montant', invoices: 'factures', overview: 'Vue d’ensemble', admin: 'Administrateur', done: 'Terminée', pending: 'En attente', late: 'En retard', client: 'Client', tasksOf: 'Tâches du projet' },
+      months: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+      problem: { t1: 'Votre entreprise n’a pas besoin de plus d’outils.', t2: 'Elle a besoin de connexion.', before: 'Aujourd’hui', after: 'Avec Progesty', disconnected: 'information dispersée', result: 'Tout est connecté au même endroit.', tools: ['Tableurs', 'Messages', 'E-mails', 'Documents', 'Systèmes séparés'] },
+      product: { title: 'Tout ce qu’il faut pour mieux piloter.', clients: { n: 'Clients', d: 'Des relations bien organisées.' }, crm: { n: 'CRM', d: 'Des opportunités qui avancent.' }, projects: { n: 'Projets', d: 'Des chantiers maîtrisés.' }, tasks: { n: 'Tâches', d: 'Une équipe organisée.' }, finance: { n: 'Finances', d: 'Factures et encaissements suivis.' }, dash: { n: 'Tableau de bord', d: 'Une vision complète de l’entreprise.' } },
+      how: { kicker: 'Comment ça marche', title: 'Du premier contact au résultat.', sub: 'Une même information suit votre entreprise tout au long du processus.', s1: { n: 'Client', v: 'Mariana Costa' }, s2: { n: 'Opportunité', v: 'R$ 680 000' }, s3: { n: 'Projet', v: 'Résidence Jardim Europa' }, s4: { n: 'Exécution', v: '72% · 12 tâches' }, s5: { n: 'Finances', v: 'R$ 126 400 à encaisser' }, s6: { n: 'Résultat', v: 'Livraison le 18/11/2026' } },
+      feat: { kicker: 'Fonctionnalités', title: 'L’essentiel, montré en pratique.', gestao: { k: 'Gestion', t: 'Gardez tout organisé.', d: 'Clients, projets et informations au même endroit.' }, prod: { k: 'Productivité', t: 'Sachez ce qui doit être fait.', d: 'Tâches, activités et priorités.' }, fin: { k: 'Finances', t: 'Sachez où va votre argent.', d: 'Recettes, encaissements et montants à recevoir.' }, intel: { k: 'Pilotage', t: 'Voyez ce qui se passe.', d: 'Indicateurs et informations clés en une seule vue.' } },
+      dash: { kicker: 'Tableau de bord', title: 'Voyez votre entreprise sous un nouvel angle.', sub: 'Indicateurs, projets, activités et alertes sur un seul écran.', chart: 'Chiffre d’affaires par mois', activity: 'Activité récente', alerts: 'Alertes', acts: [{ t: 'Devis envoyé à Mariana Costa', w: 'il y a 12 min' }, { t: 'Tâche terminée à Jardim Europa', w: 'il y a 1 h' }, { t: 'Facture #2041 encaissée', w: 'il y a 3 h' }, { t: 'Nouveau client : Construtora Horizonte', w: 'hier' }], alertList: [{ t: '3 factures arrivent à échéance cette semaine', s: 'am' }, { t: '1 facture en retard', s: 'rd' }, { t: '2 tâches en retard à Vila Nova', s: 'am' }] },
+      proj: { kicker: 'Projets', title: 'Chaque projet sous contrôle.', note: 'Suivez projets, responsables, activités et résultats au même endroit.', tasks: [{ t: 'Valider le projet structurel', s: 'done', w: 'Carlos Mendes' }, { t: 'Commande de béton — Bloc B', s: 'pending', w: 'Ana Duarte' }, { t: 'Inspection des fondations', s: 'late', w: 'Rafael Lima' }, { t: 'Métré hebdomadaire du chantier', s: 'pending', w: 'Carlos Mendes' }] },
+      crm: { kicker: 'Clients et CRM', title: 'Des relations qui deviennent des affaires.', note: 'Organisez vos clients et suivez chaque opportunité jusqu’à la signature.', stages: ['Nouveau contact', 'Qualification', 'Devis', 'Négociation', 'Signé'] },
+      fin: { kicker: 'Finances', title: 'Plus de contrôle sur votre argent.', note: 'Ayez une vision claire des entrées, des encaissements et des montants en attente.', monthRevenue: 'Chiffre d’affaires du mois', invoice: 'Facture', split: 'Répartition du mois' },
+      ben: { title: 'Moins d’efforts. Plus de contrôle.', b1: { n: 'Organisation', d: 'Chaque chose à sa place.' }, b2: { n: 'Productivité', d: 'Moins de tâches manuelles.' }, b3: { n: 'Visibilité', d: 'Comprenez ce qui se passe dans l’entreprise.' }, b4: { n: 'Croissance', d: 'Décidez avec plus d’informations.' } },
+      who: { kicker: 'Pour qui', title: 'Conçu pour la réalité du bâtiment.', text: 'Progesty a été pensé pour les entreprises qui doivent relier exploitation, projets, clients et finances.', items: ['Entreprises de construction', 'Entreprises générales', 'Entreprises de rénovation', 'Bureaux d’ingénierie', 'Professionnels et équipes de chantier'] },
+      price: { kicker: 'Tarifs', title: 'Commencez à organiser votre entreprise.', badge: 'Offres sur mesure', text: 'Contactez-nous pour découvrir l’offre adaptée à la taille et au fonctionnement de votre entreprise.', cta: 'Commencer', talk: 'Parler à l’équipe', points: ['Une proposition adaptée à votre activité', 'Un déploiement accompagné par l’équipe', 'Disponible en 4 langues'], soon: 'Offre à venir' },
+      about: { kicker: 'À propos', title: 'Conçu pour simplifier la gestion.', text: 'Progesty est né pour rendre la gestion des entreprises du bâtiment plus simple, plus connectée et plus efficace.' },
+      faq: { title: 'Questions fréquentes.', items: [{ q: 'Qu’est-ce que Progesty ?', a: 'Un ERP pour les entreprises du bâtiment qui relie clients, projets, tâches et finances.' }, { q: 'Pour qui Progesty a-t-il été créé ?', a: 'Pour les entreprises du bâtiment qui doivent centraliser leur gestion.' }, { q: 'Progesty fonctionne-t-il en plusieurs langues ?', a: 'Oui. La plateforme et le site fonctionnent en portugais, anglais, français et néerlandais.' }, { q: 'Puis-je commencer même en étant une petite entreprise ?', a: 'Oui. La structure convient à des entreprises de tailles différentes.' }, { q: 'Comment commencer ?', a: 'Via le bouton « Commencer » ou en contactant l’équipe.' }] },
+      final: { title: 'Prêt à simplifier la gestion de votre entreprise ?', text: 'Clients, projets, équipe et finances connectés au même endroit.', cta: 'Commencer' },
+      foot: { tag: 'Une gestion intelligente pour les entreprises du bâtiment.', nav: 'Navigation', langs: 'Langues', legal: 'Légal', privacy: 'Politique de confidentialité', terms: 'Conditions d’utilisation', rights: 'Tous droits réservés.' }
+    },
+    nl: {
+      meta: { t: 'Progesty — ERP voor bouwbedrijven', d: 'Progesty verbindt klanten, CRM, projecten, taken en financiën in één platform voor bouwbedrijven.' },
+      nav: { produto: 'Product', solucoes: 'Oplossingen', recursos: 'Functies', precos: 'Prijzen', sobre: 'Over ons', login: 'Inloggen', cta: 'Nu beginnen', contato: 'Contact' },
+      hero: { badge: 'voor bouwbedrijven', t1: 'Uw hele bedrijf.', t2: 'Op één plek.', sub: 'Progesty verbindt klanten, projecten, teams en financiën in één platform, voor meer controle, productiviteit en groei.', cta1: 'Nu beginnen', cta2: 'Ontdek Progesty' },
+      ui: { dash: 'Dashboard', clients: 'Klanten', crm: 'CRM', projects: 'Projecten', tasks: 'Taken', finance: 'Financiën', management: 'Beheer', revenue: 'Omzet', toReceive: 'Te ontvangen', received: 'Ontvangen', overdue: 'Achterstallig', activeProjects: 'Actieve projecten', activeClients: 'Actieve klanten', progress: 'Voortgang', owner: 'Verantwoordelijke', start: 'Start', due: 'Oplevering', status: 'Status', inProgress: 'Loopt', proposal: 'Offerte verstuurd', thisMonth: 'Deze maand', thisMonthShort: 'deze maand', starting: 'startend', search: 'Zoeken', value: 'Bedrag', invoices: 'facturen', overview: 'Overzicht', admin: 'Beheerder', done: 'Afgerond', pending: 'Open', late: 'Te laat', client: 'Klant', tasksOf: 'Projecttaken' },
+      months: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+      problem: { t1: 'Uw bedrijf heeft geen extra tools nodig.', t2: 'Het heeft verbinding nodig.', before: 'Vandaag', after: 'Met Progesty', disconnected: 'losse informatie', result: 'Alles verbonden op één plek.', tools: ['Spreadsheets', 'Berichten', 'E-mails', 'Documenten', 'Losse systemen'] },
+      product: { title: 'Alles wat u nodig heeft om beter te sturen.', clients: { n: 'Klanten', d: 'Relaties netjes georganiseerd.' }, crm: { n: 'CRM', d: 'Kansen die vooruitgaan.' }, projects: { n: 'Projecten', d: 'Werven onder controle.' }, tasks: { n: 'Taken', d: 'Een georganiseerd team.' }, finance: { n: 'Financiën', d: 'Facturen en betalingen opgevolgd.' }, dash: { n: 'Dashboard', d: 'Een volledig beeld van het bedrijf.' } },
+      how: { kicker: 'Hoe het werkt', title: 'Van eerste contact tot resultaat.', sub: 'Dezelfde informatie volgt uw bedrijf door het hele proces.', s1: { n: 'Klant', v: 'Mariana Costa' }, s2: { n: 'Kans', v: 'R$ 680.000' }, s3: { n: 'Project', v: 'Residentie Jardim Europa' }, s4: { n: 'Uitvoering', v: '72% · 12 taken' }, s5: { n: 'Financiën', v: 'R$ 126.400 te ontvangen' }, s6: { n: 'Resultaat', v: 'Oplevering op 18/11/2026' } },
+      feat: { kicker: 'Functies', title: 'Het essentiële, in de praktijk getoond.', gestao: { k: 'Beheer', t: 'Houd alles georganiseerd.', d: 'Klanten, projecten en informatie op één plek.' }, prod: { k: 'Productiviteit', t: 'Weet wat er moet gebeuren.', d: 'Taken, activiteiten en prioriteiten.' }, fin: { k: 'Financiën', t: 'Weet waar uw geld naartoe gaat.', d: 'Omzet, ontvangsten en openstaande bedragen.' }, intel: { k: 'Inzicht', t: 'Zie wat er gebeurt.', d: 'Belangrijke cijfers en informatie in één beeld.' } },
+      dash: { kicker: 'Dashboard', title: 'Bekijk uw bedrijf vanuit een nieuw perspectief.', sub: 'Cijfers, projecten, activiteit en meldingen op één scherm.', chart: 'Omzet per maand', activity: 'Recente activiteit', alerts: 'Meldingen', acts: [{ t: 'Offerte verstuurd naar Mariana Costa', w: '12 min geleden' }, { t: 'Taak afgerond bij Jardim Europa', w: '1 u geleden' }, { t: 'Factuur #2041 ontvangen', w: '3 u geleden' }, { t: 'Nieuwe klant: Construtora Horizonte', w: 'gisteren' }], alertList: [{ t: '3 facturen vervallen deze week', s: 'am' }, { t: '1 achterstallige factuur', s: 'rd' }, { t: '2 late taken bij Vila Nova', s: 'am' }] },
+      proj: { kicker: 'Projecten', title: 'Elk project onder controle.', note: 'Volg projecten, verantwoordelijken, activiteiten en resultaten op één plek.', tasks: [{ t: 'Structureel ontwerp goedkeuren', s: 'done', w: 'Carlos Mendes' }, { t: 'Betonbestelling — Blok B', s: 'pending', w: 'Ana Duarte' }, { t: 'Inspectie fundering', s: 'late', w: 'Rafael Lima' }, { t: 'Wekelijkse opmeting', s: 'pending', w: 'Carlos Mendes' }] },
+      crm: { kicker: 'Klanten en CRM', title: 'Relaties die klanten worden.', note: 'Organiseer uw klanten en volg elke kans tot aan de ondertekening.', stages: ['Nieuw contact', 'Kwalificatie', 'Offerte', 'Onderhandeling', 'Gewonnen'] },
+      fin: { kicker: 'Financiën', title: 'Meer grip op uw geld.', note: 'Krijg een helder beeld van inkomsten, ontvangsten en openstaande bedragen.', monthRevenue: 'Omzet deze maand', invoice: 'Factuur', split: 'Opbouw van de maand' },
+      ben: { title: 'Minder werk. Meer controle.', b1: { n: 'Organisatie', d: 'Alles op de juiste plek.' }, b2: { n: 'Productiviteit', d: 'Minder handmatig werk.' }, b3: { n: 'Zichtbaarheid', d: 'Begrijp wat er in het bedrijf gebeurt.' }, b4: { n: 'Groei', d: 'Beslis met betere informatie.' } },
+      who: { kicker: 'Voor wie', title: 'Gemaakt voor de praktijk van de bouw.', text: 'Progesty is bedacht voor bedrijven die uitvoering, projecten, klanten en financiën willen verbinden.', items: ['Bouwbedrijven', 'Aannemers', 'Renovatiebedrijven', 'Ingenieursbureaus', 'Vakmensen en bouwteams'] },
+      price: { kicker: 'Prijzen', title: 'Begin met het organiseren van uw bedrijf.', badge: 'Plannen op maat', text: 'Neem contact op voor het plan dat past bij de omvang en werkwijze van uw bedrijf.', cta: 'Nu beginnen', talk: 'Spreek het team', points: ['Een voorstel op maat van uw werking', 'Begeleide implementatie door het team', 'Beschikbaar in 4 talen'], soon: 'Plan binnenkort' },
+      about: { kicker: 'Over ons', title: 'Gebouwd om beheer eenvoudig te maken.', text: 'Progesty ontstond om het beheer van bouwbedrijven eenvoudiger, meer verbonden en efficiënter te maken.' },
+      faq: { title: 'Veelgestelde vragen.', items: [{ q: 'Wat is Progesty?', a: 'Een ERP voor bouwbedrijven dat klanten, projecten, taken en financiën verbindt.' }, { q: 'Voor wie is Progesty gemaakt?', a: 'Voor bedrijven in de bouw die hun beheer willen centraliseren.' }, { q: 'Werkt Progesty in verschillende talen?', a: 'Ja. Het platform en de site werken in het Portugees, Engels, Frans en Nederlands.' }, { q: 'Kan ik ook als klein bedrijf starten?', a: 'Ja. De structuur past bij bedrijven van verschillende groottes.' }, { q: 'Hoe kan ik beginnen?', a: 'Via de knop “Nu beginnen” of door contact op te nemen met het team.' }] },
+      final: { title: 'Klaar om het beheer van uw bedrijf te vereenvoudigen?', text: 'Klanten, projecten, team en financiën verbonden op één plek.', cta: 'Nu beginnen' },
+      foot: { tag: 'Slim beheer voor bouwbedrijven.', nav: 'Navigatie', langs: 'Talen', legal: 'Juridisch', privacy: 'Privacybeleid', terms: 'Gebruiksvoorwaarden', rights: 'Alle rechten voorbehouden.' }
+    }
+  };
+
+  LAB = { 'pt-BR': 'PT-BR', en: 'EN', fr: 'FR', nl: 'NL' };
+  NAMES = { 'pt-BR': 'Português (BR)', en: 'English', fr: 'Français', nl: 'Nederlands' };
+  SEP = { 'pt-BR': '.', en: ',', fr: ' ', nl: '.' };
+
+  rootRef = (el) => { this.rootEl = el; };
+
+  get lang() { return this.state.lang || this.props.defaultLang || 'pt-BR'; }
+
+  fmt(n) {
+    const s = this.SEP[this.lang] || '.';
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, s);
+  }
+
+  applyMeta() {
+    const t = this.T[this.lang];
+    try {
+      document.title = t.meta.t;
+      document.documentElement.lang = this.lang;
+      let m = document.querySelector('meta[name="description"]');
+      if (!m) { m = document.createElement('meta'); m.setAttribute('name', 'description'); document.head.appendChild(m); }
+      m.setAttribute('content', t.meta.d);
+    } catch (e) {}
+  }
+
+  fillCounters() {
+    if (!this.rootEl) return;
+    this.rootEl.querySelectorAll('[data-count]').forEach(e => {
+      e.textContent = (e.dataset.prefix || '') + this.fmt(+e.dataset.count) + (e.dataset.suffix || '');
+    });
+  }
+
+  animateCount(e) {
+    const target = +e.dataset.count, t0 = performance.now(), dur = 1200;
+    const step = (now) => {
+      const p = Math.min(1, (now - t0) / dur);
+      const v = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      e.textContent = (e.dataset.prefix || '') + this.fmt(v) + (e.dataset.suffix || '');
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  setupAnim() {
+    const root = this.rootEl;
+    if (!root) return;
+    this.fillCounters();
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) return;
+    const vh = window.innerHeight || 800;
+    const hide = (e, css) => { if (e.dataset.pgInit) return false; e.dataset.pgInit = '1'; const r = e.getBoundingClientRect(); if (r.top < vh * 0.92) return false; Object.assign(e.style, css); return true; };
+
+    root.querySelectorAll('[data-reveal]').forEach(e => {
+      hide(e, { opacity: '0', transform: 'translateY(22px)', transition: 'opacity .8s cubic-bezier(.22,.7,.2,1), transform .8s cubic-bezier(.22,.7,.2,1)', transitionDelay: (e.dataset.delay || 0) + 'ms' });
+    });
+    root.querySelectorAll('[data-bar]').forEach(e => {
+      hide(e, { transformOrigin: 'bottom', transform: 'scaleY(.04)', transition: 'transform .9s cubic-bezier(.22,.7,.2,1)' });
+    });
+    root.querySelectorAll('[data-prog]').forEach(e => {
+      hide(e, { transformOrigin: 'left', transform: 'scaleX(0)', transition: 'transform 1.1s cubic-bezier(.22,.7,.2,1)' });
+    });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        const e = en.target;
+        if (e.hasAttribute('data-count')) { if (this.props.animateCounters !== false) this.animateCount(e); }
+        else if (e.hasAttribute('data-bar')) { e.style.transitionDelay = (Math.random() * 260 | 0) + 'ms'; e.style.transform = 'scaleY(1)'; }
+        else if (e.hasAttribute('data-prog')) { e.style.transform = 'scaleX(1)'; }
+        else { e.style.opacity = '1'; e.style.transform = 'none'; }
+        io.unobserve(e);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+    root.querySelectorAll('[data-reveal],[data-bar],[data-prog],[data-count]').forEach(e => io.observe(e));
+    this.io = io;
+  }
+
+  onResize = () => {
+    const w = window.innerWidth >= 940;
+    if (w !== this.state.wide) this.setState({ wide: w });
+  };
+
+  onDocClick = (ev) => {
+    if (this.state.langOpen && this.rootEl && !ev.target.closest('button')) this.setState({ langOpen: false });
+  };
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    document.addEventListener('click', this.onDocClick);
+    this.onResize();
+    this.applyMeta();
+    this.curLang = this.lang;
+    requestAnimationFrame(() => this.setupAnim());
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('click', this.onDocClick);
+    if (this.io) this.io.disconnect();
+  }
+
+  componentDidUpdate() {
+    if (this.curLang !== this.lang) { this.curLang = this.lang; this.applyMeta(); }
+    this.fillCounters();
+  }
+
+  renderVals() {
+    const t = this.T[this.lang] || this.T['pt-BR'];
+    const C = { done: '#10B981', pending: '#F59E0B', late: '#EF4444', am: '#F59E0B', rd: '#EF4444' };
+    const projects = [
+      { n: 'Residencial Jardim Europa', c: 'Construtora Horizonte', p: 72 },
+      { n: 'Edifício Vila Nova', c: 'Incorporadora Atlas', p: 45 },
+      { n: 'Reforma Faria Lima', c: 'Grupo Meridian', p: 88 },
+      { n: 'Galpão Logístico Sul', c: 'LogPar', p: 23 }
+    ];
+    const pipeCards = [
+      [{ n: 'Construtora Aurora', v: 'R$ 240.000' }],
+      [{ n: 'Incorporadora Atlas', v: 'R$ 410.000' }],
+      [{ n: 'Mariana Costa', v: 'R$ 680.000' }, { n: 'Grupo Meridian', v: 'R$ 320.000' }],
+      [{ n: 'LogPar', v: 'R$ 155.000' }],
+      [{ n: 'Engenharia Sul', v: 'R$ 512.000' }]
+    ];
+    const invNums = ['#2041', '#2042', '#2039', '#2043'];
+    const invData = [
+      { c: 'Construtora Horizonte', v: 'R$ 84.300', s: 'done', l: t.ui.received },
+      { c: 'Incorporadora Atlas', v: 'R$ 42.100', s: 'pending', l: t.ui.pending },
+      { c: 'Grupo Meridian', v: 'R$ 18.750', s: 'late', l: t.ui.overdue },
+      { c: 'LogPar', v: 'R$ 26.900', s: 'pending', l: t.ui.pending }
+    ];
+    return {
+      t, lang: this.lang, langLabel: this.LAB[this.lang],
+      wide: this.state.wide, narrow: !this.state.wide,
+      menuOpen: this.state.menuOpen, langOpen: this.state.langOpen,
+      rootRef: this.rootRef,
+      showPlans: this.props.showPlanSlots === true,
+      navItems: [
+        { l: t.nav.produto, h: '#produto' }, { l: t.nav.solucoes, h: '#solucoes' },
+        { l: t.nav.recursos, h: '#recursos' }, { l: t.nav.precos, h: '#precos' }, { l: t.nav.sobre, h: '#sobre' }
+      ],
+      langs: Object.keys(this.LAB).map(c => ({
+        code: this.LAB[c], name: this.NAMES[c],
+        pick: () => this.setState({ lang: c, langOpen: false, menuOpen: false })
+      })),
+      sideItems: [t.ui.clients, t.ui.crm, t.ui.projects, t.ui.tasks, t.ui.finance],
+      connectedModules: [t.ui.clients, t.ui.crm, t.ui.projects, t.ui.tasks, t.ui.finance, t.ui.management],
+      projectsMini: projects.slice(0, 4).map(p => ({ n: p.n, pct: p.p + '%' })),
+      projectsFull: projects.map(p => ({ n: p.n, c: p.c, pct: p.p + '%' })),
+      projTasks: t.proj.tasks.map(x => ({ t: x.t, w: x.w, color: C[x.s], label: t.ui[x.s] })),
+      acts: t.dash.acts,
+      alerts: t.dash.alertList.map(a => ({ t: a.t, color: C[a.s] })),
+      pipeline: t.crm.stages.map((s, i) => ({ name: s, cards: pipeCards[i], count: pipeCards[i].length })),
+      invoices: invData.map((d, i) => ({ c: d.c, no: t.fin.invoice + ' ' + invNums[i], v: d.v, color: C[d.s], label: d.l })),
+      whoItems: t.who.items,
+      faqItems: t.faq.items.map((f, i) => ({
+        q: f.q, a: f.a, open: this.state.faq === i,
+        toggle: () => this.setState(s => ({ faq: s.faq === i ? -1 : i }))
+      })),
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      toggleLang: () => this.setState(s => ({ langOpen: !s.langOpen })),
+      year: '2026'
+    };
+  }
+}
+</script>
+</body>
+</html>
