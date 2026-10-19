@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgSheet{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pgDrawer{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;background:#E8ECF3;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column">
+
+<div style="background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,2vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+  <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Estado</span>
+  <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ states }}" as="x" hint-placeholder-count="7"><button onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.name }}</button></sc-for></div>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:4px;padding:3px;border-radius:10px;background:#F1F5F9"><sc-for list="{{ views }}" as="v" hint-placeholder-count="2"><button onClick="{{ v.pick }}" style="{{ v.style }}">{{ v.name }}</button></sc-for></div>
+</div>
+
+<div style="{{ stageStyle }}">
+<div style="{{ frameStyle }}">
+<div class="pg-scroll" style="{{ scrollStyle }}">
+<div style="{{ appStyle }}">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar menu" style="width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.07);color:#94A3B8;font-size:15px">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <div style="{{ g.headStyle }}"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></span><span style="flex:1;text-align:left">{{ g.name }}</span></div>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5"><div style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span>{{ it.name }}</div></sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Carlos Mendes</span><span style="font-size:11px;color:#64748B">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column">
+  <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Orçamentos de Compra</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Cotações de fornecedores, comparação de propostas e aprovação. O orçamento é opcional no processo de compras.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <button onClick="{{ doExport }}" style="{{ ghostBtn }}">Exportar</button>
+        <button onClick="{{ doRefresh }}" style="{{ ghostBtn }}">Atualizar</button>
+        <button onClick="{{ openNew }}" style="display:flex;align-items:center;gap:9px;height:46px;padding:0 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s" style-hover="transform:translateY(-1px)"><span style="font-size:17px;line-height:1">+</span>Novo orçamento</button>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px);min-width:0">
+
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD">
+      <span style="width:7px;height:7px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>
+      <span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.4">Dados demonstrativos e fictícios · data de referência {{ todayLabel }}. Alterações ficam apenas nesta sessão.</span>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="{{ kpiGrid }}"><sc-for list="{{ sk4 }}" as="k" hint-placeholder-count="4"><div class="pg-sk" style="height:112px;border-radius:18px"></div></sc-for></div>
+        <div class="pg-sk" style="height:58px;border-radius:14px"></div>
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px"><sc-for list="{{ sk7 }}" as="k" hint-placeholder-count="7"><div class="pg-sk" style="height:46px"></div></sc-for></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ kpiGrid }}">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+          <div style="{{ k.style }}">
+            <span style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:{{ k.labelColor }}">{{ k.label }}</span></span>
+            <span style="font-size:clamp(22px,2.3vw,28px);font-weight:800;letter-spacing:-.035em;color:{{ k.valueColor }};font-variant-numeric:tabular-nums">{{ k.value }}</span>
+            <span style="font-size:11.5px;font-weight:600;color:{{ k.labelColor }};line-height:1.4">{{ k.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <div style="flex:1 1 240px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0">
+          <span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+          <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Número, fornecedor ou descrição..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+          <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" aria-label="Limpar pesquisa" style="width:28px;height:28px;border-radius:8px;background:#F1F5F9;color:#64748B;font-size:12px">✕</button></sc-if>
+        </div>
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+          <div style="position:relative;flex:0 0 auto;max-width:100%">
+            <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}"><span style="color:#64748B;font-weight:600">{{ f.label }}</span><span style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.value }}</span><span style="font-size:9px;color:#64748B">▼</span></button>
+            <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+              <div class="pg-scroll" style="position:absolute;top:calc(100% + 8px);left:0;min-width:220px;max-height:300px;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button></sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearAll }}" style="{{ ghostBtn }}">Limpar filtros</button></sc-if>
+      </div>
+
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+          <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">{{ emptyTitle }}</span>
+          <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">{{ emptyText }}</span>
+          <button onClick="{{ emptyAction }}" style="margin-top:4px;height:46px;padding:0 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">{{ emptyLabel }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+          <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+            <div class="pg-scroll" style="overflow-x:auto">
+              <div style="min-width:1560px">
+                <div style="{{ gridHead }}"><sc-for list="{{ cols }}" as="h" hint-placeholder-count="9"><button onClick="{{ h.sort }}" style="{{ h.style }}">{{ h.name }}<span style="font-size:9px;color:#6D5DFB">{{ h.arrow }}</span></button></sc-for></div>
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                  <div onClick="{{ r.open }}" style="{{ r.rowStyle }}" style-hover="background:#F8FAFC">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;white-space:nowrap">{{ r.no }}</span>
+                    <span style="font-size:14px;font-weight:700;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sup }}</span>
+                    <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.desc }}</span><sc-if value="{{ r.hasCmp }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:600;color:#4338CA">{{ r.cmpText }}</span></sc-if></div>
+                    <span style="font-size:13px;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.obra }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B;white-space:nowrap">{{ r.date }}</span>
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="{{ r.validStyle }}">{{ r.valid }}</span><span style="{{ r.validSubStyle }}">{{ r.validSub }}</span></div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600;text-align:right;white-space:nowrap">{{ r.total }}</span>
+                    <span style="{{ r.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span>{{ r.status }}</span>
+                    <div style="display:flex;gap:6px;justify-content:flex-end"><sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isCards }}" hint-placeholder-val="{{ false }}">
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+              <div onClick="{{ r.open }}" style="padding:15px 16px;border-bottom:1px solid #F1F5F9;display:flex;flex-direction:column;gap:11px">
+                <div style="display:flex;align-items:flex-start;gap:10px">
+                  <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#4338CA">{{ r.no }}</span><span style="font-size:14.5px;font-weight:700">{{ r.sup }}</span><span style="font-size:13px;color:#475569;text-wrap:pretty">{{ r.desc }}</span></div>
+                  <span style="{{ r.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span>{{ r.status }}</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;padding:12px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0">
+                  <sc-for list="{{ r.facts }}" as="f" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">{{ f.k }}</span><span style="{{ f.style }}">{{ f.v }}</span></div></sc-for>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end"><sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+              </div>
+            </sc-for>
+          </sc-if>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:16px 20px;background:#F8FAFC;border-top:1px solid #E2E8F0">
+            <span style="font-size:13px;font-weight:700;color:#475569">{{ countLabel }}</span>
+            <div style="flex:1"></div>
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Valor estimado listado</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">{{ listTotal }}</span>
+          </div>
+        </div>
+      </sc-if>
+    </sc-if>
+  </div>
+</main>
+
+</div>
+</div>
+
+<sc-if value="{{ formOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center">
+    <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(820px,100%);max-height:94%;overflow-y:auto;overflow-x:hidden;background:#fff;border:1px solid #E2E8F0;border-radius:24px 24px 0 0;padding:clamp(18px,2.4vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 -30px 70px -30px rgba(15,23,42,.6);animation:pgSheet .3s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-size:19px;font-weight:800;letter-spacing:-.025em">{{ formTitle }}</span><span style="font-size:13px;color:#64748B;text-wrap:pretty">Não é necessário pedido, fatura ou recebimento vinculado.</span></div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeModal }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button>
+      </div>
+      <sc-if value="{{ showErrBanner }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:#FEF2F2;border:1px solid #FECACA"><span style="width:22px;height:22px;border-radius:50%;background:#EF4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 auto">!</span><span style="font-size:13px;font-weight:600;color:#991B1B;line-height:1.4">{{ errBanner }}</span></div>
+      </sc-if>
+
+      <span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Dados gerais</span>
+      <div style="{{ fieldGrid }}">
+        <sc-for list="{{ fields }}" as="f" hint-placeholder-count="10">
+          <label style="{{ f.wrapStyle }}">
+            <span style="font-size:12.5px;font-weight:600;color:#475569">{{ f.label }}</span>
+            <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}"><input type="{{ f.type }}" list="{{ f.list }}" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inpStyle }}"></sc-if>
+            <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onInput="{{ f.onInput }}" style="{{ f.inpStyle }}"><sc-for list="{{ f.opts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></sc-if>
+            <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}"><textarea rows="3" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inpStyle }}"></textarea></sc-if>
+            <sc-if value="{{ f.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ f.err }}</span></sc-if>
+          </label>
+        </sc-for>
+      </div>
+      <datalist id="pg-sups"><sc-for list="{{ supOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o }}"></option></sc-for></datalist>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Itens</span><div style="flex:1"></div><button onClick="{{ addItem }}" style="height:40px;padding:0 15px;border-radius:10px;background:#EEF0FE;color:#4338CA;font-size:13px;font-weight:700">+ Adicionar item</button></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ items }}" as="it" hint-placeholder-count="2">
+          <div style="{{ it.boxStyle }}">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#64748B">{{ it.n }}</span><input value="{{ it.d }}" onInput="{{ it.setD }}" placeholder="Descrição do item" style="{{ it.dStyle }}"><button onClick="{{ it.remove }}" aria-label="Remover item" style="width:44px;height:44px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;color:#B91C1C;font-size:14px;flex:0 0 auto">✕</button></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:10px">
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;font-weight:600;color:#64748B">Unidade</span><select value="{{ it.un }}" onInput="{{ it.setUn }}" style="{{ it.selStyle }}"><sc-for list="{{ it.units }}" as="u" hint-placeholder-count="5"><option value="{{ u.v }}" selected="{{ u.sel }}">{{ u.v }}</option></sc-for></select></label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;font-weight:600;color:#64748B">Quantidade</span><input value="{{ it.q }}" onInput="{{ it.setQ }}" placeholder="0" style="{{ it.qStyle }}"></label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;font-weight:600;color:#64748B">Preço unit. (€)</span><input value="{{ it.p }}" onInput="{{ it.setP }}" placeholder="0,00" style="{{ it.pStyle }}"></label>
+              <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;font-weight:600;color:#64748B">Subtotal</span><span style="min-height:44px;display:flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600">{{ it.sub }}</span></div>
+            </div>
+            <sc-if value="{{ it.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ it.err }}</span></sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{ itemsErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ itemsErr }}</span></sc-if>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:14px 16px;border-radius:14px;background:#EEF0FE;border:1px solid #DDD9FD"><span style="font-size:13px;font-weight:700;color:#4338CA">{{ itemsCount }}</span><div style="flex:1"></div><span style="font-size:12.5px;font-weight:600;color:#4338CA">Valor estimado</span><span style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:600;color:#312E81">{{ formTotal }}</span></div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;padding-top:4px">
+        <button onClick="{{ closeModal }}" style="height:48px;padding:0 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Cancelar</button>
+        <button onClick="{{ submit }}" style="height:48px;padding:0 24px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:15px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)">{{ submitLabel }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ detailOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;justify-content:flex-end">
+    <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="{{ drawerStyle }}">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:8px">
+          <span style="{{ d.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ d.dot }}"></span>{{ d.status }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#4338CA">{{ d.no }}</span>
+          <span style="font-size:19px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ d.sup }}</span>
+          <span style="font-size:13.5px;color:#475569;text-wrap:pretty">{{ d.desc }}</span>
+        </div>
+        <button onClick="{{ closeModal }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px">
+        <sc-for list="{{ d.boxes }}" as="c" hint-placeholder-count="3"><div style="{{ c.style }}"><span style="font-size:11.5px;font-weight:600;color:{{ c.lc }}">{{ c.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:clamp(12.5px,1.4vw,15px);font-weight:600;color:{{ c.vc }};overflow-wrap:anywhere">{{ c.v }}</span></div></sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0"><span style="width:4px;align-self:stretch;min-height:28px;border-radius:99px;background:{{ d.noteColor }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:#334155;line-height:1.45">{{ d.note }}</span></div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Itens do orçamento</span>
+        <sc-for list="{{ d.items }}" as="i" hint-placeholder-count="3">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+            <div style="min-width:0;flex:1 1 160px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700">{{ i.d }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ i.calc }}</span></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">{{ i.sub }}</span>
+          </div>
+        </sc-for>
+        <div style="display:flex;align-items:center;gap:10px;padding:2px 14px"><span style="font-size:13px;font-weight:700;color:#475569">Total</span><div style="flex:1"></div><span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">{{ d.total }}</span></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Condições comerciais</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 14px">
+          <sc-for list="{{ d.info }}" as="i" hint-placeholder-count="8"><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ i.k }}</span><span style="font-size:13.5px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div></sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Vínculo (opcional)</span>
+        <span style="padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">{{ d.link }}</span>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:9px;padding-top:6px;border-top:1px solid #F1F5F9;margin-top:auto">
+        <sc-for list="{{ d.actions }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ cmpOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:92;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(960px,100%);max-height:94%;overflow-y:auto;background:#fff;border-radius:22px;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:16px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-size:19px;font-weight:800;letter-spacing:-.025em">Comparar propostas</span><span style="font-size:13px;color:#64748B;text-wrap:pretty">{{ cmp.title }} · {{ cmp.count }}</span></div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeModal }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button>
+      </div>
+      <div style="{{ cmp.grid }}">
+        <sc-for list="{{ cmp.cards }}" as="c" hint-placeholder-count="3">
+          <div style="{{ c.style }}">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px"><sc-if value="{{ c.best }}" hint-placeholder-val="{{ false }}"><span style="padding:3px 9px;border-radius:999px;background:#ECFDF5;color:#047857;font-size:11px;font-weight:800">Menor preço</span></sc-if><span style="{{ c.pill }}">{{ c.status }}</span></div>
+            <span style="font-size:15.5px;font-weight:800;letter-spacing:-.02em">{{ c.sup }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.02em">{{ c.total }}</span>
+            <span style="{{ c.diffStyle }}">{{ c.diff }}</span>
+            <div style="display:flex;flex-direction:column;gap:7px;padding-top:10px;border-top:1px solid #F1F5F9">
+              <sc-for list="{{ c.facts }}" as="f" hint-placeholder-count="4"><div style="display:flex;gap:10px;font-size:12.5px"><span style="color:#64748B;flex:0 0 96px">{{ f.k }}</span><span style="font-weight:600;min-width:0;overflow-wrap:anywhere">{{ f.v }}</span></div></sc-for>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:auto;padding-top:6px"><button onClick="{{ c.view }}" style="flex:1;height:44px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700">Ver itens</button><sc-if value="{{ c.canApprove }}" hint-placeholder-val="{{ false }}"><button onClick="{{ c.approve }}" style="flex:1;height:44px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13px;font-weight:700">Aprovar</button></sc-if></div>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-size:12.5px;color:#64748B;line-height:1.5;text-wrap:pretty">Ao aprovar uma proposta, as demais propostas em aberto desta cotação passam para Recusado. Aprovar não cria pedido automaticamente.</span>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100% - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>{{ toast }}
+  </div>
+</sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Inicial&quot;,&quot;Filtros aplicados&quot;,&quot;Lista vazia&quot;,&quot;Carregando&quot;,&quot;Formulário&quot;,&quot;Detalhes&quot;,&quot;Comparação&quot;],&quot;default&quot;:&quot;Inicial&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Desktop&quot;,&quot;Mobile&quot;],&quot;default&quot;:&quot;Desktop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: null, w: 1400, navOpen: false, dataState: 'ready', cur: 'Inicial', empty: false,
+    query: '', openFilter: '', filters: { per: 'Todo o período', sup: 'Todos', obra: 'Todas', val: 'Todas', st: 'Todas' },
+    sort: { key: 'date', dir: 'desc' }, recs: this.seed(), modal: '', selNo: '', f: {}, submitted: false, toast: ''
+  };
+
+  TODAY = '2026-09-24';
+  OBRAS = ['Residencial Jardim Europa', 'Edifício Central', 'Casa Oliveira', 'Reforma Comercial Delta', 'Sem obra (geral)'];
+  CATS = ['', 'Aço e ferragens', 'Cimento e argamassa', 'Concreto usinado', 'Locação de equipamentos', 'Materiais elétricos e hidráulicos', 'Transporte de materiais', 'Serviços terceirizados', 'Madeira e acabamentos'];
+  UNITS = ['un', 'm³', 'm²', 't', 'saco', 'rolo', 'chapa', 'barra', 'viagem', 'módulo', 'serviço'];
+  STS = ['Em análise', 'Aguardando resposta', 'Aprovado', 'Recusado', 'Vencido'];
+  SC = { 'Em análise': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Aguardando resposta': ['#FFFBEB', '#B45309', '#F59E0B'], 'Aprovado': ['#ECFDF5', '#047857', '#10B981'], 'Recusado': ['#F1F5F9', '#64748B', '#94A3B8'], 'Vencido': ['#FEF2F2', '#B91C1C', '#EF4444'] };
+  GROUPS = { 'G-ACO': 'Aço CA-50 — 20 t (Edifício Central)', 'G-CIM': 'Cimento e argamassa — lote (Jardim Europa)', 'G-CON': 'Concreto usinado fck 30 — 140 m³' };
+  STATE_NAMES = ['Inicial', 'Filtros aplicados', 'Lista vazia', 'Carregando', 'Formulário', 'Detalhes', 'Comparação'];
+
+  seed() {
+    const I = (d, un, q, p) => ({ d, un, q, p });
+    const Q = (no, sup, desc, obra, cat, date, valid, st, group, prazo, pay, frete, items, order, obs) => ({ no, sup, desc, obra, cat, date, valid, st, group: group || '', prazo, pay, frete, items, order: order || '', obs: obs || '' });
+    const EC = 'Edifício Central', RJ = 'Residencial Jardim Europa', CO = 'Casa Oliveira', RD = 'Reforma Comercial Delta', SG = 'Sem obra (geral)';
+    return [
+      Q('ORC-2026-038', 'Guindastes Delta Max', 'Guindaste — 30 dias', EC, 'Locação de equipamentos', '2026-09-01', '2026-09-30', 'Aprovado', '', '2 dias', '30 dias', 'Incluído', [I('Guindaste torre — locação mensal', 'serviço', 1, 5700)], '', 'Aprovado sem pedido — locação lançada direto em fatura.'),
+      Q('ORC-2026-037', 'Madeireira Sul', 'Madeira para fôrmas', RD, 'Madeira e acabamentos', '2026-09-12', '2026-09-30', 'Aprovado', '', '7 dias', '30 dias', 'Incluído', [I('Compensado resinado 18 mm', 'chapa', 120, 58), I('Pontaletes de eucalipto 3 m', 'un', 200, 12.2)], 'PC-2026-049'),
+      Q('ORC-2026-035', 'ConcretoMix', 'Concreto fck 30 — 140 m³ + bombeamento', EC, 'Concreto usinado', '2026-09-01', '2026-09-30', 'Recusado', 'G-CON', '5 dias', '30 dias', 'Incluído', [I('Concreto usinado fck 30', 'm³', 140, 128), I('Bombeamento', 'serviço', 1, 1300)], '', 'Preço acima da proposta aprovada.'),
+      Q('ORC-2026-034', 'Cimex Materiais', 'Cimento CP-II e argamassa AC-II', RJ, 'Cimento e argamassa', '2026-09-16', '2026-10-03', 'Em análise', 'G-CIM', '4 dias', '28 dias', '€ 180,00', [I('Cimento CP-II 50 kg', 'saco', 400, 9.9), I('Argamassa colante AC-II 20 kg', 'saco', 200, 11.2)]),
+      Q('ORC-2026-033', 'SiderNorte', 'Aço CA-50 — 20 t', EC, 'Aço e ferragens', '2026-09-10', '2026-09-22', 'Em análise', 'G-ACO', '10 dias', '30 dias', 'Por conta do comprador', [I('Aço CA-50 Ø12,5 mm', 'm³' === 'x' ? 'un' : 't', 12, 1195), I('Aço CA-50 Ø8 mm', 't', 8, 1195)], '', 'Menor preço, mas prazo longo e validade encerrada.'),
+      Q('ORC-2026-032', 'Ferro & Aço Ltda', 'Aço CA-50 — 20 t', EC, 'Aço e ferragens', '2026-09-17', '2026-10-05', 'Aguardando resposta', 'G-ACO', '5 dias', '45 dias', 'Incluído', [I('Aço CA-50 Ø12,5 mm', 't', 12, 1285), I('Aço CA-50 Ø8 mm', 't', 8, 1285)]),
+      Q('ORC-2026-031', 'Fornecedor ABC', 'Aço CA-50 — 20 t', EC, 'Aço e ferragens', '2026-09-18', '2026-10-02', 'Aguardando resposta', 'G-ACO', '3 dias', '30 dias', 'Incluído', [I('Aço CA-50 Ø12,5 mm', 't', 12, 1240), I('Aço CA-50 Ø8 mm', 't', 8, 1240)]),
+      Q('ORC-2026-030', 'Cimentos do Norte', 'Cimento CP-II e argamassa AC-II', RJ, 'Cimento e argamassa', '2026-09-15', '2026-09-29', 'Aguardando resposta', 'G-CIM', '3 dias', '30 dias', 'Incluído', [I('Cimento CP-II 50 kg', 'saco', 400, 9.5), I('Argamassa colante AC-II 20 kg', 'saco', 200, 11.75)]),
+      Q('ORC-2026-029', 'Hidrosul Distribuição', 'Tubulação PVC e registros — 2.º pavimento', EC, 'Materiais elétricos e hidráulicos', '2026-09-12', '2026-10-12', 'Em análise', '', '6 dias', '30 dias', 'Incluído', [I('Tubo PVC 100 mm', 'barra', 60, 38), I('Conexões PVC sortidas', 'un', 120, 12.5), I('Registro de gaveta 3/4"', 'un', 40, 90)]),
+      Q('ORC-2026-028', 'MaqRent', 'Andaime fachadeiro — 45 dias', EC, 'Locação de equipamentos', '2026-09-10', '2026-09-20', 'Aguardando resposta', '', '3 dias', 'À vista', 'Incluído', [I('Módulo de andaime fachadeiro — 45 dias', 'módulo', 80, 140)]),
+      Q('ORC-2026-027', 'Betão Pronto', 'Concreto fck 30 — 140 m³ + bombeamento', EC, 'Concreto usinado', '2026-09-02', '2026-09-30', 'Aprovado', 'G-CON', '3 dias', '30 dias', 'Incluído', [I('Concreto usinado fck 30', 'm³', 140, 125), I('Bombeamento', 'serviço', 1, 1100)], 'PC-2026-052', 'Entrega em três concretagens.'),
+      Q('ORC-2026-026', 'EletroSul', 'Quadros, cabos e disjuntores', RD, 'Materiais elétricos e hidráulicos', '2026-09-05', '2026-10-05', 'Em análise', '', '8 dias', '30 dias', 'Incluído', [I('Quadro de distribuição 24 módulos', 'un', 4, 650), I('Cabo flexível 2,5 mm² (100 m)', 'rolo', 30, 120), I('Disjuntor bipolar 25 A', 'un', 40, 50)]),
+      Q('ORC-2026-025', 'TransLog', 'Transporte de agregados — 12 viagens', CO, 'Transporte de materiais', '2026-08-28', '2026-09-27', 'Recusado', '', '2 dias', '15 dias', 'Incluído', [I('Viagem de caminhão basculante', 'viagem', 12, 162.5)], '', 'Contratado diretamente com outro transportador.')
+    ];
+  }
+
+  pl(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+  eur(n) { return '€ ' + (n || 0).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  fmtD(s) { if (!s) return '—'; const a = s.split('-'); return a[2] + '/' + a[1] + '/' + a[0]; }
+  ms(s) { const a = s.split('-').map(Number); return Date.UTC(a[0], a[1] - 1, a[2]); }
+  days(a, b) { return Math.round((this.ms(a) - this.ms(b)) / 864e5); }
+  addDays(s, k) { return new Date(this.ms(s) + k * 864e5).toISOString().slice(0, 10); }
+  num(v) { let t = String(v == null ? '' : v).replace(/[^\d,.-]/g, ''); if (t.indexOf(',') >= 0) t = t.replace(/\./g, '').replace(',', '.'); const n = parseFloat(t); return isNaN(n) ? 0 : n; }
+  total(items) { return Math.round(items.reduce((a, i) => a + this.num(i.q) * this.num(i.p) * 100, 0)) / 100; }
+  fmtN(n) { return n.toLocaleString('de-DE', { maximumFractionDigits: 2 }); }
+  flash(msg) { clearTimeout(this.tT); this.setState({ toast: msg }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2800); }
+
+  enrich(recs) {
+    const T = this.TODAY;
+    return recs.map(r => {
+      const open = r.st === 'Em análise' || r.st === 'Aguardando resposta';
+      const status = open && r.valid < T ? 'Vencido' : r.st;
+      return Object.assign({}, r, { v: this.total(r.items), status, open, live: open && r.valid >= T });
+    });
+  }
+  blank() { return { sup: '', obra: '', cat: '', date: this.TODAY, valid: this.addDays(this.TODAY, 15), st: 'Em análise', group: '', pay: '30 dias', prazo: '', frete: 'Incluído', obs: '', items: [{ d: '', un: 'un', q: '', p: '' }] }; }
+  errsForm(f) {
+    const e = {};
+    if (!f.sup.trim()) e.sup = 'Informe o fornecedor';
+    if (!f.obra) e.obra = 'Selecione a obra ou "Sem obra"';
+    if (!f.date) e.date = 'Informe a data do orçamento';
+    if (!f.valid) e.valid = 'Informe a validade';
+    else if (f.date && f.valid < f.date) e.valid = 'Validade anterior à data do orçamento';
+    const bad = f.items.map(i => (!i.d.trim() ? 'Informe a descrição' : !(this.num(i.q) > 0) ? 'Quantidade deve ser maior que zero' : !(this.num(i.p) > 0) ? 'Informe o preço unitário' : ''));
+    if (bad.some(Boolean)) e.items = bad;
+    return e;
+  }
+  setF = (k, v) => this.setState(x => ({ f: Object.assign({}, x.f, { [k]: v }) }));
+  setItem = (n, k, v) => this.setState(x => ({ f: Object.assign({}, x.f, { items: x.f.items.map((it, i) => i === n ? Object.assign({}, it, { [k]: v }) : it) }) }));
+  setStatus(no, st, msg, groupRefuse) {
+    this.setState(x => {
+      const g = x.recs.filter(r => r.no === no)[0].group;
+      return { recs: x.recs.map(r => r.no === no ? Object.assign({}, r, { st }) : (groupRefuse && g && r.group === g && (r.st === 'Em análise' || r.st === 'Aguardando resposta') ? Object.assign({}, r, { st: 'Recusado' }) : r)) };
+    });
+    this.flash(msg);
+  }
+  openEdit(no) { const r = this.state.recs.filter(x => x.no === no)[0]; this.setState({ modal: 'form', submitted: false, f: Object.assign({}, r, { items: r.items.map(i => ({ d: i.d, un: i.un, q: String(i.q).replace('.', ','), p: String(i.p).replace('.', ',') })) }) }); }
+
+  applyState(name) {
+    const D = { per: 'Todo o período', sup: 'Todos', obra: 'Todas', val: 'Todas', st: 'Todas' };
+    const b = { cur: name, modal: '', navOpen: false, dataState: 'ready', query: '', openFilter: '', filters: D, empty: false, submitted: false };
+    if (name === 'Filtros aplicados') b.filters = Object.assign({}, D, { obra: 'Edifício Central', st: 'Aguardando resposta' });
+    if (name === 'Lista vazia') b.empty = true;
+    if (name === 'Carregando') b.dataState = 'loading';
+    if (name === 'Formulário') { b.modal = 'form'; b.f = this.blank(); }
+    if (name === 'Detalhes') { b.modal = 'detail'; b.selNo = 'ORC-2026-031'; }
+    if (name === 'Comparação') { b.modal = 'compare'; b.selNo = 'ORC-2026-031'; }
+    this.setState(b);
+  }
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() { window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth }); const st = this.props.initialState || 'Inicial'; if (st !== 'Inicial') this.applyState(st); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tT); clearTimeout(this.rT); }
+
+  renderVals() {
+    const s = this.state, T = this.TODAY, T7 = this.addDays(T, 7);
+    const view = s.view || this.props.initialView || 'Desktop', phone = view === 'Mobile';
+    const W = phone ? 390 : s.w, isMobile = W < 1024, isTable = W >= 900, avail = W - (isMobile ? 0 : 258) - 68;
+    const F = s.filters, q = s.query.trim().toLowerCase();
+    const all = s.empty ? [] : this.enrich(s.recs), full = this.enrich(s.recs);
+    const sel = full.filter(x => x.no === s.selNo)[0] || full[0];
+    const MONTHS = { 'Agosto/2026': '2026-08', 'Setembro/2026': '2026-09' };
+    const perOk = r => F.per === 'Todo o período' || (F.per === 'Últimos 30 dias' ? r.date >= this.addDays(T, -30) : r.date.slice(0, 7) === MONTHS[F.per]);
+    const valOk = r => F.val === 'Todas' || (F.val === 'Vence em 7 dias' ? r.live && r.valid <= T7 : F.val === 'Vigentes' ? r.live : r.status === 'Vencido');
+    const base = all.filter(r => perOk(r) && valOk(r) && (F.sup === 'Todos' || r.sup === F.sup) && (F.obra === 'Todas' || r.obra === F.obra) && (!q || (r.no + ' ' + r.sup + ' ' + r.desc).toLowerCase().includes(q)));
+    let list = base.filter(r => F.st === 'Todas' || r.status === F.st);
+    const sk = s.sort.key;
+    list = list.slice().sort((a, b) => { const x = a[sk], y = b[sk]; const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y)); return (c || b.no.localeCompare(a.no)) * (s.sort.dir === 'asc' ? 1 : -1); });
+    const sumv = arr => Math.round(arr.reduce((a, r) => a + r.v * 100, 0)) / 100;
+
+    const run = base.filter(r => r.live), wait = base.filter(r => r.status === 'Aguardando resposta'), appr = base.filter(r => r.status === 'Aprovado'), exp = base.filter(r => r.status === 'Vencido');
+    const neutral = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], violet = ['#4338CA', '#312E81', '#EEF0FE', '#DDD9FD'], amber = ['#B45309', '#92400E', '#FFFBEB', '#FDE68A'], green = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'], red = ['#B91C1C', '#991B1B', '#FEF2F2', '#FECACA'];
+    const kpi = (label, value, hint, color, t) => ({ label, value, hint, color, labelColor: t[0], valueColor: t[1], style: 'border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;background:' + t[2] + ';border:1px solid ' + t[3] });
+    const kpis = [
+      kpi('Em andamento', String(run.length), 'estimado ' + this.eur(sumv(run)) + ' · em análise ou aguardando resposta', '#6D5DFB', violet),
+      kpi('Aguardando resposta', String(wait.length), wait.length ? this.pl(wait.filter(r => r.live && r.valid <= T7).length, 'vence', 'vencem') + ' em 7 dias · ' + this.eur(sumv(wait)) : 'nenhum no momento', '#F59E0B', amber),
+      kpi('Aprovados', String(appr.length), this.eur(sumv(appr)) + ' · ' + this.pl(appr.filter(r => r.order).length, 'com pedido', 'com pedido') + ', ' + this.pl(appr.filter(r => !r.order).length, 'sem pedido', 'sem pedido'), '#10B981', green),
+      kpi('Vencidos', String(exp.length), exp.length ? 'validade expirada sem decisão · ' + this.eur(sumv(exp)) : 'nenhum vencido', '#EF4444', red)
+    ];
+    const kcols = avail >= 4 * 200 ? 4 : avail >= 2 * 200 ? 2 : 1;
+
+    const pill = (st) => 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + this.SC[st][0] + ';color:' + this.SC[st][1] + ';font-size:12px;font-weight:700;white-space:nowrap;flex:0 0 auto';
+    const ghostBtn = 'height:44px;padding:0 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;white-space:nowrap';
+    const mono = 'font-family:\'JetBrains Mono\',monospace;';
+    const stop = fn => e => { if (e && e.stopPropagation) e.stopPropagation(); fn(); };
+    const peers = r => r.group ? full.filter(x => x.group === r.group) : [];
+    const approve = r => () => this.setStatus(r.no, 'Aprovado', 'Orçamento ' + r.no + ' aprovado (demonstrativo)', true);
+    const aStyle = (k) => 'height:36px;padding:0 12px;border-radius:10px;font-size:12.5px;font-weight:700;' + (k === 'p' ? 'background:#EEF0FE;color:#4338CA' : k === 'g' ? 'background:#ECFDF5;color:#047857' : 'background:#F1F5F9;color:#475569');
+    const acts = r => {
+      const a = [];
+      if (r.live) a.push({ label: 'Aprovar', run: stop(approve(r)), style: aStyle('g') });
+      if (peers(r).length > 1) a.push({ label: 'Comparar', run: stop(() => this.setState({ modal: 'compare', selNo: r.no })), style: aStyle('p') });
+      if (r.status !== 'Aprovado') a.push({ label: 'Editar', run: stop(() => this.openEdit(r.no)), style: aStyle() });
+      a.push({ label: 'Ver', run: stop(() => this.setState({ modal: 'detail', selNo: r.no })), style: aStyle() });
+      return a;
+    };
+    const rows = list.map(r => {
+      const dd = this.days(r.valid, T), pr = peers(r).length;
+      const vs = r.open ? (dd < 0 ? this.pl(-dd, 'dia', 'dias') + ' vencido' : dd === 0 ? 'vence hoje' : this.pl(dd, 'dia restante', 'dias restantes')) : '';
+      const late = r.open && dd < 0;
+      return {
+        no: r.no, sup: r.sup, desc: r.desc, obra: r.obra, date: this.fmtD(r.date), valid: this.fmtD(r.valid), validSub: vs,
+        validStyle: mono + 'font-size:12.5px;white-space:nowrap;font-weight:' + (late ? 700 : 500) + ';color:' + (late ? '#B91C1C' : '#64748B'),
+        validSubStyle: 'font-size:11px;font-weight:600;color:' + (late ? '#B91C1C' : dd <= 7 ? '#B45309' : '#64748B'),
+        total: this.eur(r.v), status: r.status, pill: pill(r.status), dot: this.SC[r.status][2], hasCmp: pr > 1, cmpText: 'Cotação com ' + pr + ' propostas',
+        acts: acts(r), open: () => this.setState({ modal: 'detail', selNo: r.no }),
+        facts: [['Obra', r.obra, ''], ['Data', this.fmtD(r.date), mono], ['Validade', this.fmtD(r.valid) + (vs ? ' · ' + vs : ''), mono], ['Valor estimado', this.eur(r.v), mono]].map(f => ({ k: f[0], v: f[1], style: (f[2] || 'font-size:13px;') + 'font-size:12.5px;font-weight:600;overflow-wrap:anywhere' })),
+        rowStyle: 'display:grid;grid-template-columns:1.1fr 1.4fr 2fr 1.5fr .9fr 1.1fr 1.1fr 1.3fr 290px;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s'
+      };
+    });
+    const spec = [['no', 'Número'], ['sup', 'Fornecedor'], ['desc', 'Descrição'], ['obra', 'Obra'], ['date', 'Data'], ['valid', 'Validade'], ['v', 'Valor estimado'], ['status', 'Situação'], ['', 'Ações']];
+    const cols = spec.map(c => ({ name: c[1], arrow: s.sort.key === c[0] ? (s.sort.dir === 'asc' ? ' ▲' : ' ▼') : '', sort: () => { if (!c[0]) return; this.setState(x => ({ sort: { key: c[0], dir: x.sort.key === c[0] && x.sort.dir === 'desc' ? 'asc' : 'desc' } })); }, style: 'text-align:' + (c[0] === 'v' ? 'right' : 'left') + ';font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:0;white-space:nowrap;cursor:' + (c[0] ? 'pointer' : 'default') + ';color:' + (s.sort.key === c[0] ? '#4338CA' : '#64748B') }));
+
+    const mkFilter = (key, label, options) => ({
+      label: label + ':', value: F[key], open: s.openFilter === key,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === key ? '' : key })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' + (F[key] === options[0] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700',
+      options: options.map(o => ({ name: o, pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [key]: o }), openFilter: '' })), style: 'padding:11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (F[key] === o ? 700 : 500) + ';color:' + (F[key] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[key] === o ? '#EEF0FE' : 'transparent') }))
+    });
+    const sups = Array.from(new Set(s.recs.map(r => r.sup))).sort();
+    const filters = [mkFilter('sup', 'Fornecedor', ['Todos'].concat(sups)), mkFilter('obra', 'Obra', ['Todas'].concat(this.OBRAS)), mkFilter('per', 'Período', ['Todo o período', 'Setembro/2026', 'Agosto/2026', 'Últimos 30 dias']), mkFilter('val', 'Validade', ['Todas', 'Vence em 7 dias', 'Vigentes', 'Vencidas']), mkFilter('st', 'Situação', ['Todas'].concat(this.STS))];
+    const DEF = { per: 'Todo o período', sup: 'Todos', obra: 'Todas', val: 'Todas', st: 'Todas' };
+    const anyFilter = q !== '' || Object.keys(DEF).some(k => F[k] !== DEF[k]);
+
+    // form
+    const isForm = s.modal === 'form', f = s.f || {};
+    const errs = isForm && s.submitted ? this.errsForm(f) : {};
+    const bld = (k, label, o) => { o = o || {}; const err = errs[k] || ''; return { label, err, hasErr: !!err, isSelect: !!o.opts, isArea: !!o.area, isInput: !o.opts && !o.area, type: o.type || 'text', ph: o.ph || '', list: o.list || '', value: f[k] == null ? '' : f[k], opts: (o.opts || []).map(v => { const vv = v && v.v != null ? v.v : v; return { v: vv, l: v && v.l != null ? v.l : (v || 'Selecione'), sel: vv === (f[k] == null ? '' : f[k]) }; }), onInput: ev => this.setF(k, ev.target.value), wrapStyle: 'display:flex;flex-direction:column;gap:7px;min-width:0;grid-column:' + (o.full ? '1 / -1' : 'auto'), inpStyle: 'width:100%;min-height:46px;padding:' + (o.area ? '12px 13px' : '0 13px') + ';border-radius:11px;border:1px solid ' + (err ? '#EF4444' : '#E2E8F0') + ';background:' + (err ? '#FEF2F2' : '#F8FAFC') + ';font-size:14.5px;outline:none;color:#0F172A;' + (o.area ? 'resize:vertical;' : '') }; };
+    const groupOpts = [{ v: '', l: 'Nenhuma (orçamento isolado)' }].concat(Object.keys(this.GROUPS).map(g => ({ v: g, l: this.GROUPS[g] })));
+    const fields = isForm ? [
+      bld('sup', 'Fornecedor', { full: true, list: 'pg-sups', ph: 'Nome do fornecedor' }), bld('obra', 'Obra', { opts: [''].concat(this.OBRAS) }), bld('cat', 'Categoria de compra', { opts: this.CATS }),
+      bld('date', 'Data do orçamento', { type: 'date' }), bld('valid', 'Validade da proposta', { type: 'date' }),
+      bld('st', 'Situação', { opts: ['Em análise', 'Aguardando resposta'] }), bld('group', 'Cotação (comparar propostas)', { opts: groupOpts }),
+      bld('pay', 'Condição de pagamento', { opts: ['À vista', '15 dias', '28 dias', '30 dias', '45 dias'] }), bld('prazo', 'Prazo de entrega', { ph: 'Ex.: 5 dias' }),
+      bld('frete', 'Frete', { opts: ['Incluído', 'Por conta do comprador', 'A combinar'] }), bld('obs', 'Observações', { area: true, full: true, ph: 'Condições adicionais, referência da proposta' })
+    ] : [];
+    const itemErr = errs.items || [];
+    const inp = (bad) => 'width:100%;min-height:44px;padding:0 12px;border-radius:11px;border:1px solid ' + (bad ? '#EF4444' : '#E2E8F0') + ';background:' + (bad ? '#FEF2F2' : '#fff') + ';font-size:14px;outline:none;color:#0F172A';
+    const items = (f.items || []).map((it, n) => {
+      const sub = this.num(it.q) * this.num(it.p), er = itemErr[n] || '';
+      return { n: String(n + 1).padStart(2, '0'), d: it.d, un: it.un, q: it.q, p: it.p, sub: this.eur(sub), hasErr: !!er, err: er,
+        boxStyle: 'display:flex;flex-direction:column;gap:11px;padding:13px;border-radius:14px;border:1px solid ' + (er ? '#FECACA' : '#E2E8F0') + ';background:#F8FAFC',
+        dStyle: inp(er && !it.d.trim()) + ';flex:1;min-width:0', selStyle: inp(false), units: this.UNITS.map(u => ({ v: u, sel: u === it.un })), qStyle: inp(er && er.indexOf('Quantidade') === 0) + ';' + mono, pStyle: inp(er && er.indexOf('preço') >= 0) + ';' + mono,
+        setD: e => this.setItem(n, 'd', e.target.value), setUn: e => this.setItem(n, 'un', e.target.value), setQ: e => this.setItem(n, 'q', e.target.value), setP: e => this.setItem(n, 'p', e.target.value),
+        remove: () => { if ((this.state.f.items || []).length <= 1) { this.flash('O orçamento precisa de ao menos um item'); return; } this.setState(x => ({ f: Object.assign({}, x.f, { items: x.f.items.filter((_, i) => i !== n) }) })); } };
+    });
+    const errCount = Object.keys(errs).length ? (errs.items ? itemErr.filter(Boolean).length : 0) + Object.keys(errs).filter(k => k !== 'items').length : 0;
+    const submit = () => {
+      const fx = this.state.f, er = this.errsForm(fx);
+      if (Object.keys(er).length) { this.setState({ submitted: true }); return; }
+      const clean = fx.items.map(i => ({ d: i.d.trim(), un: i.un, q: this.num(i.q), p: this.num(i.p) }));
+      const rec = { sup: fx.sup.trim(), obra: fx.obra, cat: fx.cat, date: fx.date, valid: fx.valid, st: fx.st, group: fx.group, pay: fx.pay, prazo: fx.prazo || '—', frete: fx.frete, obs: fx.obs, items: clean, desc: clean[0].d + (clean.length > 1 ? ' + ' + (clean.length - 1) + (clean.length === 2 ? ' item' : ' itens') : '') };
+      if (fx.no) { this.setState(x => ({ recs: x.recs.map(r => r.no === fx.no ? Object.assign({}, r, rec) : r), modal: 'detail', selNo: fx.no, empty: false })); this.flash('Orçamento atualizado'); }
+      else { const nn = Math.max.apply(null, s.recs.map(r => parseInt(r.no.slice(-3), 10))) + 1, no = 'ORC-2026-' + String(nn).padStart(3, '0'); this.setState(x => ({ recs: x.recs.concat([Object.assign({ no, order: '' }, rec)]), modal: 'detail', selNo: no, empty: false })); this.flash('Orçamento ' + no + ' criado'); }
+    };
+
+    // detail
+    const box = (k, v, t) => ({ k, v, lc: t[0], vc: t[1], style: 'display:flex;flex-direction:column;gap:6px;padding:12px 13px;border-radius:13px;background:' + t[2] + ';border:1px solid ' + t[3] });
+    const dd = this.days(sel.valid, T), pr = peers(sel);
+    let note = 'Orçamento isolado — não faz parte de uma cotação com outras propostas.', nc = '#94A3B8';
+    if (pr.length > 1) { const mn = Math.min.apply(null, pr.map(x => x.v)); note = 'Cotação com ' + pr.length + ' propostas. ' + (sel.v === mn ? 'Esta é a de menor preço.' : 'Esta proposta está ' + this.eur(sel.v - mn) + ' (' + Math.round((sel.v / mn - 1) * 100) + '%) acima da menor.'); nc = '#6D5DFB'; }
+    if (sel.status === 'Vencido') { note = 'Validade encerrada em ' + this.fmtD(sel.valid) + '. Edite a validade para reabrir ou solicite nova proposta.'; nc = '#EF4444'; }
+    const dact = (label, run, kind) => ({ label, run, style: 'height:46px;padding:0 17px;border-radius:12px;font-size:13.5px;font-weight:700;' + (kind === 'p' ? 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff' : kind === 'd' ? 'border:1px solid #FECACA;background:#FEF2F2;color:#B91C1C' : 'border:1px solid #E2E8F0;background:#fff') });
+    const dacts = [];
+    if (sel.live) dacts.push(dact('Aprovar', approve(sel), 'p'));
+    if (pr.length > 1) dacts.push(dact('Comparar propostas', () => this.setState({ modal: 'compare' })));
+    if (sel.status !== 'Aprovado') dacts.push(dact('Editar', () => this.openEdit(sel.no)));
+    if (sel.open) dacts.push(dact('Recusar', () => this.setStatus(sel.no, 'Recusado', 'Orçamento recusado (demonstrativo)'), 'd'));
+    const d = {
+      no: sel.no, sup: sel.sup, desc: sel.desc, status: sel.status, pill: pill(sel.status), dot: this.SC[sel.status][2],
+      boxes: [box('Valor estimado', this.eur(sel.v), neutral), box('Validade', this.fmtD(sel.valid), sel.status === 'Vencido' ? red : neutral), box('Itens', String(sel.items.length), neutral)],
+      note, noteColor: nc, total: this.eur(sel.v),
+      items: sel.items.map(i => ({ d: i.d, calc: this.fmtN(this.num(i.q)) + ' ' + i.un + ' × ' + this.eur(this.num(i.p)), sub: this.eur(this.num(i.q) * this.num(i.p)) })),
+      info: [['Obra', sel.obra], ['Categoria', sel.cat || '—'], ['Data', this.fmtD(sel.date)], ['Pagamento', sel.pay], ['Prazo de entrega', sel.prazo], ['Frete', sel.frete], ['Observações', sel.obs || '—']].map(a => ({ k: a[0], v: a[1] })),
+      link: sel.order ? 'Pedido de compra gerado: ' + sel.order + '.' : (sel.status === 'Aprovado' ? 'Aprovado sem pedido vinculado. O pedido pode ser criado depois — ou não.' : 'Nenhum pedido vinculado. O vínculo é opcional.'),
+      actions: dacts
+    };
+
+    // compare
+    const grp = pr.length > 1 ? pr.slice().sort((a, b) => (b.live - a.live) || a.v - b.v) : [sel];
+    const liveG = grp.filter(x => x.live), best = liveG.length ? Math.min.apply(null, liveG.map(x => x.v)) : null;
+    const cmp = {
+      title: sel.group ? this.GROUPS[sel.group] : sel.desc, count: this.pl(grp.length, 'proposta', 'propostas'),
+      grid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px',
+      cards: grp.map(r => {
+        const isB = best != null && r.live && r.v === best, diff = best != null ? r.v - best : 0;
+        return { sup: r.sup, total: this.eur(r.v), best: isB && liveG.length > 1, status: r.status, pill: pill(r.status),
+          diff: best == null ? 'Sem proposta vigente' : isB ? 'Referência de menor preço' : (diff < 0 ? '− ' : '+ ') + this.eur(Math.abs(diff)) + ' (' + (diff < 0 ? '−' : '+') + Math.round(Math.abs(diff) / best * 100) + '%)' + (r.live ? '' : ' · fora da comparação'), diffStyle: 'font-size:12.5px;font-weight:700;color:' + (isB ? '#047857' : '#B45309'),
+          facts: [['Prazo', r.prazo], ['Pagamento', r.pay], ['Frete', r.frete], ['Validade', this.fmtD(r.valid)]].map(a => ({ k: a[0], v: a[1] })),
+          style: 'display:flex;flex-direction:column;gap:9px;padding:16px;border-radius:16px;border:1px solid ' + (isB ? '#A7F3D0' : '#E2E8F0') + ';background:' + (isB ? '#F6FEF9' : '#fff'),
+          canApprove: r.live, approve: () => { this.setStatus(r.no, 'Aprovado', 'Proposta de ' + r.sup + ' aprovada (demonstrativo)', true); this.setState({ modal: 'detail', selNo: r.no }); },
+          view: () => this.setState({ modal: 'detail', selNo: r.no }) };
+      })
+    };
+
+    const hasRows = list.length > 0;
+    const emptyAll = s.empty;
+    const loading = s.dataState === 'loading';
+    return {
+      isMobile, isTable, isCards: !isTable,
+      states: this.STATE_NAMES.map(n => ({ name: n, pick: () => this.applyState(n), style: 'height:34px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid ' + (s.cur === n ? '#6D5DFB' : '#E2E8F0') + ';background:' + (s.cur === n ? '#EEF0FE' : '#fff') + ';color:' + (s.cur === n ? '#4338CA' : '#475569') })),
+      views: ['Desktop', 'Mobile'].map(n => ({ name: n, pick: () => this.setState({ view: n, navOpen: false }), style: 'height:30px;padding:0 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:' + (view === n ? '#fff' : 'transparent') + ';color:' + (view === n ? '#4338CA' : '#64748B') })),
+      stageStyle: phone ? 'flex:1;display:flex;justify-content:center;padding:28px 12px' : 'flex:1;display:flex;flex-direction:column',
+      frameStyle: phone ? 'width:390px;height:844px;flex:0 0 auto;border-radius:46px;border:10px solid #0F172A;overflow:hidden;position:relative;transform:translateZ(0);background:#F8FAFC;box-shadow:0 40px 80px -30px rgba(15,23,42,.5)' : 'flex:1;display:flex;flex-direction:column;position:relative',
+      scrollStyle: phone ? 'position:absolute;inset:0;overflow-y:auto;overflow-x:hidden' : 'flex:1;display:flex;flex-direction:column',
+      appStyle: 'display:flex;flex:1;min-height:' + (phone ? '100%' : 'calc(100vh - 56px)') + ';background:#F8FAFC;color:#0F172A;font-family:\'Plus Jakarta Sans\',system-ui,sans-serif',
+      showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen && isMobile,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:calc(100vh - 56px);flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      navGroups: [['Comercial', '#EC4899', ['CRM', 'Leads']], ['Clientes', '#3B82F6', ['Clientes']], ['Projetos', '#F97316', ['Projetos / Obras']], ['Compras', '#06B6D4', ['Visão geral', 'Orçamentos de compra', 'Pedidos de compra', 'Recebimentos', 'Faturas de compra']], ['Financeiro', '#10B981', ['Contas a pagar']], ['Relatórios', '#8B5CF6', ['Consultas e Relatórios']], ['Configurações', '#64748B', ['Empresa']]].map(g => ({
+        name: g[0], dot: g[1], open: g[0] === 'Compras',
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        items: g[2].map(n => { const on = n === 'Orçamentos de compra'; return { name: n, style: 'display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:13px;font-weight:' + (on ? 700 : 500) + ';color:' + (on ? '#fff' : '#8C9AAE') + ';background:' + (on ? 'rgba(109,93,251,.26)' : 'transparent'), dotStyle: 'width:5px;height:5px;border-radius:50%;background:' + (on ? '#6D5DFB' : '#475569') }; })
+      })),
+      ghostBtn, todayLabel: this.fmtD(T),
+      openNew: () => this.setState({ modal: 'form', f: this.blank(), submitted: false }),
+      doRefresh: () => { clearTimeout(this.rT); this.setState({ dataState: 'loading', cur: 'Carregando' }); this.rT = setTimeout(() => { this.setState({ dataState: 'ready', cur: 'Inicial' }); this.flash('Dados demonstrativos atualizados'); }, 1000); },
+      doExport: () => {
+        try {
+          const csv = [['Número', 'Fornecedor', 'Descrição', 'Obra', 'Data', 'Validade', 'Valor estimado', 'Situação']].concat(list.map(r => [r.no, r.sup, r.desc, r.obra, this.fmtD(r.date), this.fmtD(r.valid), r.v.toFixed(2), r.status])).map(l => l.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';')).join('\n');
+          const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' })); a.download = 'orcamentos-de-compra-demonstrativo.csv'; a.click();
+        } catch (e) { /* demo */ }
+        this.flash('Exportação demonstrativa: ' + this.pl(list.length, 'registro', 'registros'));
+      },
+      stLoading: loading, stReady: !loading, sk4: [1, 2, 3, 4], sk7: [1, 2, 3, 4, 5, 6, 7],
+      kpiGrid: 'display:grid;grid-template-columns:repeat(' + kcols + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)', kpis,
+      query: s.query, hasQuery: s.query !== '', onQuery: e => this.setState({ query: e.target.value }), clearQuery: () => this.setState({ query: '' }),
+      filters, anyFilter, clearAll: () => this.setState({ query: '', openFilter: '', filters: DEF }),
+      hasRows, isEmpty: !hasRows,
+      emptyTitle: emptyAll ? 'Nenhum orçamento cadastrado' : 'Nenhum orçamento encontrado',
+      emptyText: emptyAll ? 'Registre a cotação de um fornecedor para comparar propostas e decidir. Orçamentos são opcionais — pedidos e faturas podem ser criados sem eles.' : 'Nenhum registro corresponde à pesquisa ou aos filtros aplicados. Tente alterar os filtros ou realizar uma nova busca.',
+      emptyLabel: emptyAll ? 'Novo orçamento' : 'Limpar filtros',
+      emptyAction: emptyAll ? () => this.setState({ modal: 'form', f: this.blank(), submitted: false }) : () => this.setState({ query: '', openFilter: '', filters: DEF }),
+      gridHead: 'display:grid;grid-template-columns:1.1fr 1.4fr 2fr 1.5fr .9fr 1.1fr 1.1fr 1.3fr 290px;gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
+      cols, rows, countLabel: this.pl(list.length, 'orçamento listado', 'orçamentos listados'), listTotal: this.eur(sumv(list)),
+      formOpen: isForm, formTitle: f.no ? 'Editar orçamento ' + f.no : 'Novo orçamento de compra', submitLabel: f.no ? 'Salvar alterações' : 'Salvar orçamento', submit, closeModal: () => this.setState({ modal: '' }),
+      showErrBanner: errCount > 0, errBanner: errCount === 1 ? 'Corrija 1 campo destacado para continuar.' : 'Corrija os ' + errCount + ' campos destacados para continuar.',
+      fields, fieldGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,' + (W < 600 ? 240 : 220) + 'px),1fr));gap:14px', supOpts: sups,
+      items, units: null, itemsErr: '', addItem: () => this.setState(x => ({ f: Object.assign({}, x.f, { items: (x.f.items || []).concat([{ d: '', un: 'un', q: '', p: '' }]) }) })),
+      itemsCount: this.pl((f.items || []).length, 'item', 'itens'), formTotal: this.eur(this.total(f.items || [])),
+      detailOpen: s.modal === 'detail', d,
+      drawerStyle: 'position:relative;width:' + (phone || W < 600 ? '100%' : 'min(560px,100%)') + ';height:100%;overflow-y:auto;background:#fff;border-left:1px solid #E2E8F0;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:20px;box-shadow:-30px 0 70px -30px rgba(15,23,42,.5);animation:pgDrawer .3s cubic-bezier(.22,.7,.2,1)',
+      cmpOpen: s.modal === 'compare', cmp,
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
