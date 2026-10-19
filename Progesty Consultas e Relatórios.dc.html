@@ -106,7 +106,7 @@ button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit
         </div>
       </sc-for>
     </div>
-    <span style="font-size:12px;color:#64748B;line-height:1.5;text-wrap:pretty;max-width:70ch">Cada departamento terá sua própria página de relatórios. Por enquanto, Horas e Custos estão disponíveis; os dados exibidos são fictícios.</span>
+    <span style="font-size:12px;color:#64748B;line-height:1.5;text-wrap:pretty;max-width:70ch">Cada departamento terá sua própria página de relatórios. Por enquanto, Horas, Custos, Logística e Obras estão disponíveis; os dados exibidos são fictícios.</span>
   </div>
 </main>
 
@@ -132,16 +132,16 @@ class Component extends DCLogic {
       { name: 'Projetos', dot: '#F97316', items: [{ n: 'Projetos / Obras' }, { n: 'Planning' }, { n: 'Controle de Horas' }, { n: 'Tarefas' }] },
       { name: 'Pessoas', dot: '#06B6D4', items: [{ n: 'Funcionários' }, { n: 'Terceirizados' }, { n: 'Veículos' }] },
       { name: 'Financeiro', dot: '#10B981', items: [{ n: 'Contas a Receber' }, { n: 'Contas a Pagar' }, { n: 'Faturas' }, { n: 'Fluxo de Caixa' }] },
-      { name: 'Relatórios', dot: '#8B5CF6', chart: true, items: [{ n: 'Consultas e Relatórios' }, { n: 'Horas', url: this.HORAS_URL }, { n: 'Custos', url: 'Progesty%20Relat%C3%B3rios%20-%20Custos.dc.html' }] },
+      { name: 'Relatórios', dot: '#8B5CF6', chart: true, items: [{ n: 'Consultas e Relatórios' }, { n: 'Horas', url: this.HORAS_URL }, { n: 'Custos', url: 'Progesty%20Relat%C3%B3rios%20-%20Custos.dc.html' }, { n: 'Logística', url: 'Progesty%20Relat%C3%B3rios%20-%20Log%C3%ADstica.dc.html' }, { n: 'Obras', url: 'Progesty%20Relat%C3%B3rios%20-%20Obras.dc.html' }] },
       { name: 'Configurações', dot: '#64748B', items: [{ n: 'Empresa' }, { n: 'Usuários' }, { n: 'Gestão de Acessos' }] }
     ];
   }
 
   DEPTS = [
-    { name: 'Logística', color: '#3B82F6', bg: '#EFF6FF', desc: 'Utilização de veículos, equipamentos e deslocamentos entre obras.', live: false },
+    { name: 'Logística', color: '#3B82F6', bg: '#EFF6FF', desc: 'Custos, combustível, manutenção, utilização e multas da frota de veículos.', live: true, href: 'Progesty%20Relat%C3%B3rios%20-%20Log%C3%ADstica.dc.html' },
     { name: 'Horas', color: '#6D5DFB', bg: '#EEF0FE', desc: 'Horas por período, funcionário, obra e terceirizado, planejadas × realizadas e pendentes de validação.', live: true, href: 'Progesty%20Relat%C3%B3rios%20-%20Horas.dc.html' },
     { name: 'Custos', color: '#10B981', bg: '#ECFDF5', desc: 'Custos por obra, de mão de obra, de subempreiteiros e de veículos, com resumo geral por período.', live: true, href: 'Progesty%20Relat%C3%B3rios%20-%20Custos.dc.html' },
-    { name: 'Chantier / Obras', color: '#F97316', bg: '#FFF7ED', desc: 'Andamento, prazos e resultado de cada obra.', live: false },
+    { name: 'Chantier / Obras', color: '#F97316', bg: '#FFF7ED', desc: 'Andamento, prazos, custos, planejado × realizado e resultado de cada obra.', live: true, href: 'Progesty%20Relat%C3%B3rios%20-%20Obras.dc.html' },
     { name: 'Financeiro', color: '#06B6D4', bg: '#ECFEFF', desc: 'Contas a receber e a pagar, faturas e fluxo de caixa.', live: false },
     { name: 'RH / Funcionários', color: '#EC4899', bg: '#FDF2F8', desc: 'Equipe, vínculos, documentação e valores por hora.', live: false },
     { name: 'CRM / Comercial', color: '#F59E0B', bg: '#FFFBEB', desc: 'Pipeline comercial, propostas e conversão de oportunidades.', live: false }
