@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgSheet{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pgDrawer{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;background:#E8ECF3;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column">
+
+<div data-pg-bar="1" style="background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,2vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+  <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Estado</span>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ states }}" as="x" hint-placeholder-count="6"><button onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.name }}</button></sc-for>
+  </div>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:4px;padding:3px;border-radius:10px;background:#F1F5F9">
+    <sc-for list="{{ views }}" as="v" hint-placeholder-count="2"><button onClick="{{ v.pick }}" style="{{ v.style }}">{{ v.name }}</button></sc-for>
+  </div>
+</div>
+
+<div style="{{ stageStyle }}">
+<div style="{{ frameStyle }}">
+<div class="pg-scroll" style="{{ scrollStyle }}">
+<div style="{{ appStyle }}">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar menu" style="width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.07);color:#94A3B8;font-size:15px">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <div style="{{ g.headStyle }}"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></span><span style="flex:1;text-align:left">{{ g.name }}</span></div>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="4"><div style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span>{{ it.name }}</div></sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Carlos Mendes</span><span style="font-size:11px;color:#64748B">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column">
+  <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Compras</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Gerencie cotações, pedidos, recebimentos e faturas de compra em um só lugar.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <button onClick="{{ doExport }}" style="{{ ghostBtn }}">Exportar</button>
+        <button onClick="{{ doRefresh }}" style="{{ ghostBtn }}">Atualizar</button>
+        <button onClick="{{ openNew }}" style="display:flex;align-items:center;gap:9px;height:46px;padding:0 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s" style-hover="transform:translateY(-1px)"><span style="font-size:17px;line-height:1">+</span>Nova compra</button>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px);min-width:0">
+
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD">
+      <span style="width:7px;height:7px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>
+      <span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.4">Dados demonstrativos e fictícios · data de referência {{ todayLabel }}. Os documentos são independentes; vínculos são opcionais.</span>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="{{ kpiGrid }}"><sc-for list="{{ sk5 }}" as="k" hint-placeholder-count="5"><div class="pg-sk" style="height:112px;border-radius:18px"></div></sc-for></div>
+        <div class="pg-sk" style="height:58px;border-radius:14px"></div>
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px"><sc-for list="{{ sk7 }}" as="k" hint-placeholder-count="7"><div class="pg-sk" style="height:46px"></div></sc-for></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ kpiGrid }}">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+          <div style="{{ k.style }}">
+            <span style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:{{ k.labelColor }}">{{ k.label }}</span></span>
+            <span style="font-size:clamp(20px,2.1vw,26px);font-weight:800;letter-spacing:-.035em;color:{{ k.valueColor }};font-variant-numeric:tabular-nums;white-space:nowrap">{{ k.value }}</span>
+            <span style="font-size:11.5px;font-weight:600;color:{{ k.labelColor }};line-height:1.4">{{ k.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="{{ areaGrid }}">
+        <sc-for list="{{ areas }}" as="a" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="width:34px;height:34px;border-radius:10px;background:{{ a.color }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;flex:0 0 auto">{{ a.code }}</span><span style="font-size:15px;font-weight:700">{{ a.name }}</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-size:28px;font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ a.count }}</span><span style="font-size:12.5px;font-weight:600;color:#64748B">{{ a.label }}</span></div>
+            <span style="font-size:12px;color:#64748B;line-height:1.45;min-height:34px">{{ a.sub }}</span>
+            <button onClick="{{ a.go }}" style="height:44px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:#4338CA" style-hover="border-color:#C7C3FB;background:#F8FAFC">Acessar {{ a.name }} ›</button>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <div style="flex:1 1 240px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0">
+          <span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+          <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Número, fornecedor ou descrição..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+          <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" aria-label="Limpar pesquisa" style="width:28px;height:28px;border-radius:8px;background:#F1F5F9;color:#64748B;font-size:12px">✕</button></sc-if>
+        </div>
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+          <div style="position:relative;flex:0 0 auto;max-width:100%">
+            <button onClick="{{ f.toggle }}" style="{{ f.btnStyle }}"><span style="color:#64748B;font-weight:600">{{ f.label }}</span><span style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.value }}</span><span style="font-size:9px;color:#64748B">▼</span></button>
+            <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+              <div class="pg-scroll" style="position:absolute;top:calc(100% + 8px);left:0;min-width:220px;max-height:300px;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50">
+                <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button></sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearAll }}" style="{{ ghostBtn }}">Limpar filtros</button></sc-if>
+      </div>
+
+      <sc-if value="{{ noRows }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+          <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">Nenhum documento encontrado</span>
+          <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">Nenhum registro corresponde à pesquisa ou aos filtros aplicados. Tente alterar os filtros ou realizar uma nova busca.</span>
+          <button onClick="{{ clearAll }}" style="margin-top:4px;height:46px;padding:0 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Limpar filtros</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.4vw,16px);align-items:flex-start">
+          <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="5">
+            <div style="{{ b.style }}">
+              <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px;font-weight:700;letter-spacing:-.02em">{{ b.title }}</span><span style="padding:3px 9px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ b.count }}</span></div>
+              <sc-if value="{{ b.empty }}" hint-placeholder-val="{{ false }}"><span style="font-size:13.5px;color:#64748B;padding:8px 0">{{ b.emptyText }}</span></sc-if>
+              <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="4">
+                <button onClick="{{ it.open }}" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;width:100%;padding:12px 13px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0;text-align:left;transition:border-color .16s" style-hover="border-color:#C7C3FB">
+                  <div style="min-width:0;flex:1 1 180px;display:flex;flex-direction:column;gap:4px">
+                    <div style="display:flex;align-items:center;gap:8px"><span style="{{ it.chipStyle }}">{{ it.chip }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ it.no }}</span></div>
+                    <span style="font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ it.title }}</span>
+                    <span style="{{ it.subStyle }}">{{ it.sub }}</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600;white-space:nowrap">{{ it.value }}</span><span style="{{ it.pill }}">{{ it.status }}</span></div>
+                </button>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,1.4vw,16px);align-items:flex-start">
+          <sc-for list="{{ sumCards }}" as="sm" hint-placeholder-count="2">
+            <div style="flex:1 1 380px;min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px"><span style="font-size:16px;font-weight:700;letter-spacing:-.02em">{{ sm.title }}</span><span style="font-size:12px;color:#64748B">comprado = pedidos + faturas e recebimentos avulsos, sem dupla contagem · clique para filtrar</span></div>
+              <sc-for list="{{ sm.rows }}" as="o" hint-placeholder-count="5">
+                <button onClick="{{ o.pick }}" style="{{ o.style }}">
+                  <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;width:100%">
+                    <span style="font-size:14px;font-weight:700;flex:1 1 150px;text-align:left">{{ o.name }}</span>
+                    <span style="font-size:12px;color:#64748B">A receber <span style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D4ED8">{{ o.receber }}</span></span>
+                    <span style="font-size:12px;color:#64748B">Faturado <span style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#B45309">{{ o.faturado }}</span></span>
+                    <span style="font-size:12px;color:#64748B">Comprado <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#0F172A">{{ o.comprado }}</span></span>
+                  </div>
+                  <div style="width:100%;height:8px;border-radius:999px;background:#F1F5F9;overflow:hidden"><div style="{{ o.bar }}"></div></div>
+                </button>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </sc-if>
+  </div>
+</main>
+
+</div>
+</div>
+
+<sc-if value="{{ newOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center">
+    <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(680px,100%);max-height:92%;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:24px 24px 0 0;padding:clamp(18px,2.4vw,30px);display:flex;flex-direction:column;gap:18px;box-shadow:0 -30px 70px -30px rgba(15,23,42,.6);animation:pgSheet .3s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-size:19px;font-weight:800;letter-spacing:-.025em">Nova compra</span><span style="font-size:13px;color:#64748B;text-wrap:pretty">Escolha o ponto de partida. Cada documento pode ser criado de forma independente.</span></div>
+        <div style="flex:1"></div>
+        <button onClick="{{ closeModal }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:11px">
+        <sc-for list="{{ paths }}" as="p" hint-placeholder-count="4">
+          <button onClick="{{ p.pick }}" style="{{ p.style }}">
+            <span style="width:40px;height:40px;border-radius:12px;background:{{ p.color }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;letter-spacing:.04em;flex:0 0 auto">{{ p.code }}</span>
+            <div style="min-width:0;display:flex;flex-direction:column;gap:3px;text-align:left"><span style="font-size:14.5px;font-weight:700">{{ p.name }}</span><span style="font-size:12.5px;color:#64748B;line-height:1.4">{{ p.desc }}</span></div>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 13px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD">
+        <span style="width:7px;height:7px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>
+        <span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.4">Nenhum documento anterior é obrigatório. Orçamento, pedido ou recebimento de origem podem ser informados, se existirem.</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeModal }}" style="height:48px;padding:0 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;font-weight:700">Cancelar</button>
+        <button onClick="{{ goPath }}" style="{{ goStyle }}">Continuar</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ detailOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;justify-content:flex-end">
+    <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="{{ drawerStyle }}">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span style="{{ d.chipStyle }}">{{ d.chip }}</span><span style="{{ d.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ d.dot }}"></span>{{ d.status }}</span></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#4338CA">{{ d.no }}</span>
+          <span style="font-size:19px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ d.sup }}</span>
+          <span style="font-size:13.5px;color:#475569;text-wrap:pretty">{{ d.desc }}</span>
+        </div>
+        <button onClick="{{ closeModal }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px">
+        <sc-for list="{{ d.boxes }}" as="c" hint-placeholder-count="3"><div style="{{ c.style }}"><span style="font-size:11.5px;font-weight:600;color:{{ c.lc }}">{{ c.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:clamp(12.5px,1.4vw,15px);font-weight:600;color:{{ c.vc }};overflow-wrap:anywhere">{{ c.v }}</span></div></sc-for>
+      </div>
+
+      <sc-for list="{{ d.bars }}" as="b" hint-placeholder-count="2">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline"><span style="font-size:13px;font-weight:700">{{ b.label }}</span><div style="flex:1"></div><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#64748B">{{ b.text }}</span></div>
+          <div style="height:10px;border-radius:999px;background:#F1F5F9;overflow:hidden"><div style="{{ b.style }}"></div></div>
+        </div>
+      </sc-for>
+      <sc-if value="{{ d.hasNote }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0"><span style="width:4px;align-self:stretch;min-height:28px;border-radius:99px;background:{{ d.noteColor }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:#334155;line-height:1.45">{{ d.note }}</span></div>
+      </sc-if>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Dados do documento</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 14px">
+          <sc-for list="{{ d.info }}" as="i" hint-placeholder-count="6"><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ i.k }}</span><span style="font-size:13.5px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div></sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Documentos relacionados</span>
+        <sc-if value="{{ d.noRel }}" hint-placeholder-val="{{ false }}"><span style="padding:14px;border-radius:13px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#64748B;line-height:1.45">Sem vínculos. Documento criado de forma independente — os vínculos são opcionais.</span></sc-if>
+        <sc-for list="{{ d.rel }}" as="r" hint-placeholder-count="3">
+          <button onClick="{{ r.open }}" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;width:100%;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0;background:#fff;text-align:left" style-hover="border-color:#C7C3FB">
+            <div style="min-width:0;flex:1 1 170px;display:flex;flex-direction:column;gap:4px"><div style="display:flex;align-items:center;gap:8px"><span style="{{ r.chipStyle }}">{{ r.chip }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ r.no }}</span></div><span style="font-size:12.5px;color:#64748B">{{ r.text }}</span></div>
+            <span style="{{ r.pill }}">{{ r.status }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Histórico relacionado</span>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ d.timeline }}" as="t" hint-placeholder-count="3">
+            <div style="display:flex;gap:12px;align-items:stretch">
+              <div style="display:flex;flex-direction:column;align-items:center;width:12px;flex:0 0 auto"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.dot }};margin-top:4px"></span><span style="flex:1;width:2px;background:#E2E8F0"></span></div>
+              <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:14px;min-width:0"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ t.date }}</span><span style="font-size:13px;font-weight:{{ t.weight }};line-height:1.4">{{ t.text }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:9px;padding-top:6px;border-top:1px solid #F1F5F9;margin-top:auto">
+        <sc-for list="{{ d.actions }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100% - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">✓</span>{{ toast }}
+  </div>
+</sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Inicial&quot;,&quot;Filtros aplicados&quot;,&quot;Sem resultado&quot;,&quot;Carregando&quot;,&quot;Menu de criação&quot;,&quot;Detalhe&quot;],&quot;default&quot;:&quot;Inicial&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Desktop&quot;,&quot;Mobile&quot;],&quot;default&quot;:&quot;Desktop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: null, w: 1400, navOpen: false, dataState: 'ready', cur: 'Inicial', tab: null,
+    query: '', openFilter: '', filters: { per: 'Todo o período', sup: 'Todos', obra: 'Todas', st: 'Todas', cat: 'Todas' },
+    sort: { key: 'date', dir: 'desc' }, docs: this.seed(), modal: '', selNo: '', npick: '', toast: ''
+  };
+
+  TODAY = '2026-09-24';
+  CATS = ['Aço e ferragens', 'Cimento e argamassa', 'Concreto usinado', 'Locação de equipamentos', 'Materiais elétricos e hidráulicos', 'Transporte de materiais', 'Serviços terceirizados', 'Madeira e acabamentos'];
+  OBRAS = ['Residencial Jardim Europa', 'Edifício Central', 'Casa Oliveira', 'Reforma Comercial Delta', 'Sem obra (geral)'];
+  TABS = [['Visão geral', 'ov'], ['Orçamentos', 'orc'], ['Pedidos de compra', 'ped'], ['Recebimentos', 'rec'], ['Faturas de compra', 'fat']];
+  TYPE = { orc: ['Orçamento', 'ORC', '#6D5DFB', '#EEF0FE', '#4338CA'], ped: ['Pedido', 'PC', '#3B82F6', '#EFF6FF', '#1D4ED8'], rec: ['Recebimento', 'REC', '#06B6D4', '#ECFEFF', '#0E7490'], fat: ['Fatura', 'FC', '#F97316', '#FFF7ED', '#C2410C'] };
+  STS = {
+    orc: ['Em análise', 'Aguardando decisão', 'Aprovado', 'Recusado', 'Expirado'],
+    ped: ['Rascunho', 'Aguardando entrega', 'Recebido parcialmente', 'Recebido', 'Cancelado'],
+    rec: ['Pendente', 'Parcial', 'Conferido'],
+    fat: ['Rascunho', 'Em aberto', 'Vence em breve', 'Vencido', 'Parcialmente pago', 'Pago']
+  };
+  SC = {
+    'Em análise': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Aguardando decisão': ['#FFFBEB', '#B45309', '#F59E0B'], 'Aprovado': ['#ECFDF5', '#047857', '#10B981'], 'Recusado': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Expirado': ['#F1F5F9', '#64748B', '#94A3B8'],
+    'Rascunho': ['#F1F5F9', '#64748B', '#94A3B8'], 'Aguardando entrega': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Recebido parcialmente': ['#EEF0FE', '#4338CA', '#6D5DFB'], 'Recebido': ['#ECFDF5', '#047857', '#10B981'], 'Cancelado': ['#F1F5F9', '#64748B', '#94A3B8'],
+    'Pendente': ['#FFF7ED', '#C2410C', '#F97316'], 'Parcial': ['#EEF0FE', '#4338CA', '#6D5DFB'], 'Conferido': ['#ECFDF5', '#047857', '#10B981'],
+    'Em aberto': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Vence em breve': ['#FFFBEB', '#B45309', '#F59E0B'], 'Vencido': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Parcialmente pago': ['#EEF0FE', '#4338CA', '#6D5DFB'], 'Pago': ['#ECFDF5', '#047857', '#10B981']
+  };
+  COLS = {
+    orc: [['no', 'Número', 'mono'], ['sup', 'Fornecedor', 'supn'], ['desc', 'Descrição', 'text'], ['obra', 'Obra', 'text'], ['date', 'Data', 'date'], ['valid', 'Validade', 'valid'], ['v', 'Valor estimado', 'eur'], ['status', 'Situação', 'pill'], ['', 'Ações', 'act']],
+    ped: [['no', 'Número', 'mono'], ['sup', 'Fornecedor', 'sup'], ['obra', 'Obra', 'text'], ['date', 'Data', 'date'], ['eta', 'Previsão de entrega', 'eta'], ['v', 'Valor total', 'eur'], ['status', 'Situação do pedido', 'pill'], ['', 'Ações', 'act']],
+    rec: [['no', 'Número', 'mono'], ['sup', 'Fornecedor', 'sup'], ['order', 'Pedido de origem', 'ord'], ['obra', 'Obra', 'text'], ['date', 'Data', 'date'], ['v', 'Recebido', 'recv'], ['status', 'Situação', 'pill'], ['', 'Ações', 'act']],
+    fat: [['no', 'Número', 'mono'], ['sup', 'Fornecedor', 'sup'], ['fiscal', 'Documento fiscal', 'mono'], ['obra', 'Obra', 'text'], ['date', 'Emissão', 'date'], ['due', 'Vencimento', 'date'], ['v', 'Valor total', 'eur'], ['status', 'Situação financeira', 'pill'], ['', 'Ações', 'act']]
+  };
+  GRID = {
+    orc: '1.1fr 1.3fr 2fr 1.5fr .9fr 1fr 1fr 1.4fr 130px', ped: '1.1fr 1.7fr 1.5fr .9fr 1.2fr 1fr 1.5fr 130px',
+    rec: '1.1fr 1.7fr 1.1fr 1.5fr .9fr 1.1fr 1.2fr 130px', fat: '1.1fr 1.7fr 1fr 1.5fr .9fr .9fr 1fr 1.5fr 130px'
+  };
+
+  seed() {
+    const Q = (no, sup, desc, obra, cat, date, valid, v, st) => ({ type: 'orc', no, sup, desc, obra, cat, date, valid, v, st });
+    const P = (no, sup, desc, obra, cat, date, eta, v, quote, st) => ({ type: 'ped', no, sup, desc, obra, cat, date, eta, v, quote: quote || '', st: st || 'Ativo' });
+    const R = (no, sup, desc, order, obra, cat, date, v, qty, st) => ({ type: 'rec', no, sup, desc, order, obra, cat, date, v, qty, st });
+    const F = (no, sup, fiscal, desc, obra, cat, date, due, v, order, recs, fin) => ({ type: 'fat', no, sup, fiscal, desc, obra, cat, date, due, v, order, recs, fin });
+    const EC = 'Edifício Central', RJ = 'Residencial Jardim Europa', CO = 'Casa Oliveira', RD = 'Reforma Comercial Delta', SG = 'Sem obra (geral)';
+    return [
+      Q('ORC-2026-031', 'Fornecedor ABC', 'Aço CA-50 — 20 t', EC, 'Aço e ferragens', '2026-09-18', '2026-10-02', 24800, 'Aguardando decisão'),
+      Q('ORC-2026-030', 'Cimentos do Norte', 'Cimento CP-II e argamassa colante — lote', RJ, 'Cimento e argamassa', '2026-09-15', '2026-09-29', 6150, 'Aguardando decisão'),
+      Q('ORC-2026-029', 'Hidrosul Distribuição', 'Tubulação PVC e conexões — 2.º pavimento', EC, 'Materiais elétricos e hidráulicos', '2026-09-12', '2026-10-12', 7380, 'Em análise'),
+      Q('ORC-2026-028', 'MaqRent', 'Andaime fachadeiro — 45 dias', EC, 'Locação de equipamentos', '2026-09-10', '2026-09-20', 11200, 'Aguardando decisão'),
+      Q('ORC-2026-027', 'Betão Pronto', 'Concreto usinado fck 30 — 140 m³', EC, 'Concreto usinado', '2026-09-02', '2026-09-30', 18600, 'Aprovado'),
+      Q('ORC-2026-026', 'EletroSul', 'Quadros e cabos elétricos', RD, 'Materiais elétricos e hidráulicos', '2026-09-05', '2026-10-05', 8200, 'Em análise'),
+      Q('ORC-2026-025', 'TransLog', 'Transporte de agregados', CO, 'Transporte de materiais', '2026-08-28', '2026-09-27', 1950, 'Recusado'),
+      P('PC-2026-055', 'Fornecedor ABC', 'Ferragens e arames — 3 t', EC, 'Aço e ferragens', '2026-09-23', '2026-09-29', 12400),
+      P('PC-2026-054', 'TransLog', 'Frete de agregados — 12 viagens', CO, 'Transporte de materiais', '2026-09-22', '2026-09-26', 1850, '', 'Rascunho'),
+      P('PC-2026-053', 'Pinturas Nova', 'Pintura externa — medição 2', RJ, 'Serviços terceirizados', '2026-09-08', '2026-09-20', 14200),
+      P('PC-2026-052', 'Betão Pronto', 'Concreto usinado fck 30 — 140 m³', EC, 'Concreto usinado', '2026-09-06', '2026-10-06', 18600, 'ORC-2026-027'),
+      P('PC-2026-051', 'Fornecedor ABC', 'Aço estrutural — 12 t', RJ, 'Aço e ferragens', '2026-09-08', '2026-09-12', 8500),
+      P('PC-2026-050', 'AluBel', 'Esquadrias de alumínio — Bloco C', EC, 'Madeira e acabamentos', '2026-08-28', '2026-10-10', 28900),
+      P('PC-2026-049', 'Madeireira Sul', 'Madeira para fôrmas', RD, 'Madeira e acabamentos', '2026-09-19', '2026-09-30', 9400),
+      P('PC-2026-048', 'Hidrosul Distribuição', 'Tubos e conexões hidráulicas', CO, 'Materiais elétricos e hidráulicos', '2026-09-01', '2026-09-15', 5320),
+      P('PC-2026-047', 'EletroSul', 'Quadros e cabos elétricos', RD, 'Materiais elétricos e hidráulicos', '2026-08-30', '2026-09-20', 7640),
+      P('PC-2026-046', 'Cimentos do Norte', 'Cimento CP-II — 400 sacos', RJ, 'Cimento e argamassa', '2026-09-10', '2026-09-17', 3980),
+      P('PC-2026-045', 'MaqRent', 'Betoneira e vibrador — 30 dias', RJ, 'Locação de equipamentos', '2026-08-18', '2026-08-20', 2100),
+      P('PC-2026-044', 'Fornecedor ABC', 'Revestimentos — pavimento superior', CO, 'Madeira e acabamentos', '2026-08-20', '2026-09-02', 9200),
+      R('REC-2026-068', 'Hidrosul Distribuição', 'Conexões — retirada em balcão', '', CO, 'Materiais elétricos e hidráulicos', '2026-09-23', 480, 'Retirada em balcão', 'Pendente'),
+      R('REC-2026-067', 'Pinturas Nova', 'Medição 2 — pintura externa', 'PC-2026-053', RJ, 'Serviços terceirizados', '2026-09-20', 14200, 'Medição 2', 'Conferido'),
+      R('REC-2026-066', 'EletroSul', 'Quadros e cabos — lote completo', 'PC-2026-047', RD, 'Materiais elétricos e hidráulicos', '2026-09-18', 7640, 'Lote completo', 'Pendente'),
+      R('REC-2026-065', 'Cimentos do Norte', 'Cimento CP-II — 2.ª entrega', 'PC-2026-046', RJ, 'Cimento e argamassa', '2026-09-21', 1990, '200 sacos', 'Conferido'),
+      R('REC-2026-064', 'Betão Pronto', 'Concretagem 2 de 3', 'PC-2026-052', EC, 'Concreto usinado', '2026-09-22', 6200, '46,7 m³', 'Parcial'),
+      R('REC-2026-063', 'Hidrosul Distribuição', 'Tubos e conexões — lote 1 de 2', 'PC-2026-048', CO, 'Materiais elétricos e hidráulicos', '2026-09-14', 3000, 'Lote 1 de 2', 'Parcial'),
+      R('REC-2026-062', 'Cimentos do Norte', 'Cimento CP-II — 1.ª entrega', 'PC-2026-046', RJ, 'Cimento e argamassa', '2026-09-17', 1990, '200 sacos', 'Conferido'),
+      R('REC-2026-061', 'Betão Pronto', 'Concretagem 1 de 3', 'PC-2026-052', EC, 'Concreto usinado', '2026-09-15', 6200, '46,7 m³', 'Conferido'),
+      R('REC-2026-060', 'Fornecedor ABC', 'Aço estrutural — 12 t', 'PC-2026-051', RJ, 'Aço e ferragens', '2026-09-10', 8500, '12 t', 'Conferido'),
+      R('REC-2026-059', 'MaqRent', 'Betoneira e vibrador', 'PC-2026-045', RJ, 'Locação de equipamentos', '2026-08-20', 2100, '2 equipamentos', 'Conferido'),
+      R('REC-2026-058', 'Fornecedor ABC', 'Revestimentos — pavimento superior', 'PC-2026-044', CO, 'Madeira e acabamentos', '2026-08-30', 9200, '180 m²', 'Conferido'),
+      F('FC-2026-052', 'ClimaTec', 'NF 2210', 'Climatização — equipamentos', RD, 'Serviços terceirizados', '2026-09-22', '2026-11-05', 18600, '', [], 'Em aberto'),
+      F('FC-2026-051', 'Hidrosul Distribuição', 'NF 2290', 'Faturamento parcial — lote 1 de 2', CO, 'Materiais elétricos e hidráulicos', '2026-09-23', '2026-10-23', 3000, 'PC-2026-048', ['REC-2026-063'], ''),
+      F('FC-2026-050', 'Pinturas Nova', 'NF 1204', 'Pintura externa — medição 2', RJ, 'Serviços terceirizados', '2026-09-08', '2026-09-20', 14200, 'PC-2026-053', ['REC-2026-067'], 'Parcialmente pago'),
+      F('FC-2026-049', 'Oficina Mecânica Central', 'NF 982', 'Manutenção da retroescavadeira', SG, 'Serviços terceirizados', '2026-09-15', '2026-10-15', 3280, '', [], 'Em aberto'),
+      F('FC-2026-048', 'Guindastes Delta Max', 'NF 3377', 'Guindaste — segundo mês', EC, 'Locação de equipamentos', '2026-09-12', '2026-09-22', 5700, '', [], 'Vencido'),
+      F('FC-2026-047', 'Cimentos do Norte', 'NF 2035', 'Cimento CP-II — 400 sacos', RJ, 'Cimento e argamassa', '2026-09-22', '2026-10-22', 3980, 'PC-2026-046', ['REC-2026-062', 'REC-2026-065'], 'Em aberto'),
+      F('FC-2026-046', 'Madeireira Sul', 'NF 7741', 'Madeira para fôrmas', RD, 'Madeira e acabamentos', '2026-09-19', '2026-10-20', 9400, 'PC-2026-049', [], 'Em aberto'),
+      F('FC-2026-045', 'Fornecedor ABC', 'NF 8842', 'Aço estrutural — 12 t', RJ, 'Aço e ferragens', '2026-09-10', '2026-09-26', 8500, 'PC-2026-051', ['REC-2026-060'], 'Vence em breve'),
+      F('FC-2026-044', 'Betão Pronto', 'NF 5510', 'Concreto usinado — 140 m³', EC, 'Concreto usinado', '2026-09-06', '2026-10-06', 18600, 'PC-2026-052', ['REC-2026-061', 'REC-2026-064'], 'Parcialmente pago'),
+      F('FC-2026-043', 'AluBel', 'NF 6630', 'Esquadrias de alumínio — Bloco C', EC, 'Madeira e acabamentos', '2026-08-28', '2026-09-28', 28900, 'PC-2026-050', [], 'Vence em breve'),
+      F('FC-2026-042', 'MaqRent', 'NF 771', 'Betoneira e vibrador — 30 dias', RJ, 'Locação de equipamentos', '2026-08-18', '2026-09-18', 2100, 'PC-2026-045', ['REC-2026-059'], 'Vencido'),
+      F('FC-2026-040', 'Fornecedor ABC', 'NF 8710', 'Revestimentos — pavimento superior', CO, 'Madeira e acabamentos', '2026-08-25', '2026-09-10', 9200, 'PC-2026-044', ['REC-2026-058'], 'Pago')
+    ];
+  }
+
+  pl(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+  eur(n) { return '€ ' + (n || 0).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  fmtD(s) { if (!s) return '—'; const a = s.split('-'); return a[2] + '/' + a[1] + '/' + a[0]; }
+  ms(s) { const a = s.split('-').map(Number); return Date.UTC(a[0], a[1] - 1, a[2]); }
+  days(a, b) { return Math.round((this.ms(a) - this.ms(b)) / 864e5); }
+  addDays(s, k) { return new Date(this.ms(s) + k * 864e5).toISOString().slice(0, 10); }
+  flash(msg) { clearTimeout(this.tT); this.setState({ toast: msg }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2800); }
+
+  enrich(docs) {
+    const T = this.TODAY, sum = (arr) => Math.round(arr.reduce((a, x) => a + x.v * 100, 0)) / 100;
+    return docs.map(d => {
+      const e = Object.assign({}, d);
+      if (d.type === 'orc') e.status = (d.st === 'Em análise' || d.st === 'Aguardando decisão') && d.valid < T ? 'Expirado' : d.st;
+      else if (d.type === 'ped') {
+        e.recv = sum(docs.filter(x => x.type === 'rec' && x.order === d.no)); e.bill = sum(docs.filter(x => x.type === 'fat' && x.order === d.no));
+        e.status = d.st === 'Rascunho' || d.st === 'Cancelado' ? d.st : (e.recv >= d.v ? 'Recebido' : e.recv > 0 ? 'Recebido parcialmente' : 'Aguardando entrega');
+        e.late = d.eta < T && (e.status === 'Aguardando entrega' || e.status === 'Recebido parcialmente');
+      } else if (d.type === 'rec') e.status = d.st;
+      else e.status = d.fin || 'Rascunho';
+      return e;
+    });
+  }
+
+  related(d, all) {
+    const by = (no) => all.find(x => x.no === no);
+    let r = [];
+    if (d.type === 'orc') r = all.filter(x => x.type === 'ped' && x.quote === d.no);
+    if (d.type === 'ped') r = [by(d.quote)].concat(all.filter(x => x.type === 'rec' && x.order === d.no), all.filter(x => x.type === 'fat' && x.order === d.no));
+    if (d.type === 'rec') r = [by(d.order)].concat(all.filter(x => x.type === 'fat' && x.recs.indexOf(d.no) >= 0));
+    if (d.type === 'fat') r = [by(d.order)].concat(d.recs.map(by));
+    return r.filter(Boolean);
+  }
+
+  setTab = (t) => this.setState({ tab: t, openFilter: '', sort: { key: 'date', dir: 'desc' }, filters: Object.assign({}, this.state.filters, { st: 'Todas' }) });
+  applyState(name) {
+    const D = { per: 'Todo o período', sup: 'Todos', obra: 'Todas', st: 'Todas', cat: 'Todas' };
+    const b = { cur: name, modal: '', navOpen: false, dataState: 'ready', query: '', openFilter: '', filters: D, tab: 'Visão geral', npick: '' };
+    if (name === 'Filtros aplicados') { b.filters = Object.assign({}, D, { obra: 'Edifício Central', per: 'Setembro/2026' }); }
+    if (name === 'Sem resultado') b.query = 'zzz';
+    if (name === 'Carregando') b.dataState = 'loading';
+    if (name === 'Menu de criação') b.modal = 'new';
+    if (name === 'Detalhe') { b.modal = 'detail'; b.selNo = 'PC-2026-052'; }
+    this.setState(b);
+  }
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    this.setState({ w: window.innerWidth });
+    const t = this.props.initialTab;
+    if (t && t !== 'Visão geral') this.setState({ tab: t });
+    const st = this.props.initialState || 'Inicial';
+    if (st !== 'Inicial') this.applyState(st);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tT); clearTimeout(this.rT); }
+
+  renderVals() {
+    const s = this.state, T = this.TODAY;
+    const view = s.view || this.props.initialView || 'Desktop', phone = view === 'Mobile';
+    const W = phone ? 390 : (this.props.vw || s.w), isMobile = W < 1024, isTable = W >= 900;
+    const avail = W - (isMobile ? 0 : 258) - 68;
+    const tabName = s.tab || this.props.initialTab || 'Visão geral';
+    const tabKey = 'ov';
+    const F = s.filters, q = s.query.trim().toLowerCase();
+    const all = this.enrich(s.docs);
+    const selDoc = all.filter(x => x.no === s.selNo)[0] || all[0];
+    const MONTHS = { 'Agosto/2026': '2026-08', 'Setembro/2026': '2026-09' };
+    const perOk = (d) => F.per === 'Todo o período' || (F.per === 'Últimos 30 dias' ? d.date >= this.addDays(T, -30) : d.date.slice(0, 7) === MONTHS[F.per]);
+    const passBase = (d) => perOk(d) && (F.sup === 'Todos' || d.sup === F.sup) && (F.obra === 'Todas' || d.obra === F.obra) && (F.cat === 'Todas' || d.cat === F.cat) &&
+      (!q || (d.no + ' ' + d.sup + ' ' + d.desc + ' ' + (d.fiscal || '')).toLowerCase().includes(q));
+    const fd = all.filter(passBase);
+    const ofType = (t) => fd.filter(d => d.type === t);
+
+    const sumv = (arr, f) => Math.round(arr.reduce((a, x) => a + (f ? f(x) : x.v) * 100, 0)) / 100;
+    const qOpen = ofType('orc').filter(d => d.status === 'Em análise' || d.status === 'Aguardando decisão');
+    const pOpen = ofType('ped').filter(d => d.status === 'Aguardando entrega' || d.status === 'Recebido parcialmente');
+    const rPend = ofType('rec').filter(d => d.status !== 'Conferido');
+    const fAll = ofType('fat');
+    const purchOrders = ofType('ped').filter(d => d.status !== 'Rascunho' && d.status !== 'Cancelado');
+    const purchInv = fAll.filter(d => !d.order && d.status !== 'Rascunho');
+    const purchRec = ofType('rec').filter(d => !d.order && !all.some(f => f.type === 'fat' && f.recs.indexOf(d.no) >= 0));
+    const bought = sumv(purchOrders) + sumv(purchInv) + sumv(purchRec);
+    const perLabel = F.per === 'Todo o período' ? 'todo o período' : F.per.toLowerCase();
+
+    const kpi = (label, value, hint, color, t) => ({ label, value, hint, color, labelColor: t[0], valueColor: t[1], style: 'border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;background:' + t[2] + ';border:1px solid ' + t[3] });
+    const neutral = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], violet = ['#4338CA', '#312E81', '#EEF0FE', '#DDD9FD'], blue = ['#1D4ED8', '#1E3A8A', '#EFF6FF', '#BFDBFE'], cyan = ['#0E7490', '#164E63', '#ECFEFF', '#A5F3FC'], orange = ['#C2410C', '#9A3412', '#FFF7ED', '#FED7AA'], green = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'];
+    const nParc = rPend.filter(d => d.status === 'Parcial').length, nPend = rPend.length - nParc;
+    const kpis = [
+      kpi('Orçamentos em andamento', String(qOpen.length), 'valor estimado ' + this.eur(sumv(qOpen)), '#6D5DFB', violet),
+      kpi('Pedidos de compra em aberto', String(pOpen.length), 'saldo a receber ' + this.eur(sumv(pOpen, d => d.v - d.recv)), '#3B82F6', blue),
+      kpi('Recebimentos pendentes ou parciais', String(rPend.length), this.pl(nParc, 'parcial', 'parciais') + ' · ' + this.pl(nPend, 'pendente', 'pendentes'), '#06B6D4', cyan),
+      kpi('Faturas de compra no período', String(fAll.length), 'total faturado ' + this.eur(sumv(fAll)) + ' · ' + perLabel, '#F97316', orange),
+      kpi('Valor comprado no período', this.eur(bought), 'pedidos ' + this.eur(sumv(purchOrders)) + ' + avulsos ' + this.eur(sumv(purchInv) + sumv(purchRec)) + ' · sem dupla contagem', '#10B981', green)
+    ];
+    const cols = (n, per) => 'display:grid;grid-template-columns:repeat(' + (avail >= n * per ? n : (avail >= Math.ceil(n / 2) * per ? Math.ceil(n / 2) : 1)) + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)';
+
+    const pillSt = (st, extra) => 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + this.SC[st][0] + ';color:' + this.SC[st][1] + ';font-size:12px;font-weight:700;white-space:nowrap;flex:0 0 auto' + (extra || '');
+    const chipSt = (t) => 'display:inline-flex;padding:3px 8px;border-radius:7px;background:' + this.TYPE[t][3] + ';color:' + this.TYPE[t][4] + ';font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap';
+    const ghostBtn = 'height:44px;padding:0 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;white-space:nowrap';
+    const openDoc = (no) => () => this.setState({ modal: 'detail', selNo: no });
+
+    const primary = (d) => {
+      if (d.type === 'orc' && (d.status === 'Em análise' || d.status === 'Aguardando decisão')) return { label: 'Aprovar', run: () => { this.setState(x => ({ docs: x.docs.map(y => y.no === d.no ? Object.assign({}, y, { st: 'Aprovado' }) : y) })); this.flash('Orçamento aprovado (demonstrativo)'); } };
+      if (d.type === 'ped' && (d.status === 'Aguardando entrega' || d.status === 'Recebido parcialmente')) return { label: 'Receber', run: () => this.flash('Registro de recebimento do pedido (demonstrativo)') };
+      if (d.type === 'rec' && d.status === 'Pendente') return { label: 'Conferir', run: () => { this.setState(x => ({ docs: x.docs.map(y => y.no === d.no ? Object.assign({}, y, { st: 'Conferido' }) : y) })); this.flash('Recebimento conferido (demonstrativo)'); } };
+      if (d.type === 'fat' && d.status === 'Rascunho') return { label: 'Lançar', run: () => { this.setState(x => ({ docs: x.docs.map(y => y.no === d.no ? Object.assign({}, y, { fin: 'Em aberto' }) : y) })); this.flash('Fatura lançada no Financeiro (demonstrativo)'); } };
+      return null;
+    };
+    const stop = (fn) => (e) => { if (e && e.stopPropagation) e.stopPropagation(); fn(); };
+    const actStyle = (p) => 'height:36px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;' + (p ? 'background:#EEF0FE;color:#4338CA' : 'background:#F1F5F9;color:#475569');
+    const acts = (d) => { const p = primary(d), a = []; if (p) a.push({ label: p.label, run: stop(p.run), style: actStyle(true) }); a.push({ label: 'Ver', run: stop(openDoc(d.no)), style: actStyle(false) }); return a; };
+
+    const mono = 'font-family:\'JetBrains Mono\',monospace;';
+    const dateSt = mono + 'font-size:12.5px;color:#64748B;white-space:nowrap';
+    const cell = (k, kind, r) => {
+      const c = { box: 'min-width:0;display:flex;flex-direction:column;gap:2px;' + (kind === 'eur' || kind === 'recv' ? 'align-items:flex-end;' : ''), isText: true, isPill: false, isActs: false, style: '', subStyle: 'font-size:11px;color:#64748B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap', text: '', sub: '' };
+      const ell = 'min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+      if (kind === 'mono') { c.text = r[k]; c.style = mono + 'font-size:12.5px;font-weight:600;white-space:nowrap;color:#0F172A'; }
+      else if (kind === 'text') { c.text = r[k]; c.style = 'font-size:13px;color:#334155;' + ell; }
+      else if (kind === 'supn' || kind === 'sup') { c.text = r.sup; c.sub = kind === 'sup' ? r.desc : ''; c.style = 'font-size:14px;font-weight:700;' + ell; }
+      else if (kind === 'date') { c.text = this.fmtD(r[k]); c.style = dateSt; }
+      else if (kind === 'valid') { const d = this.days(r.valid, T), open = r.status === 'Em análise' || r.status === 'Aguardando decisão'; c.text = this.fmtD(r.valid); c.style = dateSt; if (open) { c.sub = d < 0 ? 'expirado' : d === 0 ? 'vence hoje' : this.pl(d, 'dia restante', 'dias restantes'); c.subStyle += ';font-weight:600;color:' + (d <= 7 ? '#B45309' : '#64748B'); } }
+      else if (kind === 'eta') { c.text = this.fmtD(r.eta); c.style = mono + 'font-size:12.5px;white-space:nowrap;color:' + (r.late ? '#B91C1C' : '#64748B') + ';font-weight:' + (r.late ? 700 : 500); if (r.late) { c.sub = this.pl(this.days(T, r.eta), 'dia', 'dias') + ' de atraso'; c.subStyle += ';font-weight:600;color:#B91C1C'; } }
+      else if (kind === 'eur') { c.text = this.eur(r.v); c.style = mono + 'font-size:13.5px;font-weight:600;white-space:nowrap'; if (r.type === 'ped' && r.status === 'Recebido parcialmente') { c.sub = 'receb. ' + this.eur(r.recv); } }
+      else if (kind === 'recv') { c.text = this.eur(r.v); c.sub = r.qty; c.style = mono + 'font-size:13.5px;font-weight:600;white-space:nowrap'; }
+      else if (kind === 'ord') { c.text = r.order || 'Avulso'; c.style = r.order ? mono + 'font-size:12.5px;font-weight:600;color:#1D4ED8;white-space:nowrap' : 'font-size:12.5px;color:#94A3B8;font-style:italic'; }
+      else if (kind === 'pill') { c.isText = false; c.isPill = true; c.text = r.status; c.pill = pillSt(r.status); c.dot = this.SC[r.status][2]; }
+      else if (kind === 'act') { c.isText = false; c.isActs = true; c.acts = acts(r); }
+      return c;
+    };
+
+    const spec = this.COLS[tabKey] || [];
+    let list = tabKey === 'ov' ? [] : ofType(tabKey).filter(d => F.st === 'Todas' || d.status === F.st);
+    const sk = s.sort.key;
+    list = list.slice().sort((a, b) => {
+      const x = sk === 'order' ? (a.order || '') : a[sk], y = sk === 'order' ? (b.order || '') : b[sk];
+      const c = typeof x === 'number' ? x - y : String(x == null ? '' : x).localeCompare(String(y == null ? '' : y));
+      return (c || b.no.localeCompare(a.no)) * (s.sort.dir === 'asc' ? 1 : -1);
+    });
+    const right = ['eur', 'recv'];
+    const rows = list.map(r => {
+      const p = primary(r);
+      const factsMap = {
+        orc: [['Obra', r.obra], ['Data', this.fmtD(r.date)], ['Validade', this.fmtD(r.valid)], ['Valor estimado', this.eur(r.v)]],
+        ped: [['Obra', r.obra], ['Previsão de entrega', this.fmtD(r.eta) + (r.late ? ' · atrasado' : '')], ['Valor total', this.eur(r.v)], ['Recebido', this.eur(r.recv)]],
+        rec: [['Pedido de origem', r.order || 'Avulso'], ['Obra', r.obra], ['Data', this.fmtD(r.date)], ['Recebido', this.eur(r.v) + ' · ' + r.qty]],
+        fat: [['Documento fiscal', r.fiscal], ['Obra', r.obra], ['Vencimento', this.fmtD(r.due)], ['Valor total', this.eur(r.v)]]
+      };
+      return {
+        no: r.no, sup: r.sup, desc: r.desc, status: r.status, pill: pillSt(r.status), dot: this.SC[r.status][2],
+        cells: spec.map(c => cell(c[0], c[2], r)), acts: acts(r), open: openDoc(r.no),
+        facts: factsMap[r.type].map(f => ({ k: f[0], v: f[1], style: (f[0] === 'Obra' || f[0] === 'Pedido de origem' ? 'font-size:13px;' : mono + 'font-size:12.5px;') + 'font-weight:600;overflow-wrap:anywhere' })),
+        rowStyle: 'display:grid;grid-template-columns:' + this.GRID[tabKey] + ';align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s'
+      };
+    });
+    const cols2 = spec.map((c, i) => ({
+      name: c[1], arrow: s.sort.key === c[0] ? (s.sort.dir === 'asc' ? ' ▲' : ' ▼') : '',
+      sort: () => { if (!c[0] || c[2] === 'act') return; this.setState(x => ({ sort: { key: c[0], dir: x.sort.key === c[0] && x.sort.dir === 'desc' ? 'asc' : 'desc' } })); },
+      style: 'text-align:' + (right.indexOf(c[2]) >= 0 ? 'right' : 'left') + ';font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:' + (s.sort.key === c[0] ? '#4338CA' : '#64748B') + ';cursor:' + (c[2] === 'act' ? 'default' : 'pointer') + ';white-space:nowrap;padding:0'
+    }));
+    const totalLabels = { orc: 'Valor estimado listado', ped: 'Valor total listado (sem rascunhos e cancelados)', rec: 'Total recebido listado', fat: 'Total faturado listado' };
+    const totalValue = tabKey === 'ped' ? sumv(list.filter(d => d.status !== 'Rascunho' && d.status !== 'Cancelado')) : sumv(list);
+    const countNames = { orc: ['orçamento', 'orçamentos'], ped: ['pedido', 'pedidos'], rec: ['recebimento', 'recebimentos'], fat: ['fatura', 'faturas'] };
+
+    const mkFilter = (key, label, options) => ({
+      label: label + ':', value: F[key], open: s.openFilter === key,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === key ? '' : key })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' + (F[key] === options[0] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700',
+      options: options.map(o => ({
+        name: o, pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { [key]: o }), openFilter: '' })),
+        style: 'padding:11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:' + (F[key] === o ? 700 : 500) + ';color:' + (F[key] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[key] === o ? '#EEF0FE' : 'transparent')
+      }))
+    });
+    const sups = Array.from(new Set(s.docs.map(d => d.sup))).sort();
+    const filters = [mkFilter('per', 'Período', ['Todo o período', 'Setembro/2026', 'Agosto/2026', 'Últimos 30 dias']), mkFilter('sup', 'Fornecedor', ['Todos'].concat(sups)), mkFilter('obra', 'Obra', ['Todas'].concat(this.OBRAS))];
+    if (tabKey !== 'ov') filters.push(mkFilter('st', 'Situação', ['Todas'].concat(this.STS[tabKey])));
+    filters.push(mkFilter('cat', 'Categoria', ['Todas'].concat(this.CATS)));
+    const DEF = { per: 'Todo o período', sup: 'Todos', obra: 'Todas', st: 'Todas', cat: 'Todas' };
+    const anyFilter = q !== '' || Object.keys(DEF).some(k => F[k] !== DEF[k] && (k !== 'st' || tabKey !== 'ov'));
+
+    const item = (d, sub, subCol) => ({
+      chip: this.TYPE[d.type][0], chipStyle: chipSt(d.type), no: d.no, title: d.sup, sub, subStyle: 'font-size:12px;color:' + (subCol || '#64748B') + ';overflow:hidden;text-overflow:ellipsis;white-space:nowrap',
+      value: this.eur(d.v), status: d.status, pill: pillSt(d.status), open: openDoc(d.no)
+    });
+    const blockBox = (full) => 'flex:' + (full ? '1 1 100%' : '1 1 360px') + ';min-width:0;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:11px';
+    const recent = fd.filter(d => !(d.type === 'ped' && d.status === 'Rascunho')).slice().sort((a, b) => b.date.localeCompare(a.date) || b.no.localeCompare(a.no)).slice(0, 6);
+    const awaiting = ofType('ped').filter(d => d.status === 'Aguardando entrega' || d.status === 'Recebido parcialmente').sort((a, b) => a.eta.localeCompare(b.eta));
+    const partials = ofType('rec').filter(d => d.status === 'Parcial');
+    const decisions = ofType('orc').filter(d => d.status === 'Aguardando decisão').sort((a, b) => a.valid.localeCompare(b.valid));
+    const recentInv = ofType('fat').slice().sort((a, b) => b.date.localeCompare(a.date) || b.no.localeCompare(a.no)).slice(0, 4);
+    const byNo = (no) => all.filter(x => x.no === no)[0];
+    const blocks = [
+      { title: 'Documentos recentes', full: true, list: recent, mk: d => item(d, d.desc + ' · ' + this.fmtD(d.date)), empty: 'Nenhum documento no período.' },
+      { title: 'Pedidos aguardando recebimento', list: awaiting, mk: d => item(d, (d.late ? this.pl(this.days(T, d.eta), 'dia', 'dias') + ' de atraso · ' : 'previsto ' + this.fmtD(d.eta) + ' · ') + 'saldo ' + this.eur(d.v - d.recv), d.late ? '#B91C1C' : '#64748B'), empty: 'Nenhum pedido aguardando entrega.' },
+      { title: 'Recebimentos parciais', list: partials, mk: d => { const o = d.order && byNo(d.order); return item(d, o ? 'pedido ' + o.no + ' · recebido ' + this.eur(o.recv) + ' de ' + this.eur(o.v) : d.desc); }, empty: 'Nenhum recebimento parcial.' },
+      { title: 'Orçamentos aguardando decisão', list: decisions, mk: d => { const n = this.days(d.valid, T); return item(d, n < 0 ? 'validade expirada em ' + this.fmtD(d.valid) : 'validade ' + this.fmtD(d.valid) + ' · ' + (n === 0 ? 'vence hoje' : this.pl(n, 'dia restante', 'dias restantes')), n <= 7 ? '#B45309' : '#64748B'); }, empty: 'Nenhum orçamento aguardando decisão.' },
+      { title: 'Faturas de compra recentes', list: recentInv, mk: d => item(d, d.fiscal + ' · vence ' + this.fmtD(d.due)), empty: 'Nenhuma fatura no período.' }
+    ].map(b => ({ title: b.title, count: b.list.length, style: blockBox(b.full), empty: b.list.length === 0, emptyText: b.empty, items: b.list.map(b.mk) }));
+
+    const obraMap = {};
+    this.OBRAS.forEach(o => { obraMap[o] = { name: o, comprado: 0, receber: 0, faturado: 0 }; });
+    purchOrders.forEach(d => { obraMap[d.obra].comprado += d.v; });
+    purchInv.concat(purchRec).forEach(d => { obraMap[d.obra].comprado += d.v; });
+    pOpen.forEach(d => { obraMap[d.obra].receber += d.v - d.recv; });
+    fAll.filter(d => d.status !== 'Rascunho').forEach(d => { obraMap[d.obra].faturado += d.v; });
+    const orows = Object.keys(obraMap).map(k => obraMap[k]).filter(o => o.comprado > 0 || o.faturado > 0 || o.receber > 0).sort((a, b) => b.comprado - a.comprado);
+    const omax = orows.length ? Math.max(orows[0].comprado, 1) : 1;
+    const obraRows = orows.map(o => ({
+      name: o.name, comprado: this.eur(o.comprado), receber: this.eur(o.receber), faturado: this.eur(o.faturado),
+      bar: 'height:100%;width:' + (o.comprado / omax * 100).toFixed(1) + '%;border-radius:999px;background:linear-gradient(90deg,#6D5DFB,#06B6D4)',
+      pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { obra: x.filters.obra === o.name ? 'Todas' : o.name }) })),
+      style: 'display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:13px;border:1px solid ' + (F.obra === o.name ? '#C7C3FB' : '#F1F5F9') + ';background:' + (F.obra === o.name ? '#EEF0FE' : '#F8FAFC')
+    }));
+
+    const mkSup = () => {
+      const m = {}; const g = (n) => (m[n] = m[n] || { name: n, comprado: 0, receber: 0, faturado: 0 });
+      purchOrders.forEach(x => { g(x.sup).comprado += x.v; }); purchInv.concat(purchRec).forEach(x => { g(x.sup).comprado += x.v; });
+      pOpen.forEach(x => { g(x.sup).receber += x.v - x.recv; }); fAll.filter(x => x.status !== 'Rascunho').forEach(x => { g(x.sup).faturado += x.v; });
+      const arr = Object.keys(m).map(k => m[k]).sort((a, b) => b.comprado - a.comprado).slice(0, 6), mx = arr.length ? Math.max(arr[0].comprado, 1) : 1;
+      return arr.map(o => ({ name: o.name, comprado: this.eur(o.comprado), receber: this.eur(o.receber), faturado: this.eur(o.faturado),
+        bar: 'height:100%;width:' + (o.comprado / mx * 100).toFixed(1) + '%;border-radius:999px;background:linear-gradient(90deg,#06B6D4,#3B82F6)',
+        pick: () => this.setState(x => ({ filters: Object.assign({}, x.filters, { sup: x.filters.sup === o.name ? 'Todos' : o.name }) })),
+        style: 'display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:13px;border:1px solid ' + (F.sup === o.name ? '#C7C3FB' : '#F1F5F9') + ';background:' + (F.sup === o.name ? '#EEF0FE' : '#F8FAFC') }));
+    };
+    const sumCards = [{ title: 'Resumo por obra', rows: obraRows }, { title: 'Resumo por fornecedor', rows: mkSup() }];
+    const toArea = (n) => () => this.flash('Abre a página de ' + n + ' — navegação não conectada nesta etapa');
+    const nDec = ofType('orc').filter(x => x.status === 'Aguardando decisão').length, nLate = pOpen.filter(x => x.late).length;
+    const areas = [
+      { code: 'ORC', name: 'Orçamentos', color: '#6D5DFB', count: String(qOpen.length), label: 'em andamento', sub: this.pl(nDec, 'aguardando decisão', 'aguardando decisão') + ' · valor estimado ' + this.eur(sumv(qOpen)) },
+      { code: 'PC', name: 'Pedidos de compra', color: '#3B82F6', count: String(pOpen.length), label: 'em aberto', sub: 'saldo a receber ' + this.eur(sumv(pOpen, x => x.v - x.recv)) + (nLate ? ' · ' + this.pl(nLate, 'atrasado', 'atrasados') : '') },
+      { code: 'REC', name: 'Recebimentos', color: '#06B6D4', count: String(rPend.length), label: 'pendentes ou parciais', sub: this.pl(nParc, 'parcial', 'parciais') + ' · ' + this.pl(nPend, 'pendente de conferência', 'pendentes de conferência') },
+      { code: 'FC', name: 'Faturas de compra', color: '#F97316', count: String(fAll.length), label: 'no período', sub: 'total faturado ' + this.eur(sumv(fAll)) + ' · ' + this.pl(fAll.filter(x => x.status === 'Rascunho').length, 'não lançada', 'não lançadas') }
+    ].map(a => Object.assign(a, { go: toArea(a.name) }));
+    const buildDetail = () => {
+      const d = selDoc, ty = d.type, rel = this.related(d, all), box = (k, v, t) => ({ k, v, lc: t[0], vc: t[1], style: 'display:flex;flex-direction:column;gap:6px;padding:12px 13px;border-radius:13px;background:' + t[2] + ';border:1px solid ' + t[3] });
+      const pct = (a, b) => b ? Math.min(100, Math.round(a / b * 100)) : 0;
+      let boxes = [], bars = [], note = '', noteColor = '#6D5DFB', info = [];
+      const common = [['Fornecedor', d.sup], ['Obra', d.obra], ['Categoria', d.cat]];
+      if (ty === 'orc') {
+        const n = this.days(d.valid, T);
+        boxes = [box('Valor estimado', this.eur(d.v), violet), box('Validade', this.fmtD(d.valid), neutral), box('Prazo', n < 0 ? 'expirado' : this.pl(n, 'dia', 'dias'), n < 0 ? orange : n <= 7 ? orange : neutral)];
+        info = common.concat([['Data', this.fmtD(d.date)], ['Situação', d.status]]);
+        note = rel.length ? 'Pedido gerado a partir deste orçamento: ' + rel[0].no + '.' : 'Orçamento sem pedido associado. Um pedido pode ser criado depois, mas não é obrigatório.';
+      } else if (ty === 'ped') {
+        boxes = [box('Valor total', this.eur(d.v), neutral), box('Recebido', this.eur(d.recv), cyan), box('Faturado', this.eur(d.bill), orange)];
+        bars = [{ label: 'Recebimento', text: this.eur(d.recv) + ' de ' + this.eur(d.v) + ' · ' + pct(d.recv, d.v) + '%', style: 'height:100%;width:' + pct(d.recv, d.v) + '%;border-radius:999px;background:linear-gradient(90deg,#06B6D4,#3B82F6)' },
+          { label: 'Faturamento', text: this.eur(d.bill) + ' de ' + this.eur(d.v) + ' · ' + pct(d.bill, d.v) + '%', style: 'height:100%;width:' + pct(d.bill, d.v) + '%;border-radius:999px;background:linear-gradient(90deg,#FB923C,#F97316)' }];
+        info = common.concat([['Data', this.fmtD(d.date)], ['Previsão de entrega', this.fmtD(d.eta) + (d.late ? ' · atrasado' : '')], ['Orçamento de origem', d.quote || 'Sem orçamento']]);
+        if (d.bill > 0 && d.bill < d.v) { note = 'Faturamento parcial: ' + this.eur(d.v - d.bill) + ' ainda sem fatura.'; noteColor = '#F97316'; }
+        else if (d.recv > 0 && d.recv < d.v) { note = 'Recebimento parcial: faltam ' + this.eur(d.v - d.recv) + ' a receber, em um ou mais recebimentos.'; noteColor = '#6D5DFB'; }
+      } else if (ty === 'rec') {
+        boxes = [box('Valor recebido', this.eur(d.v), cyan), box('Quantidade', d.qty, neutral), box('Pedido de origem', d.order || 'Avulso', d.order ? blue : neutral)];
+        info = common.concat([['Data', this.fmtD(d.date)], ['Situação', d.status]]);
+        if (!d.order) note = 'Recebimento avulso: registrado sem pedido de origem.';
+        else { const o = byNo(d.order); note = 'Este pedido já recebeu ' + this.eur(o.recv) + ' de ' + this.eur(o.v) + ' em ' + this.pl(all.filter(x => x.type === 'rec' && x.order === o.no).length, 'recebimento', 'recebimentos') + '.'; }
+      } else {
+        boxes = [box('Valor total', this.eur(d.v), neutral), box('Emissão', this.fmtD(d.date), neutral), box('1.º vencimento', this.fmtD(d.due), d.status === 'Vencido' ? orange : neutral)];
+        info = common.concat([['Documento fiscal', d.fiscal], ['Situação financeira', d.status === 'Rascunho' ? 'Não lançada' : d.status], ['Pedido de origem', d.order || 'Sem pedido']]);
+        note = d.status === 'Rascunho' ? 'Fatura ainda não lançada. Depois de lançada, parcelas, vencimentos e pagamentos são acompanhados no Financeiro, em Contas a pagar.' : 'Parcelas, vencimentos e pagamentos desta fatura são acompanhados no Financeiro, em Contas a pagar. Situação atual: ' + d.status + '.';
+        noteColor = '#F97316';
+      }
+      const evt = { orc: 'Orçamento criado', ped: 'Pedido emitido', rec: 'Recebimento registrado', fat: 'Fatura emitida' };
+      const timeline = [{ date: d.date, text: evt[ty] + ' · ' + d.no, dot: '#6D5DFB', weight: 700 }].concat(rel.map(r => ({ date: r.date, text: evt[r.type] + ' · ' + r.no + (r.type === 'rec' || r.type === 'fat' ? ' · ' + this.eur(r.v) : ''), dot: this.TYPE[r.type][2], weight: 500 })))
+        .sort((a, b) => a.date.localeCompare(b.date)).map(t => ({ date: this.fmtD(t.date), text: t.text, dot: t.dot, weight: t.weight }));
+      const act = (label, run, kind) => ({ label, run, style: 'height:46px;padding:0 17px;border-radius:12px;font-size:13.5px;font-weight:700;' + (kind === 'p' ? 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff' : kind === 'd' ? 'border:1px solid #FECACA;background:#FEF2F2;color:#B91C1C' : 'border:1px solid #E2E8F0;background:#fff') });
+      const pm = primary(d), actions = [];
+      if (pm) actions.push(act(pm.label, pm.run, 'p'));
+      if (ty === 'orc' && pm) actions.push(act('Recusar', () => { this.setState(x => ({ docs: x.docs.map(y => y.no === d.no ? Object.assign({}, y, { st: 'Recusado' }) : y) })); this.flash('Orçamento recusado (demonstrativo)'); }, 'd'));
+      if (ty === 'ped' && d.status !== 'Cancelado' && d.status !== 'Rascunho' && d.bill < d.v) actions.push(act('Criar fatura', () => this.flash('Fatura de compra a partir do pedido (demonstrativo)')));
+      actions.push(act('Editar', () => this.flash('Edição de ' + this.TYPE[ty][0].toLowerCase() + ' (demonstrativo)')));
+      return {
+        chip: this.TYPE[ty][0], chipStyle: chipSt(ty), no: d.no, sup: d.sup, desc: d.desc, status: d.status, pill: pillSt(d.status), dot: this.SC[d.status][2],
+        boxes, bars, hasNote: !!note, note, noteColor, info: info.map(i => ({ k: i[0], v: i[1] })),
+        noRel: rel.length === 0, rel: rel.map(r => ({ chip: this.TYPE[r.type][0], chipStyle: chipSt(r.type), no: r.no, text: r.desc + ' · ' + this.eur(r.v), status: r.status, pill: pillSt(r.status), open: openDoc(r.no) })),
+        timeline, actions
+      };
+    };
+    const d = s.modal === 'detail' ? buildDetail() : buildDetail();
+
+    const PATHS = [['orc', 'Criar orçamento', 'Registre uma cotação de fornecedor para decidir depois.'], ['ped', 'Criar pedido de compra', 'Emita um pedido, com ou sem orçamento aprovado.'], ['rec', 'Registrar recebimento', 'Dê entrada em materiais, mesmo sem pedido de origem.'], ['fat', 'Criar fatura de compra', 'Lance a fatura do fornecedor, sem exigir pedido ou recebimento.']];
+    const paths = PATHS.map(p => { const on = s.npick === p[0]; return { name: p[1], desc: p[2], code: this.TYPE[p[0]][1], color: this.TYPE[p[0]][2], pick: () => this.setState({ npick: p[0] }), style: 'display:flex;align-items:flex-start;gap:13px;padding:15px;border-radius:15px;border:1px solid ' + (on ? this.TYPE[p[0]][2] : '#E2E8F0') + ';background:' + (on ? this.TYPE[p[0]][3] : '#fff') + ';transition:background .16s,border-color .16s' }; });
+    const loading = s.dataState === 'loading';
+    const hasData = tabKey === 'ov' ? fd.length > 0 : list.length > 0;
+
+    return {
+      isMobile, isTable, isCards: !isTable,
+      states: ['Inicial', 'Filtros aplicados', 'Sem resultado', 'Carregando', 'Menu de criação', 'Detalhe'].map(n => ({ name: n, pick: () => this.applyState(n), style: 'height:34px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid ' + (s.cur === n ? '#6D5DFB' : '#E2E8F0') + ';background:' + (s.cur === n ? '#EEF0FE' : '#fff') + ';color:' + (s.cur === n ? '#4338CA' : '#475569') })),
+      views: ['Desktop', 'Mobile'].map(n => ({ name: n, pick: () => this.setState({ view: n, navOpen: false }), style: 'height:30px;padding:0 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:' + (view === n ? '#fff' : 'transparent') + ';color:' + (view === n ? '#4338CA' : '#64748B') })),
+      stageStyle: phone ? 'flex:1;display:flex;justify-content:center;padding:28px 12px' : 'flex:1;display:flex;flex-direction:column',
+      frameStyle: phone ? 'width:390px;height:844px;flex:0 0 auto;border-radius:46px;border:10px solid #0F172A;overflow:hidden;position:relative;transform:translateZ(0);background:#F8FAFC;box-shadow:0 40px 80px -30px rgba(15,23,42,.5)' : 'flex:1;display:flex;flex-direction:column;position:relative',
+      scrollStyle: phone ? 'position:absolute;inset:0;overflow-y:auto;overflow-x:hidden' : 'flex:1;display:flex;flex-direction:column',
+      appStyle: 'display:flex;flex:1;min-height:' + (phone ? '100%' : 'calc(100vh - 56px)') + ';background:#F8FAFC;color:#0F172A;font-family:\'Plus Jakarta Sans\',system-ui,sans-serif',
+      showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen && isMobile,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:calc(100vh - 56px);flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      navGroups: [['Comercial', '#EC4899', ['CRM', 'Leads', 'Oportunidades']], ['Clientes', '#3B82F6', ['Clientes', 'Contatos']], ['Projetos', '#F97316', ['Projetos / Obras', 'Tarefas']], ['Compras', '#06B6D4', ['Central de Compras']], ['Financeiro', '#10B981', ['Visão geral', 'Contas a receber', 'Contas a pagar', 'Faturas', 'Fluxo de caixa']], ['Relatórios', '#8B5CF6', ['Consultas e Relatórios']], ['Configurações', '#64748B', ['Empresa', 'Usuários']]].map(g => ({
+        name: g[0], dot: g[1], open: g[0] === 'Compras',
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        items: g[2].map(n => ({ name: n, style: 'display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:13px;font-weight:700;color:#fff;background:rgba(109,93,251,.26)', dotStyle: 'width:5px;height:5px;border-radius:50%;background:#6D5DFB' }))
+      })),
+      ghostBtn, todayLabel: this.fmtD(T),
+      tabs: this.TABS.map(t => {
+        const on = tabName === t[0], n = t[1] === 'ov' ? 0 : ofType(t[1]).length;
+        return { name: t[0], pick: () => this.setTab(t[0]), hasCount: t[1] !== 'ov', count: String(n), badge: 'margin-left:8px;padding:2px 8px;border-radius:999px;font-family:\'JetBrains Mono\',monospace;font-size:10.5px;font-weight:600;background:' + (on ? '#EEF0FE' : '#F1F5F9') + ';color:' + (on ? '#4338CA' : '#64748B'),
+          style: 'flex:0 0 auto;display:flex;align-items:center;padding:12px 16px;border-radius:11px 11px 0 0;font-size:14px;font-weight:' + (on ? 700 : 600) + ';color:' + (on ? '#4338CA' : '#64748B') + ';background:' + (on ? '#F8FAFC' : 'transparent') + ';border:1px solid ' + (on ? '#E2E8F0' : 'transparent') + ';border-bottom:1px solid ' + (on ? '#F8FAFC' : 'transparent') + ';margin-bottom:-1px;white-space:nowrap' };
+      }),
+      openNew: () => this.setState({ modal: 'new', npick: '' }),
+      doRefresh: () => { clearTimeout(this.rT); this.setState({ dataState: 'loading', cur: 'Carregando' }); this.rT = setTimeout(() => { this.setState({ dataState: 'ready', cur: 'Inicial' }); this.flash('Dados demonstrativos atualizados'); }, 1000); },
+      doExport: () => {
+        const src = tabKey === 'ov' ? fd : list;
+        try {
+          const head = ['Tipo', 'Número', 'Fornecedor', 'Descrição', 'Obra', 'Categoria', 'Data', 'Valor', 'Situação'];
+          const csv = [head].concat(src.map(r => [this.TYPE[r.type][0], r.no, r.sup, r.desc, r.obra, r.cat, this.fmtD(r.date), r.v.toFixed(2), r.status])).map(l => l.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';')).join('\n');
+          const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' })); a.download = 'compras-demonstrativo.csv'; a.click();
+        } catch (e) { /* demo */ }
+        this.flash('Exportação demonstrativa: ' + this.pl(src.length, 'registro', 'registros'));
+      },
+      stLoading: loading, stReady: !loading, sk5: [1, 2, 3, 4, 5], sk7: [1, 2, 3, 4, 5, 6, 7],
+      kpiGrid: cols(5, 190), kpis,
+      query: s.query, hasQuery: s.query !== '', onQuery: (e) => this.setState({ query: e.target.value }), clearQuery: () => this.setState({ query: '' }),
+      filters, anyFilter, clearAll: () => this.setState({ query: '', openFilter: '', filters: DEF }),
+      noRows: !hasData, showOverview: tabKey === 'ov' && hasData, showTable: tabKey !== 'ov' && hasData,
+      blocks, obraRows, sumCards, areas, areaGrid: cols(4, 230),
+      gridHead: 'display:grid;grid-template-columns:' + (this.GRID[tabKey] || '1fr') + ';gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
+      cols: cols2, rows,
+      countLabel: tabKey === 'ov' ? '' : this.pl(list.length, countNames[tabKey][0] + ' listado', countNames[tabKey][1] + ' listados'),
+      totalLabel: totalLabels[tabKey] || '', totalValue: this.eur(totalValue),
+      newOpen: s.modal === 'new', paths, closeModal: () => this.setState({ modal: '' }),
+      goStyle: 'height:48px;padding:0 24px;border-radius:12px;font-size:15px;font-weight:700;color:#fff;background:' + (s.npick ? 'linear-gradient(135deg,#6D5DFB,#5145CD)' : '#A5B4FC') + (s.npick ? ';box-shadow:0 14px 28px -14px rgba(109,93,251,1)' : ''),
+      goPath: () => { if (!s.npick) { this.flash('Escolha um caminho para continuar'); return; } const p = PATHS.filter(x => x[0] === s.npick)[0]; this.setState({ modal: '' }); this.flash(p[1] + ' — formulário demonstrativo'); },
+      detailOpen: s.modal === 'detail', d,
+      drawerStyle: 'position:relative;width:' + (phone || W < 600 ? '100%' : 'min(580px,100%)') + ';height:100%;overflow-y:auto;background:#fff;border-left:1px solid #E2E8F0;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:20px;box-shadow:-30px 0 70px -30px rgba(15,23,42,.5);animation:pgDrawer .3s cubic-bezier(.22,.7,.2,1)',
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

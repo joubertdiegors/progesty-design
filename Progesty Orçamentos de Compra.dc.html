@@ -35,7 +35,7 @@ input,select,textarea{font-family:inherit}
 </helmet>
 <div style="min-height:100vh;background:#E8ECF3;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column">
 
-<div style="background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,2vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+<div data-pg-bar="1" style="background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,2vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
   <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Estado</span>
   <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ states }}" as="x" hint-placeholder-count="7"><button onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.name }}</button></sc-for></div>
   <div style="flex:1"></div>
@@ -431,12 +431,20 @@ class Component extends DCLogic {
 
   onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
   componentDidMount() { window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth }); const st = this.props.initialState || 'Inicial'; if (st !== 'Inicial') this.applyState(st); }
-  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tT); clearTimeout(this.rT); }
+  trackDirty() {
+    const s = this.state, inForm = s.modal === 'form';
+    if (inForm && !this.wasForm) this.snap = JSON.stringify(s.f);
+    this.wasForm = inForm;
+    const dirty = !!(inForm && JSON.stringify(s.f) !== this.snap);
+    if (dirty !== !!this.lastDirty) { this.lastDirty = dirty; const cb = this.props.dirtyCb; if (cb) setTimeout(() => cb(dirty), 0); }
+  }
+  componentWillUnmount() { if (this.props.dirtyCb && this.lastDirty) this.props.dirtyCb(false); window.removeEventListener('resize', this.onResize); clearTimeout(this.tT); clearTimeout(this.rT); }
 
   renderVals() {
+    this.trackDirty();
     const s = this.state, T = this.TODAY, T7 = this.addDays(T, 7);
     const view = s.view || this.props.initialView || 'Desktop', phone = view === 'Mobile';
-    const W = phone ? 390 : s.w, isMobile = W < 1024, isTable = W >= 900, avail = W - (isMobile ? 0 : 258) - 68;
+    const W = phone ? 390 : (this.props.vw || s.w), isMobile = W < 1024, isTable = W >= 900, avail = W - (isMobile ? 0 : 258) - 68;
     const F = s.filters, q = s.query.trim().toLowerCase();
     const all = s.empty ? [] : this.enrich(s.recs), full = this.enrich(s.recs);
     const sel = full.filter(x => x.no === s.selNo)[0] || full[0];
