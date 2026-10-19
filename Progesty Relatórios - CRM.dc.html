@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select{font-family:inherit}
+input:focus,select:focus{outline:2px solid #6D5DFB;outline-offset:0}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+@media screen{.pg-printonly{display:none !important}}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  .pg-noprint,aside,header{display:none !important}
+  html,body{background:#fff !important}
+  .pg-printfit{overflow:visible !important}
+}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll pg-noprint" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:500;color:#CBD5E1">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto"><span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span></span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <sc-if value="{{ g.isChart }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-end;gap:2px;height:13px"><span style="width:3px;height:6px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:13px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:9px;border-radius:1px;background:{{ g.dot }}"></span></span></sc-if>
+              <sc-if value="{{ g.notChart }}" hint-placeholder-val="{{ true }}"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></sc-if>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span><span style="flex:1;text-align:left">{{ it.name }}</span></button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Ana Duarte</span><span style="font-size:11px;color:#94A3B8">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div class="pg-noprint" onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+  <header class="pg-noprint" style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,30px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:12px;font-weight:700;color:#64748B">Relatórios / CRM / Comercial</span>
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Relatórios - CRM</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Leads, oportunidades, propostas, pipeline e conversão comercial.</p>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(14px,2vw,22px) clamp(16px,2.4vw,30px) 8px;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);min-width:0">
+
+    <div class="pg-noprint" style="{{ cardGrid }}">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="9">
+        <div style="{{ c.style }}">
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="width:38px;height:38px;border-radius:12px;background:{{ c.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="display:flex;align-items:flex-end;gap:2.5px;height:16px"><span style="width:4px;height:8px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:16px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:11px;border-radius:1.5px;background:{{ c.color }}"></span></span></span>
+            <span style="font-size:15px;font-weight:800;letter-spacing:-.02em;line-height:1.25">{{ c.title }}</span>
+          </div>
+          <span style="font-size:13px;color:#64748B;line-height:1.5;text-wrap:pretty;flex:1">{{ c.desc }}</span>
+          <button onClick="{{ c.pick }}" style="{{ c.btnStyle }}">Gerar relatório</button>
+        </div>
+      </sc-for>
+    </div>
+
+    <div id="cfg" class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+      <sc-if value="{{ hasRep }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px">
+            <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Configurar relatório</span><span style="font-size:18px;font-weight:800;letter-spacing:-.025em">{{ repTitle }}</span></div>
+            <button onClick="{{ closeRep }}" style="padding:9px 14px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:12.5px;font-weight:700;color:#475569">Fechar</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px">
+            <sc-if value="{{ showPeriod }}" hint-placeholder-val="{{ true }}">
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período inicial</span><input type="date" value="{{ fromIso }}" onChange="{{ onFrom }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período final</span><input type="date" value="{{ toIso }}" onChange="{{ onTo }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+            </sc-if>
+            <sc-for list="{{ selects }}" as="sl" hint-placeholder-count="6">
+              <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:11.5px;font-weight:700;color:#475569">{{ sl.label }}</span>
+                <select value="{{ sl.value }}" onChange="{{ sl.onChange }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;color:#0F172A;max-width:240px">
+                  <sc-for list="{{ sl.options }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.t }}</option></sc-for>
+                </select>
+              </label>
+            </sc-for>
+            <label style="display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 200px;max-width:280px"><span style="font-size:11.5px;font-weight:700;color:#475569">Pesquisar</span><input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Nome, oportunidade ou empresa" style="height:42px;padding:0 12px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;color:#0F172A"></label>
+          </div>
+          <sc-if value="{{ periodErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ periodErr }}</span></sc-if>
+          <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">{{ periodHint }}</span>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+            <button onClick="{{ generate }}" style="{{ genStyle }}">
+              <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}"><span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span></sc-if>
+              {{ genLabel }}
+            </button>
+            <button onClick="{{ clearFilters }}" style="padding:12px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:#475569;white-space:nowrap">Limpar filtros</button>
+            <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;background:#FFFBEB;border:1px solid #FDE68A;font-size:11.5px;font-weight:700;color:#B45309"><span style="width:6px;height:6px;border-radius:50%;background:#F59E0B"></span>Filtros alterados — gere novamente</span></sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px"><sc-for list="{{ skeletons }}" as="k" hint-placeholder-count="4"><div class="pg-sk" style="height:92px;border-radius:16px"></div></sc-for></div>
+        <div class="pg-sk" style="height:280px;border-radius:18px"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(26px,4vw,48px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+        <span style="width:56px;height:56px;border-radius:18px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:20px;height:20px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">Nenhum registro encontrado</span>
+        <span style="font-size:14px;color:#64748B;max-width:52ch;text-wrap:pretty">{{ emptyText }}</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-printonly" style="padding-bottom:6px;border-bottom:1.5px solid #0F172A">
+        <div style="font-size:17px;font-weight:800">Progesty — {{ repTitle }}</div>
+        <div style="font-size:11px;color:#334155">{{ printMeta }}</div>
+      </div>
+
+      <div class="pg-noprint" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;letter-spacing:-.02em">{{ repTitle }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ metaShort }}</span></div>
+        <button onClick="{{ doPrint }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155">Imprimir</button>
+        <button onClick="{{ doCsv }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155;white-space:nowrap">Exportar CSV</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:clamp(10px,1.2vw,14px)">
+        <sc-for list="{{ kpis }}" as="kp" hint-placeholder-count="5">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:14px 15px;display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:2px;background:{{ kp.color }};flex:0 0 auto"></span><span style="font-size:12px;font-weight:600;color:#475569">{{ kp.label }}</span></span>
+            <span style="font-size:clamp(19px,2vw,24px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums">{{ kp.value }}</span>
+            <span style="font-size:11px;font-weight:600;color:#64748B">{{ kp.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ hasNotes }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ notes }}" as="nt" hint-placeholder-count="2">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:13px;background:{{ nt.bg }};border:1px solid {{ nt.bd }}"><span style="width:20px;height:20px;border-radius:6px;background:{{ nt.iconBg }};color:{{ nt.color }};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:0 0 auto">{{ nt.icon }}</span><span style="font-size:12.5px;line-height:1.45;color:{{ nt.color }};text-wrap:pretty">{{ nt.t }}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasBars }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:12px;break-inside:avoid">
+          <span style="font-size:14px;font-weight:800;letter-spacing:-.02em">{{ chartTitle }}</span>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="5">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;align-items:baseline;gap:10px"><span style="min-width:0;flex:1;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;white-space:nowrap">{{ b.value }}</span></div>
+                <div style="height:9px;border-radius:99px;background:#F1F5F9;overflow:hidden"><div style="{{ b.bar }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden">
+        <div class="pg-noprint" style="padding:14px 16px;border-bottom:1px solid #F1F5F9;font-size:12px;color:#64748B">{{ tableCount }}</div>
+        <div class="pg-scroll pg-printfit" style="overflow-x:auto">
+          <div style="{{ tInner }}">
+            <div style="{{ tGrid }};background:#F8FAFC;border-bottom:1px solid #E2E8F0">
+              <sc-for list="{{ tHeads }}" as="th" hint-placeholder-count="6"><button onClick="{{ th.sort }}" style="{{ th.style }}">{{ th.t }}<span style="font-size:9px;color:#6D5DFB">{{ th.arrow }}</span></button></sc-for>
+            </div>
+            <sc-for list="{{ tRows }}" as="r" hint-placeholder-count="10">
+              <div style="{{ r.style }}">
+                <sc-for list="{{ r.cells }}" as="cl" hint-placeholder-count="6">
+                  <span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="{{ cl.textStyle }}">{{ cl.t }}</span><sc-if value="{{ cl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.subStyle }}">{{ cl.sub }}</span></sc-if></span>
+                </sc-for>
+              </div>
+            </sc-for>
+            <div style="{{ tGrid }};background:#F8FAFC;border-top:2px solid #E2E8F0">
+              <sc-for list="{{ tTotals }}" as="tt" hint-placeholder-count="6"><span style="{{ tt.style }}">{{ tt.t }}</span></sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="pg-noprint" style="font-size:11.5px;color:#64748B;line-height:1.5;text-wrap:pretty">Dados fictícios para demonstração, copiados do CRM do protótipo, sem sincronização real. Valores estimados e ponderados são previsão comercial — não representam receita faturada.</span>
+    </sc-if>
+  </div>
+
+  <div class="pg-noprint" style="padding:0 clamp(16px,2.4vw,30px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="10"><button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button></sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:13px 19px;border-radius:14px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)"><span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">{{ toastMark }}</span>{{ toast }}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialReport&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;resumo&quot;,&quot;pipeline&quot;,&quot;conversao&quot;,&quot;resp&quot;,&quot;prop&quot;,&quot;perdas&quot;,&quot;origem&quot;,&quot;ativ&quot;,&quot;prev&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    w: 1400, navOpen: false, active: 'CRM / Comercial',
+    open: { Comercial: false, Clientes: false, Projetos: false, Pessoas: false, Financeiro: false, 'Relatórios': true, 'Configurações': false },
+    rep: null, f: this.freshF(), applied: null, status: 'idle', sort: { k: -1, dir: 1 }, toast: '', toastOk: true
+  };
+
+  get NAV() {
+    return [
+      { name: 'Comercial', dot: '#EC4899', items: ['CRM', 'Leads', 'Oportunidades'] },
+      { name: 'Clientes', dot: '#3B82F6', items: ['Clientes', 'Contatos'] },
+      { name: 'Projetos', dot: '#F97316', items: ['Projetos / Obras', 'Planning', 'Controle de Horas', 'Tarefas'] },
+      { name: 'Pessoas', dot: '#06B6D4', items: ['Funcionários', 'Terceirizados', 'Veículos'] },
+      { name: 'Financeiro', dot: '#10B981', items: ['Contas a Receber', 'Contas a Pagar', 'Faturas', 'Fluxo de Caixa'] },
+      { name: 'Relatórios', dot: '#8B5CF6', chart: true, items: ['Consultas e Relatórios', 'Horas', 'Custos', 'Logística', 'Obras', 'RH', 'CRM / Comercial'] },
+      { name: 'Configurações', dot: '#64748B', items: ['Empresa', 'Usuários', 'Gestão de Acessos'] }
+    ];
+  }
+
+  /* Espelha Progesty CRM.dc.html: 12 oportunidades (estágios Lead…Perdido) e 5 leads. */
+  STAGES = ['Lead', 'Qualificação', 'Proposta', 'Negociação', 'Ganho'];
+  SCOL = { 'Lead': '#3B82F6', 'Qualificação': '#EC4899', 'Proposta': '#6D5DFB', 'Negociação': '#F97316', 'Ganho': '#10B981', 'Perdido': '#EF4444' };
+  OPPS = [
+    { n: 'Condomínio Vila Real', v: 46000, stage: 'Lead', client: 'Construtora Horizonte', who: 'Carlos Mendes', prob: 20, origin: 'Website', created: '14/09/2026', last: '19/09/2026', due: '10/10/2026', next: 'Agendar visita técnica' },
+    { n: 'Retrofit Torre Norte', v: 32000, stage: 'Lead', client: 'Grupo Central Engenharia', who: 'João Silva', prob: 15, origin: 'Indicação', created: '12/09/2026', last: '10/09/2026', due: '18/10/2026', next: 'Primeiro contato' },
+    { n: 'Galpão Logístico Sul', v: 58000, stage: 'Qualificação', client: 'Reformas Delta', who: 'Ana Duarte', prob: 35, origin: 'Evento', created: '08/09/2026', last: '18/09/2026', due: '02/10/2026', next: 'Levantar escopo' },
+    { n: 'Casa Ribeiro', v: 24000, stage: 'Qualificação', client: 'Maria Oliveira', who: 'Carlos Mendes', prob: 40, origin: 'Telefone', created: '05/09/2026', last: '09/09/2026', due: '28/09/2026', next: 'Confirmar orçamento' },
+    { n: 'Ampliação da sede', v: 120000, stage: 'Proposta', client: 'Grupo Central Engenharia', who: 'João Silva', prob: 55, origin: 'Indicação', created: '28/08/2026', last: '20/09/2026', due: '26/09/2026', next: 'Acompanhar resposta' },
+    { n: 'Escritório Meir', v: 12000, stage: 'Proposta', client: 'Maria Oliveira', who: 'Ana Duarte', prob: 50, origin: 'Redes sociais', created: '02/09/2026', last: '17/09/2026', due: '30/09/2026', next: 'Revisar proposta' },
+    { n: 'Reforma Comercial Delta', v: 128000, stage: 'Negociação', client: 'Reformas Delta', who: 'Carlos Mendes', prob: 70, origin: 'Website', created: '18/08/2026', last: '21/09/2026', due: '25/09/2026', next: 'Enviar proposta revisada' },
+    { n: 'Residencial Jardim Europa', v: 185000, stage: 'Ganho', client: 'Construtora Horizonte', who: 'Carlos Mendes', prob: 100, origin: 'Indicação', created: '10/01/2026', last: '28/02/2026', due: '05/03/2026', next: '' },
+    { n: 'Casa Oliveira', v: 96000, stage: 'Ganho', client: 'Maria Oliveira', who: 'Rafael Lima', prob: 100, origin: 'Website', created: '04/12/2025', last: '09/02/2026', due: '11/02/2026', next: '' },
+    { n: 'Edifício Sul', v: 74000, stage: 'Perdido', client: 'Grupo Central Engenharia', who: 'João Silva', prob: 0, origin: 'Website', created: '02/07/2026', last: '19/08/2026', due: '20/08/2026', next: '', reason: 'Preço' },
+    { n: 'Reforma Praça Central', v: 28000, stage: 'Perdido', client: 'Reformas Delta', who: 'Ana Duarte', prob: 0, origin: 'E-mail', created: '20/06/2026', last: '11/08/2026', due: '12/08/2026', next: '', reason: 'Sem resposta' },
+    { n: 'Depósito Leste', v: 41000, stage: 'Perdido', client: 'Construtora Horizonte', who: 'Carlos Mendes', prob: 0, origin: 'Evento', created: '11/06/2026', last: '29/07/2026', due: '30/07/2026', next: '', reason: 'Concorrência' }
+  ];
+  LEADS = [
+    { n: 'Pedro Almeida', company: 'Almeida Construções', origin: 'Website', who: 'Carlos Mendes', date: '20/09/2026', status: 'Novo', next: 'Primeiro contato' },
+    { n: 'Sofia Martins', company: 'Reformas Delta', origin: 'Indicação', who: 'Ana Duarte', date: '19/09/2026', status: 'Em contato', next: 'Agendar reunião' },
+    { n: 'Luc Vermeulen', company: 'Vermeulen Bouw', origin: 'Evento', who: 'João Silva', date: '18/09/2026', status: 'Qualificado', next: 'Preparar proposta' },
+    { n: 'Inês Carvalho', company: 'IC Engenharia', origin: 'Redes sociais', who: 'Carlos Mendes', date: '17/09/2026', status: 'Novo', next: 'Primeiro contato' },
+    { n: 'Thomas Dubois', company: 'Dubois Rénovation', origin: 'Telefone', who: 'Ana Duarte', date: '15/09/2026', status: 'Descartado', next: 'Sem interesse no momento' }
+  ];
+  LSTATUS = ['Novo', 'Em contato', 'Qualificado', 'Convertido', 'Descartado'];
+  REASONS = ['Preço', 'Prazo', 'Concorrência', 'Cliente desistiu', 'Projeto cancelado', 'Sem resposta', 'Outro'];
+  ORIGINS = ['Website', 'Indicação', 'Telefone', 'E-mail', 'Redes sociais', 'Evento', 'Outro'];
+  TODAY = '21/09/2026';
+  MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+  REPORTS = [
+    { id: 'resumo', title: 'Resumo comercial', desc: 'Leads, oportunidades abertas, pipeline, propostas pendentes e oportunidades ganhas.', color: '#6D5DFB', bg: '#EEF0FE', date: 'created', lead: true },
+    { id: 'pipeline', title: 'Pipeline de oportunidades', desc: 'Quantidade e valor por etapa: Lead, Qualificação, Proposta, Negociação e Ganho.', color: '#EC4899', bg: '#FDF2F8', date: 'created' },
+    { id: 'conversao', title: 'Conversão comercial', desc: 'Avanço entre etapas e taxas de ganho e perda, com a base de cada percentual.', color: '#10B981', bg: '#ECFDF5', date: 'created' },
+    { id: 'resp', title: 'Oportunidades por responsável', desc: 'Quantidade, valor estimado, valor ponderado e resultados de cada responsável.', color: '#3B82F6', bg: '#EFF6FF', date: 'created' },
+    { id: 'prop', title: 'Propostas comerciais', desc: 'Propostas aguardando resposta, conforme o estado existente no CRM.', color: '#F59E0B', bg: '#FFFBEB', date: 'created' },
+    { id: 'perdas', title: 'Motivos de perda', desc: 'Oportunidades perdidas por motivo, com quantidade e valor.', color: '#EF4444', bg: '#FEF2F2', date: 'created' },
+    { id: 'origem', title: 'Origem dos leads', desc: 'Volume e conversão por origem, em leads e em oportunidades.', color: '#06B6D4', bg: '#ECFEFF', date: 'created', lead: true },
+    { id: 'ativ', title: 'Atividades e follow-ups', desc: 'Oportunidades sem atividade recente, próximas ações e fechamentos previstos.', color: '#F97316', bg: '#FFF7ED', date: 'none' },
+    { id: 'prev', title: 'Previsão comercial', desc: 'Valor estimado e ponderado das oportunidades abertas, por mês de fechamento previsto.', color: '#8B5CF6', bg: '#F5F3FF', date: 'due' }
+  ];
+
+  freshF() { return { from: '2025-12-01', to: '2026-12-31', who: '', stage: '', ostatus: '', lstatus: '', origin: '', client: '', q: '' }; }
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth });
+    const r = this.props.initialReport; if (r) this.setState({ rep: r }, () => this.generate());
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.gT); clearTimeout(this.tT); }
+
+  toDate(k) { const p = k.split('/'); return new Date(+p[2], +p[1] - 1, +p[0]).getTime(); }
+  tIso(i) { const p = i.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]).getTime(); }
+  brIso(i) { const p = i.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  eur(n) { return '€ ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+  pct(a, b) { return b > 0 ? Math.round(a / b * 100) + '%' : 'n/d'; }
+  pl(n, a, b) { return n + ' ' + (n === 1 ? a : b); }
+  norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  days(a, b) { return Math.round((this.toDate(b) - this.toDate(a)) / 86400000); }
+  ostat(o) { return o.stage === 'Ganho' ? 'Ganha' : (o.stage === 'Perdido' ? 'Perdida' : 'Aberta'); }
+  flash(m, ok) { clearTimeout(this.tT); this.setState({ toast: m, toastOk: ok !== false }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2800); }
+
+  opps(rep, f) {
+    const a = this.tIso(f.from), b = this.tIso(f.to), q = this.norm(f.q.trim());
+    return this.OPPS.filter(o => {
+      if (f.who && o.who !== f.who) return false;
+      if (f.stage && o.stage !== f.stage) return false;
+      if (f.ostatus && this.ostat(o) !== f.ostatus) return false;
+      if (f.origin && o.origin !== f.origin) return false;
+      if (f.client && o.client !== f.client) return false;
+      if (q && this.norm(o.n + ' ' + o.client).indexOf(q) < 0) return false;
+      if (rep.date === 'created') { const t = this.toDate(o.created); if (t < a || t > b) return false; }
+      if (rep.date === 'due') { if (this.ostat(o) !== 'Aberta') return false; const t = this.toDate(o.due); if (t < a || t > b) return false; }
+      if (rep.date === 'none' && this.ostat(o) !== 'Aberta') return false;
+      return true;
+    });
+  }
+  leads(f) {
+    const a = this.tIso(f.from), b = this.tIso(f.to), q = this.norm(f.q.trim());
+    return this.LEADS.filter(l => {
+      if (f.who && l.who !== f.who) return false;
+      if (f.origin && l.origin !== f.origin) return false;
+      if (f.lstatus && l.status !== f.lstatus) return false;
+      if (q && this.norm(l.n + ' ' + l.company).indexOf(q) < 0) return false;
+      const t = this.toDate(l.date); return t >= a && t <= b;
+    });
+  }
+
+  build(rep, O, L, f) {
+    const eur = (n) => this.eur(n), text = (t, sub, bold, color) => ({ t: String(t), sub: sub || '', num: false, bold: !!bold, color: color || '' });
+    const nm = (t, sub, color) => ({ t: String(t), sub: sub || '', num: true, color: color || '' });
+    const sum = (l, k) => l.reduce((n, o) => n + (k === 'w' ? o.v * o.prob / 100 : o.v), 0);
+    const open = O.filter(o => this.ostat(o) === 'Aberta'), won = O.filter(o => o.stage === 'Ganho'), lost = O.filter(o => o.stage === 'Perdido');
+    const prop = O.filter(o => o.stage === 'Proposta');
+    const groups = [], notes = [];
+    let cols = [], totals = [], kpis = [], bars = [], chartTitle = '', count = '', empty = false;
+    const add = (head, items) => groups.push({ head: head, items: items });
+    const head = (t, n) => ({ cells: [text(t, '', true)].concat(Array.apply(null, { length: n }).map(() => nm(''))) });
+    const bar = (label, v, vt, color, max) => ({ label: label, v: v, vt: vt, color: color, max: max || 0 });
+    const kp = (l, v, c, h) => [l, v, c, h];
+
+    if (rep.id === 'resumo') {
+      cols = [{ l: 'Indicador', w: 240, fr: 1.2 }, { l: 'Quantidade', w: 110, num: true }, { l: 'Valor estimado', w: 150, num: true }, { l: 'Definição', w: 360, fr: 2 }];
+      const ls = (s) => L.filter(l => l.status === s).length;
+      const rows = [
+        { c: [text('Leads', this.LSTATUS.map(s => s + ' ' + ls(s)).join(' · '), true), nm(L.length), nm('—'), text('Entidade Leads do CRM, por data de entrada no período')], sv: ['Leads', L.length, -1, ''] },
+        { c: [text('Oportunidades abertas', 'etapas Lead a Negociação', true), nm(open.length), nm(eur(sum(open))), text('Valor estimado = soma do valor das oportunidades abertas (pipeline)')], sv: ['Abertas', open.length, sum(open), ''] },
+        { c: [text('Propostas pendentes', 'etapa Proposta', true), nm(prop.length), nm(eur(sum(prop))), text('Oportunidades aguardando resposta da proposta')], sv: ['Propostas', prop.length, sum(prop), ''] },
+        { c: [text('Oportunidades ganhas', 'etapa Ganho', true, '#047857'), nm(won.length), nm(eur(sum(won))), text('Valor contratado das oportunidades ganhas (não é faturamento)')], sv: ['Ganhas', won.length, sum(won), ''] },
+        { c: [text('Oportunidades perdidas', 'etapa Perdido', true, '#B91C1C'), nm(lost.length), nm(eur(sum(lost))), text('Valor estimado que deixou de ser fechado')], sv: ['Perdidas', lost.length, sum(lost), ''] }
+      ];
+      add(null, rows.map(r => ({ cells: r.c, sv: r.sv })));
+      totals = ['Oportunidades no filtro', String(O.length), '', 'abertas + ganhas + perdidas; leads são contados à parte'];
+      kpis = [kp('Leads', String(L.length), '#3B82F6', this.pl(ls('Novo'), 'novo', 'novos')), kp('Oportunidades abertas', String(open.length), '#EC4899', 'em aberto'), kp('Pipeline', eur(sum(open)), '#6D5DFB', 'valor estimado, não faturado'), kp('Propostas pendentes', String(prop.length), '#F59E0B', 'aguardando resposta'), kp('Oportunidades ganhas', String(won.length), '#10B981', eur(sum(won)) + ' contratados')];
+      chartTitle = 'Valor estimado por etapa (abertas)'; bars = this.STAGES.slice(0, 4).map(s => bar(s, sum(open.filter(o => o.stage === s)), eur(sum(open.filter(o => o.stage === s))), this.SCOL[s]));
+      count = this.pl(O.length, 'oportunidade', 'oportunidades') + ' · ' + this.pl(L.length, 'lead', 'leads');
+      notes.push('Leads e oportunidades são registros diferentes no CRM. As oportunidades na etapa "Lead" do pipeline não são contadas como leads. Os filtros de etapa, cliente e status da oportunidade não se aplicam aos leads.');
+      empty = O.length === 0 && L.length === 0;
+    } else if (rep.id === 'pipeline') {
+      cols = [{ l: 'Etapa', w: 220, fr: 1.2 }, { l: 'Oportunidades', w: 130, num: true }, { l: 'Valor estimado', w: 150, num: true }, { l: '% do pipeline', w: 120, num: true }, { l: 'Valor ponderado', w: 150, num: true }];
+      const tot = sum(open);
+      const rows = this.STAGES.map(s => { const l = O.filter(o => o.stage === s), isG = s === 'Ganho'; return { cells: [text(s, isG ? 'fora do pipeline: já fechada' : '', true, this.SCOL[s]), nm(l.length), nm(eur(sum(l))), nm(isG ? '—' : this.pct(sum(l), tot)), nm(isG ? '—' : eur(sum(l, 'w')))], sv: [s, l.length, sum(l), isG ? -1 : sum(l), isG ? -1 : sum(l, 'w')] }; });
+      add(null, rows);
+      totals = ['Pipeline em aberto (4 etapas)', String(open.length), eur(tot), tot ? '100%' : 'n/d', eur(sum(open, 'w'))];
+      kpis = [kp('Pipeline', eur(tot), '#6D5DFB', 'valor estimado em aberto'), kp('Valor ponderado', eur(sum(open, 'w')), '#EC4899', 'valor × probabilidade'), kp('Oportunidades abertas', String(open.length), '#3B82F6', 'etapas Lead a Negociação'), kp('Ganho', eur(sum(won)), '#10B981', this.pl(won.length, 'oportunidade', 'oportunidades'))];
+      chartTitle = 'Valor estimado por etapa'; bars = this.STAGES.map(s => bar(s, sum(O.filter(o => o.stage === s)), eur(sum(O.filter(o => o.stage === s))), this.SCOL[s]));
+      count = this.pl(O.length, 'oportunidade', 'oportunidades');
+      notes.push('A etapa Ganho aparece só para referência; o total do pipeline soma apenas as quatro etapas abertas. Perdidas não entram neste relatório.');
+      empty = O.filter(o => o.stage !== 'Perdido').length === 0;
+    } else if (rep.id === 'conversao') {
+      cols = [{ l: 'Passagem', w: 260, fr: 1.4 }, { l: 'Chegaram à etapa de origem', w: 200, num: true }, { l: 'Chegaram à etapa seguinte', w: 200, num: true }, { l: 'Conversão', w: 110, num: true }];
+      const nl = O.filter(o => o.stage !== 'Perdido'), reach = this.STAGES.map((s, i) => nl.filter(o => this.STAGES.indexOf(o.stage) >= i).length);
+      const g1 = [];
+      for (let i = 0; i < 4; i++) g1.push({ cells: [text(this.STAGES[i] + ' → ' + this.STAGES[i + 1], '', true), nm(reach[i]), nm(reach[i + 1]), nm(this.pct(reach[i + 1], reach[i]))], sv: [this.STAGES[i], reach[i], reach[i + 1], reach[i] ? reach[i + 1] / reach[i] : -1] });
+      add(head('Conversão entre etapas', 3), g1);
+      const closed = won.length + lost.length;
+      add(head('Resultado das oportunidades encerradas', 3), [
+        { cells: [text('Taxa de ganho', 'ganhas ÷ (ganhas + perdidas)', true, '#047857'), nm(closed), nm(won.length), nm(this.pct(won.length, closed))], sv: ['Taxa de ganho', closed, won.length, closed ? won.length / closed : -1] },
+        { cells: [text('Taxa de perda', 'perdidas ÷ (ganhas + perdidas)', true, '#B91C1C'), nm(closed), nm(lost.length), nm(this.pct(lost.length, closed))], sv: ['Taxa de perda', closed, lost.length, closed ? lost.length / closed : -1] },
+        { cells: [text('Ganho sobre todas as criadas', 'ganhas ÷ todas as oportunidades do filtro', true), nm(O.length), nm(won.length), nm(this.pct(won.length, O.length))], sv: ['Ganho total', O.length, won.length, O.length ? won.length / O.length : -1] }
+      ]);
+      totals = ['Oportunidades no filtro', String(O.length), '', ''];
+      kpis = [kp('Taxa de ganho', this.pct(won.length, closed), '#10B981', won.length + ' de ' + closed + (closed === 1 ? ' encerrada' : ' encerradas')), kp('Taxa de perda', this.pct(lost.length, closed), '#EF4444', lost.length + ' de ' + closed + (closed === 1 ? ' encerrada' : ' encerradas')), kp('Lead → Ganho', this.pct(reach[4], reach[0]), '#6D5DFB', reach[4] + ' de ' + reach[0] + (reach[0] === 1 ? ' não perdida' : ' não perdidas')), kp('Encerradas', String(closed), '#3B82F6', 'ganhas + perdidas')];
+      chartTitle = 'Conversão entre etapas'; bars = [0, 1, 2, 3].map(i => bar(this.STAGES[i] + ' → ' + this.STAGES[i + 1], reach[i] ? reach[i + 1] / reach[i] * 100 : 0, this.pct(reach[i + 1], reach[i]), this.SCOL[this.STAGES[i + 1]], 100));
+      count = this.pl(O.length, 'oportunidade', 'oportunidades');
+      notes.push('O CRM guarda só a etapa atual, sem histórico de movimentação. "Chegaram à etapa" conta as oportunidades não perdidas que estão nessa etapa ou depois dela. As perdidas ficam fora da conversão entre etapas porque a etapa em que foram perdidas não é registrada.');
+      empty = O.length === 0;
+    } else if (rep.id === 'resp') {
+      cols = [{ l: 'Responsável', w: 200, fr: 1.2 }, { l: 'Oportunidades', w: 120, num: true }, { l: 'Abertas', w: 90, num: true }, { l: 'Valor estimado (abertas)', w: 170, num: true }, { l: 'Valor ponderado (abertas)', w: 180, num: true }, { l: 'Ganhas', w: 150, num: true }, { l: 'Perdidas', w: 150, num: true }];
+      const whos = O.map(o => o.who).filter((v, i, a) => a.indexOf(v) === i);
+      const rows = whos.map(w => { const l = O.filter(o => o.who === w), op = l.filter(o => this.ostat(o) === 'Aberta'), wn = l.filter(o => o.stage === 'Ganho'), lo = l.filter(o => o.stage === 'Perdido'); return { cells: [text(w, '', true), nm(l.length), nm(op.length), nm(eur(sum(op))), nm(eur(sum(op, 'w'))), nm(wn.length, eur(sum(wn))), nm(lo.length, eur(sum(lo)))], sv: [w, l.length, op.length, sum(op), sum(op, 'w'), wn.length, lo.length] }; });
+      add(null, rows);
+      totals = ['Total', String(O.length), String(open.length), eur(sum(open)), eur(sum(open, 'w')), won.length + ' · ' + eur(sum(won)), lost.length + ' · ' + eur(sum(lost))];
+      kpis = [kp('Responsáveis', String(whos.length), '#3B82F6', 'com oportunidades'), kp('Valor estimado', eur(sum(open)), '#6D5DFB', 'abertas'), kp('Valor ponderado', eur(sum(open, 'w')), '#EC4899', 'valor × probabilidade'), kp('Ganhas', String(won.length), '#10B981', eur(sum(won)) + ' contratados')];
+      chartTitle = 'Valor estimado em aberto por responsável'; bars = whos.map(w => bar(w, sum(open.filter(o => o.who === w)), eur(sum(open.filter(o => o.who === w))), '#3B82F6'));
+      count = this.pl(whos.length, 'responsável', 'responsáveis') + ' · ' + this.pl(O.length, 'oportunidade', 'oportunidades');
+      notes.push('Cada oportunidade tem um só responsável e entra uma única vez no total. Estimado e ponderado referem-se às abertas; ganhas e perdidas mostram quantidade e valor separadamente.');
+      empty = O.length === 0;
+    } else if (rep.id === 'prop') {
+      cols = [{ l: 'Oportunidade', w: 250, fr: 1.4 }, { l: 'Responsável', w: 150 }, { l: 'Estado da proposta', w: 170 }, { l: 'Valor', w: 120, num: true }, { l: 'Probabilidade', w: 120, num: true }, { l: 'Última atividade', w: 130, num: true }, { l: 'Próxima ação', w: 190, fr: 1 }, { l: 'Fechamento previsto', w: 150, num: true }];
+      add(null, prop.map(o => ({ cells: [text(o.n, o.client, true), text(o.who), text('Aguardando resposta', '', true, '#B45309'), nm(eur(o.v)), nm(o.prob + '%'), nm(o.last), text(o.next || '—'), nm(o.due)], sv: [o.n, o.who, 0, o.v, o.prob, this.toDate(o.last), o.next, this.toDate(o.due)] })));
+      totals = ['Propostas: ' + prop.length, '', '', eur(sum(prop)), '', '', '', ''];
+      kpis = [kp('Aguardando resposta', String(prop.length), '#F59E0B', eur(sum(prop))), kp('Valor ponderado', eur(sum(prop, 'w')), '#6D5DFB', 'valor × probabilidade'), kp('Oportunidades ganhas', String(won.length), '#10B981', 'desfecho da oportunidade'), kp('Oportunidades perdidas', String(lost.length), '#EF4444', 'desfecho da oportunidade')];
+      count = this.pl(prop.length, 'proposta aguardando resposta', 'propostas aguardando resposta');
+      notes.push('No CRM atual a proposta só tem o estado "Aguardando resposta", e ela corresponde à etapa Proposta da oportunidade. Não existem estados "aceita" nem "recusada", nem data de envio por proposta; por isso não são exibidos.');
+      notes.push('Ganhas e perdidas nos indicadores são o desfecho da oportunidade, não da proposta: o CRM não liga os dois.');
+      empty = prop.length === 0;
+    } else if (rep.id === 'perdas') {
+      cols = [{ l: 'Motivo / Oportunidade', w: 280, fr: 1.5 }, { l: 'Perdidas', w: 100, num: true }, { l: 'Valor perdido', w: 140, num: true }, { l: '% das perdas', w: 120, num: true }, { l: 'Responsável', w: 150 }];
+      const tl = sum(lost);
+      this.REASONS.forEach(r => {
+        const l = lost.filter(o => o.reason === r);
+        add({ cells: [text(r, '', true, l.length ? '#B91C1C' : '#64748B'), nm(l.length), nm(eur(sum(l))), nm(l.length ? this.pct(sum(l), tl) : '—'), text('')] },
+          l.length ? l.map(o => ({ cells: [text('   ' + o.n, '   ' + o.client), nm(''), nm(eur(o.v)), nm(''), text(o.who)], sv: [o.n, 0, o.v, 0, o.who] })) : []);
+      });
+      totals = ['Total de perdas', String(lost.length), eur(tl), tl ? '100%' : 'n/d', ''];
+      const top = this.REASONS.map(r => ({ r: r, n: lost.filter(o => o.reason === r).length })).sort((a, b) => b.n - a.n)[0];
+      kpis = [kp('Oportunidades perdidas', String(lost.length), '#EF4444', 'no filtro'), kp('Valor perdido', eur(tl), '#F59E0B', 'valor estimado'), kp('Principal motivo', top && top.n ? top.r : '—', '#6D5DFB', top && top.n ? this.pl(top.n, 'perda', 'perdas') : 'sem perdas'), kp('Motivos distintos', String(this.REASONS.filter(r => lost.some(o => o.reason === r)).length), '#3B82F6', 'de ' + this.REASONS.length + ' previstos')];
+      chartTitle = 'Valor perdido por motivo'; bars = this.REASONS.map(r => bar(r, sum(lost.filter(o => o.reason === r)), eur(sum(lost.filter(o => o.reason === r))), '#EF4444'));
+      count = this.pl(lost.length, 'oportunidade perdida', 'oportunidades perdidas');
+      notes.push('Mostra só oportunidades já perdidas; filtros de etapa e status não alteram isso. Motivos sem perdas aparecem com zero. A oportunidade perdida permanece no histórico do CRM.');
+      empty = lost.length === 0;
+    } else if (rep.id === 'origem') {
+      cols = [{ l: 'Origem', w: 170, fr: 1 }, { l: 'Leads', w: 80, num: true }, { l: 'Leads convertidos', w: 150, num: true }, { l: 'Oportunidades', w: 130, num: true }, { l: 'Abertas', w: 90, num: true }, { l: 'Ganhas', w: 90, num: true }, { l: 'Perdidas', w: 90, num: true }, { l: 'Taxa de ganho', w: 130, num: true }];
+      const origins = this.ORIGINS.filter(g => L.some(l => l.origin === g) || O.some(o => o.origin === g));
+      const rows = origins.map(g => { const ll = L.filter(l => l.origin === g), oo = O.filter(o => o.origin === g), wn = oo.filter(o => o.stage === 'Ganho').length, lo = oo.filter(o => o.stage === 'Perdido').length, cv = ll.filter(l => l.status === 'Convertido').length; return { cells: [text(g, '', true), nm(ll.length), nm(cv), nm(oo.length), nm(oo.length - wn - lo), nm(wn), nm(lo), nm(this.pct(wn, wn + lo), wn + lo ? wn + ' de ' + (wn + lo) : 'sem encerradas')], sv: [g, ll.length, cv, oo.length, oo.length - wn - lo, wn, lo, wn + lo ? wn / (wn + lo) : -1] }; });
+      add(null, rows);
+      const cvT = L.filter(l => l.status === 'Convertido').length;
+      totals = ['Total', String(L.length), String(cvT), String(O.length), String(open.length), String(won.length), String(lost.length), this.pct(won.length, won.length + lost.length)];
+      const best = rows.filter(r => r.sv[7] >= 0).sort((a, b) => b.sv[7] - a.sv[7])[0];
+      kpis = [kp('Origens ativas', String(origins.length), '#06B6D4', 'com leads ou oportunidades'), kp('Leads', String(L.length), '#3B82F6', this.pl(cvT, 'convertido', 'convertidos')), kp('Oportunidades', String(O.length), '#EC4899', this.pl(open.length, 'aberta', 'abertas')), kp('Melhor taxa de ganho', best ? best.sv[0] : '—', '#10B981', best ? this.pct(best.sv[5], best.sv[5] + best.sv[6]) + ' das encerradas' : 'sem encerradas')];
+      chartTitle = 'Oportunidades por origem'; bars = origins.map(g => bar(g, O.filter(o => o.origin === g).length, String(O.filter(o => o.origin === g).length), '#06B6D4'));
+      count = this.pl(origins.length, 'origem', 'origens');
+      notes.push('Taxa de ganho = ganhas ÷ (ganhas + perdidas) da origem; oportunidades abertas ficam fora da base. Leads e oportunidades são contados em colunas separadas porque o CRM não liga um lead à oportunidade criada a partir dele.');
+      empty = origins.length === 0;
+    } else if (rep.id === 'ativ') {
+      cols = [{ l: 'Oportunidade', w: 250, fr: 1.4 }, { l: 'Responsável', w: 150 }, { l: 'Etapa', w: 130 }, { l: 'Última atividade', w: 130, num: true }, { l: 'Dias sem atividade', w: 150, num: true }, { l: 'Próxima ação', w: 200, fr: 1 }, { l: 'Fechamento previsto', w: 150, num: true }];
+      const rows = open.map(o => { const d = this.days(o.last, this.TODAY), dueIn = this.days(this.TODAY, o.due); return { cells: [text(o.n, o.client, true), text(o.who), text(o.stage, '', true, this.SCOL[o.stage]), nm(o.last), nm(d + ' d', d > 7 ? 'sem atividade recente' : '', d > 7 ? '#B91C1C' : ''), text(o.next || '—'), nm(o.due, dueIn < 0 ? 'vencido há ' + (-dueIn) + ' d' : 'em ' + dueIn + ' d', dueIn < 0 ? '#B91C1C' : '')], sv: [o.n, o.who, this.STAGES.indexOf(o.stage), this.toDate(o.last), d, o.next, this.toDate(o.due)], d: d, dueIn: dueIn }; });
+      rows.sort((a, b) => b.d - a.d);
+      add(null, rows);
+      const stale = rows.filter(r => r.d > 7).length, soon = rows.filter(r => r.dueIn >= 0 && r.dueIn <= 7).length, over = rows.filter(r => r.dueIn < 0).length;
+      totals = ['Abertas: ' + open.length, '', '', '', stale + ' sem atividade', '', soon + ' em 7 dias'];
+      kpis = [kp('Oportunidades abertas', String(open.length), '#F97316', 'em acompanhamento'), kp('Sem atividade há mais de 7 dias', String(stale), '#EF4444', 'a retomar'), kp('Fechamentos em 7 dias', String(soon), '#F59E0B', 'até 28/09/2026'), kp('Fechamentos vencidos', String(over), '#B91C1C', over ? 'data prevista já passou' : 'nenhum')];
+      count = this.pl(open.length, 'oportunidade aberta', 'oportunidades abertas');
+      notes.push('Situação em 21/09/2026. "Sem atividade recente" = última atividade há mais de 7 dias, como no alerta do CRM. Só oportunidades abertas; o período não se aplica.');
+      empty = open.length === 0;
+    } else {
+      cols = [{ l: 'Mês de fechamento / Oportunidade', w: 280, fr: 1.5 }, { l: 'Etapa', w: 130 }, { l: 'Valor estimado', w: 140, num: true }, { l: 'Probabilidade', w: 120, num: true }, { l: 'Valor ponderado', w: 150, num: true }, { l: 'Fechamento previsto', w: 150, num: true }];
+      const mk = (o) => { const d = new Date(this.toDate(o.due)); return d.getFullYear() * 100 + d.getMonth(); };
+      const keys = open.map(mk).filter((v, i, a) => a.indexOf(v) === i).sort((a, b) => a - b);
+      keys.forEach(k => { const l = open.filter(o => mk(o) === k).sort((a, b) => this.toDate(a.due) - this.toDate(b.due));
+        add({ cells: [text(this.MONTHS[k % 100] + ' ' + Math.floor(k / 100) + ' · ' + this.pl(l.length, 'oportunidade', 'oportunidades'), '', true), text(''), nm(eur(sum(l))), nm(''), nm(eur(sum(l, 'w'))), nm('')] },
+          l.map(o => ({ cells: [text('   ' + o.n, '   ' + o.client + ' · ' + o.who), text(o.stage, '', true, this.SCOL[o.stage]), nm(eur(o.v)), nm(o.prob + '%'), nm(eur(o.v * o.prob / 100)), nm(o.due)], sv: [o.n, this.STAGES.indexOf(o.stage), o.v, o.prob, o.v * o.prob / 100, this.toDate(o.due)] }))); });
+      totals = ['Total da previsão', '', eur(sum(open)), '', eur(sum(open, 'w')), ''];
+      kpis = [kp('Valor estimado', eur(sum(open)), '#6D5DFB', 'oportunidades abertas'), kp('Valor ponderado', eur(sum(open, 'w')), '#8B5CF6', 'valor × probabilidade'), kp('Oportunidades', String(open.length), '#EC4899', 'com fechamento no período'), kp('Probabilidade média', open.length ? Math.round(open.reduce((n, o) => n + o.prob, 0) / open.length) + '%' : 'n/d', '#3B82F6', 'média simples')];
+      chartTitle = 'Valor estimado × ponderado por etapa'; bars = this.STAGES.slice(0, 4).map(s => bar(s + ' · ponderado', sum(open.filter(o => o.stage === s), 'w'), eur(sum(open.filter(o => o.stage === s), 'w')) + ' de ' + eur(sum(open.filter(o => o.stage === s))), this.SCOL[s]));
+      count = this.pl(open.length, 'oportunidade aberta', 'oportunidades abertas') + ' · ' + this.pl(keys.length, 'mês', 'meses');
+      notes.push('Previsão comercial, não receita faturada: o valor ponderado multiplica o valor estimado pela probabilidade de cada oportunidade. Só entram oportunidades abertas com fechamento previsto dentro do período.');
+      empty = open.length === 0;
+    }
+    const mx = Math.max.apply(null, bars.map(b => b.v).concat([1]));
+    bars = bars.map(b => Object.assign(b, { w: Math.max(b.v > 0 ? 2 : 0, b.v / (b.max || mx) * 100) }));
+    return { cols: cols, groups: groups, totals: totals, kpis: kpis, notes: notes, count: count, empty: empty, bars: bars, chartTitle: chartTitle };
+  }
+
+  flatten(R, sort) {
+    const out = [];
+    R.groups.forEach(g => {
+      if (g.head) out.push({ cells: g.head.cells, level: 1 });
+      let it = g.items.slice();
+      if (sort.k >= 0) it = it.sort((x, y) => { const a = x.sv[sort.k], b = y.sv[sort.k]; if (a == null && b == null) return 0; if (a == null) return 1; if (b == null) return -1; return (typeof a === 'string' ? String(a).localeCompare(String(b)) : a - b) * sort.dir; });
+      it.forEach(x => out.push({ cells: x.cells, level: 0 }));
+    });
+    return out;
+  }
+
+  generate = () => {
+    const s = this.state, rep = this.REPORTS.filter(r => r.id === s.rep)[0];
+    if (!rep) { this.flash('Escolha um relatório primeiro', false); return; }
+    if (rep.date !== 'none' && this.tIso(s.f.from) > this.tIso(s.f.to)) { this.flash('Corrija o período antes de gerar', false); return; }
+    const f = JSON.parse(JSON.stringify(s.f));
+    this.setState({ status: 'loading', applied: null, sort: { k: -1, dir: 1 } });
+    clearTimeout(this.gT);
+    this.gT = setTimeout(() => this.setState({ status: 'ready', applied: { rep: this.state.rep, f: f } }), 800);
+  };
+
+  openRep(id) {
+    this.setState({ rep: id, status: 'idle', applied: null, sort: { k: -1, dir: 1 }, f: Object.assign(this.freshF(), { from: this.state.f.from, to: this.state.f.to }) }, () => {
+      const el = document.getElementById('cfg');
+      if (el) window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - 96), behavior: 'smooth' });
+    });
+  }
+
+  quick(id, over) {
+    clearTimeout(this.gT);
+    const f = Object.assign(this.freshF(), over || {});
+    this.setState({ rep: id, f: f, status: 'ready', applied: { rep: id, f: f }, sort: { k: -1, dir: 1 } });
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, isMobile = w < 1024;
+    const rep = this.REPORTS.filter(r => r.id === s.rep)[0] || null;
+    const f = s.f;
+    const A = s.applied && rep && s.applied.rep === rep.id ? s.applied : null;
+    const usesPeriod = !!rep && rep.date !== 'none';
+    const periodErr = usesPeriod && this.tIso(f.from) > this.tIso(f.to) ? 'A data inicial deve ser anterior ou igual à data final.' : '';
+    const setF = (p) => this.setState(x => ({ f: Object.assign({}, x.f, p) }));
+    const ready = s.status === 'ready' && !!A;
+    const dirty = !!A && JSON.stringify(A.f) !== JSON.stringify(f);
+
+    let R = null, rowsAll = [];
+    if (ready) { R = this.build(rep, this.opps(rep, A.f), rep.lead ? this.leads(A.f) : [], A.f); if (!R.empty) rowsAll = this.flatten(R, s.sort); }
+    const has = ready && !R.empty;
+
+    const mono = 'font-family:\'JetBrains Mono\',monospace;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right';
+    const txt = 'font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    let tHeads = [], tRows = [], tTotals = [], tGrid = '', tInner = '';
+    if (has) {
+      const widths = R.cols.map(c => c.fr ? 'minmax(' + c.w + 'px,' + c.fr + 'fr)' : c.w + 'px').join(' ');
+      const inner = R.cols.reduce((n, c) => n + c.w, 0) + 12 * (R.cols.length - 1) + 32;
+      tGrid = 'min-width:' + inner + 'px;display:grid;grid-template-columns:' + widths + ';gap:12px;align-items:center;padding:11px 16px';
+      tInner = 'min-width:' + inner + 'px';
+      tHeads = R.cols.map((c, i) => ({ t: c.l, arrow: s.sort.k === i ? (s.sort.dir > 0 ? '▲' : '▼') : '',
+        sort: () => this.setState(x => ({ sort: x.sort.k === i ? { k: i, dir: -x.sort.dir } : { k: i, dir: 1 } })),
+        style: 'display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748B;white-space:nowrap;text-align:left;' + (c.num ? 'justify-content:flex-end' : '') }));
+      tRows = rowsAll.map(r => ({ style: tGrid + ';border-bottom:1px solid #F1F5F9;' + (r.level === 1 ? 'background:#FBFAFF' : ''),
+        cells: r.cells.map(c => ({ t: c.t, sub: c.sub, hasSub: !!c.sub,
+          textStyle: (c.num ? mono : txt + (c.bold ? ';font-weight:700' : '')) + (c.color ? ';color:' + c.color : ''),
+          subStyle: 'font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:' + (c.color && c.num ? c.color : '#64748B') + (c.num ? ';text-align:right' : '') })) }));
+      tTotals = R.totals.map((t, i) => ({ t: t, style: 'font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;' + (R.cols[i] && R.cols[i].num ? 'font-family:\'JetBrains Mono\',monospace;text-align:right' : '') }));
+    }
+
+    const optsOf = (all, list) => [{ v: '', t: all }].concat(list.map(x => ({ v: x, t: x })));
+    const uniq = (fn) => this.OPPS.map(fn).filter((v, i, a) => a.indexOf(v) === i);
+    const SEL = {
+      who: { label: 'Responsável comercial', options: optsOf('Todos os responsáveis', uniq(o => o.who).sort()) },
+      stage: { label: 'Etapa do pipeline', options: optsOf('Todas as etapas', this.STAGES.concat(['Perdido'])) },
+      ostatus: { label: 'Status da oportunidade', options: optsOf('Todos os status', ['Aberta', 'Ganha', 'Perdida']) },
+      lstatus: { label: 'Status do lead', options: optsOf('Todos os status', this.LSTATUS) },
+      origin: { label: 'Origem do lead', options: optsOf('Todas as origens', this.ORIGINS) },
+      client: { label: 'Cliente', options: optsOf('Todos os clientes', uniq(o => o.client).sort()) }
+    };
+    const keys = rep ? ['who', 'stage', 'ostatus'].concat(rep.lead ? ['lstatus'] : []).concat(['origin', 'client']) : [];
+    const selects = keys.map(k => ({ label: SEL[k].label, options: SEL[k].options, value: f[k], onChange: (e) => setF({ [k]: e.target.value }) }));
+
+    const pDesc = { created: 'Período considerado: data de criação da oportunidade (e de entrada do lead). Oportunidades criadas antes ou depois do período ficam de fora.', due: 'Período considerado: data de fechamento previsto das oportunidades abertas.', none: 'Este relatório mostra a situação em 21/09/2026; o período não se aplica.' };
+    const periodShort = A ? (usesPeriod ? this.brIso(A.f.from) + ' → ' + this.brIso(A.f.to) : 'situação em ' + this.TODAY) : '';
+    const activeTxt = rep ? keys.filter(k => f[k]).map(k => SEL[k].label + ': ' + f[k]).concat(f.q.trim() ? ['Pesquisa: ' + f.q.trim()] : []).join('; ') || 'nenhum' : '';
+
+    const csvNow = () => {
+      if (!has) { this.flash('Gere um relatório com resultados para exportar', false); return; }
+      const esc = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const lines = [['Relatório', rep.title], ['Período', periodShort], ['Filtros', activeTxt], ['Gerado em', this.TODAY + ' (dados fictícios)'], []];
+      lines.push(R.cols.map(c => c.l));
+      rowsAll.forEach(r => lines.push(r.cells.map(c => (c.t + (c.sub ? ' (' + c.sub + ')' : '')).trim())));
+      lines.push(R.totals);
+      const csv = '\ufeff' + lines.map(l => l.map(esc).join(';')).join('\r\n');
+      try {
+        const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        const a = document.createElement('a'); a.href = url; a.download = 'progesty-crm-' + rep.id + '.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 500);
+        this.flash('Arquivo CSV gerado · ' + this.pl(rowsAll.length, 'linha', 'linhas'));
+      } catch (e) { this.flash('Não foi possível gerar o arquivo', false); }
+    };
+
+    const wAvail = w - (isMobile ? 0 : 258);
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      groups: this.NAV.map(g => ({ name: g.name, dot: g.dot, isChart: !!g.chart, notChart: !g.chart, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(n => ({ name: n, pick: () => this.setState({ active: g.name + ':' + n, navOpen: false }),
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + ((g.name + ':' + n === s.active || (g.name === 'Relatórios' && n === s.active)) ? '700' : '500') + ';color:' + ((g.name === 'Relatórios' && n === s.active) || g.name + ':' + n === s.active ? '#fff' : '#CBD5E1') + ';background:' + ((g.name === 'Relatórios' && n === s.active) || g.name + ':' + n === s.active ? 'rgba(109,93,251,.26)' : 'transparent'),
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + ((g.name === 'Relatórios' && n === s.active) || g.name + ':' + n === s.active ? '#6D5DFB' : '#64748B') })) })),
+
+      cardGrid: 'display:grid;grid-template-columns:repeat(' + (wAvail >= 1100 ? 3 : (wAvail >= 640 ? 2 : 1)) + ',minmax(0,1fr));gap:clamp(10px,1.2vw,16px)',
+      cards: this.REPORTS.map(r => ({ title: r.title, desc: r.desc, color: r.color, bg: r.bg, pick: () => this.openRep(r.id),
+        style: 'background:#fff;border:1px solid ' + (s.rep === r.id ? '#C7C3FB' : '#E2E8F0') + ';border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;' + (s.rep === r.id ? 'box-shadow:0 18px 36px -26px rgba(109,93,251,.7)' : ''),
+        btnStyle: 'align-self:flex-start;padding:11px 18px;border-radius:11px;font-size:13px;font-weight:700;' + (s.rep === r.id ? 'background:#EEF0FE;color:#4338CA;border:1px solid #C7C3FB' : 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;box-shadow:0 12px 24px -14px rgba(109,93,251,1)') })),
+
+      hasRep: !!rep, repTitle: rep ? rep.title : '', closeRep: () => this.setState({ rep: null, status: 'idle', applied: null }),
+      showPeriod: usesPeriod, fromIso: f.from, toIso: f.to, onFrom: (e) => { if (e.target.value) setF({ from: e.target.value }); }, onTo: (e) => { if (e.target.value) setF({ to: e.target.value }); },
+      selects: selects, query: f.q, onQuery: (e) => setF({ q: e.target.value }),
+      periodErr: periodErr, periodHint: rep ? pDesc[rep.date] : '', dirty: dirty, clearFilters: () => this.setState({ f: this.freshF() }),
+      generate: this.generate, isLoading: s.status === 'loading',
+      genLabel: s.status === 'loading' ? 'Gerando…' : (ready && !dirty ? 'Atualizar relatório' : 'Gerar relatório'),
+      genStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;color:#fff;background:' + (s.status === 'loading' ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';box-shadow:0 14px 26px -14px rgba(109,93,251,1);' + (s.status === 'loading' ? 'pointer-events:none;' : ''),
+
+      stLoading: s.status === 'loading' && !!rep, skeletons: [1, 2, 3, 4], stEmpty: ready && !has, stReady: has,
+      emptyText: 'Nada corresponde aos filtros' + (usesPeriod ? ' e ao período' : '') + ' escolhidos. Ajuste ou limpe os filtros e gere novamente.',
+      printMeta: 'Período: ' + periodShort + ' · Filtros: ' + activeTxt + ' · Gerado em ' + this.TODAY + ' (dados fictícios)',
+      metaShort: periodShort + (activeTxt !== 'nenhum' ? ' · ' + activeTxt : ''),
+      kpis: has ? R.kpis.map(k => ({ label: k[0], value: k[1], color: k[2], hint: k[3] })) : [],
+      hasNotes: has && R.notes.length > 0,
+      notes: has ? R.notes.map(t => ({ t: t, icon: 'i', color: '#1D4ED8', bg: '#EFF6FF', bd: '#BFDBFE', iconBg: '#DBEAFE' })) : [],
+      hasBars: has && R.bars.length > 0, chartTitle: has ? R.chartTitle : '',
+      bars: has ? R.bars.map(b => ({ label: b.label, value: b.vt, bar: 'height:100%;width:' + b.w + '%;border-radius:99px;background:' + b.color })) : [],
+      tableCount: has ? R.count : '',
+      tHeads: tHeads, tRows: tRows, tTotals: tTotals, tGrid: tGrid, tInner: tInner,
+      doPrint: () => { if (!has) { this.flash('Gere um relatório com resultados para imprimir', false); return; } try { window.print(); } catch (e) {} },
+      doCsv: csvNow,
+
+      toast: s.toast, toastMark: s.toastOk ? '✓' : '!',
+      demos: [
+        { name: 'Início', run: () => { clearTimeout(this.gT); this.setState({ rep: null, status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Configurando', run: () => { clearTimeout(this.gT); this.setState({ rep: 'resumo', status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Resumo', run: () => this.quick('resumo') },
+        { name: 'Pipeline', run: () => this.quick('pipeline') },
+        { name: 'Conversão', run: () => this.quick('conversao') },
+        { name: 'Responsáveis', run: () => this.quick('resp') },
+        { name: 'Propostas', run: () => this.quick('prop') },
+        { name: 'Perdas', run: () => this.quick('perdas') },
+        { name: 'Origem', run: () => this.quick('origem') },
+        { name: 'Follow-ups', run: () => this.quick('ativ') },
+        { name: 'Previsão', run: () => this.quick('prev') },
+        { name: 'Sem resultados', run: () => this.quick('perdas', { who: 'Rafael Lima' }) },
+        { name: 'Carregando', run: () => { this.setState({ rep: s.rep || 'resumo', status: 'loading', applied: null }); clearTimeout(this.gT); this.gT = setTimeout(() => this.quick(this.state.rep), 1600); } }
+      ].map(d => ({ name: d.name, run: d.run, style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select{font-family:inherit}
+input:focus,select:focus{outline:2px solid #6D5DFB;outline-offset:0}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+@media screen{.pg-printonly{display:none !important}}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  .pg-noprint,aside,header{display:none !important}
+  html,body{background:#fff !important}
+  .pg-printfit{overflow:visible !important}
+}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll pg-noprint" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:500;color:#CBD5E1">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto"><span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span></span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <sc-if value="{{ g.isChart }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-end;gap:2px;height:13px"><span style="width:3px;height:6px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:13px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:9px;border-radius:1px;background:{{ g.dot }}"></span></span></sc-if>
+              <sc-if value="{{ g.notChart }}" hint-placeholder-val="{{ true }}"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></sc-if>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span><span style="flex:1;text-align:left">{{ it.name }}</span></button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Ana Duarte</span><span style="font-size:11px;color:#94A3B8">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div class="pg-noprint" onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+  <header class="pg-noprint" style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,30px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:12px;font-weight:700;color:#64748B">Relatórios / RH</span>
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Relatórios - RH</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Funcionários, vínculos, documentação e valores por hora.</p>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(14px,2vw,22px) clamp(16px,2.4vw,30px) 8px;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);min-width:0">
+
+    <div class="pg-noprint" style="{{ cardGrid }}">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="8">
+        <div style="{{ c.style }}">
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="width:38px;height:38px;border-radius:12px;background:{{ c.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="display:flex;align-items:flex-end;gap:2.5px;height:16px"><span style="width:4px;height:8px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:16px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:11px;border-radius:1.5px;background:{{ c.color }}"></span></span></span>
+            <span style="font-size:15px;font-weight:800;letter-spacing:-.02em;line-height:1.25">{{ c.title }}</span>
+          </div>
+          <span style="font-size:13px;color:#64748B;line-height:1.5;text-wrap:pretty;flex:1">{{ c.desc }}</span>
+          <button onClick="{{ c.pick }}" style="{{ c.btnStyle }}">Gerar relatório</button>
+        </div>
+      </sc-for>
+    </div>
+
+    <div id="cfg" class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+      <sc-if value="{{ hasRep }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px">
+            <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Configurar relatório</span><span style="font-size:18px;font-weight:800;letter-spacing:-.025em">{{ repTitle }}</span></div>
+            <button onClick="{{ closeRep }}" style="padding:9px 14px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:12.5px;font-weight:700;color:#475569">Fechar</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px">
+            <sc-if value="{{ showPeriod }}" hint-placeholder-val="{{ true }}">
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período inicial</span><input type="date" value="{{ fromIso }}" onChange="{{ onFrom }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período final</span><input type="date" value="{{ toIso }}" onChange="{{ onTo }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+            </sc-if>
+            <sc-for list="{{ selects }}" as="sl" hint-placeholder-count="4">
+              <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:11.5px;font-weight:700;color:#475569">{{ sl.label }}</span>
+                <select value="{{ sl.value }}" onChange="{{ sl.onChange }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;color:#0F172A;max-width:240px">
+                  <sc-for list="{{ sl.options }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.t }}</option></sc-for>
+                </select>
+              </label>
+            </sc-for>
+            <label style="display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 200px;max-width:280px"><span style="font-size:11.5px;font-weight:700;color:#475569">Pesquisar por nome</span><input value="{{ nameQuery }}" onInput="{{ onName }}" placeholder="Ex.: Ana" style="height:42px;padding:0 12px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;color:#0F172A"></label>
+          </div>
+          <sc-if value="{{ periodErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ periodErr }}</span></sc-if>
+          <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">{{ periodHint }}</span>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+            <button onClick="{{ generate }}" style="{{ genStyle }}">
+              <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}"><span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span></sc-if>
+              {{ genLabel }}
+            </button>
+            <button onClick="{{ clearFilters }}" style="padding:12px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:#475569;white-space:nowrap">Limpar filtros</button>
+            <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;background:#FFFBEB;border:1px solid #FDE68A;font-size:11.5px;font-weight:700;color:#B45309"><span style="width:6px;height:6px;border-radius:50%;background:#F59E0B"></span>Filtros alterados — gere novamente</span></sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px"><sc-for list="{{ skeletons }}" as="k" hint-placeholder-count="4"><div class="pg-sk" style="height:92px;border-radius:16px"></div></sc-for></div>
+        <div class="pg-sk" style="height:280px;border-radius:18px"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(26px,4vw,48px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+        <span style="width:56px;height:56px;border-radius:18px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:20px;height:20px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">{{ emptyTitle }}</span>
+        <span style="font-size:14px;color:#64748B;max-width:52ch;text-wrap:pretty">{{ emptyText }}</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-printonly" style="padding-bottom:6px;border-bottom:1.5px solid #0F172A">
+        <div style="font-size:17px;font-weight:800">Progesty — {{ repTitle }}</div>
+        <div style="font-size:11px;color:#334155">{{ printMeta }}</div>
+      </div>
+
+      <div class="pg-noprint" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;letter-spacing:-.02em">{{ repTitle }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ metaShort }}</span></div>
+        <button onClick="{{ doPrint }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155">Imprimir</button>
+        <button onClick="{{ doCsv }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155;white-space:nowrap">Exportar CSV</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:clamp(10px,1.2vw,14px)">
+        <sc-for list="{{ kpis }}" as="kp" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:14px 15px;display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:2px;background:{{ kp.color }};flex:0 0 auto"></span><span style="font-size:12px;font-weight:600;color:#475569">{{ kp.label }}</span></span>
+            <span style="font-size:clamp(19px,2vw,24px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums">{{ kp.value }}</span>
+            <span style="font-size:11px;font-weight:600;color:{{ kp.hintColor }}">{{ kp.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ hasNotes }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ notes }}" as="nt" hint-placeholder-count="2">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:13px;background:{{ nt.bg }};border:1px solid {{ nt.bd }}"><span style="width:20px;height:20px;border-radius:6px;background:{{ nt.iconBg }};color:{{ nt.color }};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:0 0 auto">{{ nt.icon }}</span><span style="font-size:12.5px;line-height:1.45;color:{{ nt.color }};text-wrap:pretty">{{ nt.t }}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden">
+        <div class="pg-noprint" style="padding:14px 16px;border-bottom:1px solid #F1F5F9;font-size:12px;color:#64748B">{{ tableCount }}</div>
+        <div class="pg-scroll pg-printfit" style="overflow-x:auto">
+          <div style="{{ tInner }}">
+            <div style="{{ tGrid }};background:#F8FAFC;border-bottom:1px solid #E2E8F0">
+              <sc-for list="{{ tHeads }}" as="th" hint-placeholder-count="6"><button onClick="{{ th.sort }}" style="{{ th.style }}">{{ th.t }}<span style="font-size:9px;color:#6D5DFB">{{ th.arrow }}</span></button></sc-for>
+            </div>
+            <sc-for list="{{ tRows }}" as="r" hint-placeholder-count="10">
+              <div style="{{ r.style }}">
+                <sc-for list="{{ r.cells }}" as="cl" hint-placeholder-count="6">
+                  <span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="{{ cl.textStyle }}">{{ cl.t }}</span><sc-if value="{{ cl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.subStyle }}">{{ cl.sub }}</span></sc-if></span>
+                </sc-for>
+              </div>
+            </sc-for>
+            <div style="{{ tGrid }};background:#F8FAFC;border-top:2px solid #E2E8F0">
+              <sc-for list="{{ tTotals }}" as="tt" hint-placeholder-count="6"><span style="{{ tt.style }}">{{ tt.t }}</span></sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="pg-noprint" style="font-size:11.5px;color:#64748B;line-height:1.5;text-wrap:pretty">Dados fictícios para demonstração, copiados do cadastro de Funcionários do protótipo, sem sincronização real. Funcionário não é usuário do sistema: nenhum dado de acesso aparece aqui.</span>
+    </sc-if>
+  </div>
+
+  <div class="pg-noprint" style="padding:0 clamp(16px,2.4vw,30px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="10"><button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button></sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:13px 19px;border-radius:14px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)"><span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">{{ toastMark }}</span>{{ toast }}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialReport&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;quadro&quot;,&quot;status&quot;,&quot;equipe&quot;,&quot;valores&quot;,&quot;historico&quot;,&quot;docs&quot;,&quot;afast&quot;,&quot;funcao&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    w: 1400, navOpen: false, active: 'RH',
+    open: { Comercial: false, Clientes: false, Projetos: false, Pessoas: false, Financeiro: false, 'Relatórios': true, 'Configurações': false },
+    rep: null, f: this.freshF(), applied: null, status: 'idle', sort: { k: -1, dir: 1 }, toast: '', toastOk: true
+  };
+
+  get NAV() {
+    return [
+      { name: 'Comercial', dot: '#EC4899', items: ['CRM', 'Leads', 'Oportunidades'] },
+      { name: 'Clientes', dot: '#3B82F6', items: ['Clientes', 'Contatos'] },
+      { name: 'Projetos', dot: '#F97316', items: ['Projetos / Obras', 'Planning', 'Controle de Horas', 'Tarefas'] },
+      { name: 'Pessoas', dot: '#06B6D4', items: ['Funcionários', 'Terceirizados', 'Veículos'] },
+      { name: 'Financeiro', dot: '#10B981', items: ['Contas a Receber', 'Contas a Pagar', 'Faturas', 'Fluxo de Caixa'] },
+      { name: 'Relatórios', dot: '#8B5CF6', chart: true, items: ['Consultas e Relatórios', 'Horas', 'Custos', 'Logística', 'Obras', 'RH'] },
+      { name: 'Configurações', dot: '#64748B', items: ['Empresa', 'Usuários', 'Gestão de Acessos'] }
+    ];
+  }
+
+  /* Espelha o cadastro de Funcionários (f1–f10). Campos: função principal/secundária, empresa, vínculo, status, entrada/saída, histórico de valores, carta de condução, veículo. */
+  MAIN = 'Construtora Horizonte';
+  EMP = [
+    { id: 'f1', name: 'Carlos Mendes', role: 'Diretor de obras', role2: 'Engenheiro civil', bond: 'Efetivo', company: 'Construtora Horizonte', third: false, status: 'Ativo', entry: '12/01/2024', exit: '', unit: 'Hora',
+      rates: [{ v: 32, from: '01/01/2026', to: '', reason: 'Revisão anual' }, { v: 29.5, from: '01/01/2025', to: '31/12/2025', reason: 'Promoção' }, { v: 27, from: '12/01/2024', to: '31/12/2024', reason: 'Contratação' }],
+      lic: { no: 'B-1145882', cats: 'B, BE', issued: '22/05/2019', expires: '22/05/2029', notes: 'Sem restrições' }, vehicle: 'Ford Ranger · 1-ABC-234' },
+    { id: 'f2', name: 'Ana Duarte', role: 'Engenheiro civil', role2: 'Fiscalização', bond: 'Efetivo', company: 'Construtora Horizonte', third: false, status: 'Ativo', entry: '03/02/2024', exit: '', unit: 'Hora',
+      rates: [{ v: 28, from: '01/01/2026', to: '', reason: 'Revisão anual' }, { v: 26, from: '03/02/2024', to: '31/12/2025', reason: 'Contratação' }],
+      lic: { no: 'B-2298114', cats: 'B', issued: '10/04/2010', expires: '10/04/2026', notes: 'Renovação em andamento' }, vehicle: '' },
+    { id: 'f3', name: 'Rafael Lima', role: 'Encarregado de obra', role2: 'Mestre de obras', bond: 'Efetivo', company: 'Construtora Horizonte', third: false, status: 'Afastado', entry: '20/03/2024', exit: '', unit: 'Hora',
+      rates: [{ v: 24.5, from: '01/01/2026', to: '', reason: 'Acordo coletivo' }, { v: 23, from: '20/03/2024', to: '31/12/2025', reason: 'Contratação' }],
+      lic: { no: 'C-3341207', cats: 'B, C, CE', issued: '03/08/2015', expires: '03/08/2025', notes: 'Renovação pendente' }, vehicle: 'Iveco Daily · 1-KLM-882' },
+    { id: 'f4', name: 'Sofia Martins', role: 'Administrativo', role2: '', bond: 'Efetivo', company: 'Construtora Horizonte', third: false, status: 'Ativo', entry: '08/05/2025', exit: '', unit: 'Mês',
+      rates: [{ v: 21, from: '08/05/2025', to: '', reason: 'Contratação' }], lic: { no: '', cats: '', issued: '', expires: '', notes: 'Não possui' }, vehicle: '' },
+    { id: 'f5', name: 'Bruno Alves', role: 'Operador de máquinas', role2: 'Motorista', bond: 'Prazo determinado', company: 'Construtora Horizonte', third: false, status: 'Ativo', entry: '05/02/2026', exit: '31/12/2026', unit: 'Hora',
+      rates: [{ v: 23.5, from: '05/02/2026', to: '', reason: 'Contratação' }],
+      lic: { no: 'C-4482991', cats: 'B, C, CE', issued: '14/09/2020', expires: '14/09/2030', notes: 'Habilitado para máquinas' }, vehicle: 'Caterpillar 320 · MAQ-004' },
+    { id: 'f6', name: 'João Silva', role: 'Eletricista', role2: '', bond: 'Prestador', company: 'Construtora Alpha', third: true, status: 'Ativo', entry: '18/09/2026', exit: '', unit: 'Hora',
+      rates: [{ v: 26, from: '18/09/2026', to: '', reason: 'Contratação' }], lic: { no: 'B-5573882', cats: 'B', issued: '18/02/2008', expires: '18/02/2028', notes: '' }, vehicle: '' },
+    { id: 'f7', name: 'Tiago Nunes', role: 'Canalizador', role2: '', bond: 'Prestador', company: 'HidroTec', third: true, status: 'Ativo', entry: '11/03/2026', exit: '', unit: 'Hora',
+      rates: [{ v: 25, from: '11/03/2026', to: '', reason: 'Contratação' }], lic: { no: 'B-6684991', cats: 'B', issued: '20/01/2014', expires: '20/01/2027', notes: '' }, vehicle: '' },
+    { id: 'f8', name: 'Helena Rocha', role: 'Administrativo', role2: '', bond: 'Efetivo', company: 'Construtora Horizonte', third: false, status: 'Encerrado', entry: '22/09/2024', exit: '30/06/2026', unit: 'Mês',
+      rates: [{ v: 20, from: '22/09/2024', to: '30/06/2026', reason: 'Contratação' }], lic: { no: '', cats: '', issued: '', expires: '', notes: 'Não possui' }, vehicle: '' },
+    { id: 'f9', name: 'Marcos Pereira', role: 'Pintor', role2: '', bond: 'Prestador', company: 'Serviços Beta', third: true, status: 'Inativo', entry: '14/06/2025', exit: '', unit: 'Hora',
+      rates: [{ v: 22, from: '14/06/2025', to: '', reason: 'Contratação' }], lic: { no: 'B-7796114', cats: 'B', issued: '05/06/2006', expires: '05/06/2026', notes: '' }, vehicle: '' },
+    { id: 'f10', name: 'Alice Moreira', role: 'Eletricista', role2: '', bond: 'Prestador', company: 'EletroSul', third: true, status: 'Ativo', entry: '25/05/2026', exit: '', unit: 'Hora',
+      rates: [{ v: 26.5, from: '25/05/2026', to: '', reason: 'Contratação' }], lic: { no: 'B-8807221', cats: 'B', issued: '12/11/2012', expires: '12/11/2027', notes: '' }, vehicle: 'Renault Kangoo · 1-XYZ-119' }
+  ];
+  STATUSES = ['Ativo', 'Afastado', 'Inativo', 'Encerrado'];
+  SCOL = { 'Ativo': '#047857', 'Afastado': '#B45309', 'Inativo': '#64748B', 'Encerrado': '#B91C1C' };
+  TODAY = '21/09/2026';
+
+  REPORTS = [
+    { id: 'quadro', title: 'Quadro de funcionários', desc: 'Total cadastrado por status, função e empresa.', color: '#6D5DFB', bg: '#EEF0FE', date: 'overlap' },
+    { id: 'status', title: 'Funcionários por status', desc: 'Ativo, Afastado, Inativo e Encerrado, com a lista de pessoas de cada um.', color: '#10B981', bg: '#ECFDF5', date: 'overlap' },
+    { id: 'equipe', title: 'Equipe por empresa e vínculo', desc: 'Funcionários da empresa principal e de terceirizados, com o tipo de vínculo.', color: '#EC4899', bg: '#FDF2F8', date: 'overlap' },
+    { id: 'valores', title: 'Valores por hora', desc: 'Valor atual por funcionário, função e empresa, na unidade registrada.', color: '#F59E0B', bg: '#FFFBEB', date: 'none' },
+    { id: 'historico', title: 'Histórico de valores', desc: 'Alterações de valor com início, fim da vigência e motivo.', color: '#3B82F6', bg: '#EFF6FF', date: 'overlap' },
+    { id: 'docs', title: 'Documentação', desc: 'Carta de condução: situação, vencimento e pendências.', color: '#F97316', bg: '#FFF7ED', date: 'none' },
+    { id: 'afast', title: 'Afastamentos e disponibilidade', desc: 'Funcionários afastados e o impacto na disponibilidade para o Planning.', color: '#EF4444', bg: '#FEF2F2', date: 'none' },
+    { id: 'funcao', title: 'Distribuição por função', desc: 'Quantidade de funcionários por função principal e por função secundária.', color: '#06B6D4', bg: '#ECFEFF', date: 'overlap' }
+  ];
+
+  freshF() { return { from: '2026-01-01', to: '2026-09-21', status: '', role: '', company: '', bond: '' , name: '' }; }
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth });
+    const r = this.props.initialReport; if (r) this.setState({ rep: r }, () => this.generate());
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.gT); clearTimeout(this.tT); }
+
+  toDate(k) { const p = k.split('/'); return new Date(+p[2], +p[1] - 1, +p[0]).getTime(); }
+  tIso(i) { const p = i.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]).getTime(); }
+  brIso(i) { const p = i.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  eur(v) { return '€ ' + Number(v).toFixed(2).replace('.', ','); }
+  unitSuf(u) { return u === 'Hora' ? '/h' : (u === 'Dia' ? '/dia' : '/mês'); }
+  money(v, u) { return this.eur(v) + ' ' + this.unitSuf(u); }
+  pl(n, a, b) { return n + ' ' + (n === 1 ? a : b); }
+  norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  flash(m, ok) { clearTimeout(this.tT); this.setState({ toast: m, toastOk: ok !== false }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2800); }
+
+  current(p) { return p.rates.filter(r => !r.to)[0] || null; }
+  licState(p) {
+    if (!p.lic.no) return { label: 'Sem carta registrada', rank: 3, color: '#64748B' };
+    const e = this.toDate(p.lic.expires), t = this.toDate(this.TODAY);
+    if (e < t) return { label: 'Carta expirada', rank: 0, color: '#B91C1C' };
+    if (e <= this.toDate('21/03/2027')) return { label: 'Expira em breve', rank: 1, color: '#B45309' };
+    return { label: 'Carta válida', rank: 2, color: '#047857' };
+  }
+
+  emps(rep, f) {
+    const a = this.tIso(f.from), b = this.tIso(f.to), q = this.norm(f.name.trim());
+    return this.EMP.filter(p => {
+      if (f.status && p.status !== f.status) return false;
+      if (f.role && p.role !== f.role) return false;
+      if (f.company && p.company !== f.company) return false;
+      if (f.bond && p.bond !== f.bond) return false;
+      if (q && this.norm(p.name).indexOf(q) < 0) return false;
+      if (rep.date === 'overlap') { const s = this.toDate(p.entry), e = p.exit ? this.toDate(p.exit) : Infinity; if (!(s <= b && e >= a)) return false; }
+      return true;
+    });
+  }
+
+  build(rep, list, f) {
+    const text = (t, sub, bold, color) => ({ t: t, sub: sub || '', num: false, bold: !!bold, color: color || '' });
+    const nm = (t, sub, color) => ({ t: String(t), sub: sub || '', num: true, color: color || '' });
+    const emp = (p) => text(p.name, p.role + (p.role2 ? ' · ' + p.role2 : ''), true);
+    const st = (p) => text(p.status, '', true, this.SCOL[p.status]);
+    const notes = [];
+    let cols = [], groups = [], totals = [], kpis = [], count = '';
+    const n = list.length, cnt = (s) => list.filter(p => p.status === s).length;
+    const main = list.filter(p => !p.third).length, third = n - main;
+    const distinct = (fn) => list.map(fn).filter((v, i, ar) => ar.indexOf(v) === i);
+    const add = (head, items) => groups.push({ head: head, items: items });
+    const sv = (vals) => vals;
+
+    if (rep.id === 'quadro') {
+      cols = [{ l: 'Categoria', w: 260, fr: 1.4 }, { l: 'Total', w: 90, num: true }, { l: 'Ativos', w: 90, num: true }, { l: 'Afastados', w: 100, num: true }, { l: 'Inativos', w: 90, num: true }, { l: 'Encerrados', w: 100, num: true }];
+      const row = (label, l, sub) => ({ cells: [text('   ' + label, sub), nm(l.length), nm(l.filter(p => p.status === 'Ativo').length), nm(l.filter(p => p.status === 'Afastado').length), nm(l.filter(p => p.status === 'Inativo').length), nm(l.filter(p => p.status === 'Encerrado').length)], sv: [label, l.length, l.filter(p => p.status === 'Ativo').length, l.filter(p => p.status === 'Afastado').length, l.filter(p => p.status === 'Inativo').length, l.filter(p => p.status === 'Encerrado').length] });
+      const head = (t) => ({ cells: [text(t, '', true), nm(''), nm(''), nm(''), nm(''), nm('')] });
+      add(head('Por status'), this.STATUSES.map(s => row(s, list.filter(p => p.status === s))));
+      add(head('Por função principal'), distinct(p => p.role).map(r => row(r, list.filter(p => p.role === r))));
+      add(head('Por empresa'), distinct(p => p.company).map(c => row(c, list.filter(p => p.company === c), list.filter(p => p.company === c)[0].third ? 'Terceirizado' : 'Empresa principal')));
+      totals = ['Total de funcionários', String(n), String(cnt('Ativo')), String(cnt('Afastado')), String(cnt('Inativo')), String(cnt('Encerrado'))];
+      kpis = [['Funcionários', String(n), '#6D5DFB', 'no filtro'], ['Ativos', String(cnt('Ativo')), '#10B981', 'disponíveis para o Planning'], ['Afastados', String(cnt('Afastado')), '#F59E0B', 'indisponíveis até o retorno'], ['Inativos e encerrados', String(cnt('Inativo') + cnt('Encerrado')), '#64748B', 'fora das equipes']];
+      count = this.pl(n, 'funcionário', 'funcionários') + ' · 3 recortes (status, função e empresa)';
+      notes.push('Cada recorte soma o mesmo total de funcionários; as três seções são formas diferentes de ver as mesmas pessoas, não somam entre si.');
+    } else if (rep.id === 'status') {
+      cols = [{ l: 'Funcionário', w: 250, fr: 1.4 }, { l: 'Empresa', w: 170, fr: 1 }, { l: 'Vínculo', w: 150 }, { l: 'Entrada', w: 105, num: true }, { l: 'Saída', w: 105, num: true }];
+      this.STATUSES.filter(s => !f.status || f.status === s).forEach(s => {
+        const l = list.filter(p => p.status === s);
+        add({ cells: [text(s + ' · ' + this.pl(l.length, 'funcionário', 'funcionários'), '', true, this.SCOL[s]), text(''), text(''), nm(''), nm('')] },
+          l.length ? l.map(p => ({ cells: [emp(p), text(p.company, p.third ? 'Terceirizado' : 'Empresa principal'), text(p.bond), nm(p.entry), nm(p.exit || '—')], sv: [p.name, p.company, p.bond, this.toDate(p.entry), p.exit ? this.toDate(p.exit) : 0] })) : [{ cells: [text('   Nenhum funcionário neste status', ''), text(''), text(''), nm(''), nm('')], sv: ['', '', '', 0, 0], fixed: true }]);
+      });
+      totals = ['Total', '', '', '', String(n)];
+      kpis = [['Ativos', String(cnt('Ativo')), '#10B981', 'em atividade'], ['Afastados', String(cnt('Afastado')), '#F59E0B', 'vínculo mantido'], ['Inativos', String(cnt('Inativo')), '#64748B', 'desativados'], ['Encerrados', String(cnt('Encerrado')), '#EF4444', 'com data de saída']];
+      count = this.pl(n, 'funcionário', 'funcionários');
+    } else if (rep.id === 'equipe') {
+      cols = [{ l: 'Empresa / Funcionário', w: 260, fr: 1.4 }, { l: 'Tipo', w: 150 }, { l: 'Vínculo', w: 150 }, { l: 'Função', w: 190, fr: 1 }, { l: 'Status', w: 110 }];
+      distinct(p => p.company).sort((x, y) => (x === this.MAIN ? -1 : (y === this.MAIN ? 1 : x.localeCompare(y)))).forEach(c => {
+        const l = list.filter(p => p.company === c), t = l[0].third;
+        add({ cells: [text(c + ' · ' + this.pl(l.length, 'pessoa', 'pessoas'), '', true), text(t ? 'Terceirizado' : 'Empresa principal', '', true, t ? '#BE185D' : '#4338CA'), text(''), text(''), text('')] },
+          l.map(p => ({ cells: [text('   ' + p.name), text(''), text(p.bond), text(p.role), text(p.status, '', true, this.SCOL[p.status])], sv: [p.name, '', p.bond, p.role, p.status] })));
+      });
+      totals = ['Total', main + ' principal · ' + third + ' terceirizados', '', '', String(n)];
+      kpis = [['Funcionários', String(n), '#EC4899', 'no filtro'], ['Empresa principal', String(main), '#6D5DFB', this.MAIN], ['Terceirizados', String(third), '#BE185D', this.pl(distinct(p => p.company).filter(c => list.filter(p => p.company === c)[0].third).length, 'empresa', 'empresas')], ['Vínculos distintos', String(distinct(p => p.bond).length), '#3B82F6', distinct(p => p.bond).join(' · ')]];
+      count = this.pl(distinct(p => p.company).length, 'empresa', 'empresas') + ' · ' + this.pl(n, 'funcionário', 'funcionários');
+      notes.push('Funcionários de terceirizados continuam sendo registros individuais do cadastro de Funcionários; aqui aparecem agrupados pela empresa a que pertencem.');
+    } else if (rep.id === 'valores') {
+      cols = [{ l: 'Funcionário', w: 240, fr: 1.4 }, { l: 'Função', w: 180, fr: 1 }, { l: 'Empresa', w: 170, fr: 1 }, { l: 'Vínculo', w: 140 }, { l: 'Unidade', w: 90 }, { l: 'Valor atual', w: 130, num: true }, { l: 'Vigente desde', w: 120, num: true }];
+      const items = list.map(p => { const c = this.current(p); return { cells: [text(p.name, '', true), text(p.role), text(p.company), text(p.bond), text(p.unit), c ? nm(this.money(c.v, p.unit)) : nm('Sem valor vigente', 'cadastro encerrado', '#B45309'), nm(c ? c.from : '—')], sv: [p.name, p.role, p.company, p.bond, p.unit, c ? c.v : -1, c ? this.toDate(c.from) : 0] }; });
+      add(null, items);
+      const hr = list.filter(p => p.unit === 'Hora' && this.current(p)).map(p => this.current(p).v);
+      const avg = hr.length ? hr.reduce((a, b) => a + b, 0) / hr.length : null;
+      totals = ['Funcionários: ' + n, '', '', '', '', avg != null ? 'média ' + this.money(avg, 'Hora') : 'n/d', ''];
+      kpis = [['Média por hora', avg != null ? this.money(avg, 'Hora') : 'n/d', '#F59E0B', hr.length ? 'só unidade Hora · ' + this.pl(hr.length, 'pessoa', 'pessoas') : 'sem valores por hora'], ['Maior valor/hora', hr.length ? this.money(Math.max.apply(null, hr), 'Hora') : 'n/d', '#10B981', 'entre os vigentes'], ['Menor valor/hora', hr.length ? this.money(Math.min.apply(null, hr), 'Hora') : 'n/d', '#3B82F6', 'entre os vigentes'], ['Sem valor vigente', String(list.filter(p => !this.current(p)).length), '#EF4444', 'cadastros encerrados']];
+      count = this.pl(n, 'funcionário', 'funcionários');
+      if (list.some(p => p.unit !== 'Hora')) notes.push('Alguns funcionários têm o valor registrado por mês (Sofia Martins e Helena Rocha). Aparecem na unidade do cadastro e ficam fora da média por hora, porque não são comparáveis.');
+      notes.push('Valor/hora é uma referência de cadastro, não custo total de mão de obra. Não há soma de valores nesta tabela; custos reais por horas lançadas estão em Relatórios - Custos.');
+    } else if (rep.id === 'historico') {
+      cols = [{ l: 'Funcionário', w: 240, fr: 1.4 }, { l: 'Valor', w: 140, num: true }, { l: 'Vigência — início', w: 130, num: true }, { l: 'Vigência — fim', w: 130, num: true }, { l: 'Motivo', w: 170 }, { l: 'Situação', w: 110 }];
+      const a = this.tIso(f.from), b = this.tIso(f.to), items = [];
+      list.forEach(p => p.rates.forEach(r => { const s = this.toDate(r.from), e = r.to ? this.toDate(r.to) : Infinity; if (s <= b && e >= a) items.push({ p: p, r: r }); }));
+      items.sort((x, y) => (x.p.name === y.p.name ? this.toDate(y.r.from) - this.toDate(x.r.from) : x.p.name.localeCompare(y.p.name)));
+      add(null, items.map(x => ({ cells: [text(x.p.name, x.p.role, true), nm(this.money(x.r.v, x.p.unit)), nm(x.r.from), nm(x.r.to || 'atual'), text(x.r.reason), text(x.r.to ? 'Anterior' : 'Atual', '', true, x.r.to ? '#64748B' : '#047857')], sv: [x.p.name, x.r.v, this.toDate(x.r.from), x.r.to ? this.toDate(x.r.to) : Infinity, x.r.reason, x.r.to ? 0 : 1] })));
+      const multi = list.filter(p => p.rates.length > 1).length, last = items.slice().sort((x, y) => this.toDate(y.r.from) - this.toDate(x.r.from))[0];
+      totals = ['Registros: ' + items.length, '', '', '', '', ''];
+      kpis = [['Registros de valor', String(items.length), '#3B82F6', 'vigências no período'], ['Com mais de um valor', String(multi), '#6D5DFB', 'funcionários com histórico'], ['Última alteração', last ? last.r.from : '—', '#F59E0B', last ? last.p.name : ''], ['Vigências atuais', String(items.filter(x => !x.r.to).length), '#10B981', 'sem data de fim']];
+      count = this.pl(items.length, 'registro de valor', 'registros de valor') + ' · ' + this.pl(n, 'funcionário', 'funcionários');
+      notes.push('Só aparecem os valores registrados no cadastro. A primeira linha de cada pessoa é, em geral, a contratação; o histórico anterior à entrada na empresa não existe no sistema.');
+      if (!items.length) { groups = []; }
+    } else if (rep.id === 'docs') {
+      cols = [{ l: 'Funcionário', w: 240, fr: 1.4 }, { l: 'Empresa', w: 160, fr: 1 }, { l: 'Documento', w: 150 }, { l: 'Número', w: 120 }, { l: 'Categorias', w: 110 }, { l: 'Emissão', w: 105, num: true }, { l: 'Vencimento', w: 110, num: true }, { l: 'Situação', w: 160 }];
+      const items = list.map(p => { const s = this.licState(p); return { p: p, s: s, cells: [text(p.name, p.status !== 'Ativo' ? p.status : '', true), text(p.company), text('Carta de condução'), nm(p.lic.no || '—'), text(p.lic.cats || '—'), nm(p.lic.issued || '—'), nm(p.lic.expires || '—'), text(s.label, p.lic.notes, true, s.color)], sv: [p.name, p.company, '', p.lic.no, p.lic.cats, p.lic.issued ? this.toDate(p.lic.issued) : 0, p.lic.expires ? this.toDate(p.lic.expires) : Infinity, s.rank] }; });
+      items.sort((x, y) => x.s.rank - y.s.rank || x.p.name.localeCompare(y.p.name));
+      add(null, items);
+      const c = (r) => items.filter(x => x.s.rank === r).length;
+      totals = ['Funcionários: ' + n, '', '', '', '', '', '', ''];
+      kpis = [['Cartas válidas', String(c(2)), '#10B981', 'vencimento após 21/03/2027'], ['Expiram em breve', String(c(1)), '#F59E0B', 'até 21/03/2027'], ['Cartas expiradas', String(c(0)), '#EF4444', 'em 21/09/2026'], ['Sem carta registrada', String(c(3)), '#64748B', 'não é necessariamente pendência']];
+      count = this.pl(n, 'funcionário', 'funcionários');
+      notes.push('A carta de condução é o único documento profissional previsto no cadastro. Outros documentos e certificações não existem no sistema e não são listados.');
+      notes.push('Situação calculada na data de referência 21/09/2026: expirada se o vencimento já passou; em breve se vence em até 6 meses. “Sem carta” significa que o cadastro registra que o funcionário não possui.');
+    } else if (rep.id === 'afast') {
+      cols = [{ l: 'Funcionário', w: 240, fr: 1.4 }, { l: 'Função', w: 190, fr: 1 }, { l: 'Empresa', w: 170, fr: 1 }, { l: 'Vínculo', w: 140 }, { l: 'Situação no Planning', w: 260, fr: 1.2 }, { l: 'Veículo sob responsabilidade', w: 220, fr: 1 }];
+      const un = list.filter(p => p.status !== 'Ativo').sort((x, y) => this.STATUSES.indexOf(x.status) - this.STATUSES.indexOf(y.status));
+      add(null, un.map(p => ({ cells: [text(p.name, p.status, true, this.SCOL[p.status]), text(p.role), text(p.company), text(p.bond), text(p.status === 'Afastado' ? 'Indisponível até o retorno' : 'Fora das equipes e do Planning', p.status === 'Afastado' ? 'vínculo mantido' : (p.status === 'Encerrado' ? 'saída em ' + p.exit : 'desativado'), true, p.status === 'Afastado' ? '#B45309' : '#64748B'), p.vehicle ? text(p.vehicle, 'vínculo segue aberto no cadastro', false, '#B45309') : text('Nenhum')], sv: [p.name, p.role, p.company, p.bond, p.status, p.vehicle] })));
+      const act = cnt('Ativo');
+      totals = ['Indisponíveis: ' + un.length, '', '', '', 'Disponíveis: ' + act, ''];
+      kpis = [['Afastados', String(cnt('Afastado')), '#F59E0B', 'indisponíveis até o retorno'], ['Disponíveis', String(act), '#10B981', 'ativos, no Planning'], ['Indisponíveis', String(un.length), '#EF4444', 'afastados, inativos e encerrados'], ['Disponibilidade', n ? Math.round(act / n * 100) + '%' : 'n/d', '#6D5DFB', act + ' de ' + this.pl(n, 'funcionário', 'funcionários')]];
+      count = this.pl(un.length, 'funcionário indisponível', 'funcionários indisponíveis') + ' · ' + this.pl(n, 'funcionário', 'funcionários') + ' no filtro';
+      notes.push('Regra do cadastro: afastado fica indisponível para o Planning até o retorno e mantém o vínculo; inativo e encerrado saem das equipes e do Planning.');
+      notes.push('O cadastro não registra data de início, previsão de retorno nem motivo do afastamento — por isso não são exibidos. Nenhuma informação de saúde é guardada ou mostrada.');
+    } else {
+      cols = [{ l: 'Função', w: 260, fr: 1.4 }, { l: 'Como função principal', w: 180, num: true }, { l: 'Como função secundária', w: 190, num: true }, { l: 'Pessoas (principal)', w: 280, fr: 1.4 }];
+      const roles = list.map(p => p.role).concat(list.filter(p => p.role2).map(p => p.role2)).filter((v, i, ar) => ar.indexOf(v) === i);
+      const items = roles.map(r => { const pm = list.filter(p => p.role === r), sc = list.filter(p => p.role2 === r); return { cells: [text(r, '', true), nm(pm.length || '—'), nm(sc.length || '—'), text(pm.map(p => p.name).join(', ') || '—', sc.length ? 'Secundária: ' + sc.map(p => p.name).join(', ') : '')], sv: [r, pm.length, sc.length, pm.length ? pm[0].name : ''] }; });
+      add(null, items.sort((x, y) => y.sv[1] - x.sv[1] || x.sv[0].localeCompare(y.sv[0])));
+      const with2 = list.filter(p => p.role2).length;
+      totals = ['Funcionários: ' + n, String(n), String(with2), ''];
+      kpis = [['Funções principais', String(distinct(p => p.role).length), '#06B6D4', 'distintas no filtro'], ['Com função secundária', String(with2), '#6D5DFB', 'de ' + this.pl(n, 'funcionário', 'funcionários')], ['Maior equipe', items.length ? items.slice().sort((x, y) => y.sv[1] - x.sv[1])[0].sv[0] : '—', '#3B82F6', 'por função principal'], ['Funcionários', String(n), '#10B981', 'no filtro']];
+      count = this.pl(items.length, 'função', 'funções');
+      notes.push('Cada funcionário tem uma função principal; as colunas principal e secundária contam pessoas diferentes e não devem ser somadas, para não contar a mesma pessoa duas vezes.');
+    }
+    const empty = groups.length === 0 || (groups.every(g => g.items.length === 0)) || (rep.id !== 'quadro' && n === 0);
+    return { cols: cols, groups: groups, totals: totals, kpis: kpis, notes: notes, count: count, empty: empty || n === 0 };
+  }
+
+  flatten(R, sort) {
+    const out = [];
+    R.groups.forEach(g => {
+      if (g.head) out.push({ cells: g.head.cells, level: 1 });
+      let it = g.items.slice();
+      if (sort.k >= 0) it = it.filter(x => !x.fixed).sort((x, y) => { const a = x.sv[sort.k], b = y.sv[sort.k]; if (a == null && b == null) return 0; if (a == null) return 1; if (b == null) return -1; return (typeof a === 'string' ? String(a).localeCompare(String(b)) : a - b) * sort.dir; }).concat(it.filter(x => x.fixed));
+      it.forEach(x => out.push({ cells: x.cells, level: 0 }));
+    });
+    return out;
+  }
+
+  generate = () => {
+    const s = this.state, rep = this.REPORTS.filter(r => r.id === s.rep)[0];
+    if (!rep) { this.flash('Escolha um relatório primeiro', false); return; }
+    if (rep.date === 'overlap' && this.tIso(s.f.from) > this.tIso(s.f.to)) { this.flash('Corrija o período antes de gerar', false); return; }
+    const f = JSON.parse(JSON.stringify(s.f));
+    this.setState({ status: 'loading', applied: null, sort: { k: -1, dir: 1 } });
+    clearTimeout(this.gT);
+    this.gT = setTimeout(() => this.setState({ status: 'ready', applied: { rep: this.state.rep, f: f } }), 800);
+  };
+
+  openRep(id) {
+    this.setState({ rep: id, status: 'idle', applied: null, sort: { k: -1, dir: 1 }, f: Object.assign(this.freshF(), { from: this.state.f.from, to: this.state.f.to }) }, () => {
+      const el = document.getElementById('cfg');
+      if (el) window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - 96), behavior: 'smooth' });
+    });
+  }
+
+  quick(id, over) {
+    clearTimeout(this.gT);
+    const f = Object.assign(this.freshF(), over || {});
+    this.setState({ rep: id, f: f, status: 'ready', applied: { rep: id, f: f }, sort: { k: -1, dir: 1 } });
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, isMobile = w < 1024;
+    const rep = this.REPORTS.filter(r => r.id === s.rep)[0] || null;
+    const f = s.f;
+    const A = s.applied && rep && s.applied.rep === rep.id ? s.applied : null;
+    const usesPeriod = !!rep && rep.date === 'overlap';
+    const periodErr = usesPeriod && this.tIso(f.from) > this.tIso(f.to) ? 'A data inicial deve ser anterior ou igual à data final.' : '';
+    const setF = (p) => this.setState(x => ({ f: Object.assign({}, x.f, p) }));
+    const ready = s.status === 'ready' && !!A;
+    const dirty = !!A && JSON.stringify(A.f) !== JSON.stringify(f);
+
+    let R = null, rowsAll = [];
+    if (ready) { R = this.build(rep, this.emps(rep, A.f), A.f); if (!R.empty) rowsAll = this.flatten(R, s.sort); }
+    const has = ready && !R.empty;
+
+    const mono = 'font-family:\'JetBrains Mono\',monospace;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right';
+    const txt = 'font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    let tHeads = [], tRows = [], tTotals = [], tGrid = '', tInner = '';
+    if (has) {
+      const widths = R.cols.map(c => c.fr ? 'minmax(' + c.w + 'px,' + c.fr + 'fr)' : c.w + 'px').join(' ');
+      const inner = R.cols.reduce((n, c) => n + c.w, 0) + 12 * (R.cols.length - 1) + 32;
+      tGrid = 'min-width:' + inner + 'px;display:grid;grid-template-columns:' + widths + ';gap:12px;align-items:center;padding:11px 16px';
+      tInner = 'min-width:' + inner + 'px';
+      tHeads = R.cols.map((c, i) => ({ t: c.l, arrow: s.sort.k === i ? (s.sort.dir > 0 ? '▲' : '▼') : '',
+        sort: () => this.setState(x => ({ sort: x.sort.k === i ? { k: i, dir: -x.sort.dir } : { k: i, dir: 1 } })),
+        style: 'display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748B;white-space:nowrap;text-align:left;' + (c.num ? 'justify-content:flex-end' : '') }));
+      tRows = rowsAll.map(r => ({ style: tGrid + ';border-bottom:1px solid #F1F5F9;' + (r.level === 1 ? 'background:#FBFAFF' : ''),
+        cells: r.cells.map(c => ({ t: c.t, sub: c.sub, hasSub: !!c.sub,
+          textStyle: (c.num ? mono : txt + (c.bold ? ';font-weight:700' : '')) + (c.color ? ';color:' + c.color : ''),
+          subStyle: 'font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#64748B' + (c.num ? ';text-align:right' : '') })) }));
+      tTotals = R.totals.map((t, i) => ({ t: t, style: 'font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;' + (R.cols[i] && R.cols[i].num ? 'font-family:\'JetBrains Mono\',monospace;text-align:right' : '') }));
+    }
+
+    const optsOf = (all, list) => [{ v: '', t: all }].concat(list.map(x => ({ v: x, t: x })));
+    const uniq = (fn) => this.EMP.map(fn).filter((v, i, a) => a.indexOf(v) === i);
+    const SEL = {
+      status: { label: 'Status do funcionário', options: optsOf('Todos os status', this.STATUSES) },
+      role: { label: 'Cargo / função', options: optsOf('Todas as funções', uniq(p => p.role).sort()) },
+      company: { label: 'Empresa', options: optsOf('Todas as empresas', uniq(p => p.company)) },
+      bond: { label: 'Vínculo', options: optsOf('Todos os vínculos', uniq(p => p.bond)) }
+    };
+    const keys = ['status', 'role', 'company', 'bond'];
+    const selects = rep ? keys.map(k => ({ label: SEL[k].label, options: SEL[k].options, value: f[k], onChange: (e) => setF({ [k]: e.target.value }) })) : [];
+
+    const periodShort = A ? (usesPeriod ? this.brIso(A.f.from) + ' → ' + this.brIso(A.f.to) : 'situação atual') : '';
+    const activeTxt = rep ? keys.filter(k => f[k]).map(k => SEL[k].label + ': ' + f[k]).concat(f.name.trim() ? ['Nome: ' + f.name.trim()] : []).join('; ') || 'nenhum' : '';
+    const hints = { overlap: 'Entram os funcionários cuja permanência na empresa (entrada → saída) se sobrepõe ao período escolhido.', none: 'Este relatório mostra a situação atual do cadastro; o período não se aplica.' };
+    const periodHint = rep ? (rep.id === 'historico' ? 'Entram as vigências de valor que se sobrepõem ao período escolhido, de funcionários presentes nele.' : hints[rep.date]) : '';
+
+    const csvNow = () => {
+      if (!has) { this.flash('Gere um relatório com resultados para exportar', false); return; }
+      const esc = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const lines = [['Relatório', rep.title], ['Período', periodShort], ['Filtros', activeTxt], ['Gerado em', this.TODAY + ' (dados fictícios)'], []];
+      lines.push(R.cols.map(c => c.l));
+      rowsAll.forEach(r => lines.push(r.cells.map(c => (c.t + (c.sub ? ' (' + c.sub + ')' : '')).trim())));
+      lines.push(R.totals);
+      const csv = '\ufeff' + lines.map(l => l.map(esc).join(';')).join('\r\n');
+      try {
+        const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        const a = document.createElement('a'); a.href = url; a.download = 'progesty-rh-' + rep.id + '.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 500);
+        this.flash('Arquivo CSV gerado · ' + this.pl(rowsAll.length, 'linha', 'linhas'));
+      } catch (e) { this.flash('Não foi possível gerar o arquivo', false); }
+    };
+
+    const wAvail = w - (isMobile ? 0 : 258);
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      groups: this.NAV.map(g => ({ name: g.name, dot: g.dot, isChart: !!g.chart, notChart: !g.chart, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(n => ({ name: n, pick: () => this.setState({ active: n, navOpen: false }),
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === n ? '700' : '500') + ';color:' + (s.active === n ? '#fff' : '#CBD5E1') + ';background:' + (s.active === n ? 'rgba(109,93,251,.26)' : 'transparent'),
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === n ? '#6D5DFB' : '#64748B') })) })),
+
+      cardGrid: 'display:grid;grid-template-columns:repeat(' + (wAvail >= 1180 ? 4 : (wAvail >= 760 ? 2 : 1)) + ',minmax(0,1fr));gap:clamp(10px,1.2vw,16px)',
+      cards: this.REPORTS.map(r => ({ title: r.title, desc: r.desc, color: r.color, bg: r.bg, pick: () => this.openRep(r.id),
+        style: 'background:#fff;border:1px solid ' + (s.rep === r.id ? '#C7C3FB' : '#E2E8F0') + ';border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;' + (s.rep === r.id ? 'box-shadow:0 18px 36px -26px rgba(109,93,251,.7)' : ''),
+        btnStyle: 'align-self:flex-start;padding:11px 18px;border-radius:11px;font-size:13px;font-weight:700;' + (s.rep === r.id ? 'background:#EEF0FE;color:#4338CA;border:1px solid #C7C3FB' : 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;box-shadow:0 12px 24px -14px rgba(109,93,251,1)') })),
+
+      hasRep: !!rep, repTitle: rep ? rep.title : '', closeRep: () => this.setState({ rep: null, status: 'idle', applied: null }),
+      showPeriod: usesPeriod, fromIso: f.from, toIso: f.to, onFrom: (e) => { if (e.target.value) setF({ from: e.target.value }); }, onTo: (e) => { if (e.target.value) setF({ to: e.target.value }); },
+      selects: selects, nameQuery: f.name, onName: (e) => setF({ name: e.target.value }),
+      periodErr: periodErr, periodHint: periodHint, dirty: dirty, clearFilters: () => this.setState({ f: this.freshF() }),
+      generate: this.generate, isLoading: s.status === 'loading',
+      genLabel: s.status === 'loading' ? 'Gerando…' : (ready && !dirty ? 'Atualizar relatório' : 'Gerar relatório'),
+      genStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;color:#fff;background:' + (s.status === 'loading' ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';box-shadow:0 14px 26px -14px rgba(109,93,251,1);' + (s.status === 'loading' ? 'pointer-events:none;' : ''),
+
+      stLoading: s.status === 'loading' && !!rep, skeletons: [1, 2, 3, 4], stEmpty: ready && !has, stReady: has,
+      emptyTitle: 'Nenhum funcionário encontrado',
+      emptyText: 'Nenhum registro corresponde aos filtros' + (usesPeriod ? ' e ao período' : '') + ' escolhidos. Ajuste ou limpe os filtros e gere novamente.',
+      printMeta: 'Período: ' + periodShort + ' · Filtros: ' + activeTxt + ' · Gerado em ' + this.TODAY + ' (dados fictícios)',
+      metaShort: periodShort + (activeTxt !== 'nenhum' ? ' · ' + activeTxt : ''),
+      kpis: has ? R.kpis.map(k => ({ label: k[0], value: k[1], color: k[2], hint: k[3], hintColor: '#64748B' })) : [],
+      hasNotes: has && R.notes.length > 0,
+      notes: has ? R.notes.map(t => { const wn = /não registra|não é necessariamente|ficam fora|não são comparáveis/.test(t); return { t: t, icon: wn ? '!' : 'i', color: wn ? '#92400E' : '#1D4ED8', bg: wn ? '#FFFBEB' : '#EFF6FF', bd: wn ? '#FDE68A' : '#BFDBFE', iconBg: wn ? '#FEF3C7' : '#DBEAFE' }; }) : [],
+      tableCount: has ? R.count : '',
+      tHeads: tHeads, tRows: tRows, tTotals: tTotals, tGrid: tGrid, tInner: tInner,
+      doPrint: () => { if (!has) { this.flash('Gere um relatório com resultados para imprimir', false); return; } try { window.print(); } catch (e) {} },
+      doCsv: csvNow,
+
+      toast: s.toast, toastMark: s.toastOk ? '✓' : '!',
+      demos: [
+        { name: 'Início', run: () => { clearTimeout(this.gT); this.setState({ rep: null, status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Configurando', run: () => { clearTimeout(this.gT); this.setState({ rep: 'quadro', status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Quadro', run: () => this.quick('quadro') },
+        { name: 'Por status', run: () => this.quick('status') },
+        { name: 'Equipe', run: () => this.quick('equipe') },
+        { name: 'Valores', run: () => this.quick('valores') },
+        { name: 'Histórico', run: () => this.quick('historico') },
+        { name: 'Documentação', run: () => this.quick('docs') },
+        { name: 'Afastamentos', run: () => this.quick('afast') },
+        { name: 'Por função', run: () => this.quick('funcao') },
+        { name: 'Sem resultados', run: () => this.quick('quadro', { name: 'zzz' }) },
+        { name: 'Carregando', run: () => { this.setState({ rep: s.rep || 'quadro', status: 'loading', applied: null }); clearTimeout(this.gT); this.gT = setTimeout(() => this.quick(this.state.rep), 1600); } }
+      ].map(d => ({ name: d.name, run: d.run, style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
