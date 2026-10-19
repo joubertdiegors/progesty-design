@@ -87,7 +87,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid #6D5DFB;outline-offset
 </sc-if>
 
 <main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
-  <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+  <header ref="{{ headerRef }}" style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
     <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,30px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
       <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto">
@@ -128,6 +128,15 @@ input:focus,select:focus,textarea:focus{outline:2px solid #6D5DFB;outline-offset
         Filtros
         <sc-if value="{{ filterCount }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 7px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600">{{ filterCount }}</span></sc-if>
       </button>
+      <sc-if value="{{ showColsBtn }}" hint-placeholder-val="{{ true }}">
+        <div data-colwrap="1" style="flex:0 0 auto">
+          <button onClick="{{ toggleColMenu }}" aria-haspopup="true" style="{{ colBtnStyle }}">
+            <span style="display:grid;grid-template-columns:repeat(3,4px);gap:2px;flex:0 0 auto"><span style="height:12px;border-radius:1px;background:currentColor"></span><span style="height:12px;border-radius:1px;background:currentColor;opacity:.6"></span><span style="height:12px;border-radius:1px;background:currentColor;opacity:.35"></span></span>
+            Personalizar colunas
+            <span style="padding:2px 7px;border-radius:999px;background:#EEF0FE;color:#4338CA;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600">{{ colCount }}</span>
+          </button>
+        </div>
+      </sc-if>
       <div style="display:flex;flex-direction:column;gap:1px;min-width:0;padding:0 4px">
         <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;white-space:nowrap">{{ periodLabel }}</span>
         <span style="font-size:11.5px;color:#64748B;white-space:nowrap">{{ periodSub }}</span>
@@ -150,15 +159,16 @@ input:focus,select:focus,textarea:focus{outline:2px solid #6D5DFB;outline-offset
       <sc-if value="{{ panelOverlay }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ toggleFilters }}" style="order:3;position:fixed;inset:0;z-index:81;background:rgba(15,23,42,.4);backdrop-filter:blur(2px)"></div>
       </sc-if>
-      <aside class="pg-scroll" style="{{ panelStyle }}">
-        <div style="display:flex;align-items:center;gap:10px">
+      <aside style="{{ panelStyle }}">
+        <div style="flex:0 0 auto;display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid #E2E8F0">
           <span style="font-size:15px;font-weight:800;letter-spacing:-.02em">Filtros</span>
           <div style="flex:1"></div>
           <button onClick="{{ clearFilters }}" style="font-size:12px;font-weight:700;color:#4338CA;padding:4px 6px">Limpar</button>
           <button onClick="{{ toggleFilters }}" aria-label="Fechar filtros" style="width:32px;height:32px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:13px;color:#64748B">✕</button>
         </div>
 
-        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px">
+        <div class="pg-scroll" style="flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:2px 4px 18px 0">
+        <div style="flex:0 0 auto;background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;align-items:center;gap:6px">
             <button onClick="{{ calPrev }}" aria-label="Mês anterior" style="width:28px;height:28px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;color:#475569;font-size:14px">‹</button>
             <span style="flex:1;text-align:center;font-size:13px;font-weight:800">{{ calTitle }}</span>
@@ -186,7 +196,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid #6D5DFB;outline-offset
         </div>
 
         <sc-for list="{{ filterGroups }}" as="fg" hint-placeholder-count="6">
-          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:14px;overflow:hidden">
+          <div style="flex:0 0 auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;overflow:hidden">
             <button onClick="{{ fg.toggle }}" style="width:100%;display:flex;align-items:center;gap:9px;padding:11px 12px;text-align:left">
               <span style="{{ fg.caretStyle }}">▾</span>
               <span style="flex:1;font-size:12.5px;font-weight:700">{{ fg.name }}</span>
@@ -207,6 +217,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid #6D5DFB;outline-offset
             </sc-if>
           </div>
         </sc-for>
+        </div>
       </aside>
     </sc-if>
 
@@ -266,58 +277,62 @@ input:focus,select:focus,textarea:focus{outline:2px solid #6D5DFB;outline-offset
 
         <sc-if value="{{ quadroTable }}" hint-placeholder-val="{{ true }}">
           <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden">
-            <div style="{{ qHeadStyle }}">
-              <span style="{{ thStyle }}">Dia</span>
-              <span style="{{ thStyle }}">Funcionário</span>
-              <span style="{{ thStyle }}">Obra</span>
-              <span style="{{ thStyle }}">Horas</span>
-              <sc-if value="{{ showVeh }}" hint-placeholder-val="{{ true }}"><span style="{{ thStyle }}">Veículo</span></sc-if>
-              <span style="{{ thStyle }}">Informação</span>
-              <span style="display:flex;align-items:center;gap:8px"><button onClick="{{ toggleAllSel }}" aria-label="Selecionar todos" style="{{ allSelBoxStyle }}">{{ allSelMark }}</button><span style="{{ thStyle }}">Estado</span></span>
-            </div>
-            <sc-for list="{{ qRows }}" as="r" hint-placeholder-count="8">
-              <div style="{{ r.rowStyle }}">
-                <div style="min-width:0;display:flex;flex-direction:column;gap:1px">
-                  <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600">{{ r.dateFull }}</span>
-                  <span style="font-size:11px;color:#64748B">{{ r.dowFull }}</span>
+            <div class="pg-scroll" style="overflow-x:auto">
+              <div style="{{ qInnerStyle }}">
+                <div style="{{ qHeadStyle }}">
+                  <sc-for list="{{ qHeads }}" as="qh" hint-placeholder-count="7">
+                    <span style="{{ qh.style }}">
+                      <sc-if value="{{ qh.isState }}" hint-placeholder-val="{{ false }}"><button onClick="{{ toggleAllSel }}" aria-label="Selecionar todos" style="{{ allSelBoxStyle }}">{{ allSelMark }}</button></sc-if>
+                      <span style="{{ thStyle }}">{{ qh.t }}</span>
+                    </span>
+                  </sc-for>
                 </div>
-                <button onClick="{{ r.openDetail }}" style="min-width:0;display:flex;flex-direction:column;gap:1px;text-align:left">
-                  <span style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.person }}</span>
-                  <span style="{{ r.firmStyle }}">{{ r.firm }}</span>
-                </button>
-                <div style="min-width:0;display:flex;flex-direction:column;gap:1px">
-                  <span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.obra }}</span>
-                  <span style="font-size:11px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.client }}</span>
-                </div>
-                <div style="min-width:0;display:flex;align-items:center;gap:6px">
-                  <sc-if value="{{ r.isTotal }}" hint-placeholder-val="{{ true }}">
-                    <input data-nav="1" value="{{ r.total }}" onInput="{{ r.onTotal }}" onBlur="{{ r.onTotalBlur }}" onKeyDown="{{ onNavKey }}" readOnly="{{ r.locked }}" inputmode="decimal" placeholder="0,00" aria-label="Total de horas" style="{{ r.totalStyle }}">
-                  </sc-if>
-                  <sc-if value="{{ r.isHor }}" hint-placeholder-val="{{ false }}">
-                    <input data-nav="1" value="{{ r.ent }}" onInput="{{ r.onEnt }}" onKeyDown="{{ onNavKey }}" readOnly="{{ r.locked }}" placeholder="08:00" aria-label="Entrada" style="{{ r.timeStyle }}">
-                    <input data-nav="1" value="{{ r.sai }}" onInput="{{ r.onSai }}" onKeyDown="{{ onNavKey }}" readOnly="{{ r.locked }}" placeholder="17:00" aria-label="Saída" style="{{ r.timeStyle }}">
-                    <input data-nav="1" value="{{ r.pausa }}" onInput="{{ r.onPausa }}" onKeyDown="{{ onNavKey }}" readOnly="{{ r.locked }}" placeholder="min" aria-label="Pausa em minutos" title="{{ r.pausaTitle }}" style="{{ r.pauseStyle }}">
-                  </sc-if>
-                  <span style="{{ r.calcStyle }}">{{ r.calc }}</span>
-                </div>
-                <sc-if value="{{ showVeh }}" hint-placeholder-val="{{ true }}">
-                  <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.veh }}</span>
-                </sc-if>
-                <input data-nav="1" value="{{ r.obs }}" onInput="{{ r.onObs }}" onKeyDown="{{ onNavKey }}" readOnly="{{ r.locked }}" placeholder="—" aria-label="Informação" style="{{ r.obsStyle }}">
-                <div style="min-width:0;display:flex;align-items:center;gap:8px">
-                  <button onClick="{{ r.toggleSel }}" aria-label="Selecionar" style="{{ r.selBoxStyle }}">{{ r.selMark }}</button>
-                  <div style="min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px">
-                    <button onClick="{{ r.validAction }}" style="{{ r.validStyle }}">{{ r.validLabel }}</button>
-                    <sc-if value="{{ r.saveText }}" hint-placeholder-val="{{ false }}">
-                      <span style="{{ r.saveStyle }}">{{ r.saveText }}</span>
-                    </sc-if>
-                    <sc-if value="{{ r.canRetry }}" hint-placeholder-val="{{ false }}">
-                      <button onClick="{{ r.retry }}" style="font-size:10.5px;font-weight:800;color:#B91C1C;text-decoration:underline">Tentar novamente</button>
-                    </sc-if>
+                <sc-for list="{{ qRows }}" as="r" hint-placeholder-count="8">
+                  <div style="{{ r.rowStyle }}">
+                    <sc-for list="{{ r.cells }}" as="cl" hint-placeholder-count="7">
+                      <div style="{{ cl.style }}">
+                        <sc-if value="{{ cl.isPlain }}" hint-placeholder-val="{{ false }}">
+                          <span style="{{ cl.textStyle }}">{{ cl.t }}</span>
+                          <sc-if value="{{ cl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.subStyle }}">{{ cl.sub }}</span></sc-if>
+                        </sc-if>
+                        <sc-if value="{{ cl.isPerson }}" hint-placeholder-val="{{ false }}">
+                          <button onClick="{{ cl.open }}" style="min-width:0;display:flex;flex-direction:column;gap:1px;text-align:left">
+                            <span style="{{ cl.textStyle }}">{{ cl.t }}</span>
+                            <sc-if value="{{ cl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.subStyle }}">{{ cl.sub }}</span></sc-if>
+                          </button>
+                        </sc-if>
+                        <sc-if value="{{ cl.isHours }}" hint-placeholder-val="{{ false }}">
+                          <div style="min-width:0;display:flex;align-items:center;gap:6px">
+                            <sc-if value="{{ cl.r.isTotal }}" hint-placeholder-val="{{ true }}">
+                              <input data-nav="1" value="{{ cl.r.total }}" onInput="{{ cl.r.onTotal }}" onBlur="{{ cl.r.onTotalBlur }}" onKeyDown="{{ onNavKey }}" readOnly="{{ cl.r.locked }}" inputmode="decimal" placeholder="0,00" aria-label="Total de horas" style="{{ cl.r.totalStyle }}">
+                            </sc-if>
+                            <sc-if value="{{ cl.r.isHor }}" hint-placeholder-val="{{ false }}">
+                              <input data-nav="1" value="{{ cl.r.ent }}" onInput="{{ cl.r.onEnt }}" onKeyDown="{{ onNavKey }}" readOnly="{{ cl.r.locked }}" placeholder="08:00" aria-label="Entrada" style="{{ cl.r.timeStyle }}">
+                              <input data-nav="1" value="{{ cl.r.sai }}" onInput="{{ cl.r.onSai }}" onKeyDown="{{ onNavKey }}" readOnly="{{ cl.r.locked }}" placeholder="17:00" aria-label="Saída" style="{{ cl.r.timeStyle }}">
+                              <input data-nav="1" value="{{ cl.r.pausa }}" onInput="{{ cl.r.onPausa }}" onKeyDown="{{ onNavKey }}" readOnly="{{ cl.r.locked }}" placeholder="min" aria-label="Pausa em minutos" title="{{ cl.r.pausaTitle }}" style="{{ cl.r.pauseStyle }}">
+                            </sc-if>
+                            <span style="{{ cl.r.calcStyle }}">{{ cl.r.calc }}</span>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ cl.isObs }}" hint-placeholder-val="{{ false }}">
+                          <input data-nav="1" value="{{ cl.r.obs }}" onInput="{{ cl.r.onObs }}" onKeyDown="{{ onNavKey }}" readOnly="{{ cl.r.locked }}" placeholder="—" aria-label="Informação" style="{{ cl.r.obsStyle }}">
+                        </sc-if>
+                        <sc-if value="{{ cl.isState }}" hint-placeholder-val="{{ false }}">
+                          <div style="min-width:0;display:flex;align-items:center;gap:8px">
+                            <button onClick="{{ cl.r.toggleSel }}" aria-label="Selecionar" style="{{ cl.r.selBoxStyle }}">{{ cl.r.selMark }}</button>
+                            <div style="min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px">
+                              <button onClick="{{ cl.r.validAction }}" style="{{ cl.r.validStyle }}">{{ cl.r.validLabel }}</button>
+                              <sc-if value="{{ cl.r.saveText }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.r.saveStyle }}">{{ cl.r.saveText }}</span></sc-if>
+                              <sc-if value="{{ cl.r.canRetry }}" hint-placeholder-val="{{ false }}"><button onClick="{{ cl.r.retry }}" style="font-size:10.5px;font-weight:800;color:#B91C1C;text-decoration:underline">Tentar novamente</button></sc-if>
+                            </div>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
                   </div>
-                </div>
+                </sc-for>
               </div>
-            </sc-for>
+            </div>
           </div>
         </sc-if>
 
@@ -387,28 +402,26 @@ input:focus,select:focus,textarea:focus{outline:2px solid #6D5DFB;outline-offset
 
         <sc-if value="{{ listTable }}" hint-placeholder-val="{{ true }}">
           <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden">
-            <div style="{{ lHeadStyle }}">
-              <sc-for list="{{ lHeads }}" as="lh" hint-placeholder-count="7">
-                <span style="{{ lh.style }}">{{ lh.t }}</span>
-              </sc-for>
+            <div class="pg-scroll" style="overflow-x:auto">
+              <div style="{{ lInnerStyle }}">
+                <div style="{{ lHeadStyle }}">
+                  <sc-for list="{{ lHeads }}" as="lh" hint-placeholder-count="7">
+                    <span style="{{ lh.style }}">{{ lh.t }}</span>
+                  </sc-for>
+                </div>
+                <sc-for list="{{ lRows }}" as="r" hint-placeholder-count="10">
+                  <button onClick="{{ r.openDetail }}" style="{{ r.rowStyle }}" style-hover="background:#F8FAFC">
+                    <sc-for list="{{ r.cells }}" as="cl" hint-placeholder-count="7">
+                      <span style="{{ cl.style }}">
+                        <sc-if value="{{ cl.isText }}" hint-placeholder-val="{{ true }}"><span style="{{ cl.textStyle }}">{{ cl.t }}</span></sc-if>
+                        <sc-if value="{{ cl.isBadge }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.badgeStyle }}"><span style="{{ cl.dotStyle }}"></span>{{ cl.t }}</span></sc-if>
+                        <sc-if value="{{ cl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.subStyle }}">{{ cl.sub }}</span></sc-if>
+                      </span>
+                    </sc-for>
+                  </button>
+                </sc-for>
+              </div>
             </div>
-            <sc-for list="{{ lRows }}" as="r" hint-placeholder-count="10">
-              <button onClick="{{ r.openDetail }}" style="{{ r.rowStyle }}" style-hover="background:#F8FAFC">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;white-space:nowrap">{{ r.date }}</span>
-                <span style="min-width:0;display:flex;flex-direction:column;gap:1px">
-                  <span style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.person }}</span>
-                  <span style="{{ r.firmStyle }}">{{ r.firm }}</span>
-                </span>
-                <span style="min-width:0;display:flex;flex-direction:column;gap:1px">
-                  <span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.obra }}</span>
-                  <span style="font-size:11px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.client }}</span>
-                </span>
-                <span style="{{ r.c4Style }}">{{ r.c4 }}</span>
-                <span style="{{ r.c5Style }}">{{ r.c5 }}</span>
-                <span style="{{ r.c6Style }}">{{ r.c6 }}</span>
-                <span style="{{ r.badgeStyle }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ r.badgeDot }};flex:0 0 auto"></span>{{ r.badge }}</span>
-              </button>
-            </sc-for>
           </div>
         </sc-if>
 
@@ -576,6 +589,37 @@ input:focus,select:focus,textarea:focus{outline:2px solid #6D5DFB;outline-offset
   </div>
 </sc-if>
 
+<sc-if value="{{ colMenuOpen }}" hint-placeholder-val="{{ false }}">
+  <sc-if value="{{ colSheet }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeColMenu }}" style="position:fixed;inset:0;z-index:88;background:rgba(15,23,42,.45);backdrop-filter:blur(2px)"></div>
+  </sc-if>
+  <div data-colwrap="1" style="{{ colPanelStyle }}">
+    <div style="flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:14px 16px 10px">
+      <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:14px;font-weight:800;letter-spacing:-.02em">Colunas — {{ colViewName }}</span>
+        <span style="font-size:11.5px;color:#64748B;line-height:1.4">A ordem da lista é a ordem das colunas, da esquerda para a direita. Cada tabela guarda a própria configuração.</span>
+      </div>
+      <button onClick="{{ closeColMenu }}" aria-label="Fechar" style="width:32px;height:32px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:13px;color:#64748B;flex:0 0 auto">✕</button>
+    </div>
+    <div style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 10px;border-bottom:1px solid #F1F5F9">
+      <button onClick="{{ colsAll }}" style="padding:7px 12px;border-radius:9px;border:1px solid #E2E8F0;background:#fff;font-size:12px;font-weight:700;color:#475569">Mostrar todas</button>
+      <button onClick="{{ colsReset }}" style="padding:7px 12px;border-radius:9px;border:1px solid #C7C3FB;background:#EEF0FE;font-size:12px;font-weight:700;color:#4338CA">Restaurar padrão</button>
+    </div>
+    <div class="pg-scroll" style="flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:8px 10px 12px;display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ colItems }}" as="ci" hint-placeholder-count="12">
+        <div style="{{ ci.rowStyle }}">
+          <button onClick="{{ ci.toggle }}" role="checkbox" aria-checked="{{ ci.checked }}" style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;text-align:left;padding:6px 4px">
+            <span style="{{ ci.boxStyle }}">{{ ci.mark }}</span>
+            <span style="min-width:0;flex:1;font-size:13px;font-weight:{{ ci.weight }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ci.label }}</span>
+          </button>
+          <button onClick="{{ ci.up }}" aria-label="Mover para a esquerda" title="Mover para a esquerda" style="{{ ci.upStyle }}">▲</button>
+          <button onClick="{{ ci.down }}" aria-label="Mover para a direita" title="Mover para a direita" style="{{ ci.downStyle }}">▼</button>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
 <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
   <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:13px 19px;border-radius:14px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)">
     <span style="{{ toastDotStyle }}">{{ toastMark }}</span>
@@ -674,13 +718,103 @@ class Component extends DCLogic {
     period: { mode: 'day', day: '21/09/2026', from: '', to: '' }, cal: { y: 2026, m: 8 }, rangePick: false, rangeFrom: '',
     f: {}, fgOpen: { obra: true, person: false, client: false, firm: false, veh: false, valid: true, cost: true },
     filterOpen: null, query: '', sort: 'date', page: 1,
-    detail: null, nr: null, confirm: null, loading: null, failMode: false, modeMenu: null, defMode: 'total',
+    detail: null, nr: null, confirm: null, loading: null, failMode: false, modeMenu: null, defMode: 'total', cols: this.loadCols(), colMenu: false, hh: 150,
     toast: '', toastKind: 'ok'
   };
 
   rootRef = (el) => { this.rootEl = el; };
+  headerRef = (el) => { this.headerEl = el; };
+
+  COLS = {
+    date: { label: 'Data', w: 96 }, person: { label: 'Funcionário', w: 170, fr: 1.3 }, vinculo: { label: 'Tipo de vínculo', w: 124 },
+    obra: { label: 'Obra', w: 190, fr: 1.4 }, cliente: { label: 'Cliente', w: 160, fr: 1 }, firm: { label: 'Subcontratado', w: 150, fr: 1 },
+    hours: { label: 'Horas realizadas', w: 108 }, ent: { label: 'Entrada', w: 82 }, sai: { label: 'Saída', w: 82 }, pausa: { label: 'Pausa', w: 104 },
+    veh: { label: 'Veículo', w: 104 }, obs: { label: 'Informação', w: 200, fr: 1.2 }, valid: { label: 'Validação', w: 126 },
+    validBy: { label: 'Validado por', w: 160, fr: 1 }, origin: { label: 'Origem do lançamento', w: 136 },
+    rate: { label: 'Valor/h', w: 104 }, cost: { label: 'Custo', w: 112 }, situ: { label: 'Situação', w: 150 }, state: { label: 'Estado', w: 176 }
+  };
+  get ALLKEYS() { return ['date', 'person', 'vinculo', 'obra', 'cliente', 'firm', 'hours', 'ent', 'sai', 'pausa', 'veh', 'obs', 'valid', 'validBy', 'origin', 'rate', 'cost']; }
+  get VIEWCOLS() {
+    return {
+      quadro: { keys: ['date', 'person', 'vinculo', 'obra', 'cliente', 'firm', 'hours', 'veh', 'obs', 'state', 'origin', 'validBy'], def: ['date', 'person', 'obra', 'hours', 'veh', 'obs', 'state'], store: 'progesty.horas.colunas.quadro.v1' },
+      lista: { keys: this.ALLKEYS, def: ['date', 'person', 'obra', 'hours', 'veh', 'obs', 'valid'], store: 'progesty.horas.colunas.v1' },
+      custos: { keys: this.ALLKEYS.concat(['situ']), def: ['date', 'person', 'obra', 'hours', 'rate', 'cost', 'situ'], store: 'progesty.horas.colunas.custos.v1' }
+    };
+  }
+  get QW() { return { date: 100, person: 190, obra: 210, hours: 250, veh: 100, obs: 230, state: 176 }; }
+  get QLABEL() { return { date: 'Dia', hours: 'Horas' }; }
+
+  defaultCols(view) { const d = this.VIEWCOLS[view], vis = {}; d.def.forEach(k => { vis[k] = true; }); return { order: d.keys.slice(), vis: vis }; }
+  loadCols() {
+    const out = {};
+    Object.keys(this.VIEWCOLS).forEach(v => {
+      const d = this.VIEWCOLS[v];
+      try {
+        const raw = window.localStorage.getItem(d.store);
+        if (!raw) { out[v] = this.defaultCols(v); return; }
+        const o = JSON.parse(raw);
+        const order = (o.order || []).filter(k => d.keys.indexOf(k) >= 0);
+        d.keys.forEach(k => { if (order.indexOf(k) < 0) order.push(k); });
+        const vis = {}; Object.keys(o.vis || {}).forEach(k => { if (o.vis[k] && order.indexOf(k) >= 0) vis[k] = true; });
+        out[v] = Object.keys(vis).length ? { order: order, vis: vis } : this.defaultCols(v);
+      } catch (e) { out[v] = this.defaultCols(v); }
+    });
+    return out;
+  }
+  setCols(view, c) {
+    this.setState(x => ({ cols: Object.assign({}, x.cols, { [view]: c }) }));
+    try { window.localStorage.setItem(this.VIEWCOLS[view].store, JSON.stringify(c)); } catch (e) {}
+  }
+
+  qCell(k, row, ctx) {
+    const rec = this.rec(row.id);
+    const base = { isPlain: false, isPerson: false, isHours: false, isObs: false, isState: false, isBadge: false, hasSub: false, sub: '', subStyle: '', t: '', textStyle: '', r: row, open: row.openDetail, style: 'min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:1px' };
+    if (k === 'hours') return Object.assign(base, { isHours: true, style: 'min-width:0' });
+    if (k === 'obs') return Object.assign(base, { isObs: true, style: 'min-width:0' });
+    if (k === 'state') return Object.assign(base, { isState: true, style: 'min-width:0' });
+    const c = this.cellOf(k, rec, ctx);
+    const out = Object.assign(base, c, { r: row, open: row.openDetail, style: base.style });
+    if (k === 'date') { out.hasSub = true; out.sub = row.dowFull; out.subStyle = 'font-size:11px;color:#64748B'; }
+    if (k === 'person') out.isPerson = true; else out.isPlain = true;
+    return out;
+  }
+
+  cellOf(key, r, ctx) {
+    const p = this.PEOPLE[r.person], o = this.OBRAS[r.obra], hv = this.hoursOf(r), c = this.costOf(r);
+    const mono = 'font-family:\'JetBrains Mono\',monospace;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    const txt = 'font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    const dash = (t, st) => ({ t: t, textStyle: st + (t === '—' ? ';color:#94A3B8' : ''), isText: true });
+    let d;
+    if (key === 'date') d = dash(r.date, mono);
+    else if (key === 'person') d = { t: p.name, textStyle: txt + ';font-weight:700', isText: true, hasSub: !ctx.showFirm, sub: p.firm || 'Interno', subStyle: 'font-size:11px;font-weight:' + (p.firm ? '700' : '500') + ';color:' + (p.firm ? '#1D4ED8' : '#64748B') + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis' };
+    else if (key === 'vinculo') d = { t: p.firm ? 'Terceirizado' : 'Interno', textStyle: txt + ';color:' + (p.firm ? '#1D4ED8' : '#334155'), isText: true };
+    else if (key === 'obra') d = { t: o.name, textStyle: txt, isText: true, hasSub: !ctx.showClient, sub: o.client, subStyle: 'font-size:11px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' };
+    else if (key === 'cliente') d = dash(o.client, txt);
+    else if (key === 'firm') d = dash(p.firm || '—', txt + ';color:#1D4ED8');
+    else if (key === 'hours') d = dash(hv.h == null ? '—' : this.fmtH(hv.h) + ' h', mono);
+    else if (key === 'ent') d = dash(r.mode === 'horario' && r.ent ? r.ent : '—', mono);
+    else if (key === 'sai') d = dash(r.mode === 'horario' && r.sai ? r.sai : '—', mono);
+    else if (key === 'pausa') d = dash(r.mode !== 'horario' ? '—' : (r.pIni && r.pFim ? r.pIni + '–' + r.pFim : (r.pausa ? r.pausa + ' min' : '—')), mono);
+    else if (key === 'veh') d = dash(r.veh ? this.VEH[r.veh].plate : '—', mono);
+    else if (key === 'obs') d = dash(r.obs || '—', 'font-size:12px;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis');
+    else if (key === 'validBy') d = { t: r.valid ? r.valid.by : '—', textStyle: txt + (r.valid ? '' : ';color:#94A3B8'), isText: true, hasSub: !!r.valid, sub: r.valid ? r.valid.at : '', subStyle: 'font-size:11px;color:#64748B;white-space:nowrap' };
+    else if (key === 'origin') d = { t: r.origin === 'Planning' ? 'Planning' : 'Manual', textStyle: txt + ';color:' + (r.origin === 'Planning' ? '#334155' : '#B45309'), isText: true };
+    else if (key === 'rate') d = dash(c.rate == null ? 'Não definido' : this.eur(c.rate) + '/h', mono + (c.rate == null ? ';color:#B45309' : ''));
+    else if (key === 'cost') d = dash(c.cost == null ? '—' : this.eur(c.cost), mono);
+    else {
+      const SITC = { 'Calculado': ['#ECFDF5', '#047857', '#10B981'], 'Valor não definido': ['#FFFBEB', '#B45309', '#F59E0B'], 'Horas não lançadas': ['#F1F5F9', '#475569', '#94A3B8'] };
+      const bd = key === 'situ' ? SITC[c.sit] : (r.valid ? ['#ECFDF5', '#047857', '#10B981'] : (hv.h == null ? ['#F1F5F9', '#475569', '#94A3B8'] : ['#FFFBEB', '#B45309', '#F59E0B']));
+      d = { t: key === 'situ' ? c.sit : (r.valid ? 'Validado' : (hv.h == null ? 'Sem horas' : 'A conferir')), isText: false, isBadge: true, badgeStyle: this.pill(bd[0], bd[1], 'align-self:flex-start'), dotStyle: 'width:6px;height:6px;border-radius:50%;flex:0 0 auto;background:' + bd[2] };
+    }
+    return Object.assign({ isBadge: false, isText: false, hasSub: false, sub: '', subStyle: '', textStyle: '', badgeStyle: '', dotStyle: '', style: 'min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:1px' }, d);
+  }
+
+  componentDidUpdate() {
+    const h = this.headerEl ? this.headerEl.offsetHeight : 0;
+    if (h && Math.abs(h - this.state.hh) > 1) this.setState({ hh: h });
+  }
   onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
-  onDocClick = (ev) => { if (this.state.modeMenu && !ev.target.closest('[data-modewrap]')) this.setState({ modeMenu: null }); };
+  onDocClick = (ev) => { if (this.state.colMenu && !ev.target.closest('[data-colwrap]')) this.setState({ colMenu: false }); if (this.state.modeMenu && !ev.target.closest('[data-modewrap]')) this.setState({ modeMenu: null }); };
   componentDidMount() { window.addEventListener('resize', this.onResize); document.addEventListener('click', this.onDocClick); this.setState({ w: window.innerWidth }); }
   componentWillUnmount() { window.removeEventListener('resize', this.onResize); document.removeEventListener('click', this.onDocClick); Object.keys(this.tm).forEach(k => clearTimeout(this.tm[k])); clearTimeout(this.tTimer); clearTimeout(this.lTimer); }
 
@@ -918,6 +1052,12 @@ class Component extends DCLogic {
     const qTable = !isMobile, showVeh = avail >= 1000;
     const lTable = avail >= 900;
     const F = s.f;
+    const vc = s.cols[view];
+    const activeCols = vc.order.filter(k => vc.vis[k]);
+    const widthOf = (k) => (view === 'quadro' && this.QW[k]) || this.COLS[k].w;
+    const lCols = activeCols.map(k => { const cd = this.COLS[k]; return cd.fr ? 'minmax(' + widthOf(k) + 'px,' + cd.fr + 'fr)' : widthOf(k) + 'px'; }).join(' ');
+    const innerMin = activeCols.reduce((n, k) => n + widthOf(k), 0) + 10 * (activeCols.length - 1) + 28;
+    const cellCtx = { showFirm: !!vc.vis.firm, showClient: !!vc.vis.cliente };
     const groupsDef = [['obra', 'Obra'], ['person', 'Funcionário'], ['client', 'Cliente'], ['firm', 'Subcontratado'], ['veh', 'Veículo'], ['valid', 'Validação']].concat(view === 'custos' ? [['cost', 'Custo']] : []);
 
     const passes = (r, skip) => {
@@ -1026,7 +1166,7 @@ class Component extends DCLogic {
         selMark: sel[r.id] ? '✓' : '',
         selBoxStyle: box(!!sel[r.id], !!r.valid),
         toggleSel: () => this.setState(x => ({ sel: Object.assign({}, x.sel, { [r.id]: !x.sel[r.id] }) })),
-        rowStyle: 'display:grid;grid-template-columns:' + cols + ';gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid #F1F5F9;background:' +
+        rowStyle: 'display:grid;min-width:' + innerMin + 'px;grid-template-columns:' + lCols + ';gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid #F1F5F9;background:' +
           (sel[r.id] ? '#F8F8FE' : (r.valid ? '#FBFEFC' : '#fff')),
         cardStyle: 'background:' + (sel[r.id] ? '#F8F8FE' : (r.valid ? '#FBFEFC' : '#fff')) + ';border-bottom:1px solid #F1F5F9;padding:12px 14px;display:flex;flex-direction:column;gap:9px'
       };
@@ -1055,7 +1195,6 @@ class Component extends DCLogic {
       kp('Sem valor definido', String(nNoRate), nNoRate === 1 ? 'registro com custo incompleto' : 'registros com custo incompleto', '#F59E0B', nNoRate ? '#B45309' : '#0F172A')
     ];
 
-    const lCols = view === 'custos' ? '86px minmax(0,1.3fr) minmax(0,1.4fr) 62px 92px 100px 146px' : '86px minmax(0,1.3fr) minmax(0,1.4fr) 62px 96px minmax(0,1.1fr) 112px';
     const pages = Math.max(1, Math.ceil(filtered.length / this.PER));
     const page = Math.min(s.page, pages);
     const slice = filtered.slice((page - 1) * this.PER, page * this.PER);
@@ -1077,8 +1216,9 @@ class Component extends DCLogic {
         badge: isC ? c.sit : (r.valid ? 'Validado' : (hv.h == null ? 'Sem horas' : 'A conferir')),
         badgeDot: isC ? sit[2] : (r.valid ? '#10B981' : (hv.h == null ? '#94A3B8' : '#F59E0B')),
         badgeStyle: isC ? this.pill(sit[0], sit[1], 'justify-self:start') : (r.valid ? this.pill('#ECFDF5', '#047857', 'justify-self:start') : (hv.h == null ? this.pill('#F1F5F9', '#475569', 'justify-self:start') : this.pill('#FFFBEB', '#B45309', 'justify-self:start'))),
+        cells: activeCols.map(k => this.cellOf(k, r, cellCtx)),
         openDetail: () => this.setState({ detail: r.id }),
-        rowStyle: 'width:100%;text-align:left;display:grid;grid-template-columns:' + lCols + ';gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid #F1F5F9;background:#fff;transition:background .14s'
+        rowStyle: 'width:100%;min-width:' + innerMin + 'px;text-align:left;display:grid;grid-template-columns:' + lCols + ';gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid #F1F5F9;background:#fff;transition:background .14s'
       };
     });
     const th = 'font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748B;white-space:nowrap';
@@ -1244,9 +1384,9 @@ class Component extends DCLogic {
 
       showPanel: filterOpen, panelOverlay: filterOpen && !panelInline,
       panelStyle: (panelInline
-        ? 'order:2;position:sticky;top:0;align-self:flex-start;flex:0 0 288px;max-height:100vh;border-left:1px solid #E2E8F0;'
+        ? 'order:2;position:sticky;top:' + s.hh + 'px;align-self:flex-start;flex:0 0 288px;height:calc(100vh - ' + s.hh + 'px);border-left:1px solid #E2E8F0;'
         : 'position:fixed;top:0;right:0;bottom:0;z-index:82;width:min(320px,92vw);box-shadow:-20px 0 50px -20px rgba(15,23,42,.4);') +
-        'background:#FCFDFE;padding:16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto',
+        'background:#FCFDFE;padding:16px 12px 0 16px;display:flex;flex-direction:column;gap:10px;overflow:hidden',
       calTitle: this.MONTHS[cm] + ' ' + cy,
       calPrev: () => this.setState({ cal: cm === 0 ? { y: cy - 1, m: 11 } : { y: cy, m: cm - 1 } }),
       calNext: () => this.setState({ cal: cm === 11 ? { y: cy + 1, m: 0 } : { y: cy, m: cm + 1 } }),
@@ -1280,9 +1420,11 @@ class Component extends DCLogic {
       quadroTable: view === 'quadro' && !this.loading && filtered.length > 0 && qTable,
       quadroCards: view === 'quadro' && !this.loading && filtered.length > 0 && !qTable,
       showVeh: showVeh,
-      qHeadStyle: 'display:grid;grid-template-columns:' + cols + ';gap:10px;align-items:center;padding:11px 14px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
+      qInnerStyle: 'min-width:' + innerMin + 'px',
+      qHeadStyle: 'min-width:' + innerMin + 'px;display:grid;grid-template-columns:' + lCols + ';gap:10px;align-items:center;padding:11px 14px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
+      qHeads: activeCols.map(k => ({ t: this.QLABEL[k] || this.COLS[k].label, isState: k === 'state', style: 'display:flex;align-items:center;gap:8px;min-width:0' })),
       thStyle: th,
-      qRows: qRows,
+      qRows: view === 'quadro' ? qRows.map(row => Object.assign(row, { cells: activeCols.map(k => this.qCell(k, row, cellCtx)) })) : qRows,
       onNavKey: this.onNavKey,
 
       query: s.query, onQuery: (e) => this.setState({ query: e.target.value, page: 1 }),
@@ -1291,10 +1433,10 @@ class Component extends DCLogic {
         style: 'padding:8px 12px;border-radius:9px;font-size:12.5px;font-weight:700;white-space:nowrap;background:' + (s.sort === x[0] ? '#EEF0FE' : 'transparent') + ';color:' + (s.sort === x[0] ? '#4338CA' : '#64748B')
       })),
       listEmpty: view !== 'quadro' && !this.loading && filtered.length === 0,
-      listTable: view !== 'quadro' && !this.loading && filtered.length > 0 && lTable,
-      listCards: view !== 'quadro' && !this.loading && filtered.length > 0 && !lTable,
-      lHeadStyle: 'display:grid;grid-template-columns:' + lCols + ';gap:10px;align-items:center;padding:11px 14px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
-      lHeads: (view === 'custos' ? ['Data', 'Funcionário', 'Obra · Cliente', 'Horas', 'Valor/h', 'Custo', 'Situação'] : ['Data', 'Funcionário', 'Obra · Cliente', 'Horas', 'Veículo', 'Informação', 'Validação']).map(t => ({ t: t, style: th })),
+      listTable: view !== 'quadro' && !this.loading && filtered.length > 0,
+      listCards: false,
+      lInnerStyle: 'min-width:' + innerMin + 'px', lHeadStyle: 'min-width:' + innerMin + 'px;display:grid;grid-template-columns:' + lCols + ';gap:10px;align-items:center;padding:11px 14px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
+      lHeads: activeCols.map(k => ({ t: view === 'custos' && k === 'obra' ? 'Obra · Cliente' : this.COLS[k].label, style: th })),
       lRows: lRows,
       showPager: view !== 'quadro' && pages > 1,
       pageLabel: (filtered.length ? ((page - 1) * this.PER + 1) + '–' + Math.min(page * this.PER, filtered.length) : '0') + ' de ' + reg + ' · página ' + page + ' de ' + pages,
@@ -1333,6 +1475,37 @@ class Component extends DCLogic {
       cfBtnStyle: 'padding:12px 18px;border-radius:12px;color:#fff;font-size:14px;font-weight:700;background:' + tn[3],
 
       refreshFromPlanning: this.refreshFromPlanning,
+      headerRef: this.headerRef,
+      showColsBtn: !this.loading,
+      colViewName: view === 'quadro' ? 'Quadro de Horas' : (view === 'custos' ? 'Lista de Horas — Custos' : 'Lista de Horas'),
+      colMenuOpen: s.colMenu, colSheet: w < 760,
+      toggleColMenu: () => this.setState(x => ({ colMenu: !x.colMenu })),
+      closeColMenu: () => this.setState({ colMenu: false }),
+      colCount: activeCols.length + '/' + vc.order.length,
+      colBtnStyle: 'display:flex;align-items:center;gap:9px;height:44px;padding:0 14px;border-radius:12px;border:1px solid ' + (s.colMenu ? '#C7C3FB' : '#E2E8F0') + ';background:#fff;font-size:13px;font-weight:700;color:' + (s.colMenu ? '#4338CA' : '#475569'),
+      colPanelStyle: (w < 760
+        ? 'position:fixed;left:0;right:0;bottom:0;z-index:89;max-height:82vh;border-radius:22px 22px 0 0;box-shadow:0 -30px 70px -30px rgba(15,23,42,.6);'
+        : 'position:fixed;top:' + (s.hh + 8) + 'px;right:24px;z-index:55;width:340px;max-height:calc(100vh - ' + (s.hh + 32) + 'px);border-radius:16px;box-shadow:0 24px 48px -20px rgba(15,23,42,.38);') +
+        'display:flex;flex-direction:column;background:#fff;border:1px solid #E2E8F0;overflow:hidden',
+      colsAll: () => { const vis = {}; vc.order.forEach(k => { vis[k] = true; }); this.setCols(view, { order: vc.order, vis: vis }); },
+      colsReset: () => { this.setCols(view, this.defaultCols(view)); this.flash('Colunas restauradas para o padrão'); },
+      colItems: vc.order.map((k, i, arr) => {
+        const on = !!vc.vis[k], visN = arr.filter(x => vc.vis[x]).length;
+        const move = (to) => { if (to < 0 || to >= arr.length) return; const o = arr.slice(); const t = o[i]; o[i] = o[to]; o[to] = t; this.setCols(view, { order: o, vis: vc.vis }); };
+        const arrow = (dis) => 'width:30px;height:30px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;font-size:9px;color:' + (dis ? '#CBD5E1' : '#475569') + ';flex:0 0 auto' + (dis ? ';pointer-events:none' : '');
+        return {
+          label: (view === 'quadro' && this.QLABEL[k]) || this.COLS[k].label, weight: on ? '700' : '500', checked: on ? 'true' : 'false', mark: on ? '✓' : '',
+          boxStyle: 'flex:0 0 auto;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;line-height:1;border:1.5px solid ' + (on ? '#6D5DFB' : '#CBD5E1') + ';background:' + (on ? '#6D5DFB' : '#fff') + ';color:#fff',
+          rowStyle: 'display:flex;align-items:center;gap:6px;padding:2px 4px;border-radius:10px;background:' + (on ? '#F8F8FE' : 'transparent'),
+          toggle: () => {
+            if (on && visN === 1) { this.flash('Mantenha ao menos uma coluna visível', 'err'); return; }
+            const vis = Object.assign({}, vc.vis); if (on) delete vis[k]; else vis[k] = true;
+            this.setCols(view, { order: vc.order, vis: vis });
+          },
+          up: () => move(i - 1), down: () => move(i + 1),
+          upStyle: arrow(i === 0), downStyle: arrow(i === arr.length - 1)
+        };
+      }),
       keepFocus: (e) => e.preventDefault(),
       switchChecked: s.defMode === 'horario' ? 'true' : 'false',
       toggleDefaultMode: () => this.setDefaultMode(s.defMode === 'horario' ? 'total' : 'horario'),
