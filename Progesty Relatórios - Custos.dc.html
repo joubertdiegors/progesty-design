@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select{font-family:inherit}
+input:focus,select:focus{outline:2px solid #6D5DFB;outline-offset:0}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+@media screen{.pg-printonly{display:none !important}}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  .pg-noprint,aside,header{display:none !important}
+  html,body{background:#fff !important}
+  .pg-printfit{overflow:visible !important}
+}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll pg-noprint" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:500;color:#CBD5E1">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto"><span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span></span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <sc-if value="{{ g.isChart }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-end;gap:2px;height:13px"><span style="width:3px;height:6px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:13px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:9px;border-radius:1px;background:{{ g.dot }}"></span></span></sc-if>
+              <sc-if value="{{ g.notChart }}" hint-placeholder-val="{{ true }}"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></sc-if>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span><span style="flex:1;text-align:left">{{ it.name }}</span></button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Ana Duarte</span><span style="font-size:11px;color:#94A3B8">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div class="pg-noprint" onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+  <header class="pg-noprint" style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,30px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:12px;font-weight:700;color:#64748B"><a href="Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html">Relatórios</a> / Custos</span>
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Relatórios - Custos</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Custo interno da empresa por obra, mão de obra, subempreiteiros e veículos.</p>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(14px,2vw,22px) clamp(16px,2.4vw,30px) 8px;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);min-width:0">
+
+    <div class="pg-noprint" style="{{ cardGrid }}">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="5">
+        <div style="{{ c.style }}">
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="width:38px;height:38px;border-radius:12px;background:{{ c.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="display:flex;align-items:flex-end;gap:2.5px;height:16px"><span style="width:4px;height:8px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:16px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:11px;border-radius:1.5px;background:{{ c.color }}"></span></span></span>
+            <span style="font-size:15px;font-weight:800;letter-spacing:-.02em;line-height:1.25">{{ c.title }}</span>
+          </div>
+          <span style="font-size:13px;color:#64748B;line-height:1.5;text-wrap:pretty;flex:1">{{ c.desc }}</span>
+          <button onClick="{{ c.pick }}" style="{{ c.btnStyle }}">Gerar relatório</button>
+        </div>
+      </sc-for>
+    </div>
+
+    <div id="cfg" class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+      <sc-if value="{{ hasRep }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px">
+            <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Configurar relatório</span><span style="font-size:18px;font-weight:800;letter-spacing:-.025em">{{ repTitle }}</span></div>
+            <button onClick="{{ closeRep }}" style="padding:9px 14px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:12.5px;font-weight:700;color:#475569">Fechar</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px">
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período inicial</span><input type="date" value="{{ fromIso }}" onChange="{{ onFrom }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período final</span><input type="date" value="{{ toIso }}" onChange="{{ onTo }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+            <sc-for list="{{ selects }}" as="sl" hint-placeholder-count="3">
+              <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:11.5px;font-weight:700;color:#475569">{{ sl.label }}</span>
+                <select value="{{ sl.value }}" onChange="{{ sl.onChange }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;color:#0F172A;max-width:240px">
+                  <sc-for list="{{ sl.options }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.t }}</option></sc-for>
+                </select>
+              </label>
+            </sc-for>
+          </div>
+          <sc-if value="{{ periodErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ periodErr }}</span></sc-if>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+            <button onClick="{{ generate }}" style="{{ genStyle }}">
+              <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}"><span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span></sc-if>
+              {{ genLabel }}
+            </button>
+            <button onClick="{{ clearFilters }}" style="padding:12px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:#475569;white-space:nowrap">Limpar filtros</button>
+            <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;background:#FFFBEB;border:1px solid #FDE68A;font-size:11.5px;font-weight:700;color:#B45309"><span style="width:6px;height:6px;border-radius:50%;background:#F59E0B"></span>Filtros alterados — gere novamente</span></sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px"><sc-for list="{{ skeletons }}" as="k" hint-placeholder-count="4"><div class="pg-sk" style="height:92px;border-radius:16px"></div></sc-for></div>
+        <div class="pg-sk" style="height:280px;border-radius:18px"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(26px,4vw,48px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+        <span style="width:56px;height:56px;border-radius:18px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:20px;height:20px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">Nenhum custo encontrado</span>
+        <span style="font-size:14px;color:#64748B;max-width:48ch;text-wrap:pretty">Não há custos para este relatório com o período e os filtros aplicados.</span>
+        <sc-if value="{{ emptyNote }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:#B45309;max-width:52ch;text-wrap:pretty">{{ emptyNote }}</span></sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-printonly" style="padding-bottom:6px;border-bottom:1.5px solid #0F172A">
+        <div style="font-size:17px;font-weight:800">Progesty — {{ repTitle }}</div>
+        <div style="font-size:11px;color:#334155">{{ printMeta }}</div>
+      </div>
+
+      <div class="pg-noprint" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;letter-spacing:-.02em">{{ repTitle }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ metaShort }}</span></div>
+        <button onClick="{{ doPrint }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155">Imprimir</button>
+        <button onClick="{{ doPrint }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155;white-space:nowrap">Exportar PDF</button>
+        <button onClick="{{ doCsv }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155;white-space:nowrap">Exportar Excel (CSV)</button>
+      </div>
+      <span class="pg-noprint" style="font-size:11.5px;color:#64748B;line-height:1.5;margin-top:-6px">“Exportar PDF” abre a impressão do navegador — escolha “Salvar como PDF”. “Exportar Excel” baixa um CSV com a tabela exibida, que o Excel abre normalmente.</span>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:clamp(10px,1.2vw,14px)">
+        <sc-for list="{{ kpis }}" as="kp" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:14px 15px;display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:2px;background:{{ kp.color }};flex:0 0 auto"></span><span style="font-size:12px;font-weight:600;color:#475569">{{ kp.label }}</span></span>
+            <span style="font-size:clamp(19px,2vw,24px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums">{{ kp.value }}</span>
+            <span style="font-size:11px;font-weight:600;color:{{ kp.hintColor }}">{{ kp.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ hasNotes }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ notes }}" as="nt" hint-placeholder-count="2">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:13px;background:{{ nt.bg }};border:1px solid {{ nt.bd }}"><span style="width:20px;height:20px;border-radius:6px;background:{{ nt.iconBg }};color:{{ nt.color }};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:0 0 auto">{{ nt.icon }}</span><span style="font-size:12.5px;line-height:1.45;color:{{ nt.color }};text-wrap:pretty">{{ nt.t }}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:12px;break-inside:avoid">
+        <span style="font-size:14px;font-weight:800;letter-spacing:-.02em">{{ chartTitle }}</span>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ bars }}" as="b" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="display:flex;align-items:baseline;gap:10px"><span style="min-width:0;flex:1;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.label }}</span><span style="font-size:11.5px;color:#64748B;white-space:nowrap">{{ b.pct }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;white-space:nowrap">{{ b.value }}</span></div>
+              <div style="height:9px;border-radius:99px;background:#F1F5F9;overflow:hidden"><div style="{{ b.bar }}"></div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden">
+        <div class="pg-noprint" style="padding:14px 16px;border-bottom:1px solid #F1F5F9;font-size:12px;color:#64748B">{{ tableCount }}</div>
+        <div class="pg-scroll pg-printfit" style="overflow-x:auto">
+          <div style="{{ tInner }}">
+            <div style="{{ tGrid }};background:#F8FAFC;border-bottom:1px solid #E2E8F0">
+              <sc-for list="{{ tHeads }}" as="th" hint-placeholder-count="5"><span style="{{ th.style }}">{{ th.t }}</span></sc-for>
+            </div>
+            <sc-for list="{{ tRows }}" as="r" hint-placeholder-count="8">
+              <div style="{{ r.style }}">
+                <sc-for list="{{ r.cells }}" as="cl" hint-placeholder-count="5">
+                  <span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="{{ cl.textStyle }}">{{ cl.t }}</span><sc-if value="{{ cl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.subStyle }}">{{ cl.sub }}</span></sc-if></span>
+                </sc-for>
+              </div>
+            </sc-for>
+            <div style="{{ tGrid }};background:#F8FAFC;border-top:2px solid #E2E8F0">
+              <sc-for list="{{ tTotals }}" as="tt" hint-placeholder-count="5"><span style="{{ tt.style }}">{{ tt.t }}</span></sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="pg-noprint" style="font-size:11.5px;color:#64748B;line-height:1.5;text-wrap:pretty">Dados fictícios para demonstração, sem sincronização com os outros módulos. Todos os valores são custo interno da empresa — não representam o que é cobrado do cliente.</span>
+    </sc-if>
+  </div>
+
+  <div class="pg-noprint" style="padding:0 clamp(16px,2.4vw,30px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="7"><button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button></sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:13px 19px;border-radius:14px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)"><span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">{{ toastMark }}</span>{{ toast }}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialReport&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;obra&quot;,&quot;mo&quot;,&quot;sub&quot;,&quot;veic&quot;,&quot;resumo&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    w: 1400, navOpen: false, active: 'Custos',
+    open: { Comercial: false, Clientes: false, Projetos: false, Pessoas: false, Financeiro: false, 'Relatórios': true, 'Configurações': false },
+    rep: null, f: this.freshF(), applied: null, status: 'idle', toast: '', toastOk: true
+  };
+
+  HUB_URL = 'Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html';
+  HORAS_URL = 'Progesty%20Relat%C3%B3rios%20-%20Horas.dc.html';
+
+  get NAV() {
+    return [
+      { name: 'Comercial', dot: '#EC4899', items: [{ n: 'CRM' }, { n: 'Leads' }, { n: 'Oportunidades' }] },
+      { name: 'Clientes', dot: '#3B82F6', items: [{ n: 'Clientes' }, { n: 'Contatos' }] },
+      { name: 'Projetos', dot: '#F97316', items: [{ n: 'Projetos / Obras' }, { n: 'Planning' }, { n: 'Controle de Horas' }, { n: 'Tarefas' }] },
+      { name: 'Pessoas', dot: '#06B6D4', items: [{ n: 'Funcionários' }, { n: 'Terceirizados' }, { n: 'Veículos' }] },
+      { name: 'Financeiro', dot: '#10B981', items: [{ n: 'Contas a Receber' }, { n: 'Contas a Pagar' }, { n: 'Faturas' }, { n: 'Fluxo de Caixa' }] },
+      { name: 'Relatórios', dot: '#8B5CF6', chart: true, items: [{ n: 'Consultas e Relatórios', url: this.HUB_URL }, { n: 'Horas', url: this.HORAS_URL }, { n: 'Custos' }] },
+      { name: 'Configurações', dot: '#64748B', items: [{ n: 'Empresa' }, { n: 'Usuários' }, { n: 'Gestão de Acessos' }] }
+    ];
+  }
+
+  /* Regras de custo: mesmas do Controle de Horas. Funcionário: valor/hora vigente na data (histórico do cadastro). Terceirizado: regra do contrato. */
+  OBRAS = { o1: { name: 'Residencial Jardim Europa', client: 'Construtora Horizonte' }, o2: { name: 'Edifício Central', client: 'Grupo Central Engenharia' }, o3: { name: 'Casa Oliveira', client: 'Maria Oliveira' }, o4: { name: 'Reforma Comercial Delta', client: 'Reformas Delta' }, o5: { name: 'Galpão Logístico Sul', client: 'LogPar' }, o6: { name: 'Ampliação Sede Horizonte', client: 'Construtora Horizonte' } };
+  PEOPLE = {
+    p1: { name: 'Carlos Mendes', role: 'Encarregado', firm: '', rates: [{ f: '01/01/2025', v: 17 }, { f: '01/01/2026', v: 18.5 }] },
+    p2: { name: 'Ana Duarte', role: 'Engenheira', firm: '', rates: [{ f: '01/03/2024', v: 26 }] },
+    p3: { name: 'Rafael Lima', role: 'Mestre de obras', firm: '', rates: [{ f: '01/01/2026', v: 20 }, { f: '15/09/2026', v: 21.5 }] },
+    p4: { name: 'Bruno Alves', role: 'Alvenaria', firm: '', rates: [{ f: '01/02/2026', v: 16.5 }] },
+    p6: { name: 'Rita Lopes', role: 'Pintora', firm: '', rates: [] },
+    p10: { name: 'Pedro Vasco', role: 'Armador', firm: '', rates: [{ f: '01/06/2026', v: 19 }] },
+    p11: { name: 'Tiago Nunes', role: 'Eletricista', firm: 'EletroSul' }, p12: { name: 'Alice Moreira', role: 'Eletricista', firm: 'EletroSul' },
+    p13: { name: 'Hugo Teixeira', role: 'Pintor', firm: 'Pinturas Nova' }, p14: { name: 'João Silva', role: 'Encarregado', firm: 'Construtora Alpha' },
+    p18: { name: 'Nuno Ferreira', role: 'Servente', firm: 'Construtora Alpha' }, p16: { name: 'Sérgio Matos', role: 'Operador de máquina', firm: 'Terra Forte' }
+  };
+  FIRMRULES = {
+    'EletroSul': { type: 'hora', v: 42, label: 'Valor/hora único — € 42,00' },
+    'Construtora Alpha': { type: 'pessoa', rates: { p14: 36, p18: 29 }, label: 'Valor por função (€ 36,00 · € 29,00)' },
+    'Pinturas Nova': { type: 'indef', label: 'Contrato em revisão — sem valor/hora' },
+    'Terra Forte': { type: 'hora', v: 55, label: 'Máquina + operador — € 55,00/h' }
+  };
+  ALLOC = [['p1', 'o1'], ['p3', 'o1'], ['p4', 'o1'], ['p11', 'o1'], ['p12', 'o1'], ['p2', 'o2'], ['p14', 'o2'], ['p18', 'o2'], ['p6', 'o3'], ['p13', 'o3'], ['p16', 'o5']];
+
+  /* Custos de veículos, conforme os cadastros do módulo Veículos (v4 é de terceirizado: custo já está na tarifa horária do contrato). */
+  VEH = [
+    { id: 'v1', plate: '1-ABC-234', name: 'Ford Transit Custom', own: 'Próprio', items: [
+      ['14/02/2026', 'Inspeções', 62, 'Inspeção periódica obrigatória'], ['08/11/2025', 'Manutenção', 486.4, 'Revisão dos 40.000 km'], ['22/07/2025', 'Manutenção', 612, 'Substituição dos 4 pneus'],
+      ['18/09/2026', 'Combustível', 108.58, 'Total Anderlecht'], ['04/09/2026', 'Combustível', 101.31, 'Shell Ring Oost'], ['21/08/2026', 'Combustível', 105.35, 'Total Anderlecht'],
+      ['02/09/2026', 'Multas', 53, 'Excesso de velocidade · identificada'], ['11/05/2026', 'Multas', 58, 'Estacionamento indevido · paga'] ] },
+    { id: 'v2', plate: '2-XYZ-871', name: 'Renault Master L3H2', own: 'Leasing', items: [
+      ['20/08/2026', 'Inspeções', 62, 'Inspeção periódica obrigatória'], ['12/04/2026', 'Manutenção', 742.9, 'Substituição do alternador'],
+      ['16/09/2026', 'Combustível', 135.9, 'Q8 Gante'], ['31/08/2026', 'Combustível', 129.9, 'Q8 Gante'] ], monthly: { sub: 'Leasing / aluguer', day: 5, value: 512.4, from: [2026, 0], desc: 'Prestação de leasing' } },
+    { id: 'v3', plate: '1-KLM-009', name: 'VW Caddy Cargo', own: 'Alugado', items: [
+      ['14/03/2026', 'Manutenção', 298.5, 'Revisão dos 15.000 km'], ['19/09/2026', 'Manutenção', null, 'Reparação da embreagem — valor ainda não lançado'], ['12/09/2026', 'Combustível', 76.91, 'Total Louise'] ],
+      monthly: { sub: 'Leasing / aluguer', day: 2, value: 389, from: [2026, 0], desc: 'Aluguer mensal' } },
+    { id: 'v5', plate: '1-QRS-556', name: 'Peugeot Partner', own: 'Próprio', items: [['18/04/2025', 'Inspeções', 62, 'Inspeção periódica obrigatória'], ['08/02/2026', 'Multas', 150, 'Zona de baixa emissão · contestada']] },
+    { id: 'v6', plate: 'R-118-BE', name: 'Humbaur HT 3500', own: 'Próprio', items: [['11/07/2026', 'Inspeções', 48, 'Inspeção de reboque']] }
+  ];
+  SUBCATS = ['Combustível', 'Manutenção', 'Inspeções', 'Multas', 'Leasing / aluguer'];
+  CATS = ['Mão de obra', 'Subempreiteiros', 'Veículos'];
+  CCOLOR = { 'Mão de obra': '#06B6D4', 'Subempreiteiros': '#EC4899', 'Veículos': '#3B82F6' };
+  MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+  REPORTS = [
+    { id: 'obra', title: 'Custos por obra', desc: 'Custo total de cada obra e sua composição por categoria: mão de obra, subempreiteiros e veículos.', color: '#6D5DFB', bg: '#EEF0FE', filters: ['obra', 'cat'] },
+    { id: 'mo', title: 'Custos de mão de obra', desc: 'Funcionários da equipe interna: horas consideradas, custo/hora e custo total.', color: '#06B6D4', bg: '#ECFEFF', filters: ['obra', 'person'] },
+    { id: 'sub', title: 'Custos de subempreiteiros', desc: 'Empresas, regra contratual aplicada, horas consideradas e custo total.', color: '#EC4899', bg: '#FDF2F8', filters: ['obra', 'firm'] },
+    { id: 'veic', title: 'Custos de veículos', desc: 'Combustível, manutenção, inspeções, multas e leasing/aluguer lançados nos cadastros de veículos.', color: '#3B82F6', bg: '#EFF6FF', filters: ['veh', 'subcat'] },
+    { id: 'resumo', title: 'Resumo geral de custos', desc: 'Visão consolidada por mês e categoria, sem somar o mesmo custo duas vezes.', color: '#10B981', bg: '#ECFDF5', filters: ['obra', 'cat'] }
+  ];
+
+  freshF() { return { from: '2026-08-01', to: '2026-09-21', obra: '', cat: '', person: '', firm: '', veh: '', subcat: '' }; }
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth });
+    const r = this.props.initialReport; if (r) this.setState({ rep: r }, () => this.generate());
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.gT); clearTimeout(this.tT); }
+
+  toDate(k) { const p = k.split('/'); return new Date(+p[2], +p[1] - 1, +p[0]); }
+  key(d) { const z = (n) => (n < 10 ? '0' : '') + n; return z(d.getDate()) + '/' + z(d.getMonth() + 1) + '/' + d.getFullYear(); }
+  tIso(i) { const p = i.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]).getTime(); }
+  brIso(i) { const p = i.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  eur(n) { const p = Math.abs(n).toFixed(2).split('.'); return '€ ' + p[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + p[1]; }
+  fh(v) { return String(Math.round(v * 100) / 100).replace('.', ',') + ' h'; }
+  flash(m, ok) { clearTimeout(this.tT); this.setState({ toast: m, toastOk: ok !== false }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2800); }
+
+  rateOf(pid, t) {
+    const p = this.PEOPLE[pid];
+    if (!p.firm) { let v = null; (p.rates || []).forEach(x => { if (this.toDate(x.f).getTime() <= t) v = x.v; }); return v; }
+    const ru = this.FIRMRULES[p.firm];
+    return ru.type === 'hora' ? ru.v : (ru.type === 'pessoa' ? (ru.rates[pid] == null ? null : ru.rates[pid]) : null);
+  }
+
+  get entries() {
+    if (this._ent) return this._ent;
+    const out = []; let di = 0, id = 0;
+    for (let d = new Date(2026, 7, 1); d <= new Date(2026, 8, 21); d.setDate(d.getDate() + 1)) {
+      if (d.getDay() === 0 || d.getDay() === 6) continue;
+      di++; const t = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(), date = this.key(d);
+      const aug = d.getMonth() === 7, recent = t >= new Date(2026, 8, 18).getTime();
+      this.ALLOC.forEach((al, i) => {
+        const p = al[0];
+        if (aug && (p === 'p12' || p === 'p13')) return;
+        if (p === 'p16' && t < new Date(2026, 7, 15).getTime()) return;
+        if ((di * 7 + i * 13) % 11 === 0) return;
+        let o = al[1]; if (p === 'p4' && di % 5 === 3) o = 'o4'; if (p === 'p2' && di % 7 === 2) o = 'o6';
+        const plan = [8, 8, 8, 7.5, 8][(i + di) % 5], delta = [0, 0, -0.5, 0.5, 0, 1, -1, 0, 0.5, 0, 0][(di * 3 + i) % 11];
+        let hours = Math.max(0, plan + delta); if (recent && (di + i) % 3 === 0) hours = null;
+        if (hours == null) return;
+        this.push(out, ++id, date, t, p, o, hours);
+      });
+      if (di % 6 === 0) this.push(out, ++id, date, t, 'p6', 'o1', 4);
+      if (di % 9 === 4) this.push(out, ++id, date, t, 'p10', 'o2', 5);
+    }
+    this.VEH.forEach(v => {
+      v.items.forEach(it => { const t = this.toDate(it[0]).getTime(); out.push({ id: 'x' + (++id), date: it[0], t: t, cat: 'Veículos', sub: it[1], obra: '', veh: v.id, desc: it[3], cost: it[2], noCost: it[2] == null }); });
+      if (v.monthly) { const m = v.monthly; for (let k = m.from[1]; k <= 8; k++) { const dd = new Date(2026, k, m.day), t = dd.getTime(); out.push({ id: 'x' + (++id), date: this.key(dd), t: t, cat: 'Veículos', sub: m.sub, obra: '', veh: v.id, desc: m.desc, cost: m.value, noCost: false }); } }
+    });
+    this._ent = out; return out;
+  }
+  push(out, id, date, t, pid, obra, hours) {
+    const p = this.PEOPLE[pid], rate = this.rateOf(pid, t), cost = rate == null ? null : Math.round(hours * rate * 100) / 100;
+    out.push({ id: 'h' + id, date: date, t: t, cat: p.firm ? 'Subempreiteiros' : 'Mão de obra', sub: p.firm ? p.firm : 'Equipe interna', obra: obra, person: pid, firm: p.firm || '', hours: hours, rate: rate, cost: cost, noCost: cost == null });
+  }
+
+  filtered(rep, f) {
+    const a = this.tIso(f.from), b = this.tIso(f.to), al = rep.filters;
+    return this.entries.filter(e => {
+      if (e.t < a || e.t > b) return false;
+      if (rep.id === 'mo' && e.cat !== 'Mão de obra') return false;
+      if (rep.id === 'sub' && e.cat !== 'Subempreiteiros') return false;
+      if (rep.id === 'veic' && (e.cat !== 'Veículos')) return false;
+      if (al.indexOf('obra') >= 0 && f.obra && (e.obra !== f.obra)) return false;
+      if (al.indexOf('cat') >= 0 && f.cat && e.cat !== f.cat) return false;
+      if (al.indexOf('person') >= 0 && f.person && e.person !== f.person) return false;
+      if (al.indexOf('firm') >= 0 && f.firm && e.firm !== f.firm) return false;
+      if (al.indexOf('veh') >= 0 && f.veh && e.veh !== f.veh) return false;
+      if (al.indexOf('subcat') >= 0 && f.subcat && e.sub !== f.subcat) return false;
+      return true;
+    });
+  }
+
+  sum(list) { let c = 0, h = 0, miss = 0; list.forEach(e => { if (e.cost != null) c += e.cost; if (e.hours != null) h += e.hours; if (e.noCost) miss++; }); return { cost: c, hours: h, miss: miss, n: list.length }; }
+
+  build(rep, ents, f) {
+    const S = (l) => this.sum(l), cs = (l) => this.eur(S(l).cost);
+    const by = (list, fn) => { const m = {}, o = []; list.forEach(e => { const k = fn(e); if (!m[k]) { m[k] = []; o.push(k); } m[k].push(e); }); return o.map(k => ({ key: k, list: m[k] })); };
+    const num = (t, extra) => ({ t: t, num: true, warn: false, sub: extra || '' });
+    const money = (list, hideZero) => { const s = S(list); if (!list.length && hideZero) return { t: '—', num: true, sub: '' }; return { t: this.eur(s.cost), num: true, sub: s.miss ? 'parcial · ' + s.miss + (s.miss === 1 ? ' sem valor' : ' sem valor') : '' , warn: s.miss > 0 }; };
+    const notes = [], total = S(ents);
+    let cols = [], rows = [], totals = [], bars = [], chartTitle = '', kpis = [], emptyNote = '';
+    const withObra = !!f.obra;
+    const text = (t, sub, bold) => ({ t: t, sub: sub || '', num: false, bold: !!bold });
+
+    if (rep.id === 'obra' || rep.id === 'resumo') {
+      const cat = (l, c) => l.filter(e => e.cat === c);
+      if (rep.id === 'obra') {
+        cols = [{ l: 'Obra', w: 250, fr: 1.6 }, { l: 'Mão de obra', w: 130 }, { l: 'Subempreiteiros', w: 140 }, { l: 'Veículos', w: 120 }, { l: 'Total', w: 130 }];
+        by(ents.filter(e => e.obra), e => e.obra).sort((a, b) => S(b.list).cost - S(a.list).cost).forEach(g => {
+          rows.push({ cells: [text(this.OBRAS[g.key].name, this.OBRAS[g.key].client, true), money(cat(g.list, 'Mão de obra'), true), money(cat(g.list, 'Subempreiteiros'), true), num('—'), money(g.list)], level: 1, key: g.key });
+        });
+        const un = ents.filter(e => !e.obra);
+        if (un.length) rows.push({ cells: [text('Veículos — não alocados a obra', 'Cadastro de veículos não distingue a obra de cada custo', false), num('—'), num('—'), money(un), money(un)], level: 0, key: 'un' });
+        totals = ['Total geral', cs(cat(ents, 'Mão de obra')), cs(cat(ents, 'Subempreiteiros')), cs(cat(ents, 'Veículos')), cs(ents)];
+      } else {
+        cols = [{ l: 'Mês', w: 200, fr: 1.2 }, { l: 'Mão de obra', w: 130 }, { l: 'Subempreiteiros', w: 140 }, { l: 'Veículos', w: 120 }, { l: 'Total', w: 130 }];
+        by(ents, e => this.toDate(e.date).getFullYear() * 100 + this.toDate(e.date).getMonth()).sort((a, b) => a.key - b.key).forEach(g => {
+          const y = Math.floor(g.key / 100), m = g.key % 100;
+          rows.push({ cells: [text(this.MONTHS[m] + ' ' + y, g.list.length + (g.list.length === 1 ? ' lançamento' : ' lançamentos'), true), money(cat(g.list, 'Mão de obra'), true), money(cat(g.list, 'Subempreiteiros'), true), money(cat(g.list, 'Veículos'), true), money(g.list)], level: 1, key: g.key });
+        });
+        totals = ['Total geral', cs(cat(ents, 'Mão de obra')), cs(cat(ents, 'Subempreiteiros')), cs(cat(ents, 'Veículos')), cs(ents)];
+      }
+      kpis = [['Custo total', this.eur(total.cost), '#6D5DFB', total.miss ? 'parcial · ' + total.miss + ' sem valor' : 'custo interno'], ['Mão de obra', cs(cat(ents, 'Mão de obra')), '#06B6D4', 'equipe interna'], ['Subempreiteiros', cs(cat(ents, 'Subempreiteiros')), '#EC4899', 'empresas contratadas'], ['Veículos', cs(cat(ents, 'Veículos')), '#3B82F6', 'cadastros de veículos']];
+      chartTitle = 'Composição do custo por categoria';
+      bars = this.CATS.map(c => ({ label: c, v: S(cat(ents, c)).cost, color: this.CCOLOR[c] })).filter(b => b.v > 0);
+      if (withObra) notes.push('Com filtro de obra, os custos de veículos ficam de fora: o cadastro de veículos não informa a obra de cada custo, e este relatório não estima esse rateio.');
+      if (!withObra && ents.some(e => e.cat === 'Veículos')) notes.push('Custos de veículos aparecem somente na categoria Veículos e não são rateados entre as obras.');
+    } else if (rep.id === 'mo') {
+      cols = [{ l: 'Funcionário', w: 230, fr: 1.5 }, { l: 'Horas consideradas', w: 140 }, { l: 'Custo/hora', w: 150 }, { l: 'Custo total', w: 140 }, { l: 'Sem valor', w: 100 }];
+      by(ents, e => e.person).sort((a, b) => S(b.list).cost - S(a.list).cost).forEach(g => {
+        const s = S(g.list), rs = g.list.filter(e => e.rate != null).map(e => e.rate), mn = Math.min.apply(null, rs), mx = Math.max.apply(null, rs);
+        const rate = rs.length ? (mn === mx ? this.eur(mn) : this.eur(mn) + ' – ' + this.eur(mx)) : 'Não definido';
+        rows.push({ cells: [text(this.PEOPLE[g.key].name, this.PEOPLE[g.key].role, true), num(this.fh(s.hours)), Object.assign(num(rate, mn !== mx && rs.length ? 'vigente em cada data' : ''), { warn: !rs.length }), money(g.list), Object.assign(num(s.miss ? String(s.miss) : '—'), { warn: s.miss > 0 })], level: 1, key: g.key });
+      });
+      totals = ['Total geral', this.fh(total.hours), '', this.eur(total.cost), total.miss ? String(total.miss) : '—'];
+      kpis = [['Custo total', this.eur(total.cost), '#06B6D4', 'mão de obra interna'], ['Horas consideradas', this.fh(total.hours), '#6D5DFB', 'com horas lançadas'], ['Funcionários', String(rows.length), '#3B82F6', 'com horas no período'], ['Registros sem valor', String(total.miss), '#F59E0B', total.miss ? 'fora do custo' : 'todos com valor/hora']];
+      chartTitle = 'Custo por funcionário';
+      bars = rows.slice(0, 8).map(r => ({ label: r.cells[0].t, v: S(by(ents, e => e.person).filter(g => g.key === r.key)[0].list).cost, color: '#06B6D4' })).filter(b => b.v > 0);
+      if (total.miss) notes.push(total.miss + (total.miss === 1 ? ' registro está' : ' registros estão') + ' sem valor/hora no cadastro do funcionário. Ficam fora do custo; nenhum valor foi estimado.');
+      notes.push('Valor/hora vigente na data de cada lançamento, conforme o histórico do cadastro de Funcionários.');
+    } else if (rep.id === 'sub') {
+      cols = [{ l: 'Empresa / Funcionário', w: 240, fr: 1.4 }, { l: 'Regra contratual', w: 230, fr: 1.2 }, { l: 'Horas consideradas', w: 140 }, { l: 'Custo/hora', w: 120 }, { l: 'Custo total', w: 130 }];
+      by(ents, e => e.firm).sort((a, b) => S(b.list).cost - S(a.list).cost).forEach(g => {
+        const s = S(g.list), ru = this.FIRMRULES[g.key];
+        rows.push({ cells: [text(g.key, S(by(g.list, e => e.person).map(x => x.list).reduce((a, b) => a.concat(b[0]), [])).n >= 0 ? by(g.list, e => e.person).length + (by(g.list, e => e.person).length === 1 ? ' pessoa' : ' pessoas') : '', true), text(ru.label), num(this.fh(s.hours)), Object.assign(num(ru.type === 'hora' ? this.eur(ru.v) : (ru.type === 'pessoa' ? 'por função' : 'Não definido')), { warn: ru.type === 'indef' }), money(g.list)], level: 1, key: g.key });
+        by(g.list, e => e.person).sort((a, b) => S(b.list).cost - S(a.list).cost).forEach(pg => {
+          const ps = S(pg.list), p = this.PEOPLE[pg.key];
+          rows.push({ cells: [Object.assign(text('   ' + p.name, '   ' + p.role, false), {}), text(''), num(this.fh(ps.hours)), num(pg.list[0].rate == null ? '—' : this.eur(pg.list[0].rate)), money(pg.list)], level: 0, key: pg.key + g.key });
+        });
+      });
+      totals = ['Total geral', '', this.fh(total.hours), '', this.eur(total.cost)];
+      kpis = [['Custo total', this.eur(total.cost), '#EC4899', 'subempreiteiros'], ['Horas consideradas', this.fh(total.hours), '#6D5DFB', 'com horas lançadas'], ['Empresas', String(by(ents, e => e.firm).length), '#3B82F6', 'com horas no período'], ['Registros sem valor', String(total.miss), '#F59E0B', total.miss ? 'fora do custo' : 'todos com valor']];
+      chartTitle = 'Custo por empresa';
+      bars = by(ents, e => e.firm).map(g => ({ label: g.key, v: S(g.list).cost, color: '#EC4899' })).sort((a, b) => b.v - a.v).filter(b => b.v > 0);
+      if (total.miss) notes.push(total.miss + (total.miss === 1 ? ' registro está' : ' registros estão') + ' sem valor definido (contrato em revisão) e ficou fora do custo.');
+      notes.push('Regra de custo igual à do Controle de Horas. O valor/hora padrão do módulo Terceirizados é só referência de contrato e não é usado aqui.');
+    } else {
+      const sc = ['Combustível', 'Manutenção', 'Inspeções', 'Multas', 'Leasing / aluguer'];
+      cols = [{ l: 'Veículo', w: 240, fr: 1.5 }].concat(sc.map(c => ({ l: c, w: 118 }))).concat([{ l: 'Total', w: 120 }]);
+      by(ents, e => e.veh).sort((a, b) => S(b.list).cost - S(a.list).cost).forEach(g => {
+        const v = this.VEH.filter(x => x.id === g.key)[0];
+        rows.push({ cells: [text(v.plate, v.name + ' · ' + v.own, true)].concat(sc.map(c => money(g.list.filter(e => e.sub === c), true))).concat([money(g.list)]), level: 1, key: g.key });
+      });
+      totals = ['Total geral'].concat(sc.map(c => cs(ents.filter(e => e.sub === c)))).concat([cs(ents)]);
+      kpis = [['Custo total', this.eur(total.cost), '#3B82F6', total.miss ? 'parcial · ' + total.miss + ' sem valor' : 'veículos'], ['Combustível', cs(ents.filter(e => e.sub === 'Combustível')), '#06B6D4', 'abastecimentos'], ['Manutenção e inspeções', this.eur(S(ents.filter(e => e.sub === 'Manutenção' || e.sub === 'Inspeções')).cost), '#6D5DFB', 'oficina e inspeções'], ['Leasing / aluguer', cs(ents.filter(e => e.sub === 'Leasing / aluguer')), '#F59E0B', 'prestações']];
+      chartTitle = 'Custo por tipo';
+      bars = sc.map(c => ({ label: c, v: S(ents.filter(e => e.sub === c)).cost, color: '#3B82F6' })).filter(b => b.v > 0);
+      if (total.miss) notes.push(total.miss + (total.miss === 1 ? ' manutenção está' : ' manutenções estão') + ' sem valor lançado (ex.: reparação em oficina) e ficou fora do total.');
+      notes.push('O veículo E-220-BE (escavadora de Terra Forte) não entra aqui: o custo da máquina já está na tarifa horária do contrato (máquina + operador), e somar os dois contaria duas vezes.');
+      if (ents.some(e => e.sub === 'Multas')) notes.push('Multas entram pelo valor lançado, incluindo as ainda contestadas. O cadastro não define como tratá-las; ajuste quando a regra existir.');
+      if (f.veh === 'v4') emptyNote = 'Este veículo pertence a um subempreiteiro: o custo está na tarifa horária do contrato e não é listado aqui.';
+    }
+    const tb = bars.reduce((n, b) => n + b.v, 0);
+    return { cols: cols, rows: rows, totals: totals, bars: bars.sort((a, b) => b.v - a.v).map(b => Object.assign(b, { pct: tb ? Math.round(b.v / tb * 100) + '%' : '' })), chartTitle: chartTitle, kpis: kpis, notes: notes, emptyNote: emptyNote, total: total };
+  }
+
+  generate = () => {
+    const s = this.state;
+    if (!s.rep) { this.flash('Escolha um relatório primeiro', false); return; }
+    if (this.tIso(s.f.from) > this.tIso(s.f.to)) { this.flash('Corrija o período antes de gerar', false); return; }
+    const f = JSON.parse(JSON.stringify(s.f));
+    this.setState({ status: 'loading', applied: null });
+    clearTimeout(this.gT);
+    this.gT = setTimeout(() => this.setState({ status: 'ready', applied: { rep: this.state.rep, f: f } }), 800);
+  };
+
+  openRep(id) {
+    this.setState({ rep: id, status: 'idle', applied: null, f: Object.assign(this.freshF(), { from: this.state.f.from, to: this.state.f.to }) }, () => {
+      const el = document.getElementById('cfg');
+      if (el) window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - 96), behavior: 'smooth' });
+    });
+  }
+
+  quick(id, over) {
+    clearTimeout(this.gT);
+    const f = Object.assign(this.freshF(), over || {});
+    this.setState({ rep: id, f: f, status: 'ready', applied: { rep: id, f: f } });
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, isMobile = w < 1024;
+    const rep = this.REPORTS.filter(r => r.id === s.rep)[0] || null;
+    const f = s.f;
+    const A = s.applied && rep && s.applied.rep === rep.id ? s.applied : null;
+    const periodErr = this.tIso(f.from) > this.tIso(f.to) ? 'A data inicial deve ser anterior ou igual à data final.' : '';
+    const setF = (p) => this.setState(x => ({ f: Object.assign({}, x.f, p) }));
+    const ready = s.status === 'ready' && !!A;
+    const dirty = !!A && JSON.stringify(A.f) !== JSON.stringify(f);
+
+    let R = null, ents = [];
+    if (ready) { ents = this.filtered(rep, A.f); R = this.build(rep, ents, A.f); }
+    const has = ready && ents.length > 0;
+
+    const mono = 'font-family:\'JetBrains Mono\',monospace;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right';
+    const txt = 'font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    let tHeads = [], tRows = [], tTotals = [], tGrid = '', tInner = '';
+    if (has) {
+      const widths = R.cols.map(c => c.fr ? 'minmax(' + c.w + 'px,' + c.fr + 'fr)' : c.w + 'px').join(' ');
+      const inner = R.cols.reduce((n, c) => n + c.w, 0) + 12 * (R.cols.length - 1) + 32;
+      tGrid = 'min-width:' + inner + 'px;display:grid;grid-template-columns:' + widths + ';gap:12px;align-items:center;padding:11px 16px';
+      tInner = 'min-width:' + inner + 'px';
+      tHeads = R.cols.map((c, i) => ({ t: c.l, style: 'font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748B;white-space:nowrap;' + (i > 0 && rep.id !== 'sub' ? 'text-align:right' : (rep.id === 'sub' && i > 1 ? 'text-align:right' : '')) }));
+      tRows = R.rows.map(r => ({
+        style: tGrid + ';border-bottom:1px solid #F1F5F9;' + (r.level === 1 && rep.id === 'sub' ? 'background:#FBFAFF' : ''),
+        cells: r.cells.map(c => ({ t: c.t, sub: c.sub, hasSub: !!c.sub,
+          textStyle: c.num ? mono + (c.warn ? ';color:#B45309' : '') : txt + (c.bold ? ';font-weight:700' : ''),
+          subStyle: 'font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:' + (c.warn ? '#B45309' : '#64748B') + (c.num ? ';text-align:right' : '') }))
+      }));
+      tTotals = R.totals.map((t, i) => ({ t: t, style: 'font-size:13px;font-weight:800;white-space:nowrap;' + (i === 0 ? '' : 'font-family:\'JetBrains Mono\',monospace;text-align:right') }));
+    }
+
+    const optsOf = (all, list) => [{ v: '', t: all }].concat(list);
+    const SEL = {
+      obra: { label: 'Obra', options: optsOf('Todas as obras', Object.keys(this.OBRAS).map(k => ({ v: k, t: this.OBRAS[k].name }))) },
+      cat: { label: 'Categoria de custo', options: optsOf('Todas as categorias', this.CATS.map(c => ({ v: c, t: c }))) },
+      person: { label: 'Funcionário', options: optsOf('Todos os funcionários', Object.keys(this.PEOPLE).filter(k => !this.PEOPLE[k].firm).map(k => ({ v: k, t: this.PEOPLE[k].name }))) },
+      firm: { label: 'Subempreiteiro', options: optsOf('Todos os subempreiteiros', Object.keys(this.FIRMRULES).map(x => ({ v: x, t: x }))) },
+      veh: { label: 'Veículo', options: optsOf('Todos os veículos', this.VEH.map(v => ({ v: v.id, t: v.plate + ' · ' + v.name })).concat([{ v: 'v4', t: 'E-220-BE · Caterpillar 320 GC (Terra Forte)' }])) },
+      subcat: { label: 'Tipo de custo', options: optsOf('Todos os tipos', this.SUBCATS.map(c => ({ v: c, t: c }))) }
+    };
+    const selects = rep ? rep.filters.map(k => ({ label: SEL[k].label, options: SEL[k].options, value: f[k], onChange: (e) => setF({ [k]: e.target.value }) })) : [];
+
+    const periodShort = A ? this.brIso(A.f.from) + ' → ' + this.brIso(A.f.to) : '';
+    const activeTxt = rep ? rep.filters.filter(k => f[k]).map(k => SEL[k].label + ': ' + (SEL[k].options.filter(o => o.v === f[k])[0] || { t: f[k] }).t).join('; ') || 'nenhum' : '';
+    const maxBar = R ? Math.max.apply(null, R.bars.map(b => b.v).concat([1])) : 1;
+
+    const csvNow = () => {
+      if (!has) { this.flash('Gere um relatório com resultados para exportar', false); return; }
+      const esc = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const lines = [['Relatório', rep.title], ['Período', periodShort], ['Filtros', activeTxt], ['Gerado em', '21/09/2026 (dados fictícios)'], []];
+      lines.push(R.cols.map(c => c.l));
+      R.rows.forEach(r => lines.push(r.cells.map(c => (c.t + (c.sub && c.num ? ' (' + c.sub + ')' : '')).trim())));
+      lines.push(R.totals);
+      const csv = '\ufeff' + lines.map(l => l.map(esc).join(';')).join('\r\n');
+      try {
+        const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        const a = document.createElement('a'); a.href = url; a.download = 'progesty-custos-' + rep.id + '.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 500);
+        this.flash('Arquivo CSV gerado · ' + R.rows.length + (R.rows.length === 1 ? ' linha' : ' linhas'));
+      } catch (e) { this.flash('Não foi possível gerar o arquivo', false); }
+    };
+
+    const wAvail = w - (isMobile ? 0 : 258);
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      groups: this.NAV.map(g => ({ name: g.name, dot: g.dot, isChart: !!g.chart, notChart: !g.chart, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(i => ({ name: i.n, pick: () => { if (i.url) { window.location.href = i.url; } else { this.setState({ active: i.n, navOpen: false }); } },
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === i.n ? '700' : '500') + ';color:' + (s.active === i.n ? '#fff' : '#CBD5E1') + ';background:' + (s.active === i.n ? 'rgba(109,93,251,.26)' : 'transparent'),
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === i.n ? '#6D5DFB' : '#64748B') })) })),
+
+      cardGrid: 'display:grid;grid-template-columns:repeat(' + (wAvail >= 1100 ? 3 : (wAvail >= 640 ? 2 : 1)) + ',minmax(0,1fr));gap:clamp(10px,1.2vw,16px)',
+      cards: this.REPORTS.map(r => ({ title: r.title, desc: r.desc, color: r.color, bg: r.bg, pick: () => this.openRep(r.id),
+        style: 'background:#fff;border:1px solid ' + (s.rep === r.id ? '#C7C3FB' : '#E2E8F0') + ';border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;' + (s.rep === r.id ? 'box-shadow:0 18px 36px -26px rgba(109,93,251,.7)' : ''),
+        btnStyle: 'align-self:flex-start;padding:11px 18px;border-radius:11px;font-size:13px;font-weight:700;' + (s.rep === r.id ? 'background:#EEF0FE;color:#4338CA;border:1px solid #C7C3FB' : 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;box-shadow:0 12px 24px -14px rgba(109,93,251,1)') })),
+
+      hasRep: !!rep, repTitle: rep ? rep.title : '', closeRep: () => this.setState({ rep: null, status: 'idle', applied: null }),
+      fromIso: f.from, toIso: f.to, onFrom: (e) => { if (e.target.value) setF({ from: e.target.value }); }, onTo: (e) => { if (e.target.value) setF({ to: e.target.value }); },
+      selects: selects, periodErr: periodErr, dirty: dirty, clearFilters: () => this.setState({ f: this.freshF() }),
+      generate: this.generate, isLoading: s.status === 'loading',
+      genLabel: s.status === 'loading' ? 'Gerando…' : (ready && !dirty ? 'Atualizar relatório' : 'Gerar relatório'),
+      genStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;color:#fff;background:' + (s.status === 'loading' ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';box-shadow:0 14px 26px -14px rgba(109,93,251,1);' + (s.status === 'loading' ? 'pointer-events:none;' : ''),
+
+      stLoading: s.status === 'loading' && !!rep, skeletons: [1, 2, 3, 4], stEmpty: ready && !has, emptyNote: ready && !has && R ? R.emptyNote : '', stReady: has,
+      printMeta: 'Período: ' + periodShort + ' · Filtros: ' + activeTxt + ' · Gerado em 21/09/2026 (dados fictícios)',
+      metaShort: periodShort + (activeTxt !== 'nenhum' ? ' · ' + activeTxt : ''),
+      kpis: has ? R.kpis.map(k => ({ label: k[0], value: k[1], color: k[2], hint: k[3], hintColor: /parcial|sem valor|fora/.test(k[3]) && !/todos/.test(k[3]) ? '#B45309' : '#64748B' })) : [],
+      hasNotes: has && R.notes.length > 0,
+      notes: has ? R.notes.map(t => ({ t: t, icon: /sem valor|parcial|Multas|ficam de fora|ficou fora/.test(t) ? '!' : 'i', color: /sem valor|ficou fora|Multas/.test(t) ? '#92400E' : '#1D4ED8', bg: /sem valor|ficou fora|Multas/.test(t) ? '#FFFBEB' : '#EFF6FF', bd: /sem valor|ficou fora|Multas/.test(t) ? '#FDE68A' : '#BFDBFE', iconBg: /sem valor|ficou fora|Multas/.test(t) ? '#FEF3C7' : '#DBEAFE' })) : [],
+      chartTitle: has ? R.chartTitle : '',
+      bars: has ? R.bars.map(b => ({ label: b.label, pct: b.pct, value: this.eur(b.v), bar: 'height:100%;width:' + Math.max(2, b.v / maxBar * 100) + '%;border-radius:99px;background:' + b.color })) : [],
+      tableCount: has ? R.rows.length + (R.rows.length === 1 ? ' linha' : ' linhas') + ' · ' + ents.length + (ents.length === 1 ? ' lançamento considerado' : ' lançamentos considerados') : '',
+      tHeads: tHeads, tRows: tRows, tTotals: tTotals, tGrid: tGrid, tInner: tInner,
+      doPrint: () => { if (!has) { this.flash('Gere um relatório com resultados para imprimir', false); return; } try { window.print(); } catch (e) {} },
+      doCsv: csvNow,
+
+      toast: s.toast, toastMark: s.toastOk ? '✓' : '!',
+      demos: [
+        { name: 'Início', run: () => { clearTimeout(this.gT); this.setState({ rep: null, status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Configurando', run: () => { clearTimeout(this.gT); this.setState({ rep: 'obra', status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Custos por obra', run: () => this.quick('obra') },
+        { name: 'Mão de obra', run: () => this.quick('mo') },
+        { name: 'Subempreiteiros', run: () => this.quick('sub') },
+        { name: 'Veículos', run: () => this.quick('veic') },
+        { name: 'Resumo geral', run: () => this.quick('resumo') },
+        { name: 'Sem resultados', run: () => this.quick('mo', { from: '2026-07-01', to: '2026-07-05' }) },
+        { name: 'Carregando', run: () => { this.setState({ rep: s.rep || 'obra', status: 'loading', applied: null }); clearTimeout(this.gT); this.gT = setTimeout(() => this.quick(this.state.rep), 1600); } }
+      ].map(d => ({ name: d.name, run: d.run, style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
