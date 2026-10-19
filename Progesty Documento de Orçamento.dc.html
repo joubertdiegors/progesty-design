@@ -120,6 +120,7 @@ input,select,textarea{font-family:inherit}
             <div style="border-bottom:1px solid #F1F5F9">
               <sc-if value="{{ r.isItem }}" hint-placeholder-val="{{ true }}">
                 <div style="{{ gridBody }}">
+                  <span style="{{ r.numStyle }}">{{ r.numTxt }}</span>
                   <input data-prod="{{ r.n }}" value="{{ r.d }}" onInput="{{ r.setD }}" onFocus="{{ r.openPick }}" onBlur="{{ r.blur }}" onKeyDown="{{ r.key }}" placeholder="Digite para pesquisar ou descreva o item" autocomplete="off" style="{{ r.prodStyle }}">
                   <span style="{{ r.codeStyle }}">{{ r.code }}</span>
                   <select value="{{ r.un }}" onInput="{{ r.setUn }}" style="{{ r.unStyle }}"><sc-for list="{{ r.units }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select>
@@ -132,6 +133,13 @@ input,select,textarea{font-family:inherit}
                   <div style="display:flex;gap:4px;justify-content:flex-end"><button data-ins="{{ r.n }}" onClick="{{ r.ins }}" title="Inserir linha abaixo" style="{{ r.actStyle }}">＋</button><button onClick="{{ r.dup }}" title="Duplicar linha" style="{{ r.actStyle }}">⧉</button><button onClick="{{ r.remove }}" aria-label="Remover linha" title="Remover linha" style="{{ r.rmStyle }}">✕</button></div>
                 </div>
                 <sc-if value="{{ r.hasErr }}" hint-placeholder-val="{{ false }}"><div style="padding:0 20px 8px;font-size:12px;font-weight:600;color:#B91C1C">Linha {{ r.num }}: {{ r.err }}</div></sc-if>
+              </sc-if>
+              <sc-if value="{{ r.isBreak }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ r.textRow }}">
+                  <span style="{{ r.badgeStyle }}"></span>
+                  <div style="display:flex;align-items:center;gap:12px;min-height:36px"><span style="flex:1;border-top:1px dashed #94A3B8"></span><span style="font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">Quebra de página</span><span style="flex:1;border-top:1px dashed #94A3B8"></span></div>
+                  <div style="display:flex;gap:4px;justify-content:flex-end"><button data-ins="{{ r.n }}" onClick="{{ r.ins }}" title="Inserir linha abaixo" style="{{ r.actStyle }}">＋</button><button onClick="{{ r.remove }}" aria-label="Remover linha" title="Remover linha" style="{{ r.rmStyle }}">✕</button></div>
+                </div>
               </sc-if>
               <sc-if value="{{ r.isText }}" hint-placeholder-val="{{ false }}">
                 <div style="{{ r.textRow }}">
@@ -210,7 +218,7 @@ class Component extends DCLogic {
   SUPS = ['Fornecedor ABC', 'Cimentos do Norte', 'Cimex Materiais', 'Betão Pronto', 'EletroSul', 'Hidrosul Distribuição', 'MaqRent', 'Madeireira Sul', 'TransLog', 'Ferro & Aço Ltda', 'SiderNorte', 'Guindastes Delta Max'];
   GROUPS = { 'G-ACO': 'Aço CA-50 — 20 t (Edifício Central)', 'G-CIM': 'Cimento e argamassa — lote (Jardim Europa)', 'G-CON': 'Concreto usinado fck 30 — 140 m³' };
   ST = { 'Em análise': ['#EFF6FF', '#1D4ED8'], 'Aguardando resposta': ['#FFFBEB', '#B45309'], 'Aprovado': ['#ECFDF5', '#047857'], 'Recusado': ['#F1F5F9', '#64748B'], 'Vencido': ['#FEF2F2', '#B91C1C'] };
-  KINDS = { title: 'Título', subtitle: 'Subtítulo', comment: 'Comentário' };
+  KINDS = { title: 'Título', subtitle: 'Subtítulo', comment: 'Comentário', break: 'Quebra de página' };
   CATALOG = [
     ['CI-0001', 'Cimento CP-II 32 — saco 50 kg', 'Cimento e argamassa', 'saco', 9.5, 23], ['CI-0003', 'Argamassa colante AC-II — saco 20 kg', 'Cimento e argamassa', 'saco', 11.75, 23], ['CI-0004', 'Argamassa de assentamento — saco 25 kg', 'Cimento e argamassa', 'saco', 6.9, 23], ['CI-0005', 'Cal hidratada — saco 20 kg', 'Cimento e argamassa', 'saco', 5.4, 23],
     ['CO-0010', 'Concreto usinado fck 25', 'Concreto', 'm³', 118, 23], ['CO-0011', 'Concreto usinado fck 30', 'Concreto', 'm³', 125, 23], ['CO-0012', 'Bombeamento de concreto', 'Concreto', 'serviço', 1100, 23],
@@ -232,7 +240,7 @@ class Component extends DCLogic {
   addDays(s, k) { const a = s.split('-').map(Number); return new Date(Date.UTC(a[0], a[1] - 1, a[2]) + k * 864e5).toISOString().slice(0, 10); }
   isLine(it) { return !it.type || it.type === 'item'; }
   blankDraft() { return { no: '', sup: '', supContato: '', supEnd: '', obra: '', cat: '', date: this.TODAY, valid: this.addDays(this.TODAY, 15), st: 'Em análise', group: '', pay: '30 dias', prazo: '', frete: 'Incluído', obs: '', empresa: '', refForn: '', resp: '', entregaData: '', entrega: '', instr: '', history: [], items: [] }; }
-  newRow(type) { return type === 'item' ? { type: 'item', pid: '', code: '', cat: '', d: '', un: 'un', q: '1', p: '', discT: '%', disc: '', tax: '0' } : { type, d: '' }; }
+  newRow(type, lvl) { return type === 'item' ? { type: 'item', pid: '', code: '', cat: '', d: '', un: 'un', q: '1', p: '', discT: '%', disc: '', tax: '0' } : { type, d: '', lvl: lvl || (type === 'subtitle' ? 2 : 1) }; }
   lineCalc(i) {
     const q = Math.max(this.num(i.q), 0), p = Math.max(this.num(i.p), 0), gross = Math.round(q * p * 100) / 100;
     let d = Math.max(this.num(i.disc), 0); d = i.discT === '€' ? Math.min(d, gross) : gross * Math.min(d, 100) / 100; d = Math.round(d * 100) / 100;
@@ -278,9 +286,15 @@ class Component extends DCLogic {
     const nd = Object.assign({}, d, { st: fin ? 'Aguardando resposta' : d.st, history: (d.history || []).concat([{ date: this.fmtD(this.TODAY), text: ev + ' · total ' + this.eur(tot) }]) });
     if (this.props.saveFn) this.props.saveFn(nd); else this.flash('Salvo só nesta página (sem Workspace)');
   }
-  addLine(type, at) {
+  addLine(type, at, rel) {
     const items = this.draft().items, pos = at == null || at < 0 ? items.length : at + 1;
-    this.upd(d => { const a = d.items.slice(); a.splice(pos, 0, this.newRow(type)); return Object.assign({}, d, { items: a }); });
+    let lvl = 2;
+    if (type === 'subtitle') {
+      let base = 1;
+      for (let i = pos - 1; i >= 0; i--) { const it = items[i]; if (it.type === 'title') { base = 1; break; } if (it.type === 'subtitle') { base = Math.max(it.lvl || 2, 2); break; } }
+      lvl = rel === 'down' ? Math.min(base + 1, 4) : (base === 1 ? 2 : base);
+    }
+    this.upd(d => { const a = d.items.slice(); a.splice(pos, 0, this.newRow(type, lvl)); return Object.assign({}, d, { items: a }); });
     this.setState({ menuAt: null, pick: type === 'item' ? pos : -1, hi: -1 });
     this.focusRow(pos);
   }
@@ -314,8 +328,15 @@ class Component extends DCLogic {
     const mono = 'font-family:\'JetBrains Mono\',monospace;';
     const H = touch ? 44 : 40;
     const inpBase = 'width:100%;min-height:' + H + 'px;padding:0 10px;border-radius:9px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;outline:none;color:#0F172A';
-    const GRID = 'minmax(250px,2.4fr) 98px 84px 84px 108px 156px 112px 150px 116px 140px';
-    const heads = [['Produto', 0], ['Código', 0], ['Un.', 0], ['Quantidade', 1], ['Valor unit. (€)', 1], ['Desconto', 0], ['Base tributável', 1], ['Imposto', 0], ['Total da linha', 1], ['Ações', 1]].map(h => ({ name: h[0], style: 'font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B;white-space:nowrap;' + (h[1] ? 'text-align:right;' : '') }));
+    const nums = [], cnt = [0, 0, 0, 0, 0]; let itemCnt = 0;
+    d.items.forEach(it => {
+      if (it.type === 'title') { cnt[1]++; cnt[2] = cnt[3] = cnt[4] = 0; itemCnt = 0; nums.push(String(cnt[1])); }
+      else if (it.type === 'subtitle') { const l = Math.min(Math.max(it.lvl || 2, 2), 4); cnt[l]++; for (let k = l + 1; k <= 4; k++) cnt[k] = 0; itemCnt = 0; nums.push(cnt.slice(1, l + 1).join('.')); }
+      else if (this.isLine(it)) { itemCnt++; let deep = 0; for (let k = 1; k <= 4; k++) if (cnt[k] > 0) deep = k; nums.push((deep ? cnt.slice(1, deep + 1).join('.') + '.' : '') + itemCnt); }
+      else nums.push('');
+    });
+    const GRID = '52px minmax(250px,2.4fr) 98px 84px 84px 108px 156px 112px 150px 116px 140px';
+    const heads = [['Nº', 0], ['Produto', 0], ['Código', 0], ['Un.', 0], ['Quantidade', 1], ['Valor unit. (€)', 1], ['Desconto', 0], ['Base tributável', 1], ['Imposto', 0], ['Total da linha', 1], ['Ações', 1]].map(h => ({ name: h[0], style: 'font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B;white-space:nowrap;' + (h[1] ? 'text-align:right;' : '') }));
     const opt = (list, cur) => list.map(v => ({ v: v.v != null ? v.v : v, l: v.l != null ? v.l : (v || 'Selecione'), sel: (v.v != null ? v.v : v) === cur }));
     const bld = (k, label, o) => { o = o || {}; const err = errs.e[k] || ''; return { label, err, hasErr: !!err, isSelect: !!o.opts, isArea: !!o.area, isInput: !o.opts && !o.area, type: o.type || 'text', ph: o.ph || '', list: o.list || '', value: d[k] == null ? '' : d[k], opts: o.opts ? opt(o.opts, d[k] == null ? '' : d[k]) : [], onInput: ev => k === 'sup' ? this.setSup(ev.target.value) : this.setF(k, ev.target.value), wrapStyle: 'display:flex;flex-direction:column;gap:6px;min-width:0;grid-column:' + (o.full ? '1 / -1' : 'auto'), inpStyle: 'width:100%;min-height:' + H + 'px;padding:' + (o.area ? '10px 12px' : '0 12px') + ';border-radius:10px;border:1px solid ' + (err ? '#EF4444' : '#E2E8F0') + ';background:' + (err ? '#FEF2F2' : '#F8FAFC') + ';font-size:14px;outline:none;color:#0F172A;' + (o.area ? 'resize:vertical;' : '') }; };
     const groupOpts = [{ v: '', l: 'Nenhuma (orçamento isolado)' }].concat(Object.keys(this.GROUPS).map(g => ({ v: g, l: this.GROUPS[g] })));
@@ -344,17 +365,19 @@ class Component extends DCLogic {
     const rows = d.items.map((it, n) => {
       const common = { n: String(n), num: String(n + 1).padStart(2, '0'), actStyle: 'width:' + H + 'px;min-height:' + H + 'px;border-radius:9px;background:#F1F5F9;color:#475569;font-size:13px;font-weight:700', rmStyle: 'width:' + H + 'px;min-height:' + H + 'px;border-radius:9px;border:1px solid #E2E8F0;background:#fff;color:#B91C1C;font-size:12px', ins: () => this.setState({ menuAt: n, pick: -1 }), remove: () => { this.upd(x => Object.assign({}, x, { items: x.items.filter((_, i) => i !== n) })); if (s.pick === n) this.setState({ pick: -1 }); else if (s.pick > n) this.setState({ pick: s.pick - 1 }); } };
       if (!this.isLine(it)) {
-        const k = it.type, st = { title: ['font-size:16px;font-weight:800;letter-spacing:-.01em;color:#0F172A', '#F1F5F9', '#0F172A'], subtitle: ['font-size:14.5px;font-weight:700;color:#4338CA', '#fff', '#4338CA'], comment: ['font-size:13px;font-style:italic;color:#475569', '#F8FAFC', '#64748B'] }[k];
-        return Object.assign(common, { isItem: false, isText: true, d: it.d, badge: this.KINDS[k], ph: { title: 'Título da seção', subtitle: 'Subtítulo', comment: 'Comentário ou instrução para esta parte do documento' }[k],
-          textRow: 'display:grid;grid-template-columns:96px minmax(0,1fr) 140px;gap:10px;align-items:center;padding:6px clamp(14px,1.6vw,18px);background:' + st[1],
-          badgeStyle: 'font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:' + st[2] + ';opacity:.8',
-          textStyle: 'width:100%;min-height:' + H + 'px;padding:0 10px;border-radius:9px;border:1px solid transparent;background:transparent;outline:none;' + st[0],
+        const k = it.type, lv = Math.min(Math.max(it.lvl || 2, 2), 4), st = { title: ['font-size:16px;font-weight:800;letter-spacing:-.01em;color:#0F172A', '#E4E7FD', '#312E81'], subtitle: ['font-size:' + (lv === 2 ? 14.5 : 13.5) + 'px;font-weight:700;color:#4338CA', lv === 2 ? '#F1F2FE' : '#fff', '#4338CA'], comment: ['font-size:13px;font-style:italic;color:#475569', '#F8FAFC', '#64748B'], break: ['', '#fff', '#64748B'] }[k];
+        const rowS = 'display:grid;grid-template-columns:52px minmax(0,1fr) 140px;gap:10px;align-items:center;padding:6px clamp(14px,1.6vw,18px);background:' + st[1];
+        if (k === 'break') return Object.assign(common, { isItem: false, isText: false, isBreak: true, textRow: rowS, badgeStyle: '' });
+        return Object.assign(common, { isItem: false, isText: true, isBreak: false, d: it.d, badge: nums[n] || '', ph: { title: 'Título da seção', subtitle: 'Subtítulo', comment: 'Comentário ou instrução para esta parte do documento' }[k],
+          textRow: rowS,
+          badgeStyle: mono + 'font-size:12px;font-weight:700;color:' + st[2],
+          textStyle: 'width:100%;min-height:' + H + 'px;padding:0 10px 0 ' + (10 + (k === 'subtitle' ? (lv - 2) * 18 : 0)) + 'px;border-radius:9px;border:1px solid transparent;background:transparent;outline:none;' + st[0],
           setD: e => this.setItem(n, 'd', e.target.value) });
       }
       const c = calcs[n], bad = errs.rows[n] || '', empty = !String(it.d).trim();
       const calcSt = mono + 'display:flex;align-items:center;justify-content:flex-end;min-height:' + H + 'px;padding:0 10px;border-radius:9px;background:#F1F5F9;font-size:13px;color:#334155;white-space:nowrap';
       return Object.assign(common, {
-        isItem: true, isText: false, d: it.d, code: it.pid ? it.code : 'Livre', un: it.un, units: opt(this.UNITS, it.un), unStyle: inpBase + ';padding:0 6px', setUn: e => this.setItem(n, 'un', e.target.value),
+        isItem: true, isText: false, isBreak: false, numTxt: nums[n], numStyle: mono + 'font-size:12px;font-weight:700;color:#64748B', d: it.d, code: it.pid ? it.code : 'Livre', un: it.un, units: opt(this.UNITS, it.un), unStyle: inpBase + ';padding:0 6px', setUn: e => this.setItem(n, 'un', e.target.value),
         setD: e => { const v = e.target.value; this.upd(x => Object.assign({}, x, { items: x.items.map((y, i) => i === n ? Object.assign({}, y, { d: v }, y.pid && v !== y.cn ? { pid: '', code: '' } : {}) : y) })); this.setState({ pick: n, hi: -1 }); },
         openPick: () => { if (this.state.pick !== n) this.setState({ pick: n, hi: -1, menuAt: null }); },
         blur: () => { if (this.state.pick === n) this.setState({ pick: -1, hi: -1 }); },
@@ -384,7 +407,7 @@ class Component extends DCLogic {
     const showSug = !!sugA;
     const addA = s.menuAt !== null ? this.anchor(s.menuAt === -1 ? '[data-addline]' : '[data-ins="' + s.menuAt + '"]', true, 240) : null;
     const showAdd = !!addA;
-    const addOptions = [['item', 'Produto ou serviço'], ['title', 'Título'], ['subtitle', 'Subtítulo'], ['comment', 'Comentário']].map(a => ({ label: a[1], run: () => this.addLine(a[0], s.menuAt) }));
+    const addOptions = [['item', 'Produto ou serviço'], ['title', 'Título'], ['subtitle', 'Subtítulo (mesmo nível)', 'same'], ['subtitle', 'Subtítulo (nível inferior)', 'down'], ['comment', 'Comentário'], ['break', 'Quebra de página']].map(a => ({ label: a[1], run: () => this.addLine(a[0], s.menuAt, a[2]) }));
 
     const npSet = (k) => (e) => { const v = e.target.value; this.setState(x => ({ np: Object.assign({}, x.np, { [k]: v }), npErr: '' })); };
     const ist = inpBase + ';min-height:44px', np = s.np;
@@ -418,7 +441,7 @@ class Component extends DCLogic {
       menuOpen: s.menuOpen, toggleMenu: () => this.setState(x => ({ menuOpen: !x.menuOpen })),
       menuItems: [{ label: 'Histórico do documento', run: () => this.setState({ showHist: true, showPrev: false, menuOpen: false }) }, { label: 'Fechar documento', run: () => { this.setState({ menuOpen: false }); if (this.props.closeFn) this.props.closeFn(); else this.flash('Fora do Workspace não há aba para fechar.'); } }],
       pvMeta: [['Empresa emissora', d.empresa || '—'], ['Fornecedor', d.sup || '—'], ['Número', d.no || 'gerado ao salvar'], ['Data', this.fmtD(d.date)], ['Validade', this.fmtD(d.valid)], ['Pagamento', d.pay], ['Entrega', (d.entregaData ? this.fmtD(d.entregaData) : (d.prazo || '—')) + ' · ' + d.frete + (d.entrega ? ' · ' + d.entrega : '')], ['Obra', d.obra || '—']].map(a => ({ k: a[0], v: a[1] })),
-      pvRows: d.items.filter(i => this.isLine(i) ? String(i.d).trim() : String(i.d).trim()).map(i => { if (!this.isLine(i)) return { d: i.d, dStyle: i.type === 'title' ? 'font-size:15px;font-weight:800' : i.type === 'subtitle' ? 'font-size:14px;font-weight:700;color:#4338CA' : 'font-size:13px;font-style:italic;color:#64748B', calc: i.type === 'comment' ? '' : '', total: '' }; const c = this.lineCalc(i); return { d: i.d, dStyle: 'font-size:13.5px;font-weight:700', calc: this.fmtN(this.num(i.q)) + ' ' + i.un + ' × ' + this.eur(this.num(i.p)) + (c.disc ? ' − desc. ' + this.eur(c.disc) : '') + (c.tax ? ' + imposto ' + this.fmtN(c.rate) + '%' : ''), total: this.eur(c.total) }; }),
+      pvRows: d.items.filter(i => i.type === 'break' || String(i.d).trim()).map(i => { if (i.type === 'break') return { d: '— quebra de página —', dStyle: 'font-size:12px;color:#94A3B8', calc: '', total: '' }; if (!this.isLine(i)) return { d: i.d, dStyle: i.type === 'title' ? 'font-size:15px;font-weight:800' : i.type === 'subtitle' ? 'font-size:14px;font-weight:700;color:#4338CA' : 'font-size:13px;font-style:italic;color:#64748B', calc: i.type === 'comment' ? '' : '', total: '' }; const c = this.lineCalc(i); return { d: i.d, dStyle: 'font-size:13.5px;font-weight:700', calc: this.fmtN(this.num(i.q)) + ' ' + i.un + ' × ' + this.eur(this.num(i.p)) + (c.disc ? ' − desc. ' + this.eur(c.disc) : '') + (c.tax ? ' + imposto ' + this.fmtN(c.rate) + '%' : ''), total: this.eur(c.total) }; }),
       histRows: (d.history || []).slice().reverse().map(h => ({ date: h.date, text: h.text, dot: '#10B981' })).concat(this.props.isDirty ? [{ date: 'agora', text: 'Alterações em edição, ainda não salvas', dot: '#F59E0B' }] : []).concat(d.no ? [] : [{ date: 'agora', text: 'Documento ainda não salvo', dot: '#F59E0B' }]),
       showErr: errs.count > 0, errText: errs.count === 1 ? 'Corrija 1 ponto destacado para continuar.' : 'Corrija os ' + errs.count + ' pontos destacados para continuar.',
       cardsGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px;align-items:stretch', cards,

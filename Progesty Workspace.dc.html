@@ -302,7 +302,7 @@ class Component extends DCLogic {
     let savedNo = '';
     this.setState(x => {
       const qs = x.quotes || [];
-      const items = draft.items.map(i => (i.type && i.type !== 'item') ? { type: i.type, d: i.d } : { type: 'item', pid: i.pid, code: i.code, cat: i.cat, d: i.d, un: i.un, q: num(i.q), p: num(i.p), discT: i.discT, disc: num(i.disc), tax: num(i.tax) });
+      const items = draft.items.map(i => (i.type && i.type !== 'item') ? { type: i.type, d: i.d, lvl: i.lvl || 1 } : { type: 'item', pid: i.pid, code: i.code, cat: i.cat, d: i.d, un: i.un, q: num(i.q), p: num(i.p), discT: i.discT, disc: num(i.disc), tax: num(i.tax) });
       const lines = items.filter(i => i.type === 'item');
       const desc = lines[0].d + (lines.length > 1 ? ' + ' + (lines.length - 1) + (lines.length === 2 ? ' item' : ' itens') : '');
       const base = { sup: draft.sup.trim(), obra: draft.obra, cat: draft.cat, date: draft.date, valid: draft.valid, st: draft.st, group: draft.group, pay: draft.pay, prazo: draft.prazo || '—', frete: draft.frete, obs: draft.obs, empresa: draft.empresa, entrega: draft.entrega, entregaData: draft.entregaData || '', instr: draft.instr || '', refForn: draft.refForn || '', resp: draft.resp || '', supContato: draft.supContato || '', supEnd: draft.supEnd || '', history: draft.history || [], items, desc };
