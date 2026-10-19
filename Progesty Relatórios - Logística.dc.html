@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select{font-family:inherit}
+input:focus,select:focus{outline:2px solid #6D5DFB;outline-offset:0}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+@media screen{.pg-printonly{display:none !important}}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  .pg-noprint,aside,header{display:none !important}
+  html,body{background:#fff !important}
+  .pg-printfit{overflow:visible !important}
+}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll pg-noprint" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:500;color:#CBD5E1">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto"><span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span></span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <sc-if value="{{ g.isChart }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-end;gap:2px;height:13px"><span style="width:3px;height:6px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:13px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:9px;border-radius:1px;background:{{ g.dot }}"></span></span></sc-if>
+              <sc-if value="{{ g.notChart }}" hint-placeholder-val="{{ true }}"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></sc-if>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span><span style="flex:1;text-align:left">{{ it.name }}</span></button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Ana Duarte</span><span style="font-size:11px;color:#94A3B8">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div class="pg-noprint" onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+  <header class="pg-noprint" style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,30px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:12px;font-weight:700;color:#64748B"><a href="Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html">Relatórios</a> / Logística</span>
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Relatórios - Logística</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Frota: custos, combustível, manutenção, utilização e ocorrências, a partir do cadastro de veículos.</p>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(14px,2vw,22px) clamp(16px,2.4vw,30px) 8px;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);min-width:0">
+
+    <div class="pg-noprint" style="{{ cardGrid }}">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+        <div style="{{ c.style }}">
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="width:38px;height:38px;border-radius:12px;background:{{ c.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="display:flex;align-items:flex-end;gap:2.5px;height:16px"><span style="width:4px;height:8px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:16px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:11px;border-radius:1.5px;background:{{ c.color }}"></span></span></span>
+            <span style="font-size:15px;font-weight:800;letter-spacing:-.02em;line-height:1.25">{{ c.title }}</span>
+          </div>
+          <span style="font-size:13px;color:#64748B;line-height:1.5;text-wrap:pretty;flex:1">{{ c.desc }}</span>
+          <button onClick="{{ c.pick }}" style="{{ c.btnStyle }}">Gerar relatório</button>
+        </div>
+      </sc-for>
+    </div>
+
+    <div id="cfg" class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+      <sc-if value="{{ hasRep }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px">
+            <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Configurar relatório</span><span style="font-size:18px;font-weight:800;letter-spacing:-.025em">{{ repTitle }}</span></div>
+            <button onClick="{{ closeRep }}" style="padding:9px 14px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:12.5px;font-weight:700;color:#475569">Fechar</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px">
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período inicial</span><input type="date" value="{{ fromIso }}" onChange="{{ onFrom }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período final</span><input type="date" value="{{ toIso }}" onChange="{{ onTo }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+            <sc-for list="{{ selects }}" as="sl" hint-placeholder-count="5">
+              <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:11.5px;font-weight:700;color:#475569">{{ sl.label }}</span>
+                <select value="{{ sl.value }}" onChange="{{ sl.onChange }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;color:#0F172A;max-width:240px">
+                  <sc-for list="{{ sl.options }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.t }}</option></sc-for>
+                </select>
+              </label>
+            </sc-for>
+          </div>
+          <sc-if value="{{ periodErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ periodErr }}</span></sc-if>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+            <button onClick="{{ generate }}" style="{{ genStyle }}">
+              <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}"><span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span></sc-if>
+              {{ genLabel }}
+            </button>
+            <button onClick="{{ clearFilters }}" style="padding:12px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:#475569;white-space:nowrap">Limpar filtros</button>
+            <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;background:#FFFBEB;border:1px solid #FDE68A;font-size:11.5px;font-weight:700;color:#B45309"><span style="width:6px;height:6px;border-radius:50%;background:#F59E0B"></span>Filtros alterados — gere novamente</span></sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px"><sc-for list="{{ skeletons }}" as="k" hint-placeholder-count="4"><div class="pg-sk" style="height:92px;border-radius:16px"></div></sc-for></div>
+        <div class="pg-sk" style="height:280px;border-radius:18px"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(26px,4vw,48px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+        <span style="width:56px;height:56px;border-radius:18px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:20px;height:20px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">Nenhum registro encontrado</span>
+        <span style="font-size:14px;color:#64748B;max-width:50ch;text-wrap:pretty">Não há dados para este relatório com o período e os filtros aplicados. Tente ampliar o período ou limpar os filtros.</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-printonly" style="padding-bottom:6px;border-bottom:1.5px solid #0F172A">
+        <div style="font-size:17px;font-weight:800">Progesty — {{ repTitle }}</div>
+        <div style="font-size:11px;color:#334155">{{ printMeta }}</div>
+      </div>
+
+      <div class="pg-noprint" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;letter-spacing:-.02em">{{ repTitle }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ metaShort }}</span></div>
+        <button onClick="{{ doPrint }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155">Imprimir</button>
+        <button onClick="{{ doPrint }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155;white-space:nowrap">Exportar PDF</button>
+        <button onClick="{{ doCsv }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155;white-space:nowrap">Exportar Excel (CSV)</button>
+      </div>
+      <span class="pg-noprint" style="font-size:11.5px;color:#64748B;line-height:1.5;margin-top:-6px">“Exportar PDF” abre a impressão do navegador — escolha “Salvar como PDF”. “Exportar Excel” baixa um CSV com a tabela exibida, que o Excel abre normalmente.</span>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:clamp(10px,1.2vw,14px)">
+        <sc-for list="{{ kpis }}" as="kp" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:14px 15px;display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:2px;background:{{ kp.color }};flex:0 0 auto"></span><span style="font-size:12px;font-weight:600;color:#475569">{{ kp.label }}</span></span>
+            <span style="font-size:clamp(19px,2vw,24px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums">{{ kp.value }}</span>
+            <span style="font-size:11px;font-weight:600;color:{{ kp.hintColor }}">{{ kp.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ hasNotes }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ notes }}" as="nt" hint-placeholder-count="2">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:13px;background:{{ nt.bg }};border:1px solid {{ nt.bd }}"><span style="width:20px;height:20px;border-radius:6px;background:{{ nt.iconBg }};color:{{ nt.color }};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:0 0 auto">{{ nt.icon }}</span><span style="font-size:12.5px;line-height:1.45;color:{{ nt.color }};text-wrap:pretty">{{ nt.t }}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasBars }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:12px;break-inside:avoid">
+          <span style="font-size:14px;font-weight:800;letter-spacing:-.02em">{{ chartTitle }}</span>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="4">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;align-items:baseline;gap:10px"><span style="min-width:0;flex:1;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.label }}</span><span style="font-size:11.5px;color:#64748B;white-space:nowrap">{{ b.pct }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;white-space:nowrap">{{ b.value }}</span></div>
+                <div style="height:9px;border-radius:99px;background:#F1F5F9;overflow:hidden"><div style="{{ b.bar }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden">
+        <div class="pg-noprint" style="padding:14px 16px;border-bottom:1px solid #F1F5F9;font-size:12px;color:#64748B">{{ tableCount }}</div>
+        <div class="pg-scroll pg-printfit" style="overflow-x:auto">
+          <div style="{{ tInner }}">
+            <div style="{{ tGrid }};background:#F8FAFC;border-bottom:1px solid #E2E8F0">
+              <sc-for list="{{ tHeads }}" as="th" hint-placeholder-count="6"><span style="{{ th.style }}">{{ th.t }}</span></sc-for>
+            </div>
+            <sc-for list="{{ tRows }}" as="r" hint-placeholder-count="8">
+              <div style="{{ r.style }}">
+                <sc-for list="{{ r.cells }}" as="cl" hint-placeholder-count="6">
+                  <span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="{{ cl.textStyle }}">{{ cl.t }}</span><sc-if value="{{ cl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.subStyle }}">{{ cl.sub }}</span></sc-if></span>
+                </sc-for>
+              </div>
+            </sc-for>
+            <div style="{{ tGrid }};background:#F8FAFC;border-top:2px solid #E2E8F0">
+              <sc-for list="{{ tTotals }}" as="tt" hint-placeholder-count="6"><span style="{{ tt.style }}">{{ tt.t }}</span></sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="pg-noprint" style="font-size:11.5px;color:#64748B;line-height:1.5;text-wrap:pretty">Dados fictícios para demonstração, baseados no cadastro de veículos do protótipo e sem sincronização real com outros módulos. Valores são custo interno da empresa.</span>
+    </sc-if>
+  </div>
+
+  <div class="pg-noprint" style="padding:0 clamp(16px,2.4vw,30px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="9"><button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button></sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:13px 19px;border-radius:14px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)"><span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">{{ toastMark }}</span>{{ toast }}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialReport&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;custos&quot;,&quot;comb&quot;,&quot;manut&quot;,&quot;util&quot;,&quot;multas&quot;,&quot;resumo&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    w: 1400, navOpen: false, active: 'Logística',
+    open: { Comercial: false, Clientes: false, Projetos: false, Pessoas: false, Financeiro: false, 'Relatórios': true, 'Configurações': false },
+    rep: null, f: this.freshF(), applied: null, status: 'idle', toast: '', toastOk: true
+  };
+
+  U = { hub: 'Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html', horas: 'Progesty%20Relat%C3%B3rios%20-%20Horas.dc.html', custos: 'Progesty%20Relat%C3%B3rios%20-%20Custos.dc.html' };
+
+  get NAV() {
+    return [
+      { name: 'Comercial', dot: '#EC4899', items: [{ n: 'CRM' }, { n: 'Leads' }, { n: 'Oportunidades' }] },
+      { name: 'Clientes', dot: '#3B82F6', items: [{ n: 'Clientes' }, { n: 'Contatos' }] },
+      { name: 'Projetos', dot: '#F97316', items: [{ n: 'Projetos / Obras' }, { n: 'Planning' }, { n: 'Controle de Horas' }, { n: 'Tarefas' }] },
+      { name: 'Pessoas', dot: '#06B6D4', items: [{ n: 'Funcionários' }, { n: 'Terceirizados' }, { n: 'Veículos' }] },
+      { name: 'Financeiro', dot: '#10B981', items: [{ n: 'Contas a Receber' }, { n: 'Contas a Pagar' }, { n: 'Faturas' }, { n: 'Fluxo de Caixa' }] },
+      { name: 'Relatórios', dot: '#8B5CF6', chart: true, items: [{ n: 'Consultas e Relatórios', url: this.U.hub }, { n: 'Horas', url: this.U.horas }, { n: 'Custos', url: this.U.custos }, { n: 'Logística' }] },
+      { name: 'Configurações', dot: '#64748B', items: [{ n: 'Empresa' }, { n: 'Usuários' }, { n: 'Gestão de Acessos' }] }
+    ];
+  }
+
+  /* Dados espelham o cadastro em Progesty Veículos.dc.html (v1–v6). v4 pertence a Terra Forte: seu custo já está na tarifa horária do contrato. */
+  VEH = [
+    { id: 'v1', plate: '1-ABC-234', name: 'Ford Transit Custom', kind: 'Van', status: 'Ativo', own: 'Próprio', km: 48260, nextInsp: '14/02/2027', nextRev: '12/12/2026',
+      drivers: [['Tiago Nunes', '01/06/2026', '', 'Condutor principal'], ['João Silva', '01/01/2026', '31/05/2026', 'Condutor principal'], ['Rafael Lima', '18/03/2024', '31/12/2025', 'Condutor principal']],
+      maint: [['14/02/2026', 'Inspeção', 'Inspeção periódica obrigatória', 41200, 62], ['08/11/2025', 'Revisão', 'Revisão dos 40.000 km', 39850, 486.4], ['22/07/2025', 'Pneus', 'Substituição dos 4 pneus', 34100, 612]],
+      fuel: [['18/09/2026', 48120, 62.4, 108.58, 'Total Anderlecht'], ['04/09/2026', 47410, 58.9, 101.31, 'Shell Ring Oost'], ['21/08/2026', 46680, 60.2, 105.35, 'Total Anderlecht']],
+      fines: [['02/09/2026', 'Excesso de velocidade — 62 em 50', 53, 'Tiago Nunes', 'Identificada'], ['11/05/2026', 'Estacionamento indevido', 58, 'João Silva', 'Paga']] },
+    { id: 'v2', plate: '2-XYZ-871', name: 'Renault Master L3H2', kind: 'Carrinha', status: 'Ativo', own: 'Leasing', km: 96430, nextInsp: '20/08/2027', nextRev: '30/10/2026',
+      drivers: [['João Silva', '01/06/2026', '', 'Condutor principal'], ['Bruno Alves', '05/09/2023', '31/05/2026', 'Condutor principal']],
+      maint: [['20/08/2026', 'Inspeção', 'Inspeção periódica obrigatória', 94100, 62], ['12/04/2026', 'Corretiva', 'Substituição do alternador', 88240, 742.9]],
+      fuel: [['16/09/2026', 96180, 78.1, 135.9, 'Q8 Gante'], ['31/08/2026', 95260, 74.6, 129.9, 'Q8 Gante']], fines: [],
+      monthly: { day: 5, value: 512.4, desc: 'Prestação de leasing' } },
+    { id: 'v3', plate: '1-KLM-009', name: 'VW Caddy Cargo', kind: 'Van', status: 'Em manutenção', own: 'Alugado', km: 21540, nextInsp: '02/06/2027', nextRev: '05/10/2026',
+      drivers: [['Ana Duarte', '02/06/2025', '', 'Condutor principal']],
+      maint: [['19/09/2026', 'Corretiva', 'Reparação da embreagem — valor ainda não lançado', 21480, null], ['14/03/2026', 'Preventiva', 'Revisão dos 15.000 km', 15320, 298.5]],
+      fuel: [['12/09/2026', 21390, 44.2, 76.91, 'Total Louise']], fines: [],
+      monthly: { day: 2, value: 389, desc: 'Aluguer mensal' } },
+    { id: 'v4', plate: 'E-220-BE', name: 'Caterpillar 320 GC', kind: 'Máquina', status: 'Ativo', own: 'Terceirizado (Terra Forte)', km: 4120, hours: true, excl: true, nextInsp: '05/03/2027', nextRev: '28/09/2026',
+      drivers: [['Sérgio Matos', '17/02/2026', '', 'Operador']],
+      maint: [['05/03/2026', 'Revisão', 'Revisão das 4.000 horas', 4000, 1240]], fuel: [['15/09/2026', 4108, 180, 313.2, 'Depósito da obra']], fines: [] },
+    { id: 'v5', plate: '1-QRS-556', name: 'Peugeot Partner', kind: 'Van', status: 'Inativo', own: 'Próprio', km: 132870, nextInsp: '18/04/2026', nextRev: '—',
+      drivers: [['Marta Antunes', '09/04/2021', '30/06/2026', 'Condutor principal']],
+      maint: [['18/04/2025', 'Inspeção', 'Inspeção periódica obrigatória', 121400, 62]], fuel: [],
+      fines: [['08/02/2026', 'Zona de baixa emissão sem registo', 150, 'Marta Antunes', 'Contestada']] },
+    { id: 'v6', plate: 'R-118-BE', name: 'Humbaur HT 3500', kind: 'Reboque', status: 'Ativo', own: 'Próprio', km: 0, nextInsp: '11/07/2027', nextRev: '11/07/2027',
+      drivers: [], maint: [['11/07/2026', 'Inspeção', 'Inspeção de reboque', 0, 48]], fuel: [], fines: [] }
+  ];
+  KINDS = ['Van', 'Carrinha', 'Máquina', 'Reboque'];
+  STATUSES = ['Ativo', 'Em manutenção', 'Inativo'];
+  SUBCATS = ['Combustível', 'Manutenção', 'Inspeções', 'Multas', 'Leasing / aluguer'];
+  FINEST = { 'Identificada': ['#FFFBEB', '#B45309'], 'Paga': ['#ECFDF5', '#047857'], 'Contestada': ['#EFF6FF', '#1D4ED8'], 'Pendente': ['#FEF2F2', '#B91C1C'] };
+
+  REPORTS = [
+    { id: 'custos', title: 'Custos por veículo', desc: 'Combustível, manutenção, inspeções, multas e leasing/aluguer de cada veículo, separando custos recorrentes e pontuais.', color: '#6D5DFB', bg: '#EEF0FE', filters: ['veh', 'kind', 'status', 'driver', 'cat'] },
+    { id: 'comb', title: 'Consumo de combustível', desc: 'Abastecimentos, litros, valores, quilometragem e consumo médio, quando os dados permitem calcular.', color: '#06B6D4', bg: '#ECFEFF', filters: ['veh', 'kind', 'status', 'driver'] },
+    { id: 'manut', title: 'Manutenção e inspeções', desc: 'Intervenções com valores e quilometragem, mais as datas das próximas revisões e inspeções.', color: '#F97316', bg: '#FFF7ED', filters: ['veh', 'kind', 'status', 'driver'] },
+    { id: 'util', title: 'Utilização de veículos', desc: 'Veículo, tipo, estado, condutor e o período de responsabilidade de cada um.', color: '#3B82F6', bg: '#EFF6FF', filters: ['veh', 'kind', 'status', 'driver'] },
+    { id: 'multas', title: 'Multas e ocorrências', desc: 'Data, veículo, condutor identificado, valor e estado de cada multa.', color: '#EF4444', bg: '#FEF2F2', filters: ['veh', 'kind', 'status', 'driver'] },
+    { id: 'resumo', title: 'Resumo logístico', desc: 'Visão consolidada da frota, dos custos e das ocorrências no período.', color: '#10B981', bg: '#ECFDF5', filters: ['veh', 'kind', 'status', 'driver', 'cat'] }
+  ];
+
+  freshF() { return { from: '2026-01-01', to: '2026-09-21', veh: '', kind: '', status: '', driver: '', cat: '' }; }
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth });
+    const r = this.props.initialReport; if (r) this.setState({ rep: r }, () => this.generate());
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.gT); clearTimeout(this.tT); }
+
+  toDate(k) { const p = k.split('/'); return new Date(+p[2], +p[1] - 1, +p[0]); }
+  key(d) { const z = (n) => (n < 10 ? '0' : '') + n; return z(d.getDate()) + '/' + z(d.getMonth() + 1) + '/' + d.getFullYear(); }
+  tIso(i) { const p = i.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]).getTime(); }
+  brIso(i) { const p = i.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  eur(n) { const p = Math.abs(n).toFixed(2).split('.'); return '€ ' + p[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + p[1]; }
+  dec(n, d) { return n.toFixed(d).replace('.', ','); }
+  km(n, v) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (v && v.hours ? ' h' : ' km'); }
+  flash(m, ok) { clearTimeout(this.tT); this.setState({ toast: m, toastOk: ok !== false }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2800); }
+
+  driverAt(v, date) {
+    const t = this.toDate(date).getTime();
+    const d = v.drivers.filter(x => this.toDate(x[1]).getTime() <= t && (!x[2] || this.toDate(x[2]).getTime() >= t))[0];
+    return d ? d[0] : '';
+  }
+
+  get entries() {
+    if (this._e) return this._e;
+    const out = []; let id = 0;
+    this.VEH.forEach(v => {
+      const base = (date, sub, extra) => out.push(Object.assign({ id: 'e' + (++id), date: date, t: this.toDate(date).getTime(), veh: v.id, sub: sub, excl: !!v.excl, driver: this.driverAt(v, date), recurring: false }, extra));
+      v.maint.forEach(m => base(m[0], m[1] === 'Inspeção' ? 'Inspeções' : 'Manutenção', { kindLabel: m[1], desc: m[2], km: m[3], cost: m[4], noCost: m[4] == null }));
+      v.fuel.forEach(x => base(x[0], 'Combustível', { km: x[1], liters: x[2], cost: x[3], noCost: false, station: x[4], desc: x[4] }));
+      v.fines.forEach(x => { base(x[0], 'Multas', { desc: x[1], cost: x[2], noCost: false, status: x[4] }); out[out.length - 1].driver = x[3]; });
+      if (v.monthly) for (let k = 0; k <= 8; k++) { const d = new Date(2026, k, v.monthly.day); base(this.key(d), 'Leasing / aluguer', { desc: v.monthly.desc, cost: v.monthly.value, noCost: false, recurring: true }); }
+    });
+    this._e = out; return out;
+  }
+
+  vehOk(v, f) {
+    if (f.veh && v.id !== f.veh) return false;
+    if (f.kind && v.kind !== f.kind) return false;
+    if (f.status && v.status !== f.status) return false;
+    return true;
+  }
+  overlaps(d, f) {
+    const a = this.tIso(f.from), b = this.tIso(f.to), s = this.toDate(d[1]).getTime(), e = d[2] ? this.toDate(d[2]).getTime() : Infinity;
+    return s <= b && e >= a;
+  }
+  filtered(rep, f) {
+    const a = this.tIso(f.from), b = this.tIso(f.to), al = rep.filters;
+    const vs = this.VEH.filter(v => this.vehOk(v, f));
+    const ok = {}; vs.forEach(v => { ok[v.id] = 1; });
+    const ents = this.entries.filter(e => {
+      if (!ok[e.veh] || e.t < a || e.t > b) return false;
+      if (f.driver && e.driver !== f.driver) return false;
+      if (al.indexOf('cat') >= 0 && f.cat && e.sub !== f.cat) return false;
+      return true;
+    });
+    const vehs = vs.filter(v => !f.driver || v.drivers.some(d => d[0] === f.driver && this.overlaps(d, f)));
+    return { ents: ents, vehs: vehs };
+  }
+
+  pl(n, a, b) { return n + ' ' + (n === 1 ? a : b); }
+
+  sum(list) { let c = 0, miss = 0, l = 0; list.forEach(e => { if (e.excl) return; if (e.cost != null) c += e.cost; if (e.noCost) miss++; }); list.forEach(e => { if (e.liters) l += e.liters; }); return { cost: c, miss: miss, liters: l, n: list.length }; }
+
+  build(rep, D, f) {
+    const ents = D.ents, vehs = D.vehs, S = (l) => this.sum(l), eur = (n) => this.eur(n);
+    const vOf = (id) => this.VEH.filter(v => v.id === id)[0];
+    const by = (list, fn) => { const m = {}, o = []; list.forEach(e => { const k = fn(e); if (!m[k]) { m[k] = []; o.push(k); } m[k].push(e); }); return o.map(k => ({ key: k, list: m[k] })); };
+    const text = (t, sub, bold) => ({ t: t, sub: sub || '', num: false, bold: !!bold });
+    const nm = (t, sub, warn) => ({ t: t, sub: sub || '', num: true, warn: !!warn });
+    const money = (list, hideZero) => { const l = list.filter(e => !e.excl), s = S(l); if (!l.length && hideZero) return nm('—'); return nm(eur(s.cost), s.miss ? 'parcial · ' + s.miss + ' sem valor' : '', s.miss > 0); };
+    const notes = [], warnN = [];
+    let cols = [], rows = [], totals = [], bars = [], chartTitle = '', kpis = [], empty = false, count = '';
+    const counted = ents.filter(e => !e.excl), tot = S(counted);
+    const hasExcl = ents.some(e => e.excl);
+    const exclNote = 'O veículo E-220-BE (escavadora de Terra Forte) não entra nos valores: o custo da máquina já está na tarifa horária do contrato (máquina + operador) e somar os dois contaria duas vezes.';
+    const missNote = (n, what) => n + (n === 1 ? ' ' + what + ' está' : ' ' + what + 's estão') + ' sem valor lançado e ficou fora do total; nenhum valor foi estimado.';
+    const vh = (v, extra) => text(v.plate, v.name + (extra ? ' · ' + extra : ''), true);
+
+    if (rep.id === 'custos') {
+      const sc = this.SUBCATS;
+      cols = [{ l: 'Veículo', w: 240, fr: 1.5 }].concat(sc.map(c => ({ l: c, w: 118, num: true }))).concat([{ l: 'Total', w: 120, num: true }]);
+      by(counted, e => e.veh).sort((a, b) => S(b.list).cost - S(a.list).cost).forEach(g => { const v = vOf(g.key); rows.push({ cells: [vh(v, v.own)].concat(sc.map(c => money(g.list.filter(e => e.sub === c), true))).concat([money(g.list)]), level: 1 }); });
+      totals = ['Total geral'].concat(sc.map(c => eur(S(counted.filter(e => e.sub === c)).cost))).concat([eur(tot.cost)]);
+      const rec = counted.filter(e => e.recurring), pun = counted.filter(e => !e.recurring && e.sub !== 'Multas'), fin = counted.filter(e => e.sub === 'Multas');
+      kpis = [['Custo total', eur(tot.cost), '#6D5DFB', tot.miss ? 'parcial · ' + tot.miss + ' sem valor' : 'veículos'], ['Recorrentes', eur(S(rec).cost), '#F59E0B', 'leasing e aluguer mensais'], ['Pontuais', eur(S(pun).cost), '#06B6D4', 'combustível, manutenção, inspeções'], ['Multas', eur(S(fin).cost), '#EF4444', this.pl(fin.length, 'multa', 'multas')]];
+      chartTitle = 'Custo por veículo'; bars = by(counted, e => e.veh).map(g => ({ label: vOf(g.key).plate + ' · ' + vOf(g.key).name, v: S(g.list).cost, color: '#6D5DFB' }));
+      count = this.pl(rows.length, 'veículo', 'veículos') + ' · ' + this.pl(counted.length, 'lançamento', 'lançamentos'); empty = counted.length === 0;
+      if (tot.miss) notes.push(missNote(tot.miss, 'manutenção'));
+      notes.push('Recorrente: leasing e aluguer mensais. Pontual: combustível, manutenção e inspeções. Multas ficam separadas. O cadastro não tem outros tipos de custo de veículo.');
+      if (fin.length) notes.push('Multas entram pelo valor lançado, inclusive as contestadas; o cadastro não define outro tratamento.');
+      if (hasExcl) notes.push(exclNote);
+    } else if (rep.id === 'comb') {
+      const fu = ents.filter(e => e.sub === 'Combustível');
+      cols = [{ l: 'Veículo / Data', w: 240, fr: 1.4 }, { l: 'Posto', w: 170, fr: 1 }, { l: 'Quilometragem', w: 130, num: true }, { l: 'Litros', w: 100, num: true }, { l: 'Valor', w: 120, num: true }, { l: '€/litro', w: 90, num: true }, { l: 'Consumo médio', w: 150, num: true }];
+      let allL = 0, allKm = 0, allV = 0, nL = 0;
+      by(fu, e => e.veh).forEach(g => {
+        const v = vOf(g.key), sorted = g.list.slice().sort((a, b) => a.km - b.km), L = sorted.reduce((n, e) => n + e.liters, 0), V = sorted.reduce((n, e) => n + e.cost, 0);
+        let cons = null, kmRun = 0;
+        if (!v.hours && sorted.length >= 2) { kmRun = sorted[sorted.length - 1].km - sorted[0].km; const used = sorted.slice(1).reduce((n, e) => n + e.liters, 0); if (kmRun > 0) cons = used / kmRun * 100; if (cons != null) { allL += used; allKm += kmRun; } }
+        if (!v.excl) { allV += V; nL += L; }
+        rows.push({ cells: [vh(v, sorted.length + (sorted.length === 1 ? ' abastecimento' : ' abastecimentos')), text(''), nm(v.hours ? 'horas de máquina' : (kmRun ? this.km(kmRun, v) + ' no período' : '—')), nm(this.dec(L, 1) + ' L'), v.excl ? nm('Na tarifa do contrato', '', false) : nm(eur(V)), v.excl ? nm('—') : nm(eur(V / L)), cons != null ? nm(this.dec(cons, 1) + ' L/100 km') : nm('n/d', v.hours ? 'máquina: sem km comparável' : 'precisa de 2+ abastecimentos', true)], level: 1 });
+        sorted.slice().sort((a, b) => b.t - a.t).forEach(e => rows.push({ cells: [text('   ' + e.date, ''), text(e.station), nm(this.km(e.km, v)), nm(this.dec(e.liters, 1) + ' L'), v.excl ? nm('—') : nm(eur(e.cost)), v.excl ? nm('—') : nm(eur(e.cost / e.liters)), nm('')], level: 0 }));
+      });
+      const fc = allKm > 0 ? allL / allKm * 100 : null;
+      totals = ['Total geral', '', '', this.dec(fu.reduce((n, e) => n + e.liters, 0), 1) + ' L', eur(allV), nL ? eur(allV / nL) : '—', fc != null ? this.dec(fc, 1) + ' L/100 km' : 'n/d'];
+      kpis = [['Litros abastecidos', this.dec(fu.reduce((n, e) => n + e.liters, 0), 1) + ' L', '#06B6D4', this.pl(fu.length, 'abastecimento', 'abastecimentos')], ['Valor em combustível', eur(allV), '#6D5DFB', 'sem veículos de subempreiteiros'], ['Preço médio', nL ? eur(allV / nL) + '/L' : '—', '#3B82F6', 'valor ÷ litros'], ['Consumo médio da frota', fc != null ? this.dec(fc, 1) + ' L/100 km' : 'n/d', '#10B981', fc != null ? 'veículos com 2+ abastecimentos' : 'dados insuficientes']];
+      chartTitle = 'Litros por veículo'; bars = by(fu, e => e.veh).map(g => ({ label: vOf(g.key).plate + ' · ' + vOf(g.key).name, v: g.list.reduce((n, e) => n + e.liters, 0), color: '#06B6D4', unit: 'L' }));
+      count = this.pl(by(fu, e => e.veh).length, 'veículo', 'veículos') + ' · ' + this.pl(fu.length, 'abastecimento', 'abastecimentos'); empty = fu.length === 0;
+      notes.push('Consumo = litros dos abastecimentos seguintes ÷ quilômetros entre o primeiro e o último, assumindo tanque cheio a cada abastecimento. Só é calculado com 2+ abastecimentos de quilometragem crescente.');
+      if (hasExcl) notes.push('A escavadora registra horas de máquina, não km: não tem consumo em L/100 km, e o valor do combustível não é somado porque já está na tarifa do contrato (Terra Forte).');
+    } else if (rep.id === 'manut') {
+      const mt = ents.filter(e => e.sub === 'Manutenção' || e.sub === 'Inspeções');
+      cols = [{ l: 'Veículo / Data', w: 220, fr: 1.2 }, { l: 'Tipo', w: 110 }, { l: 'Descrição', w: 250, fr: 1.4 }, { l: 'Quilometragem', w: 130, num: true }, { l: 'Valor', w: 120, num: true }, { l: 'Próxima revisão', w: 130, num: true }, { l: 'Próxima inspeção', w: 140, num: true }];
+      const today = this.toDate('21/09/2026').getTime();
+      by(mt, e => e.veh).forEach(g => {
+        const v = vOf(g.key), insExp = v.nextInsp !== '—' && this.toDate(v.nextInsp).getTime() < today;
+        rows.push({ cells: [vh(v, g.list.length + (g.list.length === 1 ? ' intervenção' : ' intervenções')), text(''), text(''), nm(this.km(v.km, v), 'atual'), v.excl ? nm('Na tarifa do contrato') : money(g.list), nm(v.nextRev), nm(v.nextInsp, insExp ? 'vencida' : '', insExp)], level: 1 });
+        g.list.slice().sort((a, b) => b.t - a.t).forEach(e => rows.push({ cells: [text('   ' + e.date), text(e.kindLabel), text(e.desc), nm(this.km(e.km, v)), v.excl ? nm('—') : (e.noCost ? nm('Não lançado', '', true) : nm(eur(e.cost))), nm(''), nm('')], level: 0 }));
+      });
+      const mc = mt.filter(e => !e.excl), ms = S(mc);
+      totals = ['Total geral', '', '', '', eur(ms.cost), '', ''];
+      const inDays = (s, d) => { if (s === '—') return false; const t = this.toDate(s).getTime(); return t >= today && t <= today + d * 86400000; };
+      const visible = vehs.filter(v => !f.driver || true);
+      kpis = [['Intervenções', String(mt.length), '#F97316', this.pl(mt.filter(e => e.sub === 'Inspeções').length, 'inspeção', 'inspeções')], ['Custo total', eur(ms.cost), '#6D5DFB', ms.miss ? 'parcial · ' + ms.miss + ' sem valor' : 'oficina e inspeções'], ['Revisões em 60 dias', String(visible.filter(v => inDays(v.nextRev, 60)).length), '#F59E0B', 'veículos do filtro'], ['Inspeções vencidas', String(visible.filter(v => v.nextInsp !== '—' && this.toDate(v.nextInsp).getTime() < today).length), '#EF4444', 'em 21/09/2026']];
+      chartTitle = 'Custo de manutenção por veículo'; bars = by(mc, e => e.veh).map(g => ({ label: vOf(g.key).plate + ' · ' + vOf(g.key).name, v: S(g.list).cost, color: '#F97316' }));
+      count = this.pl(by(mt, e => e.veh).length, 'veículo', 'veículos') + ' · ' + this.pl(mt.length, 'intervenção', 'intervenções'); empty = mt.length === 0;
+      if (ms.miss) notes.push(missNote(ms.miss, 'intervenção'));
+      if (hasExcl) notes.push('A revisão da escavadora é listada, mas o valor não é somado: já está na tarifa horária do contrato (Terra Forte).');
+      notes.push('As datas de próxima revisão e inspeção vêm do cadastro de cada veículo, sem depender do período filtrado.');
+    } else if (rep.id === 'util') {
+      cols = [{ l: 'Veículo', w: 230, fr: 1.3 }, { l: 'Tipo', w: 100 }, { l: 'Estado', w: 130 }, { l: 'Propriedade', w: 180, fr: 1 }, { l: 'Condutor / Período', w: 250, fr: 1.3 }, { l: 'Quilometragem', w: 130, num: true }];
+      vehs.forEach(v => {
+        const cur = v.drivers.filter(d => !d[2])[0];
+        rows.push({ cells: [vh(v, ''), text(v.kind), text(v.status, '', false), text(v.own), text(cur ? cur[0] : 'Sem condutor', cur ? 'desde ' + cur[1] : '', false), nm(v.km ? this.km(v.km, v) : '—')], level: 1 });
+        v.drivers.filter(d => this.overlaps(d, f) && (!f.driver || d[0] === f.driver)).forEach(d => rows.push({ cells: [text('   ' + d[0], '   ' + d[3]), text(''), text(''), text(''), text(d[1] + ' → ' + (d[2] || 'atual')), nm('')], level: 0 }));
+      });
+      totals = ['Total · ' + vehs.length + (vehs.length === 1 ? ' veículo' : ' veículos'), '', '', '', '', ''];
+      const wd = vehs.filter(v => v.drivers.some(d => !d[2]));
+      kpis = [['Veículos', String(vehs.length), '#3B82F6', 'no filtro'], ['Com condutor atual', String(wd.length), '#10B981', 'responsável em aberto'], ['Em manutenção', String(vehs.filter(v => v.status === 'Em manutenção').length), '#F59E0B', 'indisponíveis'], ['Inativos', String(vehs.filter(v => v.status === 'Inativo').length), '#64748B', 'fora de uso']];
+      chartTitle = 'Veículos por estado'; bars = by(vehs, v => v.status).map(g => ({ label: g.key, v: g.list.length, color: g.key === 'Ativo' ? '#10B981' : (g.key === 'Inativo' ? '#94A3B8' : '#F59E0B'), unit: 'n' }));
+      count = this.pl(vehs.length, 'veículo', 'veículos'); empty = vehs.length === 0;
+      notes.push('Os períodos de responsabilidade vêm do histórico de condutores do cadastro; o período filtrado mostra apenas os que se sobrepõem a ele.');
+    } else if (rep.id === 'multas') {
+      const fi = ents.filter(e => e.sub === 'Multas').sort((a, b) => b.t - a.t);
+      cols = [{ l: 'Data', w: 100 }, { l: 'Veículo', w: 220, fr: 1.1 }, { l: 'Infração', w: 250, fr: 1.4 }, { l: 'Condutor identificado', w: 170, fr: 1 }, { l: 'Valor', w: 110, num: true }, { l: 'Estado', w: 120 }];
+      fi.forEach(e => { const v = vOf(e.veh); rows.push({ cells: [Object.assign(text(e.date), { mono: true }), text(v.plate, v.name), text(e.desc), text(e.driver || 'Não identificado'), nm(eur(e.cost)), text(e.status)], level: 0 }); });
+      const ft = S(fi);
+      totals = ['Total geral', '', '', '', eur(ft.cost), ''];
+      const st = (s) => fi.filter(e => e.status === s);
+      kpis = [['Multas', String(fi.length), '#EF4444', 'no período'], ['Valor total', eur(ft.cost), '#6D5DFB', 'pelo valor lançado'], ['A resolver', String(st('Identificada').length + st('Pendente').length), '#F59E0B', eur(S(st('Identificada').concat(st('Pendente'))).cost)], ['Contestadas', String(st('Contestada').length), '#3B82F6', eur(S(st('Contestada')).cost)]];
+      chartTitle = 'Valor por estado'; bars = by(fi, e => e.status).map(g => ({ label: g.key, v: S(g.list).cost, color: g.key === 'Paga' ? '#10B981' : (g.key === 'Contestada' ? '#3B82F6' : '#F59E0B') }));
+      count = fi.length + (fi.length === 1 ? ' multa' : ' multas'); empty = fi.length === 0;
+      notes.push('O cadastro de veículos registra multas; não há outro tipo de ocorrência (acidentes, avarias) a listar. Multas contestadas entram pelo valor lançado.');
+    } else {
+      const sc = this.SUBCATS;
+      const stat = this.STATUSES.map(s => vehs.filter(v => v.status === s).length);
+      const fi = counted.filter(e => e.sub === 'Multas'), fu = ents.filter(e => e.sub === 'Combustível' && !e.excl);
+      cols = [{ l: 'Indicador', w: 260, fr: 1.2 }, { l: 'Detalhe', w: 300, fr: 1.6 }, { l: 'Valor', w: 150, num: true }];
+      const head = (t) => rows.push({ cells: [text(t, '', true), text(''), nm('')], level: 1 });
+      const line = (a, b, c, warn) => rows.push({ cells: [text('   ' + a), text(b), nm(c, '', warn)], level: 0 });
+      head('Frota');
+      line('Veículos no filtro', vehs.map(v => v.plate).join(' · ') || '—', String(vehs.length));
+      this.STATUSES.forEach((s, i) => line('Estado: ' + s, '', String(stat[i])));
+      head('Custos no período');
+      sc.forEach(c => { const l = counted.filter(e => e.sub === c), s = S(l); line(c, l.length + (l.length === 1 ? ' lançamento' : ' lançamentos') + (c === 'Leasing / aluguer' ? ' · recorrente' : (c === 'Multas' ? ' · multas' : ' · pontual')), eur(s.cost), s.miss > 0); });
+      head('Combustível');
+      const L = fu.reduce((n, e) => n + e.liters, 0);
+      line('Litros abastecidos', this.pl(fu.length, 'abastecimento', 'abastecimentos'), this.dec(L, 1) + ' L');
+      head('Ocorrências');
+      Object.keys(this.FINEST).forEach(s => { const l = fi.filter(e => e.status === s); if (l.length) line('Multas ' + s.toLowerCase() + 's'.replace('as' + 's', 'as'), eur(S(l).cost), String(l.length)); });
+      if (!fi.length) line('Multas', 'nenhuma no período', '0');
+      totals = ['Custo total no período', '', eur(tot.cost)];
+      const rec = counted.filter(e => e.recurring), pun = counted.filter(e => !e.recurring && e.sub !== 'Multas');
+      kpis = [['Veículos', String(vehs.length), '#3B82F6', stat[1] + ' em manutenção · ' + this.pl(stat[2], 'inativo', 'inativos')], ['Custo total', eur(tot.cost), '#6D5DFB', tot.miss ? 'parcial · ' + tot.miss + ' sem valor' : 'veículos'], ['Recorrente × pontual', eur(S(rec).cost) + ' · ' + eur(S(pun).cost), '#F59E0B', 'leasing/aluguer · demais'], ['Multas', String(fi.length), '#EF4444', eur(S(fi).cost)]];
+      chartTitle = 'Custo por tipo'; bars = sc.map(c => ({ label: c, v: S(counted.filter(e => e.sub === c)).cost, color: c === 'Multas' ? '#EF4444' : '#3B82F6' }));
+      count = this.pl(rows.length, 'linha', 'linhas'); empty = vehs.length === 0 && ents.length === 0;
+      if (tot.miss) notes.push(missNote(tot.miss, 'manutenção'));
+      if (hasExcl) notes.push(exclNote);
+    }
+    const money2 = (b) => b.unit === 'L' ? this.dec(b.v, 1) + ' L' : (b.unit === 'n' ? String(b.v) : eur(b.v));
+    bars = bars.filter(b => b.v > 0).sort((a, b) => b.v - a.v);
+    const tb = bars.reduce((n, b) => n + b.v, 0);
+    bars.forEach(b => { b.valueText = money2(b); b.pct = tb ? Math.round(b.v / tb * 100) + '%' : ''; });
+    return { cols: cols, rows: rows, totals: totals, bars: bars, chartTitle: chartTitle, kpis: kpis, notes: notes, empty: empty, count: count };
+  }
+
+  generate = () => {
+    const s = this.state;
+    if (!s.rep) { this.flash('Escolha um relatório primeiro', false); return; }
+    if (this.tIso(s.f.from) > this.tIso(s.f.to)) { this.flash('Corrija o período antes de gerar', false); return; }
+    const f = JSON.parse(JSON.stringify(s.f));
+    this.setState({ status: 'loading', applied: null });
+    clearTimeout(this.gT);
+    this.gT = setTimeout(() => this.setState({ status: 'ready', applied: { rep: this.state.rep, f: f } }), 800);
+  };
+
+  openRep(id) {
+    this.setState({ rep: id, status: 'idle', applied: null, f: Object.assign(this.freshF(), { from: this.state.f.from, to: this.state.f.to }) }, () => {
+      const el = document.getElementById('cfg');
+      if (el) window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - 96), behavior: 'smooth' });
+    });
+  }
+
+  quick(id, over) {
+    clearTimeout(this.gT);
+    const f = Object.assign(this.freshF(), over || {});
+    this.setState({ rep: id, f: f, status: 'ready', applied: { rep: id, f: f } });
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, isMobile = w < 1024;
+    const rep = this.REPORTS.filter(r => r.id === s.rep)[0] || null;
+    const f = s.f;
+    const A = s.applied && rep && s.applied.rep === rep.id ? s.applied : null;
+    const periodErr = this.tIso(f.from) > this.tIso(f.to) ? 'A data inicial deve ser anterior ou igual à data final.' : '';
+    const setF = (p) => this.setState(x => ({ f: Object.assign({}, x.f, p) }));
+    const ready = s.status === 'ready' && !!A;
+    const dirty = !!A && JSON.stringify(A.f) !== JSON.stringify(f);
+
+    let R = null;
+    if (ready) R = this.build(rep, this.filtered(rep, A.f), A.f);
+    const has = ready && !R.empty;
+
+    const mono = 'font-family:\'JetBrains Mono\',monospace;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right';
+    const txt = 'font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    let tHeads = [], tRows = [], tTotals = [], tGrid = '', tInner = '';
+    if (has) {
+      const widths = R.cols.map(c => c.fr ? 'minmax(' + c.w + 'px,' + c.fr + 'fr)' : c.w + 'px').join(' ');
+      const inner = R.cols.reduce((n, c) => n + c.w, 0) + 12 * (R.cols.length - 1) + 32;
+      tGrid = 'min-width:' + inner + 'px;display:grid;grid-template-columns:' + widths + ';gap:12px;align-items:center;padding:11px 16px';
+      tInner = 'min-width:' + inner + 'px';
+      tHeads = R.cols.map(c => ({ t: c.l, style: 'font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748B;white-space:nowrap;' + (c.num ? 'text-align:right' : '') }));
+      tRows = R.rows.map(r => ({
+        style: tGrid + ';border-bottom:1px solid #F1F5F9;' + (r.level === 1 ? 'background:#FBFAFF' : ''),
+        cells: r.cells.map(c => ({ t: c.t, sub: c.sub, hasSub: !!c.sub,
+          textStyle: c.num ? mono + (c.warn ? ';color:#B45309' : '') : txt + (c.bold ? ';font-weight:700' : '') + (c.mono ? ';font-family:\'JetBrains Mono\',monospace;font-size:12.5px' : ''),
+          subStyle: 'font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:' + (c.warn ? '#B45309' : '#64748B') + (c.num ? ';text-align:right' : '') }))
+      }));
+      tTotals = R.totals.map((t, i) => ({ t: t, style: 'font-size:13px;font-weight:800;white-space:nowrap;' + (R.cols[i] && R.cols[i].num ? 'font-family:\'JetBrains Mono\',monospace;text-align:right' : '') }));
+    }
+
+    const optsOf = (all, list) => [{ v: '', t: all }].concat(list);
+    const drivers = []; this.VEH.forEach(v => v.drivers.forEach(d => { if (drivers.indexOf(d[0]) < 0) drivers.push(d[0]); }));
+    const SEL = {
+      veh: { label: 'Veículo / matrícula', options: optsOf('Todos os veículos', this.VEH.map(v => ({ v: v.id, t: v.plate + ' · ' + v.name }))) },
+      kind: { label: 'Tipo de veículo', options: optsOf('Todos os tipos', this.KINDS.map(k => ({ v: k, t: k }))) },
+      status: { label: 'Estado do veículo', options: optsOf('Todos os estados', this.STATUSES.map(k => ({ v: k, t: k }))) },
+      driver: { label: 'Condutor', options: optsOf('Todos os condutores', drivers.sort().map(k => ({ v: k, t: k }))) },
+      cat: { label: 'Categoria de custo', options: optsOf('Todas as categorias', this.SUBCATS.map(k => ({ v: k, t: k }))) }
+    };
+    const selects = rep ? rep.filters.map(k => ({ label: SEL[k].label, options: SEL[k].options, value: f[k], onChange: (e) => setF({ [k]: e.target.value }) })) : [];
+
+    const periodShort = A ? this.brIso(A.f.from) + ' → ' + this.brIso(A.f.to) : '';
+    const activeTxt = rep ? rep.filters.filter(k => f[k]).map(k => SEL[k].label + ': ' + (SEL[k].options.filter(o => o.v === f[k])[0] || { t: f[k] }).t).join('; ') || 'nenhum' : '';
+    const maxBar = R ? Math.max.apply(null, R.bars.map(b => b.v).concat([1])) : 1;
+
+    const csvNow = () => {
+      if (!has) { this.flash('Gere um relatório com resultados para exportar', false); return; }
+      const esc = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const lines = [['Relatório', rep.title], ['Período', periodShort], ['Filtros', activeTxt], ['Gerado em', '21/09/2026 (dados fictícios)'], []];
+      lines.push(R.cols.map(c => c.l));
+      R.rows.forEach(r => lines.push(r.cells.map(c => (c.t + (c.sub && c.num ? ' (' + c.sub + ')' : '')).trim())));
+      lines.push(R.totals);
+      const csv = '\ufeff' + lines.map(l => l.map(esc).join(';')).join('\r\n');
+      try {
+        const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        const a = document.createElement('a'); a.href = url; a.download = 'progesty-logistica-' + rep.id + '.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 500);
+        this.flash('Arquivo CSV gerado · ' + R.rows.length + (R.rows.length === 1 ? ' linha' : ' linhas'));
+      } catch (e) { this.flash('Não foi possível gerar o arquivo', false); }
+    };
+
+    const wAvail = w - (isMobile ? 0 : 258);
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      groups: this.NAV.map(g => ({ name: g.name, dot: g.dot, isChart: !!g.chart, notChart: !g.chart, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(i => ({ name: i.n, pick: () => { if (i.url) { window.location.href = i.url; } else { this.setState({ active: i.n, navOpen: false }); } },
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === i.n ? '700' : '500') + ';color:' + (s.active === i.n ? '#fff' : '#CBD5E1') + ';background:' + (s.active === i.n ? 'rgba(109,93,251,.26)' : 'transparent'),
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === i.n ? '#6D5DFB' : '#64748B') })) })),
+
+      cardGrid: 'display:grid;grid-template-columns:repeat(' + (wAvail >= 1100 ? 3 : (wAvail >= 640 ? 2 : 1)) + ',minmax(0,1fr));gap:clamp(10px,1.2vw,16px)',
+      cards: this.REPORTS.map(r => ({ title: r.title, desc: r.desc, color: r.color, bg: r.bg, pick: () => this.openRep(r.id),
+        style: 'background:#fff;border:1px solid ' + (s.rep === r.id ? '#C7C3FB' : '#E2E8F0') + ';border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;' + (s.rep === r.id ? 'box-shadow:0 18px 36px -26px rgba(109,93,251,.7)' : ''),
+        btnStyle: 'align-self:flex-start;padding:11px 18px;border-radius:11px;font-size:13px;font-weight:700;' + (s.rep === r.id ? 'background:#EEF0FE;color:#4338CA;border:1px solid #C7C3FB' : 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;box-shadow:0 12px 24px -14px rgba(109,93,251,1)') })),
+
+      hasRep: !!rep, repTitle: rep ? rep.title : '', closeRep: () => this.setState({ rep: null, status: 'idle', applied: null }),
+      fromIso: f.from, toIso: f.to, onFrom: (e) => { if (e.target.value) setF({ from: e.target.value }); }, onTo: (e) => { if (e.target.value) setF({ to: e.target.value }); },
+      selects: selects, periodErr: periodErr, dirty: dirty, clearFilters: () => this.setState({ f: this.freshF() }),
+      generate: this.generate, isLoading: s.status === 'loading',
+      genLabel: s.status === 'loading' ? 'Gerando…' : (ready && !dirty ? 'Atualizar relatório' : 'Gerar relatório'),
+      genStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;color:#fff;background:' + (s.status === 'loading' ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';box-shadow:0 14px 26px -14px rgba(109,93,251,1);' + (s.status === 'loading' ? 'pointer-events:none;' : ''),
+
+      stLoading: s.status === 'loading' && !!rep, skeletons: [1, 2, 3, 4], stEmpty: ready && !has, stReady: has,
+      printMeta: 'Período: ' + periodShort + ' · Filtros: ' + activeTxt + ' · Gerado em 21/09/2026 (dados fictícios)',
+      metaShort: periodShort + (activeTxt !== 'nenhum' ? ' · ' + activeTxt : ''),
+      kpis: has ? R.kpis.map(k => ({ label: k[0], value: k[1], color: k[2], hint: k[3], hintColor: /parcial|sem valor|insuficientes/.test(k[3]) ? '#B45309' : '#64748B' })) : [],
+      hasNotes: has && R.notes.length > 0,
+      notes: has ? R.notes.map(t => { const w = /sem valor lançado|contaria|não é somado|não entra|insuficientes/.test(t); return { t: t, icon: w ? '!' : 'i', color: w ? '#92400E' : '#1D4ED8', bg: w ? '#FFFBEB' : '#EFF6FF', bd: w ? '#FDE68A' : '#BFDBFE', iconBg: w ? '#FEF3C7' : '#DBEAFE' }; }) : [],
+      hasBars: has && R.bars.length > 0, chartTitle: has ? R.chartTitle : '',
+      bars: has ? R.bars.map(b => ({ label: b.label, pct: b.pct, value: b.valueText, bar: 'height:100%;width:' + Math.max(2, b.v / maxBar * 100) + '%;border-radius:99px;background:' + b.color })) : [],
+      tableCount: has ? R.count : '',
+      tHeads: tHeads, tRows: tRows, tTotals: tTotals, tGrid: tGrid, tInner: tInner,
+      doPrint: () => { if (!has) { this.flash('Gere um relatório com resultados para imprimir', false); return; } try { window.print(); } catch (e) {} },
+      doCsv: csvNow,
+
+      toast: s.toast, toastMark: s.toastOk ? '✓' : '!',
+      demos: [
+        { name: 'Início', run: () => { clearTimeout(this.gT); this.setState({ rep: null, status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Configurando', run: () => { clearTimeout(this.gT); this.setState({ rep: 'custos', status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Custos', run: () => this.quick('custos') },
+        { name: 'Combustível', run: () => this.quick('comb') },
+        { name: 'Manutenção', run: () => this.quick('manut') },
+        { name: 'Utilização', run: () => this.quick('util') },
+        { name: 'Multas', run: () => this.quick('multas') },
+        { name: 'Resumo', run: () => this.quick('resumo') },
+        { name: 'Sem resultados', run: () => this.quick('multas', { from: '2026-07-01', to: '2026-07-31' }) },
+        { name: 'Carregando', run: () => { this.setState({ rep: s.rep || 'custos', status: 'loading', applied: null }); clearTimeout(this.gT); this.gT = setTimeout(() => this.quick(this.state.rep), 1600); } }
+      ].map(d => ({ name: d.name, run: d.run, style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
