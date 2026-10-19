@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select{font-family:inherit}
+input:focus,select:focus{outline:2px solid #6D5DFB;outline-offset:0}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes pgSpin{to{transform:rotate(360deg)}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+@media screen{.pg-printonly{display:none !important}}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  .pg-noprint,aside,header{display:none !important}
+  html,body{background:#fff !important}
+  .pg-printfit{overflow:visible !important}
+}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll pg-noprint" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar" style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.07);color:#CBD5E1;font-size:15px;line-height:1">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <button onClick="{{ pickDash }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:500;color:#CBD5E1">
+        <span style="width:18px;display:grid;grid-template-columns:1fr 1fr;gap:2.5px;flex:0 0 auto"><span style="height:7px;border-radius:2px;background:currentColor"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor;opacity:.55"></span><span style="height:7px;border-radius:2px;background:currentColor"></span></span>
+        <span style="flex:1;text-align:left">Dashboard</span>
+      </button>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}">
+            <span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              <sc-if value="{{ g.isChart }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-end;gap:2px;height:13px"><span style="width:3px;height:6px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:13px;border-radius:1px;background:{{ g.dot }}"></span><span style="width:3px;height:9px;border-radius:1px;background:{{ g.dot }}"></span></span></sc-if>
+              <sc-if value="{{ g.notChart }}" hint-placeholder-val="{{ true }}"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></sc-if>
+            </span>
+            <span style="flex:1;text-align:left">{{ g.name }}</span>
+            <span style="{{ g.caretStyle }}">▾</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.pick }}" style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span><span style="flex:1;text-align:left">{{ it.name }}</span></button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Ana Duarte</span><span style="font-size:11px;color:#94A3B8">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div class="pg-noprint" onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh">
+  <header class="pg-noprint" style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,20px) clamp(16px,2.4vw,30px);display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <a href="Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html" aria-label="Voltar para Consultas e Relatórios" style="width:42px;height:42px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;color:#0F172A;flex:0 0 auto">‹</a>
+      <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:12px;font-weight:700;color:#64748B"><a href="Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html">Consultas e Relatórios</a> / Obras</span>
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Relatórios - Obras</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Andamento, prazos, recursos e custos de cada obra.</p>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(14px,2vw,22px) clamp(16px,2.4vw,30px) 8px;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);min-width:0">
+
+    <div class="pg-noprint" style="{{ cardGrid }}">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+        <div style="{{ c.style }}">
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="width:38px;height:38px;border-radius:12px;background:{{ c.bg }};display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="display:flex;align-items:flex-end;gap:2.5px;height:16px"><span style="width:4px;height:8px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:16px;border-radius:1.5px;background:{{ c.color }}"></span><span style="width:4px;height:11px;border-radius:1.5px;background:{{ c.color }}"></span></span></span>
+            <span style="font-size:15px;font-weight:800;letter-spacing:-.02em;line-height:1.25">{{ c.title }}</span>
+          </div>
+          <span style="font-size:13px;color:#64748B;line-height:1.5;text-wrap:pretty;flex:1">{{ c.desc }}</span>
+          <button onClick="{{ c.pick }}" style="{{ c.btnStyle }}">Gerar relatório</button>
+        </div>
+      </sc-for>
+    </div>
+
+    <div id="cfg" class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+      <sc-if value="{{ hasRep }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,2vw,24px);display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px">
+            <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:3px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Configurar relatório</span><span style="font-size:18px;font-weight:800;letter-spacing:-.025em">{{ repTitle }}</span></div>
+            <button onClick="{{ closeRep }}" style="padding:9px 14px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:12.5px;font-weight:700;color:#475569">Fechar</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px">
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período inicial</span><input type="date" value="{{ fromIso }}" onChange="{{ onFrom }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#475569">Período final</span><input type="date" value="{{ toIso }}" onChange="{{ onTo }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;font-family:'JetBrains Mono',monospace;color:#0F172A"></label>
+            <sc-for list="{{ selects }}" as="sl" hint-placeholder-count="4">
+              <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:11.5px;font-weight:700;color:#475569">{{ sl.label }}</span>
+                <select value="{{ sl.value }}" onChange="{{ sl.onChange }}" style="height:42px;padding:0 11px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13.5px;color:#0F172A;max-width:240px">
+                  <sc-for list="{{ sl.options }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.t }}</option></sc-for>
+                </select>
+              </label>
+            </sc-for>
+          </div>
+          <sc-if value="{{ periodErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ periodErr }}</span></sc-if>
+          <span style="font-size:12px;color:#64748B;line-height:1.45;text-wrap:pretty">{{ periodHint }}</span>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+            <button onClick="{{ generate }}" style="{{ genStyle }}">
+              <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}"><span style="width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:pgSpin .7s linear infinite;flex:0 0 auto"></span></sc-if>
+              {{ genLabel }}
+            </button>
+            <button onClick="{{ clearFilters }}" style="padding:12px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:#475569;white-space:nowrap">Limpar filtros</button>
+            <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;background:#FFFBEB;border:1px solid #FDE68A;font-size:11.5px;font-weight:700;color:#B45309"><span style="width:6px;height:6px;border-radius:50%;background:#F59E0B"></span>Filtros alterados — gere novamente</span></sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-noprint" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px"><sc-for list="{{ skeletons }}" as="k" hint-placeholder-count="4"><div class="pg-sk" style="height:92px;border-radius:16px"></div></sc-for></div>
+        <div class="pg-sk" style="height:280px;border-radius:18px"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(26px,4vw,48px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+        <span style="width:56px;height:56px;border-radius:18px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:20px;height:20px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.025em">Nenhuma obra encontrada</span>
+        <span style="font-size:14px;color:#64748B;max-width:50ch;text-wrap:pretty">Nenhuma obra corresponde ao período e aos filtros aplicados. Tente ampliar o período ou limpar os filtros.</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-printonly" style="padding-bottom:6px;border-bottom:1.5px solid #0F172A">
+        <div style="font-size:17px;font-weight:800">Progesty — {{ repTitle }}</div>
+        <div style="font-size:11px;color:#334155">{{ printMeta }}</div>
+      </div>
+
+      <div class="pg-noprint" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;letter-spacing:-.02em">{{ repTitle }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ metaShort }}</span></div>
+        <button onClick="{{ doPrint }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155">Imprimir</button>
+        <button onClick="{{ doPrint }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155;white-space:nowrap">Exportar PDF</button>
+        <button onClick="{{ doCsv }}" style="padding:11px 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#334155;white-space:nowrap">Exportar Excel (CSV)</button>
+      </div>
+      <span class="pg-noprint" style="font-size:11.5px;color:#64748B;line-height:1.5;margin-top:-6px">“Exportar PDF” abre a impressão do navegador — escolha “Salvar como PDF”. “Exportar Excel” baixa um CSV com a tabela exibida, que o Excel abre normalmente.</span>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:clamp(10px,1.2vw,14px)">
+        <sc-for list="{{ kpis }}" as="kp" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:14px 15px;display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:2px;background:{{ kp.color }};flex:0 0 auto"></span><span style="font-size:12px;font-weight:600;color:#475569">{{ kp.label }}</span></span>
+            <span style="font-size:clamp(19px,2vw,24px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums">{{ kp.value }}</span>
+            <span style="font-size:11px;font-weight:600;color:{{ kp.hintColor }}">{{ kp.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ hasNotes }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ notes }}" as="nt" hint-placeholder-count="2">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:13px;background:{{ nt.bg }};border:1px solid {{ nt.bd }}"><span style="width:20px;height:20px;border-radius:6px;background:{{ nt.iconBg }};color:{{ nt.color }};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:0 0 auto">{{ nt.icon }}</span><span style="font-size:12.5px;line-height:1.45;color:{{ nt.color }};text-wrap:pretty">{{ nt.t }}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasBars }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:12px;break-inside:avoid">
+          <span style="font-size:14px;font-weight:800;letter-spacing:-.02em">{{ chartTitle }}</span>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="4">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;align-items:baseline;gap:10px"><span style="min-width:0;flex:1;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;white-space:nowrap">{{ b.value }}</span></div>
+                <div style="height:9px;border-radius:99px;background:#F1F5F9;overflow:hidden"><div style="{{ b.bar }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden">
+        <div class="pg-noprint" style="padding:14px 16px;border-bottom:1px solid #F1F5F9;font-size:12px;color:#64748B">{{ tableCount }}</div>
+        <div class="pg-scroll pg-printfit" style="overflow-x:auto">
+          <div style="{{ tInner }}">
+            <div style="{{ tGrid }};background:#F8FAFC;border-bottom:1px solid #E2E8F0">
+              <sc-for list="{{ tHeads }}" as="th" hint-placeholder-count="6"><span style="{{ th.style }}">{{ th.t }}</span></sc-for>
+            </div>
+            <sc-for list="{{ tRows }}" as="r" hint-placeholder-count="4">
+              <div style="{{ r.style }}">
+                <sc-for list="{{ r.cells }}" as="cl" hint-placeholder-count="6">
+                  <span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="{{ cl.textStyle }}">{{ cl.t }}</span><sc-if value="{{ cl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="{{ cl.subStyle }}">{{ cl.sub }}</span></sc-if></span>
+                </sc-for>
+              </div>
+            </sc-for>
+            <div style="{{ tGrid }};background:#F8FAFC;border-top:2px solid #E2E8F0">
+              <sc-for list="{{ tTotals }}" as="tt" hint-placeholder-count="6"><span style="{{ tt.style }}">{{ tt.t }}</span></sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="pg-noprint" style="font-size:11.5px;color:#64748B;line-height:1.5;text-wrap:pretty">Dados fictícios para demonstração, baseados nos cadastros do protótipo e sem sincronização real entre módulos. Valores em euro; custos são custo interno da empresa.</span>
+    </sc-if>
+  </div>
+
+  <div class="pg-noprint" style="padding:0 clamp(16px,2.4vw,30px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+    <span style="font-size:12px;color:#64748B">Estados:</span>
+    <sc-for list="{{ demos }}" as="d" hint-placeholder-count="9"><button onClick="{{ d.run }}" style="{{ d.style }}">{{ d.name }}</button></sc-for>
+  </div>
+</main>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div class="pg-noprint" style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;padding:13px 19px;border-radius:14px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100vw - 32px)"><span style="width:20px;height:20px;border-radius:50%;background:#10B981;display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">{{ toastMark }}</span>{{ toast }}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialReport&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;resumo&quot;,&quot;andamento&quot;,&quot;prazos&quot;,&quot;custos&quot;,&quot;pxr&quot;,&quot;rent&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    w: 1400, navOpen: false, active: 'Obras',
+    open: { Comercial: false, Clientes: false, Projetos: false, Pessoas: false, Financeiro: false, 'Relatórios': true, 'Configurações': false },
+    rep: null, f: this.freshF(), applied: null, status: 'idle', toast: '', toastOk: true
+  };
+
+  U = { hub: 'Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html', horas: 'Progesty%20Relat%C3%B3rios%20-%20Horas.dc.html', custos: 'Progesty%20Relat%C3%B3rios%20-%20Custos.dc.html', log: 'Progesty%20Relat%C3%B3rios%20-%20Log%C3%ADstica.dc.html' };
+
+  get NAV() {
+    return [
+      { name: 'Comercial', dot: '#EC4899', items: [{ n: 'CRM' }, { n: 'Leads' }, { n: 'Oportunidades' }] },
+      { name: 'Clientes', dot: '#3B82F6', items: [{ n: 'Clientes' }, { n: 'Contatos' }] },
+      { name: 'Projetos', dot: '#F97316', items: [{ n: 'Projetos / Obras' }, { n: 'Planning' }, { n: 'Controle de Horas' }, { n: 'Tarefas' }] },
+      { name: 'Pessoas', dot: '#06B6D4', items: [{ n: 'Funcionários' }, { n: 'Terceirizados' }, { n: 'Veículos' }] },
+      { name: 'Financeiro', dot: '#10B981', items: [{ n: 'Contas a Receber' }, { n: 'Contas a Pagar' }, { n: 'Faturas' }, { n: 'Fluxo de Caixa' }] },
+      { name: 'Relatórios', dot: '#8B5CF6', chart: true, items: [{ n: 'Consultas e Relatórios', url: this.U.hub }, { n: 'Horas', url: this.U.horas }, { n: 'Custos', url: this.U.custos }, { n: 'Logística', url: this.U.log }, { n: 'Obras' }] },
+      { name: 'Configurações', dot: '#64748B', items: [{ n: 'Empresa' }, { n: 'Usuários' }, { n: 'Gestão de Acessos' }] }
+    ];
+  }
+
+  /* Cadastro de obras: espelha Progesty Obras.dc.html (valores contratados, custos e progresso). */
+  OBRAS = [
+    { id: 'o1', name: 'Residencial Jardim Europa', client: 'Construtora Horizonte', owner: 'Carlos Mendes', status: 'Em andamento', pct: 78, start: '05/03/2026', due: '30/11/2026', contract: 185000, budget: 142000, done: 96500, committed: 18700, projected: 138500,
+      phases: [['Fundação', 100], ['Estrutura', 100], ['Instalações', 64], ['Acabamento', 0], ['Entrega', 0]], tasks: ['Em andamento', 'Concluída', 'Concluída', 'A fazer', 'A fazer'] },
+    { id: 'o2', name: 'Edifício Central', client: 'Grupo Central Engenharia', owner: 'Ana Duarte', status: 'Atenção', pct: 56, start: '18/01/2026', due: '04/02/2027', contract: 420000, budget: 338000, done: 214600, committed: 61200, projected: 344800 },
+    { id: 'o3', name: 'Casa Oliveira', client: 'Maria Oliveira', owner: 'Rafael Lima', status: 'Em andamento', pct: 91, start: '11/02/2026', due: '29/09/2026', contract: 96000, budget: 74000, done: 66200, committed: 3400, projected: 71800 },
+    { id: 'o4', name: 'Reforma Comercial Delta', client: 'Reformas Delta', owner: 'Carlos Mendes', status: 'Atrasada', pct: 34, start: '20/04/2026', due: '12/10/2026', contract: 128000, budget: 101000, done: 38900, committed: 22400, projected: 104600 }
+  ];
+  SCOL = { 'Em andamento': '#047857', 'Atenção': '#B45309', 'Atrasada': '#B91C1C' };
+  TODAY = '21/09/2026';
+
+  /* Regras de custo iguais às do Controle de Horas. */
+  PEOPLE = {
+    p1: { name: 'Carlos Mendes', firm: '', rates: [{ f: '01/01/2025', v: 17 }, { f: '01/01/2026', v: 18.5 }] }, p2: { name: 'Ana Duarte', firm: '', rates: [{ f: '01/03/2024', v: 26 }] },
+    p3: { name: 'Rafael Lima', firm: '', rates: [{ f: '01/01/2026', v: 20 }, { f: '15/09/2026', v: 21.5 }] }, p4: { name: 'Bruno Alves', firm: '', rates: [{ f: '01/02/2026', v: 16.5 }] },
+    p6: { name: 'Rita Lopes', firm: '', rates: [] }, p10: { name: 'Pedro Vasco', firm: '', rates: [{ f: '01/06/2026', v: 19 }] },
+    p11: { name: 'Tiago Nunes', firm: 'EletroSul' }, p12: { name: 'Alice Moreira', firm: 'EletroSul' }, p13: { name: 'Hugo Teixeira', firm: 'Pinturas Nova' },
+    p14: { name: 'João Silva', firm: 'Construtora Alpha' }, p18: { name: 'Nuno Ferreira', firm: 'Construtora Alpha' }, p16: { name: 'Sérgio Matos', firm: 'Terra Forte' }
+  };
+  FIRMRULES = { 'EletroSul': { type: 'hora', v: 42 }, 'Construtora Alpha': { type: 'pessoa', rates: { p14: 36, p18: 29 } }, 'Pinturas Nova': { type: 'indef' }, 'Terra Forte': { type: 'hora', v: 55 } };
+  ALLOC = [['p1', 'o1'], ['p3', 'o1'], ['p4', 'o1'], ['p11', 'o1'], ['p12', 'o1'], ['p2', 'o2'], ['p14', 'o2'], ['p18', 'o2'], ['p6', 'o3'], ['p13', 'o3'], ['p16', 'o5']];
+
+  REPORTS = [
+    { id: 'resumo', title: 'Resumo por obra', desc: 'Cliente, responsável, estado, datas previstas e progresso de cada obra.', color: '#6D5DFB', bg: '#EEF0FE', date: 'overlap' },
+    { id: 'andamento', title: 'Andamento e progresso', desc: 'Progresso percentual e atividades concluídas, em curso e pendentes, onde há cronograma cadastrado.', color: '#06B6D4', bg: '#ECFEFF', date: 'overlap' },
+    { id: 'prazos', title: 'Prazos e atrasos', desc: 'Previsão de término, dias decorridos e restantes, e tempo decorrido contra progresso.', color: '#F59E0B', bg: '#FFFBEB', date: 'overlap' },
+    { id: 'custos', title: 'Custos por obra', desc: 'Mão de obra e subempreiteiros por obra, com o total acumulado no período.', color: '#10B981', bg: '#ECFDF5', date: 'entries' },
+    { id: 'pxr', title: 'Planejado × realizado', desc: 'Horas previstas no Planning contra horas lançadas no Controle de Horas, por obra.', color: '#3B82F6', bg: '#EFF6FF', date: 'entries' },
+    { id: 'rent', title: 'Rentabilidade / resultado', desc: 'Valor contratado contra custo realizado e projetado, conforme o cadastro de Obras.', color: '#EC4899', bg: '#FDF2F8', date: 'none' }
+  ];
+
+  freshF() { return { from: '2026-01-01', to: '2026-09-21', obra: '', client: '', status: '', owner: '' }; }
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth });
+    const r = this.props.initialReport; if (r) this.setState({ rep: r }, () => this.generate());
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.gT); clearTimeout(this.tT); }
+
+  toDate(k) { const p = k.split('/'); return new Date(+p[2], +p[1] - 1, +p[0]); }
+  key(d) { const z = (n) => (n < 10 ? '0' : '') + n; return z(d.getDate()) + '/' + z(d.getMonth() + 1) + '/' + d.getFullYear(); }
+  tIso(i) { const p = i.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]).getTime(); }
+  brIso(i) { const p = i.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  eur(n) { const p = Math.abs(n).toFixed(2).split('.'); return (n < 0 ? '−' : '') + '€ ' + p[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + p[1]; }
+  fh(v) { return String(Math.round(v * 100) / 100).replace('.', ',') + ' h'; }
+  pl(n, a, b) { return n + ' ' + (n === 1 ? a : b); }
+  days(a, b) { return Math.round((this.toDate(b).getTime() - this.toDate(a).getTime()) / 86400000); }
+  flash(m, ok) { clearTimeout(this.tT); this.setState({ toast: m, toastOk: ok !== false }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2800); }
+
+  rateOf(pid, t) {
+    const p = this.PEOPLE[pid];
+    if (!p.firm) { let v = null; (p.rates || []).forEach(x => { if (this.toDate(x.f).getTime() <= t) v = x.v; }); return v; }
+    const ru = this.FIRMRULES[p.firm];
+    return ru.type === 'hora' ? ru.v : (ru.type === 'pessoa' ? (ru.rates[pid] == null ? null : ru.rates[pid]) : null);
+  }
+
+  get entries() {
+    if (this._e) return this._e;
+    const out = []; let di = 0, id = 0;
+    const push = (date, t, pid, obra, plan, hours) => {
+      const p = this.PEOPLE[pid], rate = hours == null ? null : this.rateOf(pid, t), cost = rate == null || hours == null ? null : Math.round(hours * rate * 100) / 100;
+      out.push({ id: ++id, date: date, t: t, obra: obra, person: pid, firm: p.firm, cat: p.firm ? 'Subempreiteiros' : 'Mão de obra', plan: plan, hours: hours, cost: cost, noCost: hours != null && cost == null });
+    };
+    for (let d = new Date(2026, 7, 1); d <= new Date(2026, 8, 21); d.setDate(d.getDate() + 1)) {
+      if (d.getDay() === 0 || d.getDay() === 6) continue;
+      di++; const t = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(), date = this.key(d);
+      const aug = d.getMonth() === 7, recent = t >= new Date(2026, 8, 18).getTime();
+      this.ALLOC.forEach((al, i) => {
+        const p = al[0];
+        if (aug && (p === 'p12' || p === 'p13')) return;
+        if (p === 'p16' && t < new Date(2026, 7, 15).getTime()) return;
+        if ((di * 7 + i * 13) % 11 === 0) return;
+        let o = al[1]; if (p === 'p4' && di % 5 === 3) o = 'o4'; if (p === 'p2' && di % 7 === 2) o = 'o6';
+        const plan = [8, 8, 8, 7.5, 8][(i + di) % 5], delta = [0, 0, -0.5, 0.5, 0, 1, -1, 0, 0.5, 0, 0][(di * 3 + i) % 11];
+        let hours = Math.max(0, plan + delta); if (recent && (di + i) % 3 === 0) hours = null;
+        push(date, t, p, o, plan, hours);
+      });
+      if (di % 6 === 0) push(date, t, 'p6', 'o1', null, 4);
+      if (di % 9 === 4) push(date, t, 'p10', 'o2', null, 5);
+    }
+    this._e = out; return out;
+  }
+
+  obrasFor(rep, f) {
+    const a = this.tIso(f.from), b = this.tIso(f.to);
+    return this.OBRAS.filter(o => {
+      if (f.obra && o.id !== f.obra) return false;
+      if (f.client && o.client !== f.client) return false;
+      if (f.status && o.status !== f.status) return false;
+      if (f.owner && o.owner !== f.owner) return false;
+      if (rep.date === 'overlap' && !(this.toDate(o.start).getTime() <= b && this.toDate(o.due).getTime() >= a)) return false;
+      return true;
+    });
+  }
+
+  sum(list) { let c = 0, h = 0, p = 0, miss = 0, nolaunch = 0; list.forEach(e => { if (e.cost != null) c += e.cost; if (e.hours != null) h += e.hours; if (e.plan != null) p += e.plan; if (e.noCost) miss++; if (e.plan != null && e.hours == null) nolaunch++; }); return { cost: c, hours: h, plan: p, miss: miss, nolaunch: nolaunch, n: list.length }; }
+
+  build(rep, obras, f) {
+    const eur = (n) => this.eur(n), tod = this.TODAY;
+    const text = (t, sub, bold, color) => ({ t: t, sub: sub || '', num: false, bold: !!bold, color: color || '' });
+    const nm = (t, sub, warn, color) => ({ t: t, sub: sub || '', num: true, warn: !!warn, color: color || '' });
+    const obraCell = (o) => text(o.name, o.client, true);
+    const notes = [], a = this.tIso(f.from), b = this.tIso(f.to);
+    let cols = [], rows = [], totals = [], bars = [], chartTitle = '', kpis = [], count = '';
+    const avg = obras.length ? Math.round(obras.reduce((n, o) => n + o.pct, 0) / obras.length) : 0;
+    const ids = {}; obras.forEach(o => { ids[o.id] = 1; });
+    const ents = (rep.date === 'entries') ? this.entries.filter(e => ids[e.obra] && e.t >= a && e.t <= b) : [];
+    const stCount = (s) => obras.filter(o => o.status === s).length;
+
+    if (rep.id === 'resumo') {
+      cols = [{ l: 'Obra', w: 250, fr: 1.5 }, { l: 'Responsável', w: 150 }, { l: 'Estado', w: 130 }, { l: 'Início', w: 110, num: true }, { l: 'Previsão de término', w: 150, num: true }, { l: 'Progresso', w: 100, num: true }];
+      obras.forEach(o => rows.push({ cells: [obraCell(o), text(o.owner), text(o.status, '', true, this.SCOL[o.status]), nm(o.start), nm(o.due), nm(o.pct + '%')], level: 1 }));
+      totals = ['Total · ' + this.pl(obras.length, 'obra', 'obras'), '', '', '', '', avg + '% (média)'];
+      kpis = [['Obras', String(obras.length), '#6D5DFB', 'no filtro'], ['Progresso médio', avg + '%', '#06B6D4', 'média simples das obras'], ['Atenção ou atrasadas', String(stCount('Atenção') + stCount('Atrasada')), '#F59E0B', stCount('Atenção') + ' em atenção · ' + stCount('Atrasada') + ' atrasada' + (stCount('Atrasada') === 1 ? '' : 's')], ['Valor contratado', eur(obras.reduce((n, o) => n + o.contract, 0)), '#10B981', 'soma dos contratos']];
+      chartTitle = 'Progresso por obra'; bars = obras.map(o => ({ label: o.name, v: o.pct, vt: o.pct + '%', max: 100, color: '#6D5DFB' }));
+      count = this.pl(obras.length, 'obra', 'obras');
+      notes.push('Obras listadas quando o período previsto (início → término) se sobrepõe ao período filtrado.');
+    } else if (rep.id === 'andamento') {
+      cols = [{ l: 'Obra', w: 250, fr: 1.5 }, { l: 'Progresso', w: 100, num: true }, { l: 'Fases (concl. · curso · pend.)', w: 210, num: true }, { l: 'Tarefas (concl. · curso · pend.)', w: 220, num: true }, { l: 'Cronograma', w: 190 }];
+      let fs = [0, 0, 0], ts = [0, 0, 0], withSched = 0;
+      obras.forEach(o => {
+        if (o.phases) {
+          withSched++;
+          const fc = o.phases.filter(p => p[1] === 100).length, fp = o.phases.filter(p => p[1] === 0).length, fe = o.phases.length - fc - fp;
+          const tc = o.tasks.filter(x => x === 'Concluída').length, te = o.tasks.filter(x => x === 'Em andamento').length, tp = o.tasks.filter(x => x === 'A fazer').length;
+          fs = [fs[0] + fc, fs[1] + fe, fs[2] + fp]; ts = [ts[0] + tc, ts[1] + te, ts[2] + tp];
+          rows.push({ cells: [obraCell(o), nm(o.pct + '%'), nm(fc + ' · ' + fe + ' · ' + fp), nm(tc + ' · ' + te + ' · ' + tp), text('Cadastrado', o.phases.length + ' fases', false)], level: 1 });
+        } else rows.push({ cells: [obraCell(o), nm(o.pct + '%'), nm('—'), nm('—'), text('Sem cronograma cadastrado', '', false, '#B45309')], level: 1 });
+      });
+      totals = ['Total · ' + this.pl(obras.length, 'obra', 'obras'), avg + '% (média)', fs.join(' · '), ts.join(' · '), this.pl(withSched, 'obra com cronograma', 'obras com cronograma')];
+      kpis = [['Obras', String(obras.length), '#06B6D4', 'no filtro'], ['Progresso médio', avg + '%', '#6D5DFB', 'média simples'], ['Com 80% ou mais', String(obras.filter(o => o.pct >= 80).length), '#10B981', 'perto da conclusão'], ['Com cronograma', String(withSched), '#F59E0B', 'fases e tarefas cadastradas']];
+      chartTitle = 'Progresso por obra'; bars = obras.map(o => ({ label: o.name, v: o.pct, vt: o.pct + '%', max: 100, color: '#06B6D4' }));
+      count = this.pl(obras.length, 'obra', 'obras');
+      if (obras.length > withSched) notes.push('Fases e tarefas só existem no cadastro de Residencial Jardim Europa. As demais obras mostram apenas o progresso percentual; nada foi estimado.');
+    } else if (rep.id === 'prazos') {
+      cols = [{ l: 'Obra', w: 240, fr: 1.4 }, { l: 'Início', w: 105, num: true }, { l: 'Previsão', w: 105, num: true }, { l: 'Dias decorridos', w: 120, num: true }, { l: 'Dias restantes', w: 140, num: true }, { l: 'Tempo decorrido', w: 120, num: true }, { l: 'Progresso', w: 95, num: true }, { l: 'Desvio', w: 100, num: true }, { l: 'Estado', w: 120 }];
+      const data = obras.map(o => { const tot = this.days(o.start, o.due), el = Math.max(0, this.days(o.start, tod)), left = this.days(tod, o.due), tp = Math.min(100, Math.round(el / tot * 100)); return { o: o, tot: tot, el: el, left: left, tp: tp, dev: o.pct - tp }; });
+      data.forEach(d => rows.push({ cells: [obraCell(d.o), nm(d.o.start), nm(d.o.due), nm(d.el + ' d'), d.left >= 0 ? nm(d.left + ' d') : nm('vencido há ' + (-d.left) + ' d', '', true), nm(d.tp + '%'), nm(d.o.pct + '%'), nm((d.dev > 0 ? '+' : (d.dev < 0 ? '−' : '')) + Math.abs(d.dev) + ' p.p.', '', false, d.dev >= 0 ? '#047857' : '#B45309'), text(d.o.status, '', true, this.SCOL[d.o.status])], level: 1 }));
+      const overdue = data.filter(d => d.left < 0 && d.o.pct < 100).length, next = data.filter(d => d.left >= 0).sort((x, y) => x.left - y.left)[0];
+      totals = ['Total · ' + this.pl(obras.length, 'obra', 'obras'), '', '', '', '', '', avg + '% (média)', '', ''];
+      kpis = [['Obras', String(obras.length), '#F59E0B', 'no filtro'], ['Prazos vencidos', String(overdue), '#EF4444', overdue ? 'sem conclusão' : 'nenhuma obra vencida em 21/09/2026'], ['Próximo término', next ? next.o.due : '—', '#6D5DFB', next ? next.o.name + ' · ' + next.left + ' d' : ''], ['Em atenção ou atrasadas', String(stCount('Atenção') + stCount('Atrasada')), '#F97316', 'estado do cadastro']];
+      chartTitle = 'Dias restantes até a previsão'; bars = data.map(d => ({ label: d.o.name, v: Math.max(0, d.left), vt: d.left >= 0 ? d.left + ' d' : 'vencido', max: 0, color: '#F59E0B' }));
+      count = this.pl(obras.length, 'obra', 'obras');
+      notes.push('O cadastro não tem datas de término realizadas (nenhuma obra concluída): o relatório compara tempo decorrido com progresso. Desvio = progresso − tempo decorrido, em pontos percentuais.');
+      notes.push('Atividades críticas não são definidas no cadastro, então não são listadas. O estado (em andamento, atenção, atrasada) é o registrado em cada obra.');
+    } else if (rep.id === 'custos') {
+      cols = [{ l: 'Obra', w: 250, fr: 1.5 }, { l: 'Mão de obra', w: 140, num: true }, { l: 'Subempreiteiros', w: 150, num: true }, { l: 'Veículos', w: 130, num: true }, { l: 'Custo acumulado', w: 150, num: true }];
+      const money = (l) => { const s = this.sum(l); if (!l.length) return nm('—'); return nm(eur(s.cost), s.miss ? 'parcial · ' + s.miss + ' sem valor' : '', s.miss > 0); };
+      let rowsN = 0;
+      obras.forEach(o => { const l = ents.filter(e => e.obra === o.id); if (!l.length) return; rowsN++; rows.push({ cells: [obraCell(o), money(l.filter(e => e.cat === 'Mão de obra')), money(l.filter(e => e.cat === 'Subempreiteiros')), nm('—', 'não rateado', false), money(l)], level: 1 }); });
+      const T = this.sum(ents), tm = this.sum(ents.filter(e => e.cat === 'Mão de obra')), ts = this.sum(ents.filter(e => e.cat === 'Subempreiteiros'));
+      totals = ['Total geral', eur(tm.cost), eur(ts.cost), '—', eur(T.cost)];
+      kpis = [['Custo acumulado', eur(T.cost), '#10B981', T.miss ? 'parcial · ' + T.miss + ' sem valor' : 'mão de obra + subempreiteiros'], ['Mão de obra', eur(tm.cost), '#06B6D4', 'equipe interna'], ['Subempreiteiros', eur(ts.cost), '#EC4899', 'empresas contratadas'], ['Registros sem valor', String(T.miss), '#F59E0B', T.miss ? 'fora do custo' : 'todos com valor']];
+      chartTitle = 'Custo acumulado por obra'; bars = obras.map(o => ({ label: o.name, v: this.sum(ents.filter(e => e.obra === o.id)).cost, vt: eur(this.sum(ents.filter(e => e.obra === o.id)).cost), max: 0, color: '#10B981' }));
+      count = this.pl(rowsN, 'obra', 'obras') + ' · ' + this.pl(ents.length, 'lançamento', 'lançamentos');
+      if (T.miss) notes.push(T.miss + (T.miss === 1 ? ' registro está' : ' registros estão') + ' sem valor/hora definido e ficou fora do custo; nenhum valor foi estimado.');
+      notes.push('Veículos: o cadastro de veículos não informa a obra de cada custo, então não há rateio por obra. Veja Relatórios - Custos e Relatórios - Logística.');
+      notes.push('Só entram as obras do cadastro de Obras. Horas lançadas em obras sem cadastro aqui (Galpão Logístico Sul e Ampliação Sede Horizonte) ficam de fora. Valor/hora conforme as regras do Controle de Horas.');
+      if (!ents.length) rows = [];
+    } else if (rep.id === 'pxr') {
+      cols = [{ l: 'Obra', w: 250, fr: 1.5 }, { l: 'Horas planejadas', w: 140, num: true }, { l: 'Horas realizadas', w: 140, num: true }, { l: 'Diferença', w: 120, num: true }, { l: 'Execução', w: 100, num: true }, { l: 'Sem lançamento', w: 130, num: true }];
+      let rowsN = 0;
+      obras.forEach(o => { const l = ents.filter(e => e.obra === o.id); if (!l.length) return; rowsN++; const s = this.sum(l), df = s.hours - s.plan; rows.push({ cells: [obraCell(o), nm(this.fh(s.plan)), nm(this.fh(s.hours)), nm((df > 0.001 ? '+' : (df < -0.001 ? '−' : '')) + this.fh(Math.abs(df)), '', false, df >= 0 ? '#047857' : '#B91C1C'), nm(s.plan > 0 ? Math.round(s.hours / s.plan * 100) + '%' : 'n/d'), nm(s.nolaunch ? String(s.nolaunch) : '—', '', s.nolaunch > 0)], level: 1 }); });
+      const T = this.sum(ents), df = T.hours - T.plan;
+      totals = ['Total geral', this.fh(T.plan), this.fh(T.hours), (df > 0.001 ? '+' : (df < -0.001 ? '−' : '')) + this.fh(Math.abs(df)), T.plan > 0 ? Math.round(T.hours / T.plan * 100) + '%' : 'n/d', T.nolaunch ? String(T.nolaunch) : '—'];
+      kpis = [['Horas planejadas', this.fh(T.plan), '#3B82F6', 'do Planning'], ['Horas realizadas', this.fh(T.hours), '#6D5DFB', 'do Controle de Horas'], ['Diferença', (df > 0.001 ? '+' : (df < -0.001 ? '−' : '')) + this.fh(Math.abs(df)), df >= 0 ? '#10B981' : '#EF4444', 'realizadas − planejadas'], ['Execução', T.plan > 0 ? Math.round(T.hours / T.plan * 100) + '%' : 'n/d', '#F59E0B', T.nolaunch + (T.nolaunch === 1 ? ' registro sem lançamento' : ' registros sem lançamento')]];
+      chartTitle = 'Horas realizadas por obra'; bars = obras.map(o => ({ label: o.name, v: this.sum(ents.filter(e => e.obra === o.id)).hours, vt: this.fh(this.sum(ents.filter(e => e.obra === o.id)).hours), max: 0, color: '#3B82F6' }));
+      count = this.pl(rowsN, 'obra', 'obras') + ' · ' + this.pl(ents.length, 'registro', 'registros');
+      notes.push('Planejado (Planning) e realizado (Controle de Horas) são medidas separadas. Registros planejados sem lançamento contam como 0 h realizada; horas lançadas sem planejamento entram só em realizadas.');
+      if (!ents.length) rows = [];
+    } else {
+      cols = [{ l: 'Obra', w: 240, fr: 1.4 }, { l: 'Valor contratado', w: 130, num: true }, { l: 'Custo realizado', w: 130, num: true }, { l: 'Custo comprometido', w: 140, num: true }, { l: 'Custo projetado', w: 130, num: true }, { l: 'Resultado atual', w: 130, num: true }, { l: 'Resultado projetado', w: 140, num: true }, { l: 'Margem projetada', w: 120, num: true }];
+      let T = { c: 0, d: 0, cm: 0, p: 0 };
+      obras.forEach(o => {
+        const ra = o.contract - o.done, rp = o.contract - o.projected, mg = rp / o.contract * 100;
+        T.c += o.contract; T.d += o.done; T.cm += o.committed; T.p += o.projected;
+        rows.push({ cells: [obraCell(o), nm(eur(o.contract)), nm(eur(o.done)), nm(eur(o.committed)), nm(eur(o.projected)), nm(eur(ra)), nm(eur(rp), '', false, rp >= 0 ? '#047857' : '#B91C1C'), nm(mg.toFixed(1).replace('.', ',') + '%')], level: 1 });
+      });
+      const rpT = T.c - T.p, mgT = T.c ? rpT / T.c * 100 : 0;
+      totals = ['Total geral', eur(T.c), eur(T.d), eur(T.cm), eur(T.p), eur(T.c - T.d), eur(rpT), mgT.toFixed(1).replace('.', ',') + '%'];
+      kpis = [['Valor contratado', eur(T.c), '#6D5DFB', 'soma dos contratos'], ['Custo projetado', eur(T.p), '#F59E0B', 'realizado + comprometido + previsto'], ['Resultado projetado', eur(rpT), rpT >= 0 ? '#10B981' : '#EF4444', 'contratado − custo projetado'], ['Margem projetada', mgT.toFixed(1).replace('.', ',') + '%', '#EC4899', 'resultado ÷ contratado']];
+      chartTitle = 'Resultado projetado por obra'; bars = obras.map(o => ({ label: o.name, v: Math.max(0, o.contract - o.projected), vt: eur(o.contract - o.projected), max: 0, color: '#EC4899' }));
+      count = this.pl(obras.length, 'obra', 'obras');
+      notes.push('Valores do cadastro de Obras: valor contratado e custos registrados em cada obra (realizado, comprometido e projetado). Não há valores faturados no cadastro, então receita faturada e margem real não são calculadas; o resultado usa o valor contratado.');
+      notes.push('Este relatório é acumulado e não depende do período. Os custos do módulo Obras não somam com os de mão de obra e subempreiteiros dos outros relatórios, para evitar contagem dupla.');
+    }
+    const maxV = Math.max.apply(null, bars.map(x => x.v).concat([1]));
+    bars = bars.map(x => Object.assign(x, { w: Math.max(x.v > 0 ? 2 : 0, x.v / (x.max || maxV) * 100) }));
+    const empty = rep.date === 'entries' ? (obras.length === 0 || ents.length === 0) : obras.length === 0;
+    return { cols: cols, rows: rows, totals: totals, bars: bars, chartTitle: chartTitle, kpis: kpis, notes: notes, empty: empty, count: count };
+  }
+
+  generate = () => {
+    const s = this.state;
+    if (!s.rep) { this.flash('Escolha um relatório primeiro', false); return; }
+    if (this.tIso(s.f.from) > this.tIso(s.f.to)) { this.flash('Corrija o período antes de gerar', false); return; }
+    const f = JSON.parse(JSON.stringify(s.f));
+    this.setState({ status: 'loading', applied: null });
+    clearTimeout(this.gT);
+    this.gT = setTimeout(() => this.setState({ status: 'ready', applied: { rep: this.state.rep, f: f } }), 800);
+  };
+
+  openRep(id) {
+    this.setState({ rep: id, status: 'idle', applied: null, f: Object.assign(this.freshF(), { from: this.state.f.from, to: this.state.f.to }) }, () => {
+      const el = document.getElementById('cfg');
+      if (el) window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - 96), behavior: 'smooth' });
+    });
+  }
+
+  quick(id, over) {
+    clearTimeout(this.gT);
+    const f = Object.assign(this.freshF(), over || {});
+    this.setState({ rep: id, f: f, status: 'ready', applied: { rep: id, f: f } });
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, isMobile = w < 1024;
+    const rep = this.REPORTS.filter(r => r.id === s.rep)[0] || null;
+    const f = s.f;
+    const A = s.applied && rep && s.applied.rep === rep.id ? s.applied : null;
+    const periodErr = this.tIso(f.from) > this.tIso(f.to) ? 'A data inicial deve ser anterior ou igual à data final.' : '';
+    const setF = (p) => this.setState(x => ({ f: Object.assign({}, x.f, p) }));
+    const ready = s.status === 'ready' && !!A;
+    const dirty = !!A && JSON.stringify(A.f) !== JSON.stringify(f);
+
+    let R = null;
+    if (ready) R = this.build(rep, this.obrasFor(rep, A.f), A.f);
+    const has = ready && !R.empty;
+
+    const mono = 'font-family:\'JetBrains Mono\',monospace;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right';
+    const txt = 'font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    let tHeads = [], tRows = [], tTotals = [], tGrid = '', tInner = '';
+    if (has) {
+      const widths = R.cols.map(c => c.fr ? 'minmax(' + c.w + 'px,' + c.fr + 'fr)' : c.w + 'px').join(' ');
+      const inner = R.cols.reduce((n, c) => n + c.w, 0) + 12 * (R.cols.length - 1) + 32;
+      tGrid = 'min-width:' + inner + 'px;display:grid;grid-template-columns:' + widths + ';gap:12px;align-items:center;padding:11px 16px';
+      tInner = 'min-width:' + inner + 'px';
+      tHeads = R.cols.map(c => ({ t: c.l, style: 'font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748B;white-space:nowrap;' + (c.num ? 'text-align:right' : '') }));
+      tRows = R.rows.map(r => ({
+        style: tGrid + ';border-bottom:1px solid #F1F5F9;background:#FBFAFF',
+        cells: r.cells.map(c => ({ t: c.t, sub: c.sub, hasSub: !!c.sub,
+          textStyle: (c.num ? mono + (c.warn ? ';color:#B45309' : '') : txt + (c.bold ? ';font-weight:700' : '')) + (c.color ? ';color:' + c.color : ''),
+          subStyle: 'font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:' + (c.warn ? '#B45309' : '#64748B') + (c.num ? ';text-align:right' : '') }))
+      }));
+      tTotals = R.totals.map((t, i) => ({ t: t, style: 'font-size:13px;font-weight:800;white-space:nowrap;' + (R.cols[i] && R.cols[i].num ? 'font-family:\'JetBrains Mono\',monospace;text-align:right' : '') }));
+    }
+
+    const optsOf = (all, list) => [{ v: '', t: all }].concat(list);
+    const uniq = (fn) => this.OBRAS.map(fn).filter((v, i, a) => a.indexOf(v) === i);
+    const SEL = {
+      obra: { label: 'Obra / projeto', options: optsOf('Todas as obras', this.OBRAS.map(o => ({ v: o.id, t: o.name }))) },
+      client: { label: 'Cliente', options: optsOf('Todos os clientes', uniq(o => o.client).map(c => ({ v: c, t: c }))) },
+      status: { label: 'Estado da obra', options: optsOf('Todos os estados', ['Em andamento', 'Atenção', 'Atrasada'].map(c => ({ v: c, t: c }))) },
+      owner: { label: 'Responsável', options: optsOf('Todos os responsáveis', uniq(o => o.owner).map(c => ({ v: c, t: c }))) }
+    };
+    const keys = ['obra', 'client', 'status', 'owner'];
+    const selects = rep ? keys.map(k => ({ label: SEL[k].label, options: SEL[k].options, value: f[k], onChange: (e) => setF({ [k]: e.target.value }) })) : [];
+
+    const periodShort = A ? this.brIso(A.f.from) + ' → ' + this.brIso(A.f.to) : '';
+    const activeTxt = rep ? keys.filter(k => f[k]).map(k => SEL[k].label + ': ' + (SEL[k].options.filter(o => o.v === f[k])[0] || { t: f[k] }).t).join('; ') || 'nenhum' : '';
+    const periodHint = rep ? (rep.date === 'none' ? 'Este relatório é acumulado: o período não se aplica; use os demais filtros.' : (rep.date === 'overlap' ? 'Entram as obras cujo período previsto (início → término) se sobrepõe ao período escolhido.' : 'O período filtra os lançamentos de horas por data.')) : '';
+
+    const csvNow = () => {
+      if (!has) { this.flash('Gere um relatório com resultados para exportar', false); return; }
+      const esc = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const lines = [['Relatório', rep.title], ['Período', rep.date === 'none' ? 'acumulado' : periodShort], ['Filtros', activeTxt], ['Gerado em', this.TODAY + ' (dados fictícios)'], []];
+      lines.push(R.cols.map(c => c.l));
+      R.rows.forEach(r => lines.push(r.cells.map(c => (c.t + (c.sub && c.num ? ' (' + c.sub + ')' : '')).trim())));
+      lines.push(R.totals);
+      const csv = '\ufeff' + lines.map(l => l.map(esc).join(';')).join('\r\n');
+      try {
+        const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        const a = document.createElement('a'); a.href = url; a.download = 'progesty-obras-' + rep.id + '.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 500);
+        this.flash('Arquivo CSV gerado · ' + this.pl(R.rows.length, 'linha', 'linhas'));
+      } catch (e) { this.flash('Não foi possível gerar o arquivo', false); }
+    };
+
+    const wAvail = w - (isMobile ? 0 : 258);
+    return {
+      isMobile, showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:100vh;flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      pickDash: () => this.setState({ active: 'Dashboard', navOpen: false }),
+      groups: this.NAV.map(g => ({ name: g.name, dot: g.dot, isChart: !!g.chart, notChart: !g.chart, open: !!s.open[g.name],
+        toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
+        items: g.items.map(i => ({ name: i.n, pick: () => { if (i.url) { window.location.href = i.url; } else { this.setState({ active: i.n, navOpen: false }); } },
+          style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === i.n ? '700' : '500') + ';color:' + (s.active === i.n ? '#fff' : '#CBD5E1') + ';background:' + (s.active === i.n ? 'rgba(109,93,251,.26)' : 'transparent'),
+          dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === i.n ? '#6D5DFB' : '#64748B') })) })),
+
+      cardGrid: 'display:grid;grid-template-columns:repeat(' + (wAvail >= 1100 ? 3 : (wAvail >= 640 ? 2 : 1)) + ',minmax(0,1fr));gap:clamp(10px,1.2vw,16px)',
+      cards: this.REPORTS.map(r => ({ title: r.title, desc: r.desc, color: r.color, bg: r.bg, pick: () => this.openRep(r.id),
+        style: 'background:#fff;border:1px solid ' + (s.rep === r.id ? '#C7C3FB' : '#E2E8F0') + ';border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;' + (s.rep === r.id ? 'box-shadow:0 18px 36px -26px rgba(109,93,251,.7)' : ''),
+        btnStyle: 'align-self:flex-start;padding:11px 18px;border-radius:11px;font-size:13px;font-weight:700;' + (s.rep === r.id ? 'background:#EEF0FE;color:#4338CA;border:1px solid #C7C3FB' : 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;box-shadow:0 12px 24px -14px rgba(109,93,251,1)') })),
+
+      hasRep: !!rep, repTitle: rep ? rep.title : '', closeRep: () => this.setState({ rep: null, status: 'idle', applied: null }),
+      fromIso: f.from, toIso: f.to, onFrom: (e) => { if (e.target.value) setF({ from: e.target.value }); }, onTo: (e) => { if (e.target.value) setF({ to: e.target.value }); },
+      selects: selects, periodErr: periodErr, periodHint: periodHint, dirty: dirty, clearFilters: () => this.setState({ f: this.freshF() }),
+      generate: this.generate, isLoading: s.status === 'loading',
+      genLabel: s.status === 'loading' ? 'Gerando…' : (ready && !dirty ? 'Atualizar relatório' : 'Gerar relatório'),
+      genStyle: 'display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;color:#fff;background:' + (s.status === 'loading' ? '#A5B4FC' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') + ';box-shadow:0 14px 26px -14px rgba(109,93,251,1);' + (s.status === 'loading' ? 'pointer-events:none;' : ''),
+
+      stLoading: s.status === 'loading' && !!rep, skeletons: [1, 2, 3, 4], stEmpty: ready && !has, stReady: has,
+      printMeta: (rep && rep.date === 'none' ? 'Acumulado' : 'Período: ' + periodShort) + ' · Filtros: ' + activeTxt + ' · Gerado em ' + this.TODAY + ' (dados fictícios)',
+      metaShort: (rep && rep.date === 'none' ? 'acumulado' : periodShort) + (activeTxt !== 'nenhum' ? ' · ' + activeTxt : ''),
+      kpis: has ? R.kpis.map(k => ({ label: k[0], value: k[1], color: k[2], hint: k[3], hintColor: /parcial|sem valor|fora do custo/.test(k[3]) ? '#B45309' : '#64748B' })) : [],
+      hasNotes: has && R.notes.length > 0,
+      notes: has ? R.notes.map(t => { const wn = /ficou fora|sem cronograma|nada foi estimado/.test(t); return { t: t, icon: wn ? '!' : 'i', color: wn ? '#92400E' : '#1D4ED8', bg: wn ? '#FFFBEB' : '#EFF6FF', bd: wn ? '#FDE68A' : '#BFDBFE', iconBg: wn ? '#FEF3C7' : '#DBEAFE' }; }) : [],
+      hasBars: has && R.bars.length > 0, chartTitle: has ? R.chartTitle : '',
+      bars: has ? R.bars.map(b => ({ label: b.label, value: b.vt, bar: 'height:100%;width:' + b.w + '%;border-radius:99px;background:' + b.color })) : [],
+      tableCount: has ? R.count : '',
+      tHeads: tHeads, tRows: tRows, tTotals: tTotals, tGrid: tGrid, tInner: tInner,
+      doPrint: () => { if (!has) { this.flash('Gere um relatório com resultados para imprimir', false); return; } try { window.print(); } catch (e) {} },
+      doCsv: csvNow,
+
+      toast: s.toast, toastMark: s.toastOk ? '✓' : '!',
+      demos: [
+        { name: 'Início', run: () => { clearTimeout(this.gT); this.setState({ rep: null, status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Configurando', run: () => { clearTimeout(this.gT); this.setState({ rep: 'resumo', status: 'idle', applied: null, f: this.freshF() }); } },
+        { name: 'Resumo', run: () => this.quick('resumo') },
+        { name: 'Andamento', run: () => this.quick('andamento') },
+        { name: 'Prazos', run: () => this.quick('prazos') },
+        { name: 'Custos', run: () => this.quick('custos') },
+        { name: 'Planejado × realizado', run: () => this.quick('pxr') },
+        { name: 'Rentabilidade', run: () => this.quick('rent') },
+        { name: 'Sem resultados', run: () => this.quick('resumo', { obra: 'o3', status: 'Atrasada' }) },
+        { name: 'Carregando', run: () => { this.setState({ rep: s.rep || 'resumo', status: 'loading', applied: null }); clearTimeout(this.gT); this.gT = setTimeout(() => this.quick(this.state.rep), 1600); } }
+      ].map(d => ({ name: d.name, run: d.run, style: 'padding:6px 12px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-size:11.5px;font-weight:700;color:#64748B' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
