@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgPop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="90" y="110" width="220" height="40" rx="10" fill="#6D5DFB"/><rect x="90" y="170" width="220" height="24" rx="8" fill="#fff"/><rect x="90" y="206" width="220" height="24" rx="8" fill="#fff"/><rect x="90" y="242" width="220" height="24" rx="8" fill="#fff"/></svg>
+</template>
+</helmet>
+<div ref="{{ rootRef }}" style="background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column;min-width:0">
+
+<div style="position:sticky;top:0;z-index:30;background:rgba(248,250,252,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0;padding:clamp(12px,1.6vw,18px) clamp(14px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+  <div style="min-width:0;flex:1 1 260px;display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><h1 style="margin:0;font-size:clamp(19px,2vw,25px);font-weight:800;letter-spacing:-.03em">{{ title }}</h1><span style="{{ stPill }}">{{ st }}</span><sc-if value="{{ isDirty }}" hint-placeholder-val="{{ false }}"><span style="padding:3px 10px;border-radius:999px;background:#FFFBEB;color:#B45309;font-size:11.5px;font-weight:700">Alterações não salvas</span></sc-if></div>
+    <span style="font-size:13px;color:#64748B">Orçamento de compra · documento independente; pedido, recebimento e fatura não são exigidos.</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <button onClick="{{ doClose }}" style="height:46px;padding:0 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Fechar</button>
+    <button onClick="{{ doSave }}" style="height:46px;padding:0 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1)">{{ saveLabel }}</button>
+  </div>
+</div>
+
+<div style="padding:clamp(14px,2vw,26px) clamp(14px,2.4vw,34px) 54px;display:flex;flex-direction:column;gap:14px;min-width:0">
+
+  <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD"><span style="width:7px;height:7px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.4">Dados e catálogo demonstrativos. O documento fica guardado apenas nesta sessão; mudar de aba não o apaga.</span></div>
+
+  <sc-if value="{{ showErr }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:#FEF2F2;border:1px solid #FECACA"><span style="width:22px;height:22px;border-radius:50%;background:#EF4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 auto">!</span><span style="font-size:13px;font-weight:600;color:#991B1B;line-height:1.4">{{ errText }}</span></div></sc-if>
+
+  <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:14px">
+    <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Dados gerais</span>
+    <div style="{{ fieldGrid }}">
+      <sc-for list="{{ fields }}" as="f" hint-placeholder-count="11">
+        <label style="{{ f.wrapStyle }}">
+          <span style="font-size:12.5px;font-weight:600;color:#475569">{{ f.label }}</span>
+          <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}"><input type="{{ f.type }}" list="{{ f.list }}" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inpStyle }}"></sc-if>
+          <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onInput="{{ f.onInput }}" style="{{ f.inpStyle }}"><sc-for list="{{ f.opts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></sc-if>
+          <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}"><textarea rows="3" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inpStyle }}"></textarea></sc-if>
+          <sc-if value="{{ f.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ f.err }}</span></sc-if>
+        </label>
+      </sc-for>
+    </div>
+    <datalist id="pg-sups"><sc-for list="{{ supOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o }}"></option></sc-for></datalist>
+  </div>
+
+  <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+    <div style="padding:clamp(14px,1.6vw,20px);display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px">
+      <div style="min-width:0;flex:1 1 240px;display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Itens do orçamento <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#64748B">{{ itemsCount }}</span></span><span style="font-size:12px;color:#64748B;line-height:1.45">Digite no campo Produto para buscar no catálogo ou escreva uma descrição livre. Campos brancos são editáveis; os cinzas são calculados. Alterar a linha não altera o cadastro do produto.</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><button onClick="{{ toggleNew }}" style="height:46px;padding:0 16px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700">{{ newBtn }}</button><button onClick="{{ addItem }}" style="height:46px;padding:0 18px;border-radius:12px;background:#EEF0FE;color:#4338CA;font-size:14px;font-weight:700">+ Adicionar item</button></div>
+    </div>
+    <sc-if value="{{ noItems }}" hint-placeholder-val="{{ true }}"><div style="margin:0 clamp(14px,1.6vw,20px) clamp(14px,1.6vw,20px);padding:30px 16px;border-radius:14px;border:1px dashed #CBD5E1;background:#F8FAFC;text-align:center;font-size:14px;color:#64748B;line-height:1.5">Nenhum item adicionado. Use “Adicionar item”: pesquise no catálogo ou digite a descrição livremente.</div></sc-if>
+    <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-scroll" style="overflow-x:auto;border-top:1px solid #E2E8F0">
+        <div style="min-width:1400px">
+          <div style="{{ gridHead }}">
+            <sc-for list="{{ heads }}" as="h" hint-placeholder-count="10"><span style="{{ h.style }}">{{ h.name }}</span></sc-for>
+          </div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="3">
+            <div style="border-bottom:1px solid #F1F5F9">
+              <div style="{{ gridBody }}">
+                <input data-prod="{{ r.n }}" value="{{ r.d }}" onInput="{{ r.setD }}" onFocus="{{ r.openPick }}" onBlur="{{ r.blur }}" onKeyDown="{{ r.key }}" placeholder="Digite para pesquisar ou descreva o item" autocomplete="off" style="{{ r.prodStyle }}">
+                <span style="{{ r.codeStyle }}">{{ r.code }}</span>
+                <select value="{{ r.un }}" onInput="{{ r.setUn }}" style="{{ r.unStyle }}"><sc-for list="{{ r.units }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select>
+                <input data-qty="{{ r.n }}" value="{{ r.q }}" onInput="{{ r.setQ }}" inputmode="decimal" placeholder="0" style="{{ r.qStyle }}">
+                <input value="{{ r.p }}" onInput="{{ r.setP }}" inputmode="decimal" placeholder="0,00" style="{{ r.pStyle }}">
+                <div style="display:flex;gap:4px;min-width:0"><input value="{{ r.disc }}" onInput="{{ r.setDisc }}" inputmode="decimal" placeholder="0" style="{{ r.dStyle }}"><button onClick="{{ r.toggleDisc }}" title="Alternar entre percentual e valor em euros" style="{{ r.dtStyle }}">{{ r.discT }}</button></div>
+                <span style="{{ r.calcStyle }}">{{ r.base }}</span>
+                <div style="display:flex;align-items:center;gap:6px;min-width:0"><select value="{{ r.tax }}" onInput="{{ r.setTax }}" style="{{ r.taxStyle }}"><sc-for list="{{ r.rates }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#475569;white-space:nowrap">{{ r.taxVal }}</span></div>
+                <span style="{{ r.totalStyle }}">{{ r.total }}</span>
+                <div style="display:flex;gap:4px;justify-content:flex-end"><sc-if value="{{ r.linked }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.unlink }}" title="Desvincular do catálogo e manter como item livre" style="{{ r.actStyle }}">Desvincular</button></sc-if><button onClick="{{ r.remove }}" aria-label="Remover item" title="Remover item" style="{{ r.rmStyle }}">✕</button></div>
+              </div>
+              <sc-if value="{{ r.hasErr }}" hint-placeholder-val="{{ false }}"><div style="padding:0 20px 10px;font-size:12px;font-weight:600;color:#B91C1C">Item {{ r.num }}: {{ r.err }}</div></sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pickOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid #E2E8F0;background:#F8FAFC;padding:clamp(14px,1.6vw,20px);display:flex;flex-direction:column;gap:10px;animation:pgPop .18s">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px"><span style="font-size:14px;font-weight:700">Sugestões do catálogo — item {{ pickNum }}</span><span style="font-size:12px;color:#64748B">{{ pResultsLabel }}</span></div>
+        <div class="pg-scroll" style="max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ results }}" as="p" hint-placeholder-count="5">
+            <button onMouseDown="{{ p.md }}" onClick="{{ p.pick }}" style="{{ p.style }}">
+              <div style="min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700">{{ p.name }}</span><span style="font-size:12px;color:#64748B">{{ p.cat }}</span></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#4338CA">{{ p.code }}</span><span style="font-size:12.5px;color:#475569;min-width:40px">{{ p.un }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;min-width:90px;text-align:right">{{ p.price }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <span style="font-size:12.5px;color:#475569;line-height:1.5">{{ pHint }}</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ newOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid #E2E8F0;background:#F8FAFC;padding:clamp(14px,1.6vw,20px);display:flex;flex-direction:column;gap:12px;animation:pgPop .18s">
+        <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:700">Cadastrar produto no catálogo desta sessão</span><span style="font-size:12px;color:#64748B">Opcional. Não é necessário cadastrar para usar uma descrição livre no orçamento; vale só nesta sessão.</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px">
+          <sc-for list="{{ npFields }}" as="f" hint-placeholder-count="6">
+            <label style="display:flex;flex-direction:column;gap:5px;min-width:0"><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ f.label }}</span>
+              <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onInput="{{ f.onInput }}" style="{{ f.st }}"><sc-for list="{{ f.opts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></sc-if>
+              <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}"><input value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.st }}"></sc-if>
+            </label>
+          </sc-for>
+        </div>
+        <sc-if value="{{ npErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ npErr }}</span></sc-if>
+        <div style="display:flex;justify-content:flex-end"><button onClick="{{ saveNew }}" style="height:44px;padding:0 18px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700">Adicionar ao catálogo</button></div>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:flex-end">
+    <div style="flex:0 1 460px;min-width:min(100%,300px);background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Resumo financeiro</span>
+      <sc-for list="{{ summary }}" as="s" hint-placeholder-count="6"><div style="display:flex;align-items:baseline;gap:10px"><span style="{{ s.lblStyle }}">{{ s.label }}</span><div style="flex:1"></div><span style="{{ s.valStyle }}">{{ s.value }}</span></div></sc-for>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:14px;margin-top:4px;border-radius:14px;background:#EEF0FE;border:1px solid #DDD9FD"><span style="font-size:14px;font-weight:700;color:#4338CA">Total do orçamento</span><div style="flex:1"></div><span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:#312E81">{{ grand }}</span></div>
+      <span style="font-size:12px;color:#64748B;line-height:1.45">Imposto calculado sobre a base tributável (valor bruto menos desconto). Estimativa demonstrativa, sem integração fiscal.</span>
+    </div>
+  </div>
+</div>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99;padding:13px 18px;border-radius:14px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s;max-width:calc(100% - 32px)">{{ toast }}</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { local: null, pick: -1, hi: -1, localExtra: [], newOpen: false, np: { name: '', code: '', un: 'un', price: '', cat: 'Materiais diversos', tax: '23' }, npErr: '', submitted: false, toast: '', w: 1400 };
+
+  TODAY = '2026-09-24';
+  OBRAS = ['Residencial Jardim Europa', 'Edifício Central', 'Casa Oliveira', 'Reforma Comercial Delta', 'Sem obra (geral)'];
+  CATS = ['', 'Aço e ferragens', 'Cimento e argamassa', 'Concreto usinado', 'Locação de equipamentos', 'Materiais elétricos e hidráulicos', 'Transporte de materiais', 'Serviços terceirizados', 'Madeira e acabamentos'];
+  PCATS = ['Cimento e argamassa', 'Concreto', 'Aço e ferragens', 'Agregados', 'Hidráulica', 'Elétrica', 'Tintas e revestimentos', 'Equipamentos e ferramentas', 'Serviços', 'Materiais diversos'];
+  UNITS = ['un', 'm', 'm²', 'm³', 'kg', 'L', 'h', 't', 'saco', 'rolo', 'barra', 'viagem', 'mês', 'módulo', 'serviço', 'balde'];
+  RATES = ['0', '6', '13', '23'];
+  SUPS = ['Fornecedor ABC', 'Cimentos do Norte', 'Cimex Materiais', 'Betão Pronto', 'EletroSul', 'Hidrosul Distribuição', 'MaqRent', 'Madeireira Sul', 'TransLog', 'Ferro & Aço Ltda', 'SiderNorte', 'Guindastes Delta Max'];
+  GROUPS = { 'G-ACO': 'Aço CA-50 — 20 t (Edifício Central)', 'G-CIM': 'Cimento e argamassa — lote (Jardim Europa)', 'G-CON': 'Concreto usinado fck 30 — 140 m³' };
+  ST = { 'Em análise': ['#EFF6FF', '#1D4ED8'], 'Aguardando resposta': ['#FFFBEB', '#B45309'], 'Aprovado': ['#ECFDF5', '#047857'], 'Recusado': ['#F1F5F9', '#64748B'], 'Vencido': ['#FEF2F2', '#B91C1C'] };
+  CATALOG = [
+    ['CI-0001', 'Cimento CP-II 32 — saco 50 kg', 'Cimento e argamassa', 'saco', 9.5, 23], ['CI-0003', 'Argamassa colante AC-II — saco 20 kg', 'Cimento e argamassa', 'saco', 11.75, 23], ['CI-0004', 'Argamassa de assentamento — saco 25 kg', 'Cimento e argamassa', 'saco', 6.9, 23], ['CI-0005', 'Cal hidratada — saco 20 kg', 'Cimento e argamassa', 'saco', 5.4, 23],
+    ['CO-0010', 'Concreto usinado fck 25', 'Concreto', 'm³', 118, 23], ['CO-0011', 'Concreto usinado fck 30', 'Concreto', 'm³', 125, 23], ['CO-0012', 'Bombeamento de concreto', 'Concreto', 'serviço', 1100, 23],
+    ['AC-0125', 'Vergalhão CA-50 Ø12,5 mm', 'Aço e ferragens', 't', 1240, 23], ['AC-0100', 'Vergalhão CA-50 Ø10 mm', 'Aço e ferragens', 't', 1255, 23], ['AC-0080', 'Vergalhão CA-50 Ø8 mm', 'Aço e ferragens', 't', 1270, 23], ['AC-0630', 'Arame recozido nº 18', 'Aço e ferragens', 'kg', 1.95, 23], ['AC-MQ196', 'Malha eletrossoldada Q196', 'Aço e ferragens', 'm²', 5.8, 23],
+    ['AG-0001', 'Areia média lavada', 'Agregados', 'm³', 24, 13], ['AG-0002', 'Brita 1', 'Agregados', 'm³', 27, 13], ['AG-0003', 'Pedra britada 2', 'Agregados', 'm³', 26, 13], ['AG-0004', 'Pó de pedra', 'Agregados', 'm³', 21, 13],
+    ['HI-0050', 'Tubo PVC 50 mm — barra 6 m', 'Hidráulica', 'barra', 17.5, 23], ['HI-0100', 'Tubo PVC 100 mm — barra 6 m', 'Hidráulica', 'barra', 38, 23], ['HI-0200', 'Conexões PVC sortidas', 'Hidráulica', 'un', 12.5, 23], ['HI-0300', 'Registro de gaveta 3/4"', 'Hidráulica', 'un', 90, 23], ['HI-0400', 'Caixa d’água 1000 L', 'Hidráulica', 'un', 185, 23],
+    ['EL-0025', 'Cabo flexível 2,5 mm² — rolo 100 m', 'Elétrica', 'rolo', 120, 23], ['EL-0060', 'Cabo flexível 6 mm² — rolo 100 m', 'Elétrica', 'rolo', 285, 23], ['EL-0200', 'Disjuntor bipolar 25 A', 'Elétrica', 'un', 50, 23], ['EL-0300', 'Quadro de distribuição 24 módulos', 'Elétrica', 'un', 650, 23], ['EL-0400', 'Eletroduto corrugado 3/4" — rolo 50 m', 'Elétrica', 'rolo', 38, 23],
+    ['TI-0001', 'Tinta acrílica fosca — balde 18 L', 'Tintas e revestimentos', 'balde', 92, 23], ['TI-0002', 'Selador acrílico — balde 18 L', 'Tintas e revestimentos', 'balde', 64, 23], ['TI-0003', 'Massa corrida — 25 kg', 'Tintas e revestimentos', 'un', 28, 23], ['RV-0001', 'Porcelanato 60×60 cm', 'Tintas e revestimentos', 'm²', 22.5, 23], ['RV-0002', 'Cerâmica de parede 30×60 cm', 'Tintas e revestimentos', 'm²', 14.8, 23],
+    ['EQ-0001', 'Betoneira 400 L — locação mensal', 'Equipamentos e ferramentas', 'mês', 420, 23], ['EQ-0002', 'Andaime fachadeiro — módulo, 45 dias', 'Equipamentos e ferramentas', 'módulo', 140, 23], ['EQ-0003', 'Vibrador de imersão — locação mensal', 'Equipamentos e ferramentas', 'mês', 95, 23], ['EQ-0004', 'Furadeira de impacto', 'Equipamentos e ferramentas', 'un', 148, 23],
+    ['SV-0001', 'Mão de obra — pedreiro', 'Serviços', 'h', 14.5, 6], ['SV-0002', 'Mão de obra — servente', 'Serviços', 'h', 10.2, 6], ['SV-0003', 'Transporte de materiais — viagem', 'Serviços', 'viagem', 162.5, 23], ['SV-0004', 'Locação de guindaste torre — mensal', 'Serviços', 'mês', 5700, 23]
+  ].map(a => ({ code: a[0], name: a[1], cat: a[2], un: a[3], price: a[4], tax: a[5] }));
+
+  pl(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+  eur(n) { return '€ ' + (n || 0).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  fmtN(n) { return n.toLocaleString('de-DE', { maximumFractionDigits: 2 }); }
+  num(v) { let t = String(v == null ? '' : v).replace(/[^\d,.-]/g, ''); if (t.indexOf(',') >= 0) t = t.replace(/\./g, '').replace(',', '.'); const n = parseFloat(t); return isNaN(n) ? 0 : n; }
+  norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  addDays(s, k) { const a = s.split('-').map(Number); return new Date(Date.UTC(a[0], a[1] - 1, a[2]) + k * 864e5).toISOString().slice(0, 10); }
+  blankDraft() { return { no: '', sup: '', obra: '', cat: '', date: this.TODAY, valid: this.addDays(this.TODAY, 15), st: 'Em análise', group: '', pay: '30 dias', prazo: '', frete: 'Incluído', obs: '', items: [] }; }
+  lineCalc(i) {
+    const q = Math.max(this.num(i.q), 0), p = Math.max(this.num(i.p), 0), gross = Math.round(q * p * 100) / 100;
+    let d = Math.max(this.num(i.disc), 0); d = i.discT === '€' ? Math.min(d, gross) : gross * Math.min(d, 100) / 100; d = Math.round(d * 100) / 100;
+    const base = Math.round((gross - d) * 100) / 100, rate = Math.min(Math.max(this.num(i.tax), 0), 100), tax = Math.round(base * rate) / 100;
+    return { gross, disc: d, base, rate, tax, total: Math.round((base + tax) * 100) / 100 };
+  }
+  products() { return this.CATALOG.concat(this.props.extraProducts || [], this.state.localExtra); }
+  draft() { return this.props.draft || this.state.local || this.blankDraft(); }
+  upd(fn) { if (this.props.changeFn) this.props.changeFn(fn); else this.setState(x => ({ local: fn(x.local || this.blankDraft()) })); }
+  setF(k, v) { this.upd(d => Object.assign({}, d, { [k]: v })); }
+  setItem(n, k, v) { this.upd(d => Object.assign({}, d, { items: d.items.map((it, i) => i === n ? Object.assign({}, it, { [k]: v }) : it) })); }
+  flash(m) { clearTimeout(this.tT); this.setState({ toast: m }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2600); }
+
+  errors(d) {
+    const e = {}, rows = [];
+    if (!d.sup.trim()) e.sup = 'Informe o fornecedor';
+    if (!d.obra) e.obra = 'Selecione a obra ou "Sem obra"';
+    if (!d.date) e.date = 'Informe a data do orçamento';
+    if (!d.valid) e.valid = 'Informe a validade'; else if (d.date && d.valid < d.date) e.valid = 'Validade anterior à data do orçamento';
+    d.items.forEach((it, n) => {
+      const c = this.lineCalc(it); let m = '';
+      if (!String(it.d).trim()) m = 'informe a descrição do item';
+      else if (!(this.num(it.q) > 0)) m = 'quantidade deve ser maior que zero';
+      else if (!(this.num(it.p) > 0)) m = 'informe o valor unitário';
+      else if (it.discT === '%' && this.num(it.disc) > 100) m = 'desconto não pode passar de 100%';
+      else if (it.discT === '€' && this.num(it.disc) > c.gross) m = 'desconto maior que o valor bruto da linha';
+      rows[n] = m;
+    });
+    if (!d.items.length) e.items = 'Adicione ao menos um item';
+    return { e, rows, count: Object.keys(e).filter(k => k !== 'items').length + rows.filter(Boolean).length + (e.items ? 1 : 0) };
+  }
+
+  rootRef = (el) => { this.rootEl = el; };
+  searchRef = (el) => { this.searchEl = el; };
+  componentDidUpdate() {
+    if (this.focusSearch && this.searchEl) { this.searchEl.focus(); this.focusSearch = false; }
+    if (this.focusQty != null && this.rootEl) { const el = this.rootEl.querySelector('[data-qty="' + this.focusQty + '"]'); if (el) { el.focus(); if (el.select) el.select(); this.focusQty = null; } }
+  }
+  componentWillUnmount() { clearTimeout(this.tT); }
+  focusLater(fn) { [60, 200].forEach(ms => setTimeout(fn, ms)); }
+  openPick(n) { if (this.state.pick !== n) this.setState({ pick: n, hi: -1 }); }
+  choose(n, p) {
+    this.upd(d => Object.assign({}, d, { items: d.items.map((it, i) => i === n ? Object.assign({}, it, { pid: p.code, code: p.code, cat: p.cat, d: p.name, un: p.un, p: String(p.price).replace('.', ','), tax: String(p.tax), q: it.q || '1' }) : it) }));
+    this.setState({ pick: -1, hi: -1 });
+    this.focusLater(() => { const el = this.rootEl && this.rootEl.querySelector('[data-qty="' + n + '"]'); if (el && this.state.pick === -1) { el.focus(); if (el.select) el.select(); } });
+  }
+
+  renderVals() {
+    const s = this.state, d = this.draft(), W = this.props.vw || s.w, touch = W < 1024;
+    const errs = s.submitted ? this.errors(d) : { e: {}, rows: [], count: 0 };
+    const calcs = d.items.map(i => this.lineCalc(i));
+    const sum = (k) => Math.round(calcs.reduce((a, c) => a + c[k] * 100, 0)) / 100;
+    const gross = sum('gross'), disc = sum('disc'), base = sum('base'), tax = sum('tax'), grand = sum('total');
+    const inpBase = 'width:100%;min-height:' + (touch ? 44 : 40) + 'px;padding:0 10px;border-radius:9px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;outline:none;color:#0F172A';
+    const mono = 'font-family:\'JetBrains Mono\',monospace;';
+    const GRID = 'minmax(250px,2.4fr) 98px 84px 84px 108px 156px 112px 150px 116px 112px';
+    const heads = [['Produto', 0], ['Código', 0], ['Un.', 0], ['Quantidade', 1], ['Valor unit. (€)', 1], ['Desconto', 0], ['Base tributável', 1], ['Imposto', 0], ['Total da linha', 1], ['Ações', 1]].map(h => ({ name: h[0], style: 'font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B;white-space:nowrap;' + (h[1] ? 'text-align:right;' : '') }));
+    const opt = (list, cur) => list.map(v => ({ v: v.v != null ? v.v : v, l: v.l != null ? v.l : (v || 'Selecione'), sel: (v.v != null ? v.v : v) === cur }));
+    const bld = (k, label, o) => { o = o || {}; const err = errs.e[k] || ''; return { label, err, hasErr: !!err, isSelect: !!o.opts, isArea: !!o.area, isInput: !o.opts && !o.area, type: o.type || 'text', ph: o.ph || '', list: o.list || '', value: d[k] == null ? '' : d[k], opts: o.opts ? opt(o.opts, d[k] == null ? '' : d[k]) : [], onInput: ev => this.setF(k, ev.target.value), wrapStyle: 'display:flex;flex-direction:column;gap:7px;min-width:0;grid-column:' + (o.full ? '1 / -1' : 'auto'), inpStyle: 'width:100%;min-height:46px;padding:' + (o.area ? '12px 13px' : '0 13px') + ';border-radius:11px;border:1px solid ' + (err ? '#EF4444' : '#E2E8F0') + ';background:' + (err ? '#FEF2F2' : '#F8FAFC') + ';font-size:14.5px;outline:none;color:#0F172A;' + (o.area ? 'resize:vertical;' : '') }; };
+    const groupOpts = [{ v: '', l: 'Nenhuma (orçamento isolado)' }].concat(Object.keys(this.GROUPS).map(g => ({ v: g, l: this.GROUPS[g] })));
+    const fields = [bld('sup', 'Fornecedor', { full: true, list: 'pg-sups', ph: 'Nome do fornecedor' }), bld('obra', 'Obra', { opts: [''].concat(this.OBRAS) }), bld('cat', 'Categoria de compra', { opts: this.CATS }), bld('date', 'Data do orçamento', { type: 'date' }), bld('valid', 'Validade da proposta', { type: 'date' }), bld('st', 'Situação', { opts: ['Em análise', 'Aguardando resposta'] }), bld('group', 'Cotação (comparar propostas)', { opts: groupOpts }), bld('pay', 'Condição de pagamento', { opts: ['À vista', '15 dias', '28 dias', '30 dias', '45 dias'] }), bld('prazo', 'Prazo de entrega', { ph: 'Ex.: 5 dias' }), bld('frete', 'Frete', { opts: ['Incluído', 'Por conta do comprador', 'A combinar'] }), bld('obs', 'Observações', { area: true, full: true, ph: 'Condições adicionais, referência da proposta' })];
+
+    const qtxt = s.pick >= 0 && d.items[s.pick] ? d.items[s.pick].d : '';
+    const qt = this.norm(qtxt).split(/\s+/).filter(Boolean);
+    const all = this.products().filter(p => { const h = this.norm(p.name + ' ' + p.code + ' ' + p.cat); return qt.every(x => h.indexOf(x) >= 0); });
+    const hits = all.slice(0, 8);
+    const rows = d.items.map((it, n) => {
+      const c = calcs[n], bad = errs.rows[n] || '', empty = !String(it.d).trim();
+      const calcSt = mono + 'display:flex;align-items:center;justify-content:flex-end;min-height:' + (touch ? 44 : 40) + 'px;padding:0 10px;border-radius:9px;background:#F1F5F9;font-size:13px;color:#334155;white-space:nowrap';
+      return {
+        n: String(n), num: String(n + 1).padStart(2, '0'), d: it.d, linked: !!it.pid, code: it.pid ? it.code : 'Livre', un: it.un, units: opt(this.UNITS, it.un), unStyle: inpBase + ';padding:0 6px', setUn: e => this.setItem(n, 'un', e.target.value),
+        setD: e => { const v = e.target.value; this.setItem(n, 'd', v); this.setState({ pick: n, hi: -1 }); },
+        blur: () => { if (this.state.pick === n) this.setState({ pick: -1, hi: -1 }); },
+        unlink: () => this.upd(x => Object.assign({}, x, { items: x.items.map((y, i) => i === n ? Object.assign({}, y, { pid: '', code: '' }) : y) })),
+        key: (e) => {
+          const k = e.key;
+          if (k === 'ArrowDown') { e.preventDefault(); this.setState(x => ({ pick: n, hi: Math.min(x.hi + 1, hits.length - 1) })); }
+          else if (k === 'ArrowUp') { e.preventDefault(); this.setState(x => ({ hi: Math.max(x.hi - 1, -1) })); }
+          else if (k === 'Enter') { e.preventDefault(); if (this.state.pick === n && this.state.hi >= 0 && hits[this.state.hi]) this.choose(n, hits[this.state.hi]); else { this.setState({ pick: -1, hi: -1 }); const el = this.rootEl && this.rootEl.querySelector('[data-qty="' + n + '"]'); if (el) el.focus(); } }
+          else if (k === 'Escape') this.setState({ pick: -1, hi: -1 });
+        },
+        q: it.q, p: it.p, disc: it.disc, discT: it.discT, tax: it.tax, taxVal: this.eur(c.tax), base: this.eur(c.base), total: this.eur(c.total),
+        rates: opt(this.RATES.map(r => ({ v: r, l: r + '%' })), it.tax),
+        hasErr: !!bad, err: bad,
+        prodStyle: 'width:100%;min-height:' + (touch ? 44 : 40) + 'px;padding:0 10px;border-radius:9px;border:1px solid ' + (bad && empty ? '#EF4444' : it.pid ? '#C7C3FB' : '#E2E8F0') + ';background:' + (bad && empty ? '#FEF2F2' : '#fff') + ';font-size:13.5px;font-weight:600;outline:none;color:#0F172A;min-width:0',
+        codeStyle: mono + 'font-size:12px;font-weight:600;color:' + (it.pid ? '#4338CA' : '#94A3B8'),
+        qStyle: inpBase + ';' + mono + 'text-align:right;' + (bad && bad.indexOf('quantidade') === 0 ? 'border-color:#EF4444;background:#FEF2F2;' : ''),
+        pStyle: inpBase + ';' + mono + 'text-align:right;' + (bad && bad.indexOf('valor') === 0 ? 'border-color:#EF4444;background:#FEF2F2;' : ''),
+        dStyle: inpBase + ';' + mono + 'text-align:right;' + (bad && bad.indexOf('desconto') === 0 ? 'border-color:#EF4444;background:#FEF2F2;' : ''),
+        dtStyle: 'flex:0 0 auto;min-width:' + (touch ? 44 : 40) + 'px;min-height:' + (touch ? 44 : 40) + 'px;border-radius:9px;background:#EEF0FE;color:#4338CA;font-size:13px;font-weight:800;' + mono,
+        taxStyle: inpBase + ';width:76px;flex:0 0 auto', calcStyle: calcSt, totalStyle: calcSt + ';font-weight:600;color:#0F172A;background:#EEF0FE',
+        actStyle: 'min-height:' + (touch ? 44 : 40) + 'px;padding:0 10px;border-radius:9px;background:#F1F5F9;color:#475569;font-size:12px;font-weight:700',
+        rmStyle: 'width:' + (touch ? 44 : 40) + 'px;min-height:' + (touch ? 44 : 40) + 'px;border-radius:9px;border:1px solid #E2E8F0;background:#fff;color:#B91C1C;font-size:12px',
+        setQ: e => this.setItem(n, 'q', e.target.value), setP: e => this.setItem(n, 'p', e.target.value), setDisc: e => this.setItem(n, 'disc', e.target.value), setTax: e => this.setItem(n, 'tax', e.target.value),
+        toggleDisc: () => this.setItem(n, 'discT', it.discT === '%' ? '€' : '%'),
+        openPick: () => this.openPick(n),
+        remove: () => { this.upd(x => Object.assign({}, x, { items: x.items.filter((_, i) => i !== n) })); if (s.pick === n) this.setState({ pick: -1 }); else if (s.pick > n) this.setState({ pick: s.pick - 1 }); }
+      };
+    });
+
+    const npSet = (k) => (e) => { const v = e.target.value; this.setState(x => ({ np: Object.assign({}, x.np, { [k]: v }), npErr: '' })); };
+    const ist = inpBase + ';min-height:44px';
+    const np = s.np;
+    const npFields = [
+      { label: 'Nome do produto', value: np.name, ph: 'Ex.: Tijolo cerâmico 8 furos', isInput: true, isSelect: false, onInput: npSet('name'), st: ist },
+      { label: 'Código (opcional)', value: np.code, ph: 'Gerado se vazio', isInput: true, isSelect: false, onInput: npSet('code'), st: ist + ';' + mono },
+      { label: 'Categoria', value: np.cat, isInput: false, isSelect: true, opts: opt(this.PCATS, np.cat), onInput: npSet('cat'), st: ist },
+      { label: 'Unidade', value: np.un, isInput: false, isSelect: true, opts: opt(this.UNITS, np.un), onInput: npSet('un'), st: ist },
+      { label: 'Preço de referência (€)', value: np.price, ph: '0,00', isInput: true, isSelect: false, onInput: npSet('price'), st: ist + ';' + mono },
+      { label: 'Imposto padrão', value: np.tax, isInput: false, isSelect: true, opts: opt(this.RATES.map(r => ({ v: r, l: r + '%' })), np.tax), onInput: npSet('tax'), st: ist }
+    ];
+
+    const stc = this.ST[d.st] || this.ST['Em análise'];
+    const rateMap = {}; d.items.forEach((it, n) => { const r = calcs[n].rate; if (calcs[n].tax) rateMap[r] = (rateMap[r] || 0) + calcs[n].tax; });
+    const sRow = (label, value, strong, neg) => ({ label, value, lblStyle: 'font-size:13.5px;color:' + (strong ? '#0F172A' : '#475569') + ';font-weight:' + (strong ? 700 : 500), valStyle: mono + 'font-size:14px;font-weight:' + (strong ? 600 : 500) + ';color:' + (neg ? '#B45309' : '#0F172A') });
+    const summary = [sRow('Subtotal bruto', this.eur(gross)), sRow('Descontos', disc ? '− ' + this.eur(disc) : this.eur(0), false, disc > 0), sRow('Base tributável', this.eur(base), true)]
+      .concat(Object.keys(rateMap).sort((a, b) => a - b).map(r => sRow('Imposto ' + this.fmtN(Number(r)) + '%', this.eur(rateMap[r] / 100 * 100)))).concat([sRow('Impostos', this.eur(tax), true)]);
+
+    return {
+      rootRef: this.rootRef, searchRef: this.searchRef,
+      title: d.no ? 'Orçamento ' + d.no : 'Novo orçamento', st: d.st, stPill: 'padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;background:' + stc[0] + ';color:' + stc[1],
+      isDirty: !!this.props.isDirty, saveLabel: d.no ? 'Salvar alterações' : 'Salvar orçamento',
+      doClose: () => { if (this.props.closeFn) this.props.closeFn(); else this.flash('Fora do Workspace não há aba para fechar.'); },
+      doSave: () => {
+        const r = this.errors(d);
+        if (r.count) { this.setState({ submitted: true }); return; }
+        this.setState({ submitted: false });
+        if (this.props.saveFn) this.props.saveFn(d); else this.flash('Salvo só nesta página (sem Workspace)');
+      },
+      showErr: errs.count > 0, errText: errs.count === 1 ? 'Corrija 1 ponto destacado para continuar.' : 'Corrija os ' + errs.count + ' pontos destacados para continuar.',
+      fields, fieldGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px', supOpts: this.SUPS,
+      itemsCount: '· ' + this.pl(d.items.length, 'linha', 'linhas'), noItems: d.items.length === 0, hasItems: d.items.length > 0,
+      heads, rows, gridHead: 'display:grid;grid-template-columns:' + GRID + ';gap:10px;align-items:center;padding:12px clamp(14px,1.6vw,20px);background:#F8FAFC;border-bottom:1px solid #E2E8F0', gridBody: 'display:grid;grid-template-columns:' + GRID + ';gap:10px;align-items:center;padding:8px clamp(14px,1.6vw,20px)',
+      addItem: () => { const n = d.items.length; this.upd(x => Object.assign({}, x, { items: x.items.concat([{ pid: '', code: '', cat: '', d: '', un: 'un', q: '1', p: '', discT: '%', disc: '', tax: '0' }]) })); this.setState({ pick: n, hi: -1 }); this.focusLater(() => { const el = this.rootEl && this.rootEl.querySelector('[data-prod="' + n + '"]'); if (el) el.focus(); }); },
+      pickOpen: s.pick >= 0 && s.pick < d.items.length, pickNum: String(s.pick + 1).padStart(2, '0'),
+      results: hits.map((p, i) => ({ name: p.name, cat: p.cat, code: p.code, un: p.un, price: this.eur(p.price), md: e => e.preventDefault(), pick: () => this.choose(s.pick, p), style: 'display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:11px 13px;border-radius:12px;background:' + (s.hi === i ? '#EEF0FE' : '#fff') + ';border:1px solid ' + (s.hi === i ? '#C7C3FB' : '#E2E8F0') + ';text-align:left;min-height:48px' })),
+      pResultsLabel: qt.length ? (all.length > 8 ? 'Mostrando 8 de ' + all.length + ' — continue digitando para refinar' : this.pl(all.length, 'produto encontrado', 'produtos encontrados')) : 'Sugestões iniciais — digite para filtrar por nome, código ou categoria',
+      pHint: qt.length && !all.length ? 'Nenhum produto do catálogo corresponde. Continue digitando: a descrição será usada como item livre, sem cadastro.' : 'Selecione uma sugestão para preencher os dados, ou ignore e continue digitando (Enter mantém o texto livre). Setas ↑↓ navegam nas sugestões.',
+      toggleNew: () => this.setState(x => ({ newOpen: !x.newOpen, npErr: '' })), newOpen: s.newOpen, newBtn: s.newOpen ? 'Fechar cadastro' : 'Cadastrar produto na sessão',
+      npFields, npErr: s.npErr,
+      saveNew: () => {
+        if (!np.name.trim()) { this.setState({ npErr: 'Informe o nome do produto' }); return; }
+        if (!(this.num(np.price) > 0)) { this.setState({ npErr: 'Informe um preço de referência maior que zero' }); return; }
+        const code = (np.code.trim() || 'NV-' + String(this.products().length + 1).padStart(4, '0')).toUpperCase();
+        if (this.products().some(x => x.code === code)) { this.setState({ npErr: 'Já existe um produto com o código ' + code }); return; }
+        const pr = { code, name: np.name.trim(), cat: np.cat, un: np.un, price: this.num(np.price), tax: Number(np.tax) };
+        if (this.props.addProdFn) this.props.addProdFn(pr); else this.setState(x => ({ localExtra: x.localExtra.concat([pr]) }));
+        this.setState({ newOpen: false, np: { name: '', code: '', un: 'un', price: '', cat: 'Materiais diversos', tax: '23' } });
+        this.flash('Produto ' + code + ' adicionado ao catálogo desta sessão');
+      },
+            summary, grand: this.eur(grand), toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

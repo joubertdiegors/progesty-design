@@ -141,7 +141,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
     <sc-if value="{{ m.pay }}" hint-placeholder-val="{{ false }}"><div style="{{ v.pay }}"><dc-import name="Progesty Contas a Pagar" vw="{{ vw }}" hint-size="100%,640px"></dc-import></div></sc-if>
     <sc-if value="{{ m.rhf }}" hint-placeholder-val="{{ false }}"><div style="{{ v.rhf }}"><dc-import name="Progesty Funcionários" vw="{{ vw }}" hint-size="100%,640px"></dc-import></div></sc-if>
     <sc-if value="{{ m.cmp }}" hint-placeholder-val="{{ false }}"><div style="{{ v.cmp }}"><dc-import name="Progesty Compras" vw="{{ vw }}" hint-size="100%,640px"></dc-import></div></sc-if>
-    <sc-if value="{{ m.orc }}" hint-placeholder-val="{{ false }}"><div style="{{ v.orc }}"><dc-import name="Progesty Orçamentos de Compra" vw="{{ vw }}" dirty-cb="{{ onDirtyOrc }}" hint-size="100%,640px"></dc-import></div></sc-if>
+    <sc-if value="{{ m.orc }}" hint-placeholder-val="{{ false }}"><div style="{{ v.orc }}"><dc-import name="Progesty Orçamentos de Compra" vw="{{ vw }}" recs="{{ quotes }}" recs-fn="{{ setQuotes }}" doc-fn="{{ openDocTab }}" hint-size="100%,640px"></dc-import></div></sc-if>
+    <sc-for list="{{ docItems }}" as="dc" hint-placeholder-count="0"><div style="{{ dc.vis }}"><dc-import name="Progesty Documento de Orçamento" vw="{{ vw }}" draft="{{ dc.draft }}" change-fn="{{ dc.change }}" save-fn="{{ dc.save }}" close-fn="{{ dc.close }}" is-dirty="{{ dc.dirty }}" extra-products="{{ extraProds }}" add-prod-fn="{{ addProd }}" hint-size="100%,640px"></dc-import></div></sc-for>
     <sc-if value="{{ cur.showNotice }}" hint-placeholder-val="{{ false }}">
       <div style="padding:clamp(16px,2.2vw,28px) clamp(14px,2.4vw,34px);max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
         <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:14px">
@@ -205,7 +206,7 @@ class Component extends DCLogic {
   state = {
     view: null, w: 1400, navOpen: false, collapsed: false, cur: 'Inicial',
     tabs: ['dashboard', 'rh-funcionarios', 'financeiro-contas-pagar', 'compras-orcamentos'].map(id => ({ id, title: '' })), active: 'compras-orcamentos',
-    pages: {}, dirtyMap: {}, groupsOpen: { dash: true, cmp: true, fin: true, rh: true }, ctx: null, confirm: null, regOpen: false, bell: false, profile: false, toast: ''
+    pages: {}, dirtyMap: {}, quotes: null, docs: {}, docSeq: 0, extraProds: [], groupsOpen: { dash: true, cmp: true, fin: true, rh: true }, ctx: null, confirm: null, regOpen: false, bell: false, profile: false, toast: ''
   };
 
   DEPT = { dash: ['Dashboard', '#6D5DFB', 'DB'], com: ['Comercial', '#EC4899', 'CM'], obr: ['Projetos e Obras', '#F97316', 'OB'], cmp: ['Compras', '#06B6D4', 'CP'], fin: ['Financeiro', '#10B981', 'FN'], rh: ['Recursos Humanos', '#3B82F6', 'RH'], log: ['Logística e Frota', '#F59E0B', 'LG'], tar: ['Tarefas e Documentos', '#8B5CF6', 'TD'], rel: ['Relatórios', '#6366F1', 'RL'], cfg: ['Configurações', '#64748B', 'CF'] };
@@ -280,10 +281,37 @@ class Component extends DCLogic {
   pinned(id) { const r = this.regOf(id); return !!(r && r.pinned); }
   isDetail(id) { return id.indexOf(':detalhe:') > 0; }
   titleOf(t) { return t.title || this.regOf(t.id).title; }
-  dirty(id) { return !!this.state.dirtyMap[id]; }
+  dirty(id) {
+    if (id.indexOf(':doc:') > 0) { const d = this.state.docs[id.split(':doc:')[1]]; return !!d && JSON.stringify(d.draft) !== d.base; }
+    return !!this.state.dirtyMap[id];
+  }
+  setQuotes = (arr) => this.setState({ quotes: arr });
+  addProd = (p) => this.setState(x => ({ extraProds: x.extraProds.concat([p]) }));
+  openDocTab = (req) => this.setState(x => {
+    const key = req.no ? req.no : 'new-' + (x.docSeq + 1), id = 'compras-orcamentos:doc:' + key;
+    if (x.tabs.some(t => t.id === id)) return { active: id, navOpen: false, ctx: null };
+    return { tabs: x.tabs.concat([{ id, title: req.no ? 'Orçamento ' + req.no : 'Novo orçamento' }]), docs: Object.assign({}, x.docs, { [key]: { draft: req.draft, base: JSON.stringify(req.draft) } }), docSeq: req.no ? x.docSeq : x.docSeq + 1, active: id, navOpen: false, ctx: null };
+  });
+  docChange(key, fn) { this.setState(x => (x.docs[key] ? { docs: Object.assign({}, x.docs, { [key]: Object.assign({}, x.docs[key], { draft: fn(x.docs[key].draft) }) }) } : null)); }
+  docSave(key, draft) {
+    const num = (v) => { let s = String(v == null ? '' : v).replace(/[^\d,.-]/g, ''); if (s.indexOf(',') >= 0) s = s.replace(/\./g, '').replace(',', '.'); const n = parseFloat(s); return isNaN(n) ? 0 : n; };
+    let savedNo = '';
+    this.setState(x => {
+      const qs = x.quotes || [];
+      const items = draft.items.map(i => ({ pid: i.pid, code: i.code, cat: i.cat, d: i.d, un: i.un, q: num(i.q), p: num(i.p), discT: i.discT, disc: num(i.disc), tax: num(i.tax) }));
+      const desc = items[0].d + (items.length > 1 ? ' + ' + (items.length - 1) + (items.length === 2 ? ' item' : ' itens') : '');
+      const base = { sup: draft.sup.trim(), obra: draft.obra, cat: draft.cat, date: draft.date, valid: draft.valid, st: draft.st, group: draft.group, pay: draft.pay, prazo: draft.prazo || '—', frete: draft.frete, obs: draft.obs, items, desc };
+      let no = draft.no, quotes;
+      if (no) quotes = qs.map(r => r.no === no ? Object.assign({}, r, base) : r);
+      else { no = 'ORC-2026-' + String(Math.max.apply(null, qs.map(r => parseInt(r.no.slice(-3), 10)).concat([0])) + 1).padStart(3, '0'); quotes = qs.concat([Object.assign({ no, order: '' }, base)]); }
+      savedNo = no;
+      const nd = Object.assign({}, draft, { no });
+      return { quotes, docs: Object.assign({}, x.docs, { [key]: { draft: nd, base: JSON.stringify(nd) } }), tabs: x.tabs.map(t => t.id === 'compras-orcamentos:doc:' + key ? Object.assign({}, t, { title: 'Orçamento ' + no }) : t) };
+    });
+    setTimeout(() => this.flash('Orçamento ' + savedNo + ' salvo nesta sessão'), 0);
+  }
   flash(m) { clearTimeout(this.tT); this.setState({ toast: m }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2600); }
 
-  onDirtyOrc = (v) => this.setState(x => (!!x.dirtyMap['compras-orcamentos'] === !!v ? null : { dirtyMap: Object.assign({}, x.dirtyMap, { 'compras-orcamentos': !!v }) }));
   openPage = (id, title) => {
     const r = this.regOf(id);
     if (!r.ok) { this.flash(r.title + ' ainda não foi desenvolvida — não há tela para abrir.'); return; }
@@ -305,13 +333,13 @@ class Component extends DCLogic {
         const i = x.tabs.findIndex(t => t.id === active), before = x.tabs.slice(0, i).reverse().find(t => ids.indexOf(t.id) < 0), after = x.tabs.slice(i + 1).find(t => ids.indexOf(t.id) < 0);
         active = (before || after || { id: 'dashboard' }).id;
       }
-      const dm = Object.assign({}, x.dirtyMap); ids.forEach(id => { delete dm[id]; delete this.scrollMap[id]; });
-      return { tabs: rest.length ? rest : [{ id: 'dashboard', title: '' }], active, dirtyMap: dm, confirm: null, ctx: null };
+      const dm = Object.assign({}, x.dirtyMap), docs = Object.assign({}, x.docs); ids.forEach(id => { delete dm[id]; delete this.scrollMap[id]; if (id.indexOf(':doc:') > 0) delete docs[id.split(':doc:')[1]]; });
+      return { tabs: rest.length ? rest : [{ id: 'dashboard', title: '' }], active, dirtyMap: dm, docs, confirm: null, ctx: null };
     });
   }
 
   applyState(name) {
-    const b = { cur: name, ctx: null, confirm: null, regOpen: false, navOpen: false, bell: false, profile: false };
+    const b = { docs: {}, cur: name, ctx: null, confirm: null, regOpen: false, navOpen: false, bell: false, profile: false };
     const base = ['dashboard', 'rh-funcionarios', 'financeiro-contas-pagar', 'compras-orcamentos'];
     if (name === 'Inicial') { b.tabs = base.map(id => ({ id, title: '' })); b.active = 'compras-orcamentos'; b.dirtyMap = {}; }
     if (name === 'Muitas abas') { b.tabs = ['dashboard', 'crm-listagem', 'clientes-listagem', 'obras-listagem', 'obras-planejamento', 'compras-visao', 'compras-orcamentos', 'financeiro-visao', 'financeiro-contas-pagar', 'rh-funcionarios', 'rh-terceirizados', 'log-veiculos', 'tarefas-listagem', 'rel-hub', 'cfg-usuarios'].map(id => ({ id, title: '' })); b.active = 'financeiro-contas-pagar'; b.dirtyMap = {}; }
@@ -388,7 +416,7 @@ class Component extends DCLogic {
       };
     });
 
-    const curV = { id: s.active, title: tabTitle(s.active), file: cur.file || '(sem arquivo)', dept: dept[0], color: dept[1], code: cur.code, showNotice: !this.EMBED[s.active] };
+    const curV = { id: s.active, title: tabTitle(s.active), file: cur.file || '(sem arquivo)', dept: dept[0], color: dept[1], code: cur.code, showNotice: !this.EMBED[s.active] && s.active.indexOf(':doc:') < 0 };
     const mm = {}, vv = {}; Object.keys(this.EMBED).forEach(k => { const e = this.EMBED[k]; mm[e[0]] = s.tabs.some(x => x.id === k); vv[e[0]] = s.active === k ? 'display:block' : 'display:none'; });
 
     const conf = s.confirm;
@@ -415,7 +443,8 @@ class Component extends DCLogic {
       tabs, arrowSize: touch ? '44px' : '32px', scrollerRef: this.scrollerRef, contentRef: this.contentRef, onContentScroll: this.onContentScroll,
       scrollLeft: () => this.scrollBy(-240), scrollRight: () => this.scrollBy(240),
       ctxOpen: !!s.ctx, toggleCtx: () => this.setState(x => ({ ctx: x.ctx ? null : x.active, bell: false, profile: false })), ctxTitle: tabTitle(ctxId), ctxItems,
-      cur: curV, m: mm, v: vv, vw: W, onDirtyOrc: this.onDirtyOrc,
+      cur: curV, m: mm, v: vv, vw: W, quotes: s.quotes, setQuotes: this.setQuotes, openDocTab: this.openDocTab, extraProds: s.extraProds, addProd: this.addProd,
+      docItems: s.tabs.filter(tb => tb.id.indexOf(':doc:') > 0).map(tb => { const key = tb.id.split(':doc:')[1], dd = s.docs[key]; return dd ? { vis: s.active === tb.id ? 'display:block' : 'display:none', draft: dd.draft, dirty: JSON.stringify(dd.draft) !== dd.base, change: fn => this.docChange(key, fn), save: dr => this.docSave(key, dr), close: () => this.requestClose([tb.id]) } : null; }).filter(Boolean),
       confirmOpen: !!conf, confirmTitle: conf ? (conf.ids.length > 1 ? 'Fechar ' + conf.ids.length + ' abas?' : 'Fechar “' + tabTitle(conf.ids[0]) + '”?') : '', confirmList: conf ? conf.dirty.map(tabTitle) : [],
       keepEditing: () => this.setState({ confirm: null }), discard: () => conf && this.doClose(conf.ids),
       regOpen: s.regOpen, regRows, regSummary: this.pl(nOk, 'página integrada', 'páginas integradas') + ' · ' + this.pl(nEx - nOk, 'existente não adaptada', 'existentes não adaptadas') + ' · ' + (regRows.length - nEx) + ' não desenvolvidas (de ' + regRows.length + ').',
