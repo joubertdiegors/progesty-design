@@ -253,7 +253,7 @@ class Component extends DCLogic {
       { name: 'Financeiro', dot: '#10B981', items: [{ n: 'Contas a Receber' }, { n: 'Contas a Pagar' }, { n: 'Faturas' }, { n: 'Fluxo de Caixa' }] },
       { name: 'Relatórios', dot: '#8B5CF6', chart: true, items: [
         { n: 'Consultas e Relatórios', enabled: true }, { n: 'Horas', enabled: true },
-        { n: 'Logística', enabled: false }, { n: 'Custos', enabled: false }, { n: 'Chantier / Obras', enabled: false },
+        { n: 'Logística', enabled: false }, { n: 'Custos', enabled: true }, { n: 'Chantier / Obras', enabled: false },
         { n: 'Financeiro (relatórios)', enabled: false }, { n: 'RH / Funcionários', enabled: false }, { n: 'CRM / Comercial', enabled: false }
       ] },
       { name: 'Configurações', dot: '#64748B', items: [{ n: 'Empresa' }, { n: 'Usuários' }, { n: 'Gestão de Acessos' }] }
@@ -456,7 +456,7 @@ class Component extends DCLogic {
         toggle: () => this.setState(x => ({ open: Object.assign({}, x.open, { [g.name]: !x.open[g.name] }) })),
         headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
         caretStyle: 'font-size:9px;color:#94A3B8;transition:transform .2s;transform:rotate(' + (s.open[g.name] ? 0 : -90) + 'deg)',
-        items: g.items.filter(i => i.enabled !== false).map(i => ({ name: i.n, pick: () => { if (i.n === 'Consultas e Relatórios') { window.location.href = 'Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html'; } else { this.setState({ active: i.n, navOpen: false }); } },
+        items: g.items.filter(i => i.enabled !== false).map(i => ({ name: i.n, pick: () => { if (i.n === 'Consultas e Relatórios') { window.location.href = 'Progesty%20Consultas%20e%20Relat%C3%B3rios.dc.html'; } else if (i.n === 'Custos') { window.location.href = 'Progesty%20Relat%C3%B3rios%20-%20Custos.dc.html'; } else { this.setState({ active: i.n, navOpen: false }); } },
           style: 'display:flex;align-items:center;gap:10px;width:100%;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:' + (s.active === i.n ? '700' : '500') + ';color:' + (s.active === i.n ? '#fff' : '#CBD5E1') + ';background:' + (s.active === i.n ? 'rgba(109,93,251,.26)' : 'transparent'),
           dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (s.active === i.n ? '#6D5DFB' : '#64748B') })) })),
 
