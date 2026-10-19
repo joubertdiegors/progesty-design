@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+.pg-hide::-webkit-scrollbar{display:none}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #6D5DFB;outline-offset:2px}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgPop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes pgSheet{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pgDrawer{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="90" y="130" width="90" height="26" rx="8" fill="#6D5DFB"/><rect x="190" y="130" width="90" height="26" rx="8" fill="#334155"/><rect x="90" y="170" width="220" height="110" rx="14" fill="#fff"/></svg>
+</template>
+</helmet>
+<div style="height:100vh;background:#E8ECF3;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column">
+
+<div style="background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,2vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;flex:0 0 auto">
+  <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Estado</span>
+  <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ states }}" as="x" hint-placeholder-count="5"><button onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.name }}</button></sc-for></div>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:4px;padding:3px;border-radius:10px;background:#F1F5F9"><sc-for list="{{ views }}" as="v" hint-placeholder-count="3"><button onClick="{{ v.pick }}" style="{{ v.style }}">{{ v.name }}</button></sc-for></div>
+</div>
+
+<div style="{{ stageStyle }}">
+<div style="{{ frameStyle }}">
+<div style="display:flex;height:100%;min-height:0;background:#F8FAFC;font-family:'Plus Jakarta Sans',system-ui,sans-serif">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 16px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isDrawer }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar menu" style="width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.07);color:#94A3B8;font-size:15px">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="10">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <button onClick="{{ g.toggle }}" style="{{ g.headStyle }}"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></span><span style="flex:1;text-align:left">{{ g.name }}</span><span style="font-size:9px;color:#64748B">{{ g.caret }}</span></button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5">
+                <button onClick="{{ it.go }}" style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span><span style="flex:1;text-align:left;min-width:0">{{ it.name }}</span><sc-if value="{{ it.soon }}" hint-placeholder-val="{{ false }}"><span style="font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#94A3B8;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.08);white-space:nowrap">Em breve</span></sc-if><sc-if value="{{ it.isOpen }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:#06B6D4;flex:0 0 auto"></span></sc-if></button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:16px"></div>
+    <button onClick="{{ openRegistry }}" style="padding:11px 12px;border-radius:12px;border:1px dashed rgba(255,255,255,.18);color:#CBD5E1;font-size:12.5px;font-weight:700;text-align:left">Registro de páginas ›</button>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closeNav }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;min-height:0;display:flex;flex-direction:column">
+
+  <header style="position:relative;z-index:45;flex:0 0 auto;background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,1.6vw,22px);display:flex;align-items:center;gap:10px 12px">
+    <button onClick="{{ toggleNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+    <div style="display:flex;flex-direction:column;min-width:0;flex:0 1 auto"><span style="font-size:14px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Construtora Alvorada</span><span style="font-size:11px;color:#64748B;white-space:nowrap">Empresa demonstrativa</span></div>
+    <div style="flex:1"></div>
+    <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:0 1 380px;min-width:0;width:100%;display:flex;align-items:center;gap:10px;padding:0 14px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0">
+        <span style="width:13px;height:13px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+        <input disabled placeholder="Pesquisa global — em breve" style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:13.5px;color:#64748B;cursor:not-allowed">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94A3B8;padding:2px 6px;border-radius:6px;border:1px solid #CBD5E1">Ctrl K</span>
+      </div>
+    </sc-if>
+    <div style="position:relative;flex:0 0 auto">
+      <button onClick="{{ toggleBell }}" aria-label="Notificações" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;position:relative;font-size:14px;font-weight:800;color:#475569">!<span style="position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:#EF4444;border:2px solid #fff"></span></button>
+      <sc-if value="{{ bellOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:calc(100% + 8px);right:0;width:min(320px,calc(100vw - 32px));background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:8px;display:flex;flex-direction:column;gap:2px;z-index:60;animation:pgPop .18s">
+          <span style="padding:8px 10px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Notificações · demonstrativo</span>
+          <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="3"><button onClick="{{ n.go }}" style="display:flex;gap:10px;padding:10px;border-radius:10px;text-align:left" style-hover="background:#F8FAFC"><span style="width:8px;height:8px;border-radius:50%;background:{{ n.color }};margin-top:5px;flex:0 0 auto"></span><span style="font-size:13px;font-weight:600;line-height:1.4">{{ n.text }}</span></button></sc-for>
+        </div>
+      </sc-if>
+    </div>
+    <div style="position:relative;flex:0 0 auto">
+      <button onClick="{{ toggleProfile }}" aria-label="Perfil" style="display:flex;align-items:center;gap:9px;height:44px;padding:0 8px;border-radius:12px;border:1px solid #E2E8F0;background:#fff"><span style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></span><sc-if value="{{ showName }}" hint-placeholder-val="{{ true }}"><span style="display:flex;flex-direction:column;text-align:left;padding-right:4px"><span style="font-size:12.5px;font-weight:700;white-space:nowrap">Carlos Mendes</span><span style="font-size:10.5px;color:#64748B">Administrador</span></span></sc-if></button>
+      <sc-if value="{{ profileOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:calc(100% + 8px);right:0;width:220px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:60;animation:pgPop .18s">
+          <sc-for list="{{ profileItems }}" as="p" hint-placeholder-count="3"><button onClick="{{ p.go }}" style="padding:11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:600" style-hover="background:#F8FAFC">{{ p.name }}</button></sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </header>
+
+  <div style="position:relative;z-index:44;flex:0 0 auto;background:#EEF1F6;border-bottom:1px solid #E2E8F0;display:flex;align-items:flex-end;padding:8px 8px 0 8px;gap:4px">
+    <button onClick="{{ scrollLeft }}" aria-label="Rolar abas para a esquerda" style="width:{{ arrowSize }};height:38px;border-radius:9px;color:#64748B;font-size:16px;flex:0 0 auto;margin-bottom:0" style-hover="background:#E2E8F0">‹</button>
+    <div ref="{{ scrollerRef }}" class="pg-hide" style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:3px;overflow-x:auto;scrollbar-width:none">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+        <div data-tab="{{ t.id }}" title="{{ t.tip }}" onClick="{{ t.go }}" onContextMenu="{{ t.ctx }}" style="{{ t.style }}">
+          <span style="width:22px;height:22px;border-radius:7px;background:{{ t.color }};color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto">{{ t.code }}</span>
+          <span style="{{ t.titleStyle }}">{{ t.title }}</span>
+          <sc-if value="{{ t.dirty }}" hint-placeholder-val="{{ false }}"><span title="Alterações não salvas" style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex:0 0 auto"></span></sc-if>
+          <sc-if value="{{ t.pinned }}" hint-placeholder-val="{{ false }}"><span title="Aba fixa" style="font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#94A3B8;flex:0 0 auto">fixa</span></sc-if>
+          <sc-if value="{{ t.canClose }}" hint-placeholder-val="{{ true }}"><button onClick="{{ t.close }}" aria-label="Fechar aba" style="{{ t.closeStyle }}">✕</button></sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <button onClick="{{ scrollRight }}" aria-label="Rolar abas para a direita" style="width:{{ arrowSize }};height:38px;border-radius:9px;color:#64748B;font-size:16px;flex:0 0 auto" style-hover="background:#E2E8F0">›</button>
+    <div style="position:relative;flex:0 0 auto">
+      <button onClick="{{ toggleCtx }}" aria-label="Ações das abas" style="width:{{ arrowSize }};height:38px;border-radius:9px;color:#475569;font-size:17px;font-weight:800;letter-spacing:1px" style-hover="background:#E2E8F0">⋯</button>
+      <sc-if value="{{ ctxOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:calc(100% + 4px);right:0;width:270px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:60;animation:pgPop .18s">
+          <span style="padding:8px 10px;font-size:11.5px;font-weight:700;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Aba: {{ ctxTitle }}</span>
+          <sc-for list="{{ ctxItems }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.run }}" style="{{ c.style }}"><span>{{ c.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94A3B8">{{ c.count }}</span></button></sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div ref="{{ contentRef }}" onScroll="{{ onContentScroll }}" class="pg-scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;background:#F8FAFC">
+    <div style="padding:clamp(16px,2.2vw,28px) clamp(14px,2.4vw,34px) 54px;display:flex;flex-direction:column;gap:14px;max-width:1180px;margin:0 auto">
+
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD">
+        <span style="width:7px;height:7px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>
+        <span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.45">Conteúdo de exemplo — não é a tela real. Ela continuará sendo o arquivo <span style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ cur.file }}</span>, ainda não conectado.</span>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+        <span style="width:44px;height:44px;border-radius:13px;background:{{ cur.color }};color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto">{{ cur.code }}</span>
+        <div style="min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:3px"><h1 style="margin:0;font-size:clamp(20px,2.2vw,26px);font-weight:800;letter-spacing:-.03em">{{ cur.title }}</h1><span style="font-size:13px;color:#64748B">{{ cur.dept }} · <span style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ cur.id }}</span></span></div>
+        <sc-if value="{{ cur.hasDetail }}" hint-placeholder-val="{{ false }}"><button onClick="{{ cur.openDetail }}" style="height:44px;padding:0 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;color:#4338CA">{{ cur.detailLabel }}</button></sc-if>
+      </div>
+
+      <sc-if value="{{ cur.isDash }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px">
+          <sc-for list="{{ dashCards }}" as="k" hint-placeholder-count="3"><div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:600;color:#64748B">{{ k.label }}</span><span style="font-size:28px;font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums">{{ k.value }}</span><span style="font-size:11.5px;color:#64748B;line-height:1.4">{{ k.hint }}</span></div></sc-for>
+        </div>
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Abas abertas</span>
+          <sc-for list="{{ openList }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.go }}" style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0;text-align:left;min-height:44px"><span style="width:8px;height:8px;border-radius:3px;background:{{ o.color }};flex:0 0 auto"></span><span style="flex:1;min-width:0;font-size:13.5px;font-weight:700">{{ o.title }}</span><span style="font-size:12px;font-weight:600;color:#B45309">{{ o.note }}</span></button></sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ cur.isList }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="flex:1 1 240px;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0"><span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span><input value="{{ cur.q }}" onInput="{{ cur.setQ }}" placeholder="Pesquisar nesta aba..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ cur.chips }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.name }}</button></sc-for></div>
+        </div>
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+          <sc-for list="{{ cur.rows }}" as="r" hint-placeholder-count="8"><div style="display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid #F1F5F9"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#64748B;flex:0 0 auto">{{ r.code }}</span><span style="flex:1;min-width:0;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.name }}</span><span style="{{ r.pill }}">{{ r.status }}</span></div></sc-for>
+          <sc-if value="{{ cur.noRows }}" hint-placeholder-val="{{ false }}"><div style="padding:34px 18px;text-align:center;font-size:14px;color:#64748B">Nenhum registro de exemplo corresponde à pesquisa.</div></sc-if>
+          <div style="padding:14px 18px;background:#F8FAFC;font-size:13px;font-weight:700;color:#475569">{{ cur.count }}</div>
+        </div>
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(16px,1.8vw,22px);display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;letter-spacing:-.02em">Formulário em andamento (simulação)</span><sc-if value="{{ cur.dirty }}" hint-placeholder-val="{{ false }}"><span style="padding:3px 10px;border-radius:999px;background:#FFFBEB;color:#B45309;font-size:11.5px;font-weight:700">Alterações não salvas</span></sc-if></div>
+          <span style="font-size:13px;color:#64748B;line-height:1.5">Digite algo, abra outra aba e volte: o texto, a pesquisa e os filtros são mantidos pelo gerenciador de abas. Ao fechar com texto não salvo, a confirmação aparece.</span>
+          <textarea rows="3" value="{{ cur.draft }}" onInput="{{ cur.setDraft }}" placeholder="Observação ou rascunho de formulário" style="width:100%;padding:12px 13px;border-radius:11px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:14.5px;outline:none;resize:vertical;color:#0F172A"></textarea>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end"><button onClick="{{ cur.clearDraft }}" style="height:44px;padding:0 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700">Limpar</button><button onClick="{{ cur.saveDraft }}" style="height:44px;padding:0 17px;border-radius:12px;background:#EEF0FE;color:#4338CA;font-size:13.5px;font-weight:700">Salvar (simulado)</button></div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</main>
+
+<sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ keepEditing }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(460px,100%);background:#fff;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:16px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <span style="width:48px;height:48px;border-radius:15px;background:#FFFBEB;border:1px solid #FDE68A;display:flex;align-items:center;justify-content:center;color:#B45309;font-size:22px;font-weight:800">!</span>
+      <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:19px;font-weight:800;letter-spacing:-.025em">{{ confirmTitle }}</span><span style="font-size:14px;color:#475569;line-height:1.5;text-wrap:pretty">Há alterações que ainda não foram salvas. Se continuar, elas serão descartadas.</span></div>
+      <div style="display:flex;flex-direction:column;gap:6px"><sc-for list="{{ confirmList }}" as="c" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:11px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:13.5px;font-weight:700"><span style="width:8px;height:8px;border-radius:50%;background:#F59E0B"></span>{{ c }}</div></sc-for></div>
+      <span style="font-size:12px;color:#64748B;line-height:1.45">Protótipo: “Salvar” é uma simulação e não grava dados.</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+        <button onClick="{{ keepEditing }}" style="height:46px;padding:0 18px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14px;font-weight:700">Continuar editando</button>
+        <button onClick="{{ discard }}" style="height:46px;padding:0 18px;border-radius:12px;border:1px solid #FECACA;background:#FEF2F2;color:#B91C1C;font-size:14px;font-weight:700">Descartar alterações</button>
+        <button onClick="{{ saveClose }}" style="height:46px;padding:0 18px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14px;font-weight:700">Salvar (simulado)</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ regOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;z-index:90;display:flex;justify-content:flex-end">
+    <div onClick="{{ closeRegistry }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(640px,100%);height:100%;overflow-y:auto;background:#fff;border-left:1px solid #E2E8F0;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;align-items:flex-start;gap:12px"><div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:19px;font-weight:800;letter-spacing:-.025em">Registro de páginas</span><span style="font-size:13px;color:#64748B;line-height:1.45">{{ regSummary }}</span></div><button onClick="{{ closeRegistry }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button></div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <sc-for list="{{ regRows }}" as="r" hint-placeholder-count="10"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:11px 13px;border-radius:12px;border:1px solid #E2E8F0;background:{{ r.bg }}"><div style="min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700">{{ r.title }} <span style="font-weight:500;color:#64748B">· {{ r.dept }}</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#4338CA">{{ r.id }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#64748B;overflow-wrap:anywhere">{{ r.file }}</span></div><span style="{{ r.pill }}">{{ r.label }}</span></div></sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B">Como registrar um módulo</span>
+        <pre style="margin:0;padding:14px;border-radius:13px;background:#0F172A;color:#E2E8F0;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.6;overflow-x:auto;white-space:pre">{{ regSnippet }}</pre>
+        <span style="font-size:12.5px;color:#64748B;line-height:1.5">Páginas de detalhe usam <span style="font-family:'JetBrains Mono',monospace">idDaListagem:detalhe:chave</span>. Documentação completa em docs/workspace-abas.md.</span>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:12px;padding:13px 18px;border-radius:14px;background:#0F172A;color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s;max-width:calc(100% - 32px)">{{ toast }}</div>
+</sc-if>
+
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Inicial&quot;,&quot;Muitas abas&quot;,&quot;Alterações pendentes&quot;,&quot;Confirmação ao fechar&quot;,&quot;Menu de abas&quot;],&quot;default&quot;:&quot;Inicial&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Desktop&quot;,&quot;Tablet&quot;,&quot;Mobile&quot;],&quot;default&quot;:&quot;Desktop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: null, w: 1400, navOpen: false, collapsed: false, cur: 'Inicial',
+    tabs: ['dashboard', 'rh-funcionarios', 'financeiro-contas-pagar', 'compras-orcamentos'].map(id => ({ id, title: '' })), active: 'compras-orcamentos',
+    pages: {}, groupsOpen: { dash: true, cmp: true, fin: true, rh: true }, ctx: null, confirm: null, regOpen: false, bell: false, profile: false, toast: ''
+  };
+
+  DEPT = { dash: ['Dashboard', '#6D5DFB', 'DB'], com: ['Comercial', '#EC4899', 'CM'], obr: ['Projetos e Obras', '#F97316', 'OB'], cmp: ['Compras', '#06B6D4', 'CP'], fin: ['Financeiro', '#10B981', 'FN'], rh: ['Recursos Humanos', '#3B82F6', 'RH'], log: ['Logística e Frota', '#F59E0B', 'LG'], tar: ['Tarefas e Documentos', '#8B5CF6', 'TD'], rel: ['Relatórios', '#6366F1', 'RL'], cfg: ['Configurações', '#64748B', 'CF'] };
+  F = (n) => 'Progesty ' + n + '.dc.html';
+  REG = (() => {
+    const F = (n) => 'Progesty ' + n + '.dc.html', R = {};
+    const add = (id, dept, title, code, file, extra) => { R[id] = Object.assign({ id, dept, title, code, file: file ? F(file) : '', ok: !!file }, extra || {}); };
+    add('dashboard', 'dash', 'Dashboard', 'DB', 'Dashboard', { pinned: true });
+    add('dash-indicadores', 'dash', 'Indicadores de gestão', 'IG', '');
+    add('crm-listagem', 'com', 'CRM', 'CR', 'CRM');
+    add('crm-leads', 'com', 'Leads e oportunidades', 'LO', '');
+    add('clientes-listagem', 'com', 'Clientes', 'CL', 'Clientes', { detail: { key: 'c-0007', label: 'Abrir detalhe de exemplo (cliente)', title: 'Cliente · Construtora Aurora' } });
+    add('com-consultas', 'com', 'Consultas comerciais', 'CC', '');
+    add('obras-listagem', 'obr', 'Obras e projetos', 'OB', 'Obras', { detail: { key: 'o-0003', label: 'Abrir detalhe de exemplo (obra)', title: 'Obra · Edifício Central' } });
+    add('obras-planejamento', 'obr', 'Planejamento', 'PL', 'Planning');
+    add('obras-horas', 'obr', 'Controle de horas', 'CH', 'Controle de Horas');
+    add('obras-custos', 'obr', 'Custos por obra', 'CO', '');
+    add('compras-visao', 'cmp', 'Visão geral de Compras', 'CP', 'Compras');
+    add('compras-orcamentos', 'cmp', 'Orçamentos de Compra', 'OC', 'Orçamentos de Compra');
+    add('compras-pedidos', 'cmp', 'Pedidos de Compra', 'PC', '');
+    add('compras-recebimentos', 'cmp', 'Recebimentos', 'RC', '');
+    add('compras-faturas', 'cmp', 'Faturas de Compra', 'FC', '');
+    add('financeiro-visao', 'fin', 'Visão geral financeira', 'FN', 'Financeiro');
+    add('financeiro-contas-receber', 'fin', 'Contas a Receber', 'CR', '');
+    add('financeiro-contas-pagar', 'fin', 'Contas a Pagar', 'CP', 'Contas a Pagar');
+    add('financeiro-faturas', 'fin', 'Faturas', 'FT', '');
+    add('financeiro-fluxo', 'fin', 'Fluxo de Caixa', 'FX', '');
+    add('financeiro-custos', 'fin', 'Custos das Obras', 'CO', '');
+    add('rh-funcionarios', 'rh', 'Funcionários', 'FU', 'Funcionários', { detail: { key: 'f-0012', label: 'Abrir detalhe de exemplo (funcionário)', title: 'Funcionário · Ana Ribeiro' } });
+    add('rh-terceirizados', 'rh', 'Terceirizados', 'TE', 'Terceirizados');
+    add('rh-horas', 'rh', 'Gestão de horas', 'GH', '');
+    add('rh-custos', 'rh', 'Custos de mão de obra', 'MO', '');
+    add('log-veiculos', 'log', 'Veículos', 'VE', 'Veículos');
+    add('log-utilizacao', 'log', 'Utilização e custos', 'UC', '');
+    add('tarefas-listagem', 'tar', 'Tarefas', 'TA', 'Tarefas');
+    add('documentos', 'tar', 'Documentos', 'DO', '');
+    add('rel-hub', 'rel', 'Consultas e Relatórios', 'CR', 'Consultas e Relatórios');
+    add('rel-horas', 'rel', 'Relatório de Horas', 'RH', 'Relatórios - Horas');
+    add('rel-custos', 'rel', 'Relatório de Custos', 'RC', 'Relatórios - Custos');
+    add('rel-logistica', 'rel', 'Relatório de Logística', 'RL', 'Relatórios - Logística');
+    add('rel-obras', 'rel', 'Relatório de Obras', 'RO', 'Relatórios - Obras');
+    add('rel-financeiro', 'rel', 'Relatório Financeiro', 'RF', '');
+    add('rel-rh', 'rel', 'Relatório de RH', 'RR', 'Relatórios - RH');
+    add('rel-crm', 'rel', 'CRM e Comercial', 'RM', 'Relatórios - CRM');
+    add('cfg-empresa', 'cfg', 'Empresa', 'EM', 'Configurações da Empresa');
+    add('cfg-usuarios', 'cfg', 'Usuários', 'US', 'Usuários');
+    add('cfg-acessos', 'cfg', 'Gestão de acessos', 'GA', 'Gestão de Acessos');
+    return R;
+  })();
+  MENU = [
+    ['dash', ['dashboard', 'dash-indicadores']], ['com', ['crm-listagem', 'crm-leads', 'clientes-listagem', 'com-consultas']],
+    ['obr', ['obras-listagem', 'obras-planejamento', 'obras-horas', 'obras-custos']], ['cmp', ['compras-visao', 'compras-orcamentos', 'compras-pedidos', 'compras-recebimentos', 'compras-faturas']],
+    ['fin', ['financeiro-visao', 'financeiro-contas-receber', 'financeiro-contas-pagar', 'financeiro-faturas', 'financeiro-fluxo', 'financeiro-custos']],
+    ['rh', ['rh-funcionarios', 'rh-terceirizados', 'rh-horas', 'rh-custos', 'rel-rh']], ['log', ['log-veiculos', 'log-utilizacao', 'rel-logistica']],
+    ['tar', ['tarefas-listagem', 'documentos']], ['rel', ['rel-hub', 'rel-horas', 'rel-custos', 'rel-logistica', 'rel-obras', 'rel-financeiro', 'rel-rh', 'rel-crm']],
+    ['cfg', ['cfg-empresa', 'cfg-usuarios', 'cfg-acessos']]
+  ];
+  POOL = {
+    dash: ['Resumo geral', 'Indicador de obras', 'Indicador financeiro'], com: ['Construtora Aurora', 'Incorporadora Vale', 'Família Oliveira', 'Hotel Marina', 'Condomínio Solar', 'Delta Engenharia'],
+    obr: ['Residencial Jardim Europa', 'Edifício Central', 'Casa Oliveira', 'Reforma Comercial Delta', 'Galpão Logístico Norte', 'Clínica Santa Luzia'], cmp: ['Fornecedor ABC', 'Betão Pronto', 'EletroSul', 'Hidrosul Distribuição', 'MaqRent', 'Cimentos do Norte'],
+    fin: ['NF 8842 · Fornecedor ABC', 'NF 5510 · Betão Pronto', 'NF 2291 · EletroSul', 'NF 1204 · Pinturas Nova', 'NF 6630 · AluBel', 'NF 3377 · Guindastes Delta Max'],
+    rh: ['Ana Ribeiro', 'Bruno Matos', 'Carla Domingues', 'Diego Faria', 'Elisa Nogueira', 'Fábio Teixeira'], log: ['Camião MAN TGS', 'Retroescavadeira CAT 320', 'Carrinha Renault Master', 'Grua móvel Liebherr', 'Dumper Volvo A30', 'Pickup Toyota Hilux'],
+    tar: ['Revisar medição da obra', 'Enviar proposta ao cliente', 'Conferir recebimento de aço', 'Atualizar cronograma', 'Renovar seguro de obra', 'Validar folha de horas'], rel: ['Resumo mensal', 'Por obra', 'Por fornecedor', 'Por colaborador', 'Comparativo trimestral', 'Exportação contábil'],
+    cfg: ['Carlos Mendes', 'Marta Souza', 'João Pires', 'Sofia Lemos', 'Rui Antunes', 'Inês Carvalho']
+  };
+  STATE_NAMES = ['Inicial', 'Muitas abas', 'Alterações pendentes', 'Confirmação ao fechar', 'Menu de abas'];
+  scrollMap = {};
+
+  pl(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+  regOf(id) { return this.REG[id.split(':')[0]]; }
+  pinned(id) { const r = this.regOf(id); return !!(r && r.pinned); }
+  isDetail(id) { return id.indexOf(':detalhe:') > 0; }
+  titleOf(t) { return t.title || this.regOf(t.id).title; }
+  page(id) { return this.state.pages[id] || { q: '', st: 'Todos', draft: '', saved: '' }; }
+  dirty(id) { const p = this.page(id); return p.draft !== p.saved; }
+  flash(m) { clearTimeout(this.tT); this.setState({ toast: m }); this.tT = setTimeout(() => this.setState({ toast: '' }), 2600); }
+  patch(id, o) { this.setState(x => ({ pages: Object.assign({}, x.pages, { [id]: Object.assign({}, { q: '', st: 'Todos', draft: '', saved: '' }, x.pages[id], o) }) })); }
+
+  openPage = (id, title) => {
+    const r = this.regOf(id);
+    if (!r.ok) { this.flash(r.title + ' ainda está em desenvolvimento — não há tela para abrir.'); return; }
+    this.setState(x => ({ tabs: x.tabs.some(t => t.id === id) ? x.tabs : x.tabs.concat([{ id, title: title || '' }]), active: id, navOpen: false, ctx: null, bell: false, profile: false }));
+  };
+  activate = (id) => this.setState({ active: id, ctx: null, bell: false, profile: false });
+
+  requestClose(ids) {
+    const s = this.state, list = ids.filter(id => s.tabs.some(t => t.id === id) && !this.pinned(id));
+    if (!list.length) { this.flash('A aba Dashboard é fixa e permanece aberta.'); this.setState({ ctx: null }); return; }
+    const dirty = list.filter(id => this.dirty(id));
+    if (dirty.length) this.setState({ confirm: { ids: list, dirty }, ctx: null }); else this.doClose(list);
+  }
+  doClose(ids) {
+    this.setState(x => {
+      const rest = x.tabs.filter(t => ids.indexOf(t.id) < 0);
+      let active = x.active;
+      if (ids.indexOf(active) >= 0) {
+        const i = x.tabs.findIndex(t => t.id === active), before = x.tabs.slice(0, i).reverse().find(t => ids.indexOf(t.id) < 0), after = x.tabs.slice(i + 1).find(t => ids.indexOf(t.id) < 0);
+        active = (before || after || { id: 'dashboard' }).id;
+      }
+      const pages = Object.assign({}, x.pages); ids.forEach(id => { delete pages[id]; delete this.scrollMap[id]; });
+      return { tabs: rest.length ? rest : [{ id: 'dashboard', title: '' }], active, pages, confirm: null, ctx: null };
+    });
+  }
+
+  applyState(name) {
+    const b = { cur: name, ctx: null, confirm: null, regOpen: false, navOpen: false, bell: false, profile: false };
+    const base = ['dashboard', 'rh-funcionarios', 'financeiro-contas-pagar', 'compras-orcamentos'];
+    if (name === 'Inicial') { b.tabs = base.map(id => ({ id, title: '' })); b.active = 'compras-orcamentos'; b.pages = {}; }
+    if (name === 'Muitas abas') { b.tabs = ['dashboard', 'crm-listagem', 'clientes-listagem', 'obras-listagem', 'obras-planejamento', 'compras-visao', 'compras-orcamentos', 'financeiro-visao', 'financeiro-contas-pagar', 'rh-funcionarios', 'rh-terceirizados', 'log-veiculos', 'tarefas-listagem', 'rel-hub', 'cfg-usuarios'].map(id => ({ id, title: '' })); b.active = 'financeiro-contas-pagar'; b.pages = {}; }
+    if (name === 'Alterações pendentes' || name === 'Confirmação ao fechar') {
+      b.tabs = base.map(id => ({ id, title: '' })); b.active = 'rh-funcionarios';
+      b.pages = { 'rh-funcionarios': { q: 'ana', st: 'Ativo', draft: 'Atualizar função de Ana Ribeiro para encarregada.', saved: '' }, 'compras-orcamentos': { q: '', st: 'Todos', draft: 'Pedir nova proposta de aço.', saved: '' } };
+    }
+    if (name === 'Confirmação ao fechar') b.confirm = { ids: ['rh-funcionarios'], dirty: ['rh-funcionarios'] };
+    if (name === 'Menu de abas') { b.tabs = base.map(id => ({ id, title: '' })); b.active = 'rh-funcionarios'; b.pages = {}; b.ctx = 'rh-funcionarios'; }
+    this.setState(b);
+  }
+
+  rows(id, pg) {
+    const r = this.regOf(id), pool = this.POOL[r.dept], rows = [];
+    for (let i = 0; i < 14; i++) rows.push({ code: r.code + '-' + String(i + 1).padStart(3, '0'), name: pool[i % pool.length] + (i >= pool.length ? ' · ' + (Math.floor(i / pool.length) + 1) : ''), status: ['Ativo', 'Pendente', 'Concluído'][(i * 7 + r.code.charCodeAt(0)) % 3] });
+    const q = pg.q.trim().toLowerCase();
+    return rows.filter(x => (pg.st === 'Todos' || x.status === pg.st) && (!q || (x.name + ' ' + x.code).toLowerCase().includes(q)));
+  }
+
+  rootRef = null;
+  scrollerRef = (el) => { this.scroller = el; };
+  contentRef = (el) => { this.content = el; };
+  onContentScroll = () => { if (this.content) this.scrollMap[this.state.active] = this.content.scrollTop; };
+  scrollBy(d) { if (this.scroller) this.scroller.scrollLeft += d; }
+  revealTab() {
+    const sc = this.scroller; if (!sc) return;
+    const el = sc.querySelector('[data-tab="' + this.state.active + '"]'); if (!el) return;
+    if (el.offsetLeft < sc.scrollLeft) sc.scrollLeft = el.offsetLeft - 8;
+    else if (el.offsetLeft + el.offsetWidth > sc.scrollLeft + sc.clientWidth) sc.scrollLeft = el.offsetLeft + el.offsetWidth - sc.clientWidth + 8;
+  }
+  componentDidUpdate() {
+    const a = this.state.active, n = this.state.tabs.length;
+    if (this.prevActive !== a || this.prevCount !== n) this.revealTab();
+    if (this.prevActive !== a && this.content) this.content.scrollTop = this.scrollMap[a] || 0;
+    this.prevActive = a; this.prevCount = n;
+  }
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth });
+    const st = this.props.initialState || 'Inicial'; if (st !== 'Inicial') this.applyState(st);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tT); }
+
+  renderVals() {
+    const s = this.state, view = s.view || this.props.initialView || 'Desktop';
+    const W = view === 'Mobile' ? 390 : view === 'Tablet' ? 820 : s.w, isDrawer = W < 1024, touch = W < 1024;
+    const framed = view !== 'Desktop';
+    const cur = this.regOf(s.active), pg = this.page(s.active), dept = this.DEPT[cur.dept];
+    const openIds = s.tabs.map(t => t.id), dirtyIds = openIds.filter(id => this.dirty(id));
+    const tabTitle = (id) => { const t = s.tabs.filter(x => x.id === id)[0]; return t ? this.titleOf(t) : ''; };
+
+    const tabs = s.tabs.map(t => {
+      const r = this.regOf(t.id), d = this.DEPT[r.dept], on = s.active === t.id, pin = this.pinned(t.id), dirty = this.dirty(t.id), title = this.titleOf(t);
+      return {
+        id: t.id, title, tip: title + (dirty ? ' · alterações não salvas' : '') + (pin ? ' · aba fixa' : ''), code: this.isDetail(t.id) ? 'DT' : r.code, color: d[1], dirty, pinned: pin, canClose: !pin,
+        go: () => this.activate(t.id), ctx: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ active: t.id, ctx: t.id }); },
+        close: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.requestClose([t.id]); },
+        style: 'flex:0 0 auto;display:flex;align-items:center;gap:8px;min-width:' + (touch ? 128 : 132) + 'px;max-width:' + (touch ? 190 : 220) + 'px;height:' + (on ? 42 : 38) + 'px;padding:0 6px 0 10px;border-radius:12px 12px 0 0;cursor:pointer;border:1px solid ' + (on ? '#E2E8F0' : 'transparent') + ';border-bottom:' + (on ? '1px solid #F8FAFC' : '1px solid transparent') + ';margin-bottom:-1px;background:' + (on ? '#F8FAFC' : 'rgba(255,255,255,.55)') + ';box-shadow:' + (on ? 'inset 0 3px 0 ' + d[1] : 'none') + ';transition:background .15s',
+        titleStyle: 'flex:1;min-width:0;font-size:13px;font-weight:' + (on ? 700 : 600) + ';color:' + (on ? '#0F172A' : '#475569') + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis',
+        closeStyle: 'width:' + (touch ? 44 : 26) + 'px;height:' + (touch ? 44 : 26) + 'px;border-radius:8px;font-size:11px;color:#64748B;flex:0 0 auto;display:flex;align-items:center;justify-content:center'
+      };
+    });
+
+    const ctxId = s.ctx || s.active, ctxIdx = s.tabs.findIndex(t => t.id === ctxId);
+    const rightIds = s.tabs.slice(ctxIdx + 1).map(t => t.id).filter(id => !this.pinned(id)), otherIds = s.tabs.map(t => t.id).filter(id => id !== ctxId && !this.pinned(id));
+    const ci = (label, ids, off) => ({ label, count: off ? 'fixa' : String(ids.length), run: () => off ? null : this.requestClose(ids), style: 'display:flex;align-items:center;gap:10px;padding:11px;border-radius:9px;font-size:13.5px;font-weight:600;text-align:left;width:100%;justify-content:space-between;opacity:' + (off || !ids.length ? .45 : 1) });
+    const ctxItems = [ci('Fechar esta aba', [ctxId], this.pinned(ctxId)), ci('Fechar as outras abas', otherIds), ci('Fechar abas à direita', rightIds)];
+
+    const navGroups = this.MENU.map(g => {
+      const d = this.DEPT[g[0]], open = !!s.groupsOpen[g[0]];
+      return {
+        name: d[0], dot: d[1], open, caret: open ? '▲' : '▼',
+        toggle: () => this.setState(x => ({ groupsOpen: Object.assign({}, x.groupsOpen, { [g[0]]: !x.groupsOpen[g[0]] }) })),
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:0 11px;border-radius:10px;font-size:13.5px;font-weight:700;color:#CBD5E1',
+        items: g[1].map(id => {
+          const r = this.REG[id], on = s.active === id;
+          return { name: r.title, soon: !r.ok, isOpen: r.ok && openIds.indexOf(id) >= 0 && !on, go: () => this.openPage(id),
+            style: 'display:flex;align-items:center;gap:10px;min-height:' + (touch ? 44 : 38) + 'px;padding:0 11px;border-radius:9px;font-size:13px;font-weight:' + (on ? 700 : 500) + ';color:' + (on ? '#fff' : r.ok ? '#C0CBDA' : '#64748B') + ';background:' + (on ? 'rgba(109,93,251,.28)' : 'transparent') + ';width:100%',
+            dotStyle: 'width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:' + (on ? '#6D5DFB' : '#475569') };
+        })
+      };
+    });
+
+    const detailMeta = cur.detail && !this.isDetail(s.active) ? cur.detail : null;
+    const isDash = cur.id === 'dashboard';
+    const chipSt = (on) => 'height:36px;padding:0 13px;border-radius:999px;font-size:12.5px;font-weight:700;border:1px solid ' + (on ? '#C7C3FB' : '#E2E8F0') + ';background:' + (on ? '#EEF0FE' : '#fff') + ';color:' + (on ? '#4338CA' : '#475569');
+    const PST = { 'Ativo': ['#ECFDF5', '#047857'], 'Pendente': ['#FFFBEB', '#B45309'], 'Concluído': ['#F1F5F9', '#64748B'] };
+    const rows = this.rows(s.active, pg).map(r => ({ code: r.code, name: r.name, status: r.status, pill: 'padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;background:' + PST[r.status][0] + ';color:' + PST[r.status][1] }));
+    const curV = {
+      id: s.active, title: tabTitle(s.active), file: cur.file || '(sem arquivo)', dept: dept[0], color: dept[1], code: this.isDetail(s.active) ? 'DT' : cur.code,
+      isDash, isList: !isDash, hasDetail: !!detailMeta,
+      detailLabel: detailMeta ? detailMeta.label : '', openDetail: () => detailMeta && this.openPage(cur.id + ':detalhe:' + detailMeta.key, detailMeta.title),
+      q: pg.q, setQ: e => this.patch(s.active, { q: e.target.value }),
+      chips: ['Todos', 'Ativo', 'Pendente', 'Concluído'].map(n => ({ name: n, pick: () => this.patch(s.active, { st: n }), style: chipSt(pg.st === n) })),
+      rows, noRows: rows.length === 0, count: this.pl(rows.length, 'registro de exemplo', 'registros de exemplo') + (pg.st !== 'Todos' || pg.q ? ' · filtro aplicado' : ''),
+      draft: pg.draft, dirty: pg.draft !== pg.saved, setDraft: e => this.patch(s.active, { draft: e.target.value }), clearDraft: () => this.patch(s.active, { draft: '' }),
+      saveDraft: () => { this.patch(s.active, { saved: pg.draft }); this.flash('Salvo (simulado) — nada foi gravado'); }
+    };
+    if (this.isDetail(s.active)) { curV.hasDetail = false; curV.dept = dept[0] + ' · detalhe'; }
+
+    const conf = s.confirm;
+    const regRows = Object.keys(this.REG).map(k => this.REG[k]).map(r => ({
+      id: r.id, title: r.title, dept: this.DEPT[r.dept][0], file: r.ok ? r.file : 'sem arquivo — em desenvolvimento', label: r.ok ? 'Disponível' : 'Em desenvolvimento', bg: r.ok ? '#fff' : '#F8FAFC',
+      pill: 'padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap;background:' + (r.ok ? '#ECFDF5' : '#F1F5F9') + ';color:' + (r.ok ? '#047857' : '#64748B')
+    }));
+    const nOk = regRows.filter(r => r.label === 'Disponível').length;
+
+    return {
+      states: this.STATE_NAMES.map(n => ({ name: n, pick: () => this.applyState(n), style: 'height:34px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid ' + (s.cur === n ? '#6D5DFB' : '#E2E8F0') + ';background:' + (s.cur === n ? '#EEF0FE' : '#fff') + ';color:' + (s.cur === n ? '#4338CA' : '#475569') })),
+      views: ['Desktop', 'Tablet', 'Mobile'].map(n => ({ name: n, pick: () => this.setState({ view: n, navOpen: false }), style: 'height:30px;padding:0 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:' + (view === n ? '#fff' : 'transparent') + ';color:' + (view === n ? '#4338CA' : '#64748B') })),
+      stageStyle: framed ? 'flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;padding:24px 12px' : 'flex:1;min-height:0;display:flex;flex-direction:column',
+      frameStyle: framed ? 'width:' + (view === 'Mobile' ? 390 : 820) + 'px;height:' + (view === 'Mobile' ? 844 : 1000) + 'px;flex:0 0 auto;border-radius:' + (view === 'Mobile' ? 46 : 28) + 'px;border:10px solid #0F172A;overflow:hidden;position:relative;transform:translateZ(0);background:#F8FAFC;box-shadow:0 40px 80px -30px rgba(15,23,42,.5)' : 'flex:1;min-height:0;position:relative;transform:translateZ(0);overflow:hidden',
+      isDrawer, showSidebar: !isDrawer ? !s.collapsed : s.navOpen, navOpen: isDrawer && s.navOpen,
+      sidebarStyle: (isDrawer ? 'position:absolute;top:0;left:0;bottom:0;z-index:80;width:276px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);animation:pgDrawer .22s;' : 'flex:0 0 258px;') + 'background:#0F172A;padding:18px 12px;display:flex;flex-direction:column;overflow-y:auto',
+      toggleNav: () => isDrawer ? this.setState(x => ({ navOpen: !x.navOpen })) : this.setState(x => ({ collapsed: !x.collapsed })), closeNav: () => this.setState({ navOpen: false }),
+      navGroups, openRegistry: () => this.setState({ regOpen: true, navOpen: false }), closeRegistry: () => this.setState({ regOpen: false }),
+      showSearch: W >= 700, showName: W >= 700,
+      bellOpen: s.bell, toggleBell: () => this.setState(x => ({ bell: !x.bell, profile: false, ctx: null })),
+      notifs: [{ text: 'Orçamento ORC-2026-031 vence em 7 dias', color: '#F59E0B', id: 'compras-orcamentos' }, { text: 'Conta vencida: Guindastes Delta Max', color: '#EF4444', id: 'financeiro-contas-pagar' }, { text: 'Novo funcionário aguardando cadastro', color: '#3B82F6', id: 'rh-funcionarios' }].map(n => ({ text: n.text, color: n.color, go: () => this.openPage(n.id) })),
+      profileOpen: s.profile, toggleProfile: () => this.setState(x => ({ profile: !x.profile, bell: false, ctx: null })),
+      profileItems: [['Configurações da empresa', 'cfg-empresa'], ['Usuários', 'cfg-usuarios'], ['Gestão de acessos', 'cfg-acessos']].map(a => ({ name: a[0], go: () => this.openPage(a[1]) })),
+      tabs, arrowSize: touch ? '44px' : '32px', scrollerRef: this.scrollerRef, contentRef: this.contentRef, onContentScroll: this.onContentScroll,
+      scrollLeft: () => this.scrollBy(-240), scrollRight: () => this.scrollBy(240),
+      ctxOpen: !!s.ctx, toggleCtx: () => this.setState(x => ({ ctx: x.ctx ? null : x.active, bell: false, profile: false })), ctxTitle: tabTitle(ctxId), ctxItems,
+      cur: curV, dashCards: [{ label: 'Abas abertas', value: String(s.tabs.length), hint: 'Dashboard fixo + ' + this.pl(s.tabs.length - 1, 'página', 'páginas') }, { label: 'Com alterações pendentes', value: String(dirtyIds.length), hint: 'Fechar pede confirmação' }, { label: 'Páginas disponíveis', value: nOk + '/' + regRows.length, hint: 'As demais aparecem como “Em breve”' }],
+      openList: s.tabs.filter(t => t.id !== 'dashboard').map(t => ({ title: this.titleOf(t), color: this.DEPT[this.regOf(t.id).dept][1], note: this.dirty(t.id) ? 'alterações não salvas' : '', go: () => this.activate(t.id) })),
+      confirmOpen: !!conf, confirmTitle: conf ? (conf.ids.length > 1 ? 'Fechar ' + conf.ids.length + ' abas?' : 'Fechar “' + tabTitle(conf.ids[0]) + '”?') : '', confirmList: conf ? conf.dirty.map(tabTitle) : [],
+      keepEditing: () => this.setState({ confirm: null }), discard: () => conf && this.doClose(conf.ids),
+      saveClose: () => { if (!conf) return; conf.dirty.forEach(id => this.patch(id, { saved: this.page(id).draft })); this.doClose(conf.ids); this.flash('Salvo (simulado) e fechado'); },
+      regOpen: s.regOpen, regRows, regSummary: this.pl(nOk, 'página disponível', 'páginas disponíveis') + ' de ' + regRows.length + '. Itens em desenvolvimento não abrem aba.',
+      regSnippet: "add('compras-pedidos', 'cmp',\n    'Pedidos de Compra', 'PC',\n    'Progesty Pedidos de Compra.dc.html')\n// id estável · departamento · título\n// ícone · arquivo da página\n// sem arquivo = 'Em breve' no menu",
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
