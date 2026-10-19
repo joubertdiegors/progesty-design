@@ -142,7 +142,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
     <sc-if value="{{ m.rhf }}" hint-placeholder-val="{{ false }}"><div style="{{ v.rhf }}"><dc-import name="Progesty Funcionários" vw="{{ vw }}" hint-size="100%,640px"></dc-import></div></sc-if>
     <sc-if value="{{ m.cmp }}" hint-placeholder-val="{{ false }}"><div style="{{ v.cmp }}"><dc-import name="Progesty Compras" vw="{{ vw }}" hint-size="100%,640px"></dc-import></div></sc-if>
     <sc-if value="{{ m.orc }}" hint-placeholder-val="{{ false }}"><div style="{{ v.orc }}"><dc-import name="Progesty Orçamentos de Compra" vw="{{ vw }}" recs="{{ quotes }}" recs-fn="{{ setQuotes }}" doc-fn="{{ openDocTab }}" hint-size="100%,640px"></dc-import></div></sc-if>
-    <sc-for list="{{ docItems }}" as="dc" hint-placeholder-count="0"><div style="{{ dc.vis }}"><dc-import name="Progesty Documento de Orçamento" vw="{{ vw }}" draft="{{ dc.draft }}" change-fn="{{ dc.change }}" save-fn="{{ dc.save }}" close-fn="{{ dc.close }}" is-dirty="{{ dc.dirty }}" extra-products="{{ extraProds }}" add-prod-fn="{{ addProd }}" hint-size="100%,640px"></dc-import></div></sc-for>
+    <sc-for list="{{ docItems }}" as="dc" hint-placeholder-count="0"><div style="{{ dc.vis }}"><dc-import name="Progesty Documento de Orçamento" vw="{{ vw }}" draft="{{ dc.draft }}" change-fn="{{ dc.change }}" save-fn="{{ dc.save }}" close-fn="{{ dc.close }}" back-fn="{{ dc.back }}" is-dirty="{{ dc.dirty }}" extra-products="{{ extraProds }}" add-prod-fn="{{ addProd }}" hint-size="100%,640px"></dc-import></div></sc-for>
     <sc-if value="{{ cur.showNotice }}" hint-placeholder-val="{{ false }}">
       <div style="padding:clamp(16px,2.2vw,28px) clamp(14px,2.4vw,34px);max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
         <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:14px">
@@ -290,7 +290,11 @@ class Component extends DCLogic {
   openDocTab = (req) => this.setState(x => {
     const key = req.no ? req.no : 'new-' + (x.docSeq + 1), id = 'compras-orcamentos:doc:' + key;
     if (x.tabs.some(t => t.id === id)) return { active: id, navOpen: false, ctx: null };
-    return { tabs: x.tabs.concat([{ id, title: req.no ? 'Orçamento ' + req.no : 'Novo orçamento' }]), docs: Object.assign({}, x.docs, { [key]: { draft: req.draft, base: JSON.stringify(req.draft) } }), docSeq: req.no ? x.docSeq : x.docSeq + 1, active: id, navOpen: false, ctx: null };
+    if (req.no) {
+      const k2 = Object.keys(x.docs).filter(k => x.docs[k].draft.no === req.no)[0];
+      if (k2) return { active: 'compras-orcamentos:doc:' + k2, navOpen: false, ctx: null };
+    }
+    return { tabs: x.tabs.concat([{ id, title: req.no ? 'Orçamento ' + req.no : 'Novo orçamento' }]), docs: Object.assign({}, x.docs, { [key]: { draft: req.draft, base: JSON.stringify(req.draft) } }), docSeq: req.no ? x.docSeq : x.docSeq + 1, active: id, navOpen: false, ctx: null, collapsed: true };
   });
   docChange(key, fn) { this.setState(x => (x.docs[key] ? { docs: Object.assign({}, x.docs, { [key]: Object.assign({}, x.docs[key], { draft: fn(x.docs[key].draft) }) }) } : null)); }
   docSave(key, draft) {
@@ -298,9 +302,10 @@ class Component extends DCLogic {
     let savedNo = '';
     this.setState(x => {
       const qs = x.quotes || [];
-      const items = draft.items.map(i => ({ pid: i.pid, code: i.code, cat: i.cat, d: i.d, un: i.un, q: num(i.q), p: num(i.p), discT: i.discT, disc: num(i.disc), tax: num(i.tax) }));
-      const desc = items[0].d + (items.length > 1 ? ' + ' + (items.length - 1) + (items.length === 2 ? ' item' : ' itens') : '');
-      const base = { sup: draft.sup.trim(), obra: draft.obra, cat: draft.cat, date: draft.date, valid: draft.valid, st: draft.st, group: draft.group, pay: draft.pay, prazo: draft.prazo || '—', frete: draft.frete, obs: draft.obs, items, desc };
+      const items = draft.items.map(i => (i.type && i.type !== 'item') ? { type: i.type, d: i.d } : { type: 'item', pid: i.pid, code: i.code, cat: i.cat, d: i.d, un: i.un, q: num(i.q), p: num(i.p), discT: i.discT, disc: num(i.disc), tax: num(i.tax) });
+      const lines = items.filter(i => i.type === 'item');
+      const desc = lines[0].d + (lines.length > 1 ? ' + ' + (lines.length - 1) + (lines.length === 2 ? ' item' : ' itens') : '');
+      const base = { sup: draft.sup.trim(), obra: draft.obra, cat: draft.cat, date: draft.date, valid: draft.valid, st: draft.st, group: draft.group, pay: draft.pay, prazo: draft.prazo || '—', frete: draft.frete, obs: draft.obs, empresa: draft.empresa, entrega: draft.entrega, entregaData: draft.entregaData || '', instr: draft.instr || '', refForn: draft.refForn || '', resp: draft.resp || '', supContato: draft.supContato || '', supEnd: draft.supEnd || '', history: draft.history || [], items, desc };
       let no = draft.no, quotes;
       if (no) quotes = qs.map(r => r.no === no ? Object.assign({}, r, base) : r);
       else { no = 'ORC-2026-' + String(Math.max.apply(null, qs.map(r => parseInt(r.no.slice(-3), 10)).concat([0])) + 1).padStart(3, '0'); quotes = qs.concat([Object.assign({ no, order: '' }, base)]); }
@@ -444,7 +449,7 @@ class Component extends DCLogic {
       scrollLeft: () => this.scrollBy(-240), scrollRight: () => this.scrollBy(240),
       ctxOpen: !!s.ctx, toggleCtx: () => this.setState(x => ({ ctx: x.ctx ? null : x.active, bell: false, profile: false })), ctxTitle: tabTitle(ctxId), ctxItems,
       cur: curV, m: mm, v: vv, vw: W, quotes: s.quotes, setQuotes: this.setQuotes, openDocTab: this.openDocTab, extraProds: s.extraProds, addProd: this.addProd,
-      docItems: s.tabs.filter(tb => tb.id.indexOf(':doc:') > 0).map(tb => { const key = tb.id.split(':doc:')[1], dd = s.docs[key]; return dd ? { vis: s.active === tb.id ? 'display:block' : 'display:none', draft: dd.draft, dirty: JSON.stringify(dd.draft) !== dd.base, change: fn => this.docChange(key, fn), save: dr => this.docSave(key, dr), close: () => this.requestClose([tb.id]) } : null; }).filter(Boolean),
+      docItems: s.tabs.filter(tb => tb.id.indexOf(':doc:') > 0).map(tb => { const key = tb.id.split(':doc:')[1], dd = s.docs[key]; return dd ? { vis: s.active === tb.id ? 'display:block' : 'display:none', draft: dd.draft, dirty: JSON.stringify(dd.draft) !== dd.base, change: fn => this.docChange(key, fn), save: dr => this.docSave(key, dr), close: () => this.requestClose([tb.id]), back: () => this.openPage('compras-orcamentos') } : null; }).filter(Boolean),
       confirmOpen: !!conf, confirmTitle: conf ? (conf.ids.length > 1 ? 'Fechar ' + conf.ids.length + ' abas?' : 'Fechar “' + tabTitle(conf.ids[0]) + '”?') : '', confirmList: conf ? conf.dirty.map(tabTitle) : [],
       keepEditing: () => this.setState({ confirm: null }), discard: () => conf && this.doClose(conf.ids),
       regOpen: s.regOpen, regRows, regSummary: this.pl(nOk, 'página integrada', 'páginas integradas') + ' · ' + this.pl(nEx - nOk, 'existente não adaptada', 'existentes não adaptadas') + ' · ' + (regRows.length - nEx) + ' não desenvolvidas (de ' + regRows.length + ').',

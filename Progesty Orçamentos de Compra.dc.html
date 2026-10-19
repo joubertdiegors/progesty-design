@@ -199,6 +199,17 @@ input,select,textarea{font-family:inherit}
 </div>
 </div>
 
+<sc-if value="{{ empOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:92;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeEmp }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(460px,100%);background:#fff;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:16px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:19px;font-weight:800;letter-spacing:-.025em">Empresa emissora</span><span style="font-size:13px;color:#64748B;line-height:1.45">Escolha a empresa que emite este orçamento. O documento abrirá em uma nova aba.</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><sc-for list="{{ empresas }}" as="e" hint-placeholder-count="3"><button onClick="{{ e.pick }}" style="{{ e.style }}"><span style="font-size:15px;color:#6D5DFB;flex:0 0 auto">{{ e.mark }}</span><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:14px;font-weight:700">{{ e.name }}</span><span style="font-size:12px;color:#64748B">{{ e.sub }}</span></div></button></sc-for></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end"><button onClick="{{ closeEmp }}" style="height:46px;padding:0 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button><button onClick="{{ confirmEmp }}" style="height:46px;padding:0 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700">Abrir documento</button></div>
+    </div>
+  </div>
+</sc-if>
+
 <sc-if value="{{ detailOpen }}" hint-placeholder-val="{{ false }}">
   <div style="position:fixed;inset:0;z-index:90;display:flex;justify-content:flex-end">
     <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
@@ -289,13 +300,14 @@ class Component extends DCLogic {
   state = {
     view: null, w: 1400, navOpen: false, dataState: 'ready', cur: 'Inicial', empty: false,
     query: '', openFilter: '', filters: { per: 'Todo o período', sup: 'Todos', obra: 'Todas', val: 'Todas', st: 'Todas' },
-    sort: { key: 'date', dir: 'desc' }, recs: this.seed(), modal: '', selNo: '', f: {}, submitted: false, toast: ''
+    sort: { key: 'date', dir: 'desc' }, recs: this.seed(), modal: '', selNo: '', empOpen: false, empPick: '', f: {}, submitted: false, toast: ''
   };
 
   TODAY = '2026-09-24';
   OBRAS = ['Residencial Jardim Europa', 'Edifício Central', 'Casa Oliveira', 'Reforma Comercial Delta', 'Sem obra (geral)'];
   CATS = ['', 'Aço e ferragens', 'Cimento e argamassa', 'Concreto usinado', 'Locação de equipamentos', 'Materiais elétricos e hidráulicos', 'Transporte de materiais', 'Serviços terceirizados', 'Madeira e acabamentos'];
   UNITS = ['un', 'm³', 'm²', 't', 'saco', 'rolo', 'chapa', 'barra', 'viagem', 'módulo', 'serviço'];
+  EMPRESAS = [['Construtora Alvorada, Lda.', 'Obras e empreitadas'], ['Alvorada Engenharia e Projetos, S.A.', 'Projetos e fiscalização'], ['Alvorada Instalações, Lda.', 'Elétrica e hidráulica']];
   STS = ['Em análise', 'Aguardando resposta', 'Aprovado', 'Recusado', 'Vencido'];
   SC = { 'Em análise': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Aguardando resposta': ['#FFFBEB', '#B45309', '#F59E0B'], 'Aprovado': ['#ECFDF5', '#047857', '#10B981'], 'Recusado': ['#F1F5F9', '#64748B', '#94A3B8'], 'Vencido': ['#FEF2F2', '#B91C1C', '#EF4444'] };
   GROUPS = { 'G-ACO': 'Aço CA-50 — 20 t (Edifício Central)', 'G-CIM': 'Cimento e argamassa — lote (Jardim Europa)', 'G-CON': 'Concreto usinado fck 30 — 140 m³' };
@@ -338,12 +350,12 @@ class Component extends DCLogic {
   total(items) { return Math.round(items.reduce((a, i) => a + this.lineCalc(i).total * 100, 0)) / 100; }
   getRecs() { return this.props.recs || this.state.recs; }
   commit(next) { if (this.props.recsFn) this.props.recsFn(next); else this.setState({ recs: next }); }
-  blank() { return { no: '', sup: '', obra: '', cat: '', date: this.TODAY, valid: this.addDays(this.TODAY, 15), st: 'Em análise', group: '', pay: '30 dias', prazo: '', frete: 'Incluído', obs: '', items: [] }; }
-  draftFrom(r) { return Object.assign({}, r, { items: r.items.map(i => ({ pid: i.pid || '', code: i.code || '', cat: i.cat || '', d: i.d, un: i.un, q: String(i.q).replace('.', ','), p: String(i.p).replace('.', ','), discT: i.discT || '%', disc: i.disc ? String(i.disc).replace('.', ',') : '', tax: String(i.tax || 0) })) }); }
-  openDoc(no) {
+  blank() { return { no: '', sup: '', obra: '', cat: '', date: this.TODAY, valid: this.addDays(this.TODAY, 15), st: 'Em análise', group: '', pay: '30 dias', prazo: '', frete: 'Incluído', obs: '', empresa: '', entrega: '', history: [], items: [] }; }
+  draftFrom(r) { return Object.assign({}, r, { empresa: r.empresa || this.EMPRESAS[0][0], entrega: r.entrega || '', history: r.history || [], items: r.items.map(i => (i.type && i.type !== 'item') ? { type: i.type, d: i.d } : ({ type: 'item', pid: i.pid || '', code: i.code || '', cat: i.cat || '', d: i.d, un: i.un, q: String(i.q).replace('.', ','), p: String(i.p).replace('.', ','), discT: i.discT || '%', disc: i.disc ? String(i.disc).replace('.', ',') : '', tax: String(i.tax || 0) })) }); }
+  openDoc(no, emp) {
     const fn = this.props.docFn; if (!fn) { this.flash('Criar e editar orçamentos abre uma aba do Workspace.'); return; }
     const r = no ? this.getRecs().filter(x => x.no === no)[0] : null;
-    fn({ no: no || '', draft: r ? this.draftFrom(r) : this.blank() });
+    fn({ no: no || '', draft: r ? this.draftFrom(r) : Object.assign(this.blank(), { empresa: emp || this.EMPRESAS[0][0] }) });
   }
 
   fmtN(n) { return n.toLocaleString('de-DE', { maximumFractionDigits: 2 }); }
@@ -463,9 +475,9 @@ class Component extends DCLogic {
     if (sel.open) dacts.push(dact('Recusar', () => this.setStatus(sel.no, 'Recusado', 'Orçamento recusado (demonstrativo)'), 'd'));
     const d = {
       no: sel.no, sup: sel.sup, desc: sel.desc, status: sel.status, pill: pill(sel.status), dot: this.SC[sel.status][2],
-      boxes: [box('Valor estimado', this.eur(sel.v), neutral), box('Validade', this.fmtD(sel.valid), sel.status === 'Vencido' ? red : neutral), box('Itens', String(sel.items.length), neutral)],
+      boxes: [box('Valor estimado', this.eur(sel.v), neutral), box('Validade', this.fmtD(sel.valid), sel.status === 'Vencido' ? red : neutral), box('Itens', String(sel.items.filter(i => !i.type || i.type === 'item').length), neutral)],
       note, noteColor: nc, total: this.eur(sel.v),
-      items: sel.items.map(i => { const c = this.lineCalc(i); return { d: (i.code ? i.code + ' · ' : '') + i.d, calc: this.fmtN(this.num(i.q)) + ' ' + i.un + ' × ' + this.eur(this.num(i.p)) + (c.disc ? ' − desc. ' + this.eur(c.disc) : '') + (c.tax ? ' + imposto ' + this.fmtN(c.rate) + '% (' + this.eur(c.tax) + ')' : ''), sub: this.eur(c.total) }; }),
+      items: sel.items.map(i => { if (i.type && i.type !== 'item') return { d: i.d || '—', calc: ({ title: 'Título', subtitle: 'Subtítulo', comment: 'Comentário' })[i.type], sub: '' }; const c = this.lineCalc(i); return { d: (i.code ? i.code + ' · ' : '') + i.d, calc: this.fmtN(this.num(i.q)) + ' ' + i.un + ' × ' + this.eur(this.num(i.p)) + (c.disc ? ' − desc. ' + this.eur(c.disc) : '') + (c.tax ? ' + imposto ' + this.fmtN(c.rate) + '% (' + this.eur(c.tax) + ')' : ''), sub: this.eur(c.total) }; }),
       info: [['Obra', sel.obra], ['Categoria', sel.cat || '—'], ['Data', this.fmtD(sel.date)], ['Pagamento', sel.pay], ['Prazo de entrega', sel.prazo], ['Frete', sel.frete], ['Observações', sel.obs || '—']].map(a => ({ k: a[0], v: a[1] })),
       link: sel.order ? 'Pedido de compra gerado: ' + sel.order + '.' : (sel.status === 'Aprovado' ? 'Aprovado sem pedido vinculado. O pedido pode ser criado depois — ou não.' : 'Nenhum pedido vinculado. O vínculo é opcional.'),
       actions: dacts
@@ -508,7 +520,7 @@ class Component extends DCLogic {
         items: g[2].map(n => { const on = n === 'Orçamentos de compra'; return { name: n, style: 'display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:13px;font-weight:' + (on ? 700 : 500) + ';color:' + (on ? '#fff' : '#8C9AAE') + ';background:' + (on ? 'rgba(109,93,251,.26)' : 'transparent'), dotStyle: 'width:5px;height:5px;border-radius:50%;background:' + (on ? '#6D5DFB' : '#475569') }; })
       })),
       ghostBtn, todayLabel: this.fmtD(T),
-      openNew: () => this.openDoc(''),
+      openNew: () => this.setState({ empOpen: true, empPick: this.EMPRESAS[0][0] }),
       doRefresh: () => { clearTimeout(this.rT); this.setState({ dataState: 'loading', cur: 'Carregando' }); this.rT = setTimeout(() => { this.setState({ dataState: 'ready', cur: 'Inicial' }); this.flash('Dados demonstrativos atualizados'); }, 1000); },
       doExport: () => {
         try {
@@ -525,10 +537,12 @@ class Component extends DCLogic {
       emptyTitle: emptyAll ? 'Nenhum orçamento cadastrado' : 'Nenhum orçamento encontrado',
       emptyText: emptyAll ? 'Registre a cotação de um fornecedor para comparar propostas e decidir. Orçamentos são opcionais — pedidos e faturas podem ser criados sem eles.' : 'Nenhum registro corresponde à pesquisa ou aos filtros aplicados. Tente alterar os filtros ou realizar uma nova busca.',
       emptyLabel: emptyAll ? 'Novo orçamento' : 'Limpar filtros',
-      emptyAction: emptyAll ? () => this.openDoc('') : () => this.setState({ query: '', openFilter: '', filters: DEF }),
+      emptyAction: emptyAll ? () => this.setState({ empOpen: true, empPick: this.EMPRESAS[0][0] }) : () => this.setState({ query: '', openFilter: '', filters: DEF }),
       gridHead: 'display:grid;grid-template-columns:1.1fr 1.4fr 2fr 1.5fr .9fr 1.1fr 1.1fr 1.3fr 290px;gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
       cols, rows, countLabel: this.pl(list.length, 'orçamento listado', 'orçamentos listados'), listTotal: this.eur(sumv(list)),
       closeModal: () => this.setState({ modal: '' }),
+      empOpen: s.empOpen, closeEmp: () => this.setState({ empOpen: false }), confirmEmp: () => { const e = s.empPick; this.setState({ empOpen: false }); this.openDoc('', e); },
+      empresas: this.EMPRESAS.map(e => { const on = s.empPick === e[0]; return { name: e[0], sub: e[1], pick: () => this.setState({ empPick: e[0] }), mark: on ? '●' : '○', style: 'display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;border:1px solid ' + (on ? '#6D5DFB' : '#E2E8F0') + ';background:' + (on ? '#EEF0FE' : '#fff') + ';text-align:left;min-height:56px' }; }),
       detailOpen: s.modal === 'detail', d,
       drawerStyle: 'position:relative;width:' + (phone || W < 600 ? '100%' : 'min(560px,100%)') + ';height:100%;overflow-y:auto;background:#fff;border-left:1px solid #E2E8F0;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:20px;box-shadow:-30px 0 70px -30px rgba(15,23,42,.5);animation:pgDrawer .3s cubic-bezier(.22,.7,.2,1)',
       cmpOpen: s.modal === 'compare', cmp,
