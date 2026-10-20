@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #6D5DFB;outline-offset:2px}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgSheet{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pgDrawer{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;background:#E8ECF3;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column">
+
+<div style="background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,2vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+  <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Estado</span>
+  <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ states }}" as="x" hint-placeholder-count="9"><button onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.name }}</button></sc-for></div>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:4px;padding:3px;border-radius:10px;background:#F1F5F9"><sc-for list="{{ views }}" as="v" hint-placeholder-count="2"><button onClick="{{ v.pick }}" style="{{ v.style }}">{{ v.name }}</button></sc-for></div>
+</div>
+
+<div style="{{ stageStyle }}">
+<div style="{{ frameStyle }}">
+<div class="pg-scroll" style="{{ scrollStyle }}">
+<div style="{{ appStyle }}">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar menu" style="width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.07);color:#94A3B8;font-size:15px">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <div style="{{ g.headStyle }}"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></span><span style="flex:1;text-align:left">{{ g.name }}</span></div>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5"><div style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span>{{ it.name }}</div></sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Carlos Mendes</span><span style="font-size:11px;color:#64748B">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column">
+<sc-if value="{{ docMode }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ rootRef }}" style="background:#F8FAFC;display:flex;flex-direction:column;min-width:0">
+<div style="position:sticky;top:0;z-index:30;background:rgba(248,250,252,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E2E8F0;padding:8px clamp(12px,1.6vw,22px);display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px">
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button></sc-if>
+  <button onClick="{{ doBack }}" style="{{ ghostS }}">‹ Pedidos de Compra</button>
+  <div style="min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-left:4px"><h1 style="margin:0;font-size:clamp(16px,1.6vw,19px);font-weight:800;letter-spacing:-.02em">{{ title }}</h1><span style="{{ stPill }}">{{ st }}</span><sc-if value="{{ isDirty }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B45309">● não salvo</span></sc-if></div>
+  <div style="flex:1"></div>
+  <button onClick="{{ togglePrev }}" style="{{ ghostS }}">Visualizar</button>
+  <div style="position:relative"><button onClick="{{ toggleMenu }}" aria-label="Mais ações" style="{{ ghostS }};padding:0 14px;font-size:17px;letter-spacing:1px">⋯</button>
+    <sc-if value="{{ docMenuOpen }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:calc(100% + 6px);right:0;min-width:220px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:40;animation:pgPop .18s"><sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="3"><button onClick="{{ m.run }}" style="padding:11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:600;min-height:44px" style-hover="background:#F8FAFC">{{ m.label }}</button></sc-for></div></sc-if></div>
+  <button onClick="{{ doSave }}" style="{{ saveStyle }}">{{ saveLabel }}</button>
+  <sc-if value="{{ canFinish }}" hint-placeholder-val="{{ false }}"><button onClick="{{ doFinish }}" style="{{ finStyle }}">Enviar para aprovação</button></sc-if>
+</div>
+<div style="padding:clamp(12px,1.6vw,20px) clamp(12px,2vw,26px) 28px;display:flex;flex-direction:column;gap:12px;min-width:0">
+  <sc-if value="{{ showErr }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#FEF2F2;border:1px solid #FECACA"><span style="width:20px;height:20px;border-radius:50%;background:#EF4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 auto">!</span><span style="font-size:13px;font-weight:600;color:#991B1B;line-height:1.4">{{ errText }}</span></div></sc-if>
+  <sc-if value="{{ showPrev }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ panelS }}">
+      <div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font-size:15px;font-weight:700">Pré-visualização do documento</span><button onClick="{{ togglePrev }}" aria-label="Fechar pré-visualização" style="width:44px;height:44px;border-radius:10px;border:1px solid #E2E8F0;font-size:13px;color:#64748B">✕</button></div>
+      <div style="background:#fff;border:1px solid #CBD5E1;border-radius:6px;padding:clamp(16px,3vw,36px);display:flex;flex-direction:column;gap:18px;box-shadow:0 18px 40px -26px rgba(15,23,42,.35)">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:10px 20px;padding-bottom:14px;border-bottom:2px solid #0F172A"><div style="flex:1 1 220px;display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:800">{{ pvEmpresa }}</span><span style="font-size:12px;color:#64748B">Documento demonstrativo — sem valor fiscal</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span style="font-size:clamp(17px,2.4vw,24px);font-weight:800;letter-spacing:.04em">PEDIDO DE COMPRA</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">{{ pvNo }}</span></div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 18px"><sc-for list="{{ pvMeta }}" as="m" hint-placeholder-count="10"><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">{{ m.k }}</span><span style="font-size:13px;font-weight:600;overflow-wrap:anywhere">{{ m.v }}</span></div></sc-for></div>
+        <div style="display:flex;flex-direction:column;border-top:1px solid #0F172A"><sc-for list="{{ pvRows }}" as="r" hint-placeholder-count="3"><div style="{{ r.rowS }}"><span style="{{ r.numS }}">{{ r.num }}</span><div style="min-width:0;flex:1 1 200px;display:flex;flex-direction:column;gap:2px"><span style="{{ r.dStyle }}">{{ r.d }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ r.calc }}</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">{{ r.total }}</span></div></sc-for><sc-if value="{{ noItems }}" hint-placeholder-val="{{ false }}"><div style="padding:12px 0;font-size:13px;color:#64748B">Sem itens.</div></sc-if></div>
+        <div style="display:flex;flex-direction:column;gap:5px;align-self:flex-end;width:min(100%,320px)"><sc-for list="{{ sumMain }}" as="s" hint-placeholder-count="4"><div style="display:flex;align-items:baseline;gap:10px"><span style="{{ s.lblStyle }}">{{ s.label }}</span><div style="flex:1"></div><span style="{{ s.valStyle }}">{{ s.value }}</span></div></sc-for><div style="display:flex;align-items:baseline;gap:12px;padding-top:7px;border-top:2px solid #0F172A"><span style="font-size:14px;font-weight:800">Total do pedido</span><div style="flex:1"></div><span style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:600">{{ grand }}</span></div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:26px;padding-top:26px"><div style="border-top:1px solid #94A3B8;padding-top:6px;font-size:12px;color:#64748B">Responsável pela compra</div><div style="border-top:1px solid #94A3B8;padding-top:6px;font-size:12px;color:#64748B">Aprovação</div></div>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ showHist }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ panelS }}">
+      <div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font-size:15px;font-weight:700">Histórico do documento</span><button onClick="{{ toggleHist }}" aria-label="Fechar histórico" style="width:44px;height:44px;border-radius:10px;border:1px solid #E2E8F0;font-size:13px;color:#64748B">✕</button></div>
+      <sc-for list="{{ histRows }}" as="h" hint-placeholder-count="2"><div style="display:flex;gap:12px"><span style="width:9px;height:9px;border-radius:50%;background:{{ h.dot }};margin-top:5px;flex:0 0 auto"></span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ h.date }}</span><span style="font-size:13.5px;font-weight:600;line-height:1.4">{{ h.text }}</span></div></div></sc-for>
+    </div>
+  </sc-if>
+  <div style="{{ cardsGrid }}">
+    <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+      <div style="{{ c.style }}">
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;font-weight:800;letter-spacing:-.01em">{{ c.title }}</span><div style="flex:1"></div><button onClick="{{ c.toggle }}" style="min-height:44px;padding:0 4px;font-size:12.5px;font-weight:700;color:#4338CA">{{ c.btn }}</button></div>
+        <sc-if value="{{ c.editing }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ fieldGrid }}">
+            <sc-for list="{{ c.fields }}" as="f" hint-placeholder-count="4">
+              <label style="{{ f.wrapStyle }}">
+                <span style="font-size:12px;font-weight:600;color:#475569">{{ f.label }}</span>
+                <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}"><input type="{{ f.type }}" list="{{ f.list }}" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inpStyle }}"></sc-if>
+                <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onInput="{{ f.onInput }}" style="{{ f.inpStyle }}"><sc-for list="{{ f.opts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></sc-if>
+                <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}"><textarea rows="2" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inpStyle }}"></textarea></sc-if>
+                <sc-if value="{{ f.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ f.err }}</span></sc-if>
+              </label>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ c.summary }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:5px"><sc-for list="{{ c.lines }}" as="l" hint-placeholder-count="4"><div style="display:flex;gap:6px;font-size:13px;line-height:1.4;min-width:0"><span style="color:#64748B;flex:0 0 auto">{{ l.k }}:</span><span style="{{ l.style }}">{{ l.v }}</span></div></sc-for></div>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <div style="{{ panelS }}">
+    <button onClick="{{ toggleMore }}" style="align-self:flex-start;min-height:44px;font-size:13px;font-weight:700;color:#4338CA">{{ moreLabel }}</button>
+    <sc-if value="{{ moreOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ fieldGrid }}">
+        <sc-for list="{{ secondary }}" as="f" hint-placeholder-count="6">
+          <label style="{{ f.wrapStyle }}">
+            <span style="font-size:12px;font-weight:600;color:#475569">{{ f.label }}</span>
+            <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}"><input type="{{ f.type }}" list="{{ f.list }}" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inpStyle }}"></sc-if>
+            <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onInput="{{ f.onInput }}" style="{{ f.inpStyle }}"><sc-for list="{{ f.opts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></sc-if>
+            <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}"><textarea rows="2" value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.inpStyle }}"></textarea></sc-if>
+          </label>
+        </sc-for>
+      </div>
+    </sc-if>
+    <datalist id="pg-sups"><sc-for list="{{ supOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o }}"></option></sc-for></datalist>
+    <datalist id="pg-resp"><sc-for list="{{ respOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o }}"></option></sc-for></datalist>
+  </div>
+  <div ref="{{ wrapRef }}" style="position:relative;background:#fff;border:1px solid #E2E8F0;border-radius:16px">
+    <div style="padding:12px clamp(14px,1.6vw,18px);display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px">
+      <span style="font-size:15px;font-weight:700;letter-spacing:-.01em">Itens <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#64748B">{{ itemsCount }}</span></span>
+      <div style="flex:1"></div>
+      <button onClick="{{ toggleNew }}" style="min-height:44px;padding:0 6px;font-size:13px;font-weight:700;color:#475569">{{ newBtn }}</button>
+      <button data-addline="1" onClick="{{ openAddMenu }}" style="{{ ghostS }}">Adicionar linha ▾</button>
+      <button onClick="{{ addItem }}" style="{{ addStyle }}">+ Adicionar item</button>
+    </div>
+    <sc-if value="{{ noItems }}" hint-placeholder-val="{{ true }}"><div style="padding:14px clamp(14px,1.6vw,18px) 18px;border-top:1px solid #F1F5F9;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px"><span style="font-size:13.5px;color:#64748B">Nenhuma linha ainda. Digite a descrição, pesquise no catálogo ou use “Adicionar linha” para título, subtítulo e comentário.</span><button onClick="{{ addItem }}" style="min-height:44px;padding:0 4px;font-size:13.5px;font-weight:700;color:#4338CA">Adicionar primeira linha</button></div></sc-if>
+    <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-scroll" onScroll="{{ onGridScroll }}" style="overflow-x:auto;border-top:1px solid #E2E8F0">
+        <div style="min-width:1420px">
+          <div style="{{ gridHead }}"><sc-for list="{{ heads }}" as="h" hint-placeholder-count="11"><span style="{{ h.style }}">{{ h.name }}</span></sc-for></div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="3">
+            <div style="border-bottom:1px solid #F1F5F9">
+              <sc-if value="{{ r.isItem }}" hint-placeholder-val="{{ true }}">
+                <div style="{{ gridBody }}">
+                  <span style="{{ r.numStyle }}">{{ r.numTxt }}</span>
+                  <input data-prod="{{ r.n }}" value="{{ r.d }}" onInput="{{ r.setD }}" onFocus="{{ r.openPick }}" onBlur="{{ r.blur }}" onKeyDown="{{ r.key }}" placeholder="Digite para pesquisar ou descreva o item" autocomplete="off" style="{{ r.prodStyle }}">
+                  <span style="{{ r.codeStyle }}">{{ r.code }}</span>
+                  <select value="{{ r.un }}" onInput="{{ r.setUn }}" style="{{ r.unStyle }}"><sc-for list="{{ r.units }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select>
+                  <input data-qty="{{ r.n }}" value="{{ r.q }}" onInput="{{ r.setQ }}" inputmode="decimal" placeholder="0" style="{{ r.qStyle }}">
+                  <input value="{{ r.p }}" onInput="{{ r.setP }}" inputmode="decimal" placeholder="0,00" style="{{ r.pStyle }}">
+                  <div style="display:flex;gap:4px;min-width:0"><input value="{{ r.disc }}" onInput="{{ r.setDisc }}" inputmode="decimal" placeholder="0" style="{{ r.dStyle }}"><button onClick="{{ r.toggleDisc }}" title="Alternar entre percentual e valor em euros" style="{{ r.dtStyle }}">{{ r.discT }}</button></div>
+                  <span style="{{ r.calcStyle }}">{{ r.base }}</span>
+                  <div style="display:flex;align-items:center;gap:6px;min-width:0"><select value="{{ r.tax }}" onInput="{{ r.setTax }}" style="{{ r.taxStyle }}"><sc-for list="{{ r.rates }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#475569;white-space:nowrap">{{ r.taxVal }}</span></div>
+                  <span style="{{ r.totalStyle }}">{{ r.total }}</span>
+                  <div style="display:flex;gap:4px;justify-content:flex-end"><button data-ins="{{ r.n }}" onClick="{{ r.ins }}" title="Inserir linha abaixo" style="{{ r.actStyle }}">＋</button><button onClick="{{ r.dup }}" title="Duplicar linha" style="{{ r.actStyle }}">⧉</button><button onClick="{{ r.remove }}" aria-label="Remover linha" title="Remover linha" style="{{ r.rmStyle }}">✕</button></div>
+                </div>
+                <sc-if value="{{ r.hasErr }}" hint-placeholder-val="{{ false }}"><div style="padding:0 20px 8px;font-size:12px;font-weight:600;color:#B91C1C">Linha {{ r.num }}: {{ r.err }}</div></sc-if>
+              </sc-if>
+              <sc-if value="{{ r.isBreak }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ r.textRow }}">
+                  <span style="{{ r.badgeStyle }}"></span>
+                  <div style="display:flex;align-items:center;gap:12px;min-height:36px"><span style="flex:1;border-top:1px dashed #94A3B8"></span><span style="font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">Quebra de página</span><span style="flex:1;border-top:1px dashed #94A3B8"></span></div>
+                  <div style="display:flex;gap:4px;justify-content:flex-end"><button data-ins="{{ r.n }}" onClick="{{ r.ins }}" title="Inserir linha abaixo" style="{{ r.actStyle }}">＋</button><button onClick="{{ r.remove }}" aria-label="Remover linha" title="Remover linha" style="{{ r.rmStyle }}">✕</button></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ r.isText }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ r.textRow }}">
+                  <span style="{{ r.badgeStyle }}">{{ r.badge }}</span>
+                  <input data-txt="{{ r.n }}" value="{{ r.d }}" onInput="{{ r.setD }}" placeholder="{{ r.ph }}" autocomplete="off" style="{{ r.textStyle }}">
+                  <div style="display:flex;gap:4px;justify-content:flex-end"><button data-ins="{{ r.n }}" onClick="{{ r.ins }}" title="Inserir linha abaixo" style="{{ r.actStyle }}">＋</button><button onClick="{{ r.remove }}" aria-label="Remover linha" title="Remover linha" style="{{ r.rmStyle }}">✕</button></div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ newOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid #E2E8F0;background:#F8FAFC;padding:clamp(14px,1.6vw,18px);display:flex;flex-direction:column;gap:12px;animation:pgPop .18s">
+        <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:700">Cadastrar produto no catálogo desta sessão</span><span style="font-size:12px;color:#64748B">Opcional. Não é necessário cadastrar para usar uma descrição livre; vale só nesta sessão.</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px">
+          <sc-for list="{{ npFields }}" as="f" hint-placeholder-count="6">
+            <label style="display:flex;flex-direction:column;gap:5px;min-width:0"><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ f.label }}</span>
+              <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onInput="{{ f.onInput }}" style="{{ f.st }}"><sc-for list="{{ f.opts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></sc-if>
+              <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}"><input value="{{ f.value }}" onInput="{{ f.onInput }}" placeholder="{{ f.ph }}" style="{{ f.st }}"></sc-if>
+            </label>
+          </sc-for>
+        </div>
+        <sc-if value="{{ npErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ npErr }}</span></sc-if>
+        <div style="display:flex;justify-content:flex-end"><button onClick="{{ saveNew }}" style="height:44px;padding:0 18px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700">Adicionar ao catálogo</button></div>
+      </div>
+    </sc-if>
+    <div style="border-top:1px solid #E2E8F0;padding:12px clamp(14px,1.6vw,18px);display:flex;justify-content:flex-end">
+      <div style="width:min(100%,340px);display:flex;flex-direction:column;gap:5px">
+        <sc-for list="{{ sumMain }}" as="s" hint-placeholder-count="4"><div style="display:flex;align-items:baseline;gap:10px"><span style="{{ s.lblStyle }}">{{ s.label }}</span><div style="flex:1"></div><span style="{{ s.valStyle }}">{{ s.value }}</span></div></sc-for>
+        <sc-if value="{{ calcOpen }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:5px;padding:6px 0;border-top:1px dashed #E2E8F0;border-bottom:1px dashed #E2E8F0"><sc-for list="{{ sumDetail }}" as="s" hint-placeholder-count="3"><div style="display:flex;align-items:baseline;gap:10px"><span style="{{ s.lblStyle }}">{{ s.label }}</span><div style="flex:1"></div><span style="{{ s.valStyle }}">{{ s.value }}</span></div></sc-for></div></sc-if>
+        <button onClick="{{ toggleCalc }}" style="align-self:flex-start;min-height:44px;font-size:12.5px;font-weight:700;color:#4338CA">{{ calcLabel }}</button>
+        <div style="display:flex;align-items:baseline;gap:10px;padding-top:8px;border-top:1px solid #E2E8F0"><span style="font-size:15px;font-weight:700">Total</span><div style="flex:1"></div><span style="font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:600;letter-spacing:-.02em">{{ grand }}</span></div>
+      </div>
+    </div>
+    <sc-if value="{{ anyPop }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closePops }}" style="position:fixed;inset:0;z-index:15"></div></sc-if>
+    <sc-if value="{{ showSug }}" hint-placeholder-val="{{ false }}">
+      <div class="pg-scroll" style="{{ sugStyle }}">
+        <sc-for list="{{ results }}" as="p" hint-placeholder-count="5">
+          <button onMouseDown="{{ p.md }}" onClick="{{ p.pick }}" style="{{ p.style }}">
+            <div style="min-width:0;flex:1 1 200px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700">{{ p.name }}</span><span style="font-size:12px;color:#64748B">{{ p.cat }}</span></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#4338CA">{{ p.code }}</span><span style="font-size:12.5px;color:#475569;min-width:36px">{{ p.un }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;min-width:84px;text-align:right">{{ p.price }}</span>
+          </button>
+        </sc-for>
+        <span style="padding:6px 10px 4px;font-size:11.5px;color:#64748B;line-height:1.4">↑↓ navegam · Enter seleciona · Esc fecha. Continue digitando para manter descrição livre.</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showAdd }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ addMenuStyle }}"><sc-for list="{{ addOptions }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.run }}" style="padding:11px;border-radius:9px;text-align:left;font-size:13.5px;font-weight:600;min-height:44px" style-hover="background:#F8FAFC">{{ o.label }}</button></sc-for></div>
+    </sc-if>
+  </div>
+  <span style="font-size:11.5px;color:#94A3B8;line-height:1.5">Dados e catálogo demonstrativos; o documento fica guardado só nesta sessão. Imposto calculado sobre a base tributável (bruto menos desconto) — estimativa, sem integração fiscal. Títulos, subtítulos e comentários não entram nos totais. Recebimentos e faturas são registrados à parte e não alteram as quantidades pedidas.</span>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+  <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Pedidos de Compra</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Gestão e acompanhamento de pedidos aos fornecedores, da aprovação ao recebimento. O orçamento é opcional.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <button onClick="{{ doExport }}" style="{{ ghostBtn }}">Exportar</button>
+        <button onClick="{{ doRefresh }}" style="{{ ghostBtn }}">Atualizar</button>
+        <button onClick="{{ openNew }}" style="display:flex;align-items:center;gap:9px;height:46px;padding:0 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s" style-hover="transform:translateY(-1px)"><span style="font-size:17px;line-height:1">+</span>Novo pedido</button>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px);min-width:0">
+
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD">
+      <span style="width:7px;height:7px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>
+      <span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.4">Dados demonstrativos e fictícios · data de referência {{ todayLabel }}. Alterações ficam apenas nesta sessão.</span>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="{{ kpiGrid }}"><sc-for list="{{ sk5 }}" as="k" hint-placeholder-count="5"><div class="pg-sk" style="height:112px;border-radius:18px"></div></sc-for></div>
+        <div class="pg-sk" style="height:58px;border-radius:14px"></div>
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px"><sc-for list="{{ sk7 }}" as="k" hint-placeholder-count="7"><div class="pg-sk" style="height:46px"></div></sc-for></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ kpiGrid }}">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+          <div style="{{ k.style }}">
+            <span style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:{{ k.labelColor }}">{{ k.label }}</span></span>
+            <span style="font-size:clamp(22px,2.2vw,27px);font-weight:800;letter-spacing:-.035em;color:{{ k.valueColor }};font-variant-numeric:tabular-nums">{{ k.value }}</span>
+            <span style="font-size:11.5px;font-weight:600;color:{{ k.labelColor }};line-height:1.4">{{ k.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0">
+          <span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+          <input value="{{ query }}" onInput="{{ onQuery }}" aria-label="Pesquisar pedidos" placeholder="Número, fornecedor, obra, descrição ou responsável..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+          <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" aria-label="Limpar pesquisa" style="width:28px;height:28px;border-radius:8px;background:#F1F5F9;color:#64748B;font-size:12px">✕</button></sc-if>
+        </div>
+        <div style="{{ filterRow }}">
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+            <div style="position:relative;min-width:0;max-width:100%">
+              <button onClick="{{ f.toggle }}" aria-haspopup="listbox" style="{{ f.btnStyle }}"><span style="color:#64748B;font-weight:600">{{ f.label }}</span><span style="flex:1;text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.value }}</span><span style="font-size:9px;color:#64748B">▼</span></button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div class="pg-scroll" style="{{ f.menuStyle }}">
+                  <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button></sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearAll }}" style="{{ ghostBtn }}">Limpar filtros</button></sc-if>
+        </div>
+      </div>
+
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+          <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">{{ emptyTitle }}</span>
+          <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">{{ emptyText }}</span>
+          <button onClick="{{ emptyAction }}" style="margin-top:4px;height:46px;padding:0 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">{{ emptyLabel }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+          <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+            <div class="pg-scroll" style="overflow-x:auto">
+              <div style="min-width:1440px">
+                <div style="{{ gridHead }}"><sc-for list="{{ cols }}" as="h" hint-placeholder-count="9"><button onClick="{{ h.sort }}" style="{{ h.style }}">{{ h.name }}<span style="font-size:9px;color:#6D5DFB">{{ h.arrow }}</span></button></sc-for></div>
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                  <div onClick="{{ r.open }}" style="{{ r.rowStyle }}" style-hover="background:#F8FAFC">
+                    <div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;white-space:nowrap">{{ r.no }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ r.date }}</span></div>
+                    <span style="font-size:14px;font-weight:700;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sup }}</span>
+                    <span style="font-size:13px;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.obra }}</span>
+                    <span style="font-size:13px;color:#475569;white-space:nowrap">{{ r.resp }}</span>
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="{{ r.etaStyle }}">{{ r.eta }}</span><span style="{{ r.etaSubStyle }}">{{ r.etaSub }}</span></div>
+                    <span style="{{ r.totalStyle }}">{{ r.total }}</span>
+                    <div style="display:flex;flex-direction:column;gap:5px;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ r.pctLabel }}</span><span style="font-size:11px;font-weight:600;color:#64748B;white-space:nowrap">{{ r.recvSub }}</span></div><div style="height:6px;border-radius:99px;background:#E2E8F0;overflow:hidden"><div style="{{ r.barStyle }}"></div></div></div>
+                    <span style="{{ r.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span>{{ r.status }}</span>
+                    <div style="display:flex;gap:6px;justify-content:flex-end"><sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isCards }}" hint-placeholder-val="{{ false }}">
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+              <div onClick="{{ r.open }}" style="padding:15px 16px;border-bottom:1px solid #F1F5F9;display:flex;flex-direction:column;gap:11px;{{ r.cardOpacity }}">
+                <div style="display:flex;align-items:flex-start;gap:10px">
+                  <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#4338CA">{{ r.no }} · {{ r.date }}</span><span style="font-size:14.5px;font-weight:700">{{ r.sup }}</span><span style="font-size:13px;color:#475569;text-wrap:pretty">{{ r.obra }}</span></div>
+                  <span style="{{ r.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span>{{ r.status }}</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;padding:12px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0">
+                  <sc-for list="{{ r.facts }}" as="f" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">{{ f.k }}</span><span style="{{ f.style }}">{{ f.v }}</span></div></sc-for>
+                  <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">Recebimento</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ r.pctLabel }} <span style="font-family:'Plus Jakarta Sans',sans-serif;color:#64748B;font-size:11px">{{ r.recvSub }}</span></span></div><div style="height:6px;border-radius:99px;background:#E2E8F0;overflow:hidden"><div style="{{ r.barStyle }}"></div></div></div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end"><sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+              </div>
+            </sc-for>
+          </sc-if>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 20px;background:#F8FAFC;border-top:1px solid #E2E8F0">
+            <span style="font-size:13px;font-weight:700;color:#475569">{{ countLabel }}</span>
+            <div style="display:flex;gap:6px;align-items:center"><sc-for list="{{ pager }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.go }}" aria-label="{{ p.aria }}" style="{{ p.style }}">{{ p.label }}</button></sc-for></div>
+            <div style="flex:1"></div>
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Valor listado (sem cancelados)</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">{{ listTotal }}</span>
+          </div>
+        </div>
+      </sc-if>
+    </sc-if>
+  </div>
+</sc-if>
+</main>
+
+</div>
+</div>
+
+<sc-if value="{{ detailOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;justify-content:flex-end">
+    <div onClick="{{ closeDetail }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div id="pg-drawer" class="pg-scroll" style="{{ drawerStyle }}">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:8px">
+          <span style="{{ d.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ d.dot }}"></span>{{ d.status }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#4338CA">{{ d.no }} · emitido em {{ d.date }}</span>
+          <span style="font-size:20px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ d.sup }}</span>
+          <span style="font-size:13.5px;color:#475569;text-wrap:pretty">{{ d.obra }}</span>
+        </div>
+        <button onClick="{{ closeDetail }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px"><sc-for list="{{ d.actions }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Acompanhamento</span>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px">
+          <sc-for list="{{ d.boxes }}" as="c" hint-placeholder-count="4"><div style="{{ c.style }}"><span style="font-size:11.5px;font-weight:600;color:{{ c.lc }}">{{ c.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:clamp(13px,1.4vw,16px);font-weight:600;color:{{ c.vc }};overflow-wrap:anywhere">{{ c.v }}</span><span style="font-size:11.5px;font-weight:600;color:{{ c.lc }}">{{ c.sub }}</span></div></sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0"><span style="width:4px;align-self:stretch;min-height:28px;border-radius:99px;background:{{ d.noteColor }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:#334155;line-height:1.45">{{ d.note }}</span></div>
+        <sc-if value="{{ d.hasDiv }}" hint-placeholder-val="{{ false }}"><div style="padding:12px 14px;border-radius:13px;background:#FEF2F2;border:1px solid #FECACA;font-size:12.5px;font-weight:700;color:#991B1B;line-height:1.45">Divergência: há itens com quantidade recebida acima da quantidade pedida. Verifique com o fornecedor.</div></sc-if>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Itens e totais</span>
+        <sc-for list="{{ d.items }}" as="i" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:9px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+            <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px 12px">
+              <div style="min-width:0;flex:1 1 160px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700">{{ i.d }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ i.calc }}</span></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">{{ i.sub }}</span>
+            </div>
+            <sc-if value="{{ i.isLine }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:9px 11px;border-radius:10px;background:#F8FAFC">
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748B">Pedido</span><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600">{{ i.ord }}</span></div>
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748B">Recebido</span><span style="{{ i.recStyle }}">{{ i.rec }}</span></div>
+              <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748B">Pendente</span><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600">{{ i.pend }}</span></div>
+            </div></sc-if>
+          </div>
+        </sc-for>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:4px 14px">
+          <sc-for list="{{ d.totals }}" as="t" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:10px"><span style="{{ t.ls }}">{{ t.k }}</span><div style="flex:1"></div><span style="{{ t.vs }}">{{ t.v }}</span></div></sc-for>
+        </div>
+      </div>
+
+      <div id="sec-rec" style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Recebimentos</span>
+        <sc-if value="{{ d.noRec }}" hint-placeholder-val="{{ false }}"><span style="padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">{{ d.noRecText }}</span></sc-if>
+        <sc-for list="{{ d.receipts }}" as="x" hint-placeholder-count="2">
+          <div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#0E7490">{{ x.id }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ x.date }}</span><sc-if value="{{ x.div }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 8px;border-radius:99px;background:#FEF2F2;color:#B91C1C;font-size:11px;font-weight:800">Divergência</span></sc-if></div>
+            <span style="font-size:13px;color:#334155;line-height:1.45">{{ x.lines }}</span>
+            <span style="font-size:12px;color:#64748B">{{ x.note }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ d.canReceive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ d.receive }}" style="height:46px;border-radius:12px;border:1px solid #A5F3FC;background:#ECFEFF;color:#0E7490;font-size:13.5px;font-weight:700">+ Registrar recebimento</button></sc-if>
+      </div>
+
+      <div id="sec-fat" style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Faturas relacionadas</span>
+        <sc-if value="{{ d.noInv }}" hint-placeholder-val="{{ false }}"><span style="padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">Nenhuma fatura do fornecedor vinculada a este pedido.</span></sc-if>
+        <sc-for list="{{ d.invoices }}" as="x" hint-placeholder-count="1">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+            <div style="min-width:0;flex:1 1 150px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600">{{ x.no }}</span><span style="font-size:12px;color:#64748B">{{ x.date }} · {{ x.pct }} do pedido</span></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">{{ x.val }}</span>
+            <span style="{{ x.pill }}">{{ x.st }}</span>
+          </div>
+        </sc-for>
+        <span style="font-size:12px;color:#64748B;line-height:1.5;text-wrap:pretty">Faturas e recebimentos são documentos independentes: uma fatura não confirma a entrega e um recebimento não gera fatura.</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Fornecedor</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 14px"><sc-for list="{{ d.supInfo }}" as="i" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ i.k }}</span><span style="font-size:13.5px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div></sc-for></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Obra, responsáveis e condições</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 14px"><sc-for list="{{ d.info }}" as="i" hint-placeholder-count="10"><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ i.k }}</span><span style="font-size:13.5px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div></sc-for></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Observações</span>
+        <sc-for list="{{ d.obs }}" as="o" hint-placeholder-count="2"><div style="padding:12px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0;display:flex;flex-direction:column;gap:3px"><span style="font-size:11.5px;font-weight:700;color:#64748B">{{ o.k }}</span><span style="font-size:13px;color:#334155;line-height:1.5;text-wrap:pretty">{{ o.v }}</span></div></sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Histórico e eventos</span>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ d.timeline }}" as="e" hint-placeholder-count="5">
+            <div style="display:flex;gap:13px">
+              <div style="display:flex;flex-direction:column;align-items:center;flex:0 0 14px"><span style="width:12px;height:12px;border-radius:50%;background:{{ e.color }};border:3px solid #fff;box-shadow:0 0 0 2px {{ e.color }};margin-top:4px"></span><span style="{{ e.lineStyle }}"></span></div>
+              <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:16px;min-width:0"><span style="font-size:13.5px;font-weight:700;text-wrap:pretty">{{ e.ev }}</span><span style="font-size:12px;color:#64748B"><span style="font-family:'JetBrains Mono',monospace">{{ e.date }}</span> · {{ e.by }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Documentos relacionados</span>
+        <sc-for list="{{ d.docs }}" as="x" hint-placeholder-count="3"><button onClick="{{ x.open }}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:13px;border:1px solid #E2E8F0;background:#fff;text-align:left;min-height:52px"><span style="width:32px;height:32px;border-radius:9px;background:{{ x.bg }};color:{{ x.fg }};display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;flex:0 0 auto">{{ x.tag }}</span><div style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:700">{{ x.t }}</span><span style="font-size:12px;color:#64748B">{{ x.s }}</span></div></button></sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ empOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:92;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeEmp }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(460px,100%);background:#fff;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:16px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:19px;font-weight:800;letter-spacing:-.025em">Empresa emissora</span><span style="font-size:13px;color:#64748B;line-height:1.45">Escolha a empresa que emite este pedido de compra. O documento abrirá para edição.</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><sc-for list="{{ empresas }}" as="e" hint-placeholder-count="3"><button onClick="{{ e.pick }}" style="{{ e.style }}"><span style="font-size:15px;color:#6D5DFB;flex:0 0 auto">{{ e.mark }}</span><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:14px;font-weight:700">{{ e.name }}</span><span style="font-size:12px;color:#64748B">{{ e.sub }}</span></div></button></sc-for></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end"><button onClick="{{ closeEmp }}" style="height:46px;padding:0 20px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">Cancelar</button><button onClick="{{ confirmEmp }}" style="height:46px;padding:0 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700">Abrir documento</button></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ rcptOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:93;display:flex;align-items:center;justify-content:center;padding:{{ formPad }}">
+    <div onClick="{{ closeRcpt }}" style="position:absolute;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(760px,100%);max-height:100%;overflow-y:auto;background:#fff;border-radius:22px;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:16px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:flex-start;gap:12px"><div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:19px;font-weight:800;letter-spacing:-.025em">Registrar recebimento</span><span style="font-size:13px;color:#64748B">{{ rc.title }}</span></div><button onClick="{{ closeRcpt }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+        <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;font-weight:700;color:#475569">Data da entrega<span style="color:#EF4444">*</span></span><input type="date" value="{{ rc.date }}" onInput="{{ rc.onDate }}" style="{{ rc.dateStyle }}"></label>
+        <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;font-weight:700;color:#475569">Guia / referência da entrega</span><input type="text" value="{{ rc.note }}" onInput="{{ rc.onNote }}" placeholder="Ex.: Guia de remessa GR-1234" style="{{ rc.noteStyle }}"></label>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ rc.lines }}" as="l" hint-placeholder-count="3">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:12px 14px;border-radius:13px;border:1px solid {{ l.border }};background:{{ l.bg }}">
+            <div style="min-width:0;flex:1 1 200px;display:flex;flex-direction:column;gap:3px"><span style="font-size:13.5px;font-weight:700">{{ l.d }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ l.calc }}</span><sc-if value="{{ l.warn }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:700;color:#B91C1C">{{ l.warnText }}</span></sc-if></div>
+            <label style="display:flex;flex-direction:column;gap:4px;width:150px"><span style="font-size:11.5px;font-weight:700;color:#475569">Receber agora ({{ l.un }})</span><input type="text" inputmode="decimal" value="{{ l.value }}" onInput="{{ l.on }}" placeholder="0" style="{{ l.style }}"></label>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ rc.needsOk }}" hint-placeholder-val="{{ false }}"><button onClick="{{ rc.toggleOk }}" role="checkbox" aria-checked="{{ rc.ok }}" style="display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:13px;border:1px solid #FECACA;background:#FEF2F2;text-align:left;min-height:48px"><span style="width:22px;height:22px;border-radius:7px;border:2px solid #B91C1C;background:{{ rc.okBg }};color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto">{{ rc.okMark }}</span><span style="font-size:13px;font-weight:700;color:#991B1B;line-height:1.4">Confirmo a divergência: a quantidade acumulada ultrapassa a quantidade pedida.</span></button></sc-if>
+      <sc-if value="{{ rc.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:700;color:#B91C1C">{{ rc.err }}</span></sc-if>
+      <span style="font-size:12.5px;color:#64748B;line-height:1.5">O recebimento é independente da fatura do fornecedor: registrar a entrega não cria nem baixa faturas.</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end"><button onClick="{{ closeRcpt }}" style="{{ ghostBtn }};height:46px">Cancelar</button><button onClick="{{ confirmRcpt }}" style="height:46px;padding:0 22px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700">Registrar recebimento</button></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:94;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeMenu }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(440px,100%);max-height:100%;overflow-y:auto;background:#fff;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:10px;padding:2px 4px 6px"><div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;letter-spacing:-.02em">Ações do pedido</span><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#4338CA;font-weight:600">{{ menu.no }} · {{ menu.status }}</span></div><button onClick="{{ closeMenu }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B">✕</button></div>
+      <sc-for list="{{ menu.items }}" as="a" hint-placeholder-count="8"><button onClick="{{ a.run }}" aria-disabled="{{ a.off }}" style="{{ a.style }}"><span style="font-size:13.5px;font-weight:700;{{ a.labelStyle }}">{{ a.label }}</span><span style="font-size:11.5px;font-weight:600;color:{{ a.subColor }};line-height:1.35">{{ a.sub }}</span></button></sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ cfmOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:96;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeCfm }}" style="position:absolute;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(460px,100%);background:#fff;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:14px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <span style="font-size:19px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ cfm.title }}</span>
+      <span style="font-size:13.5px;color:#475569;line-height:1.55;text-wrap:pretty">{{ cfm.text }}</span>
+      <sc-if value="{{ cfm.hasInput }}" hint-placeholder-val="{{ false }}"><label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;font-weight:700;color:#475569">{{ cfm.inputLabel }}</span><input type="text" value="{{ cfm.reason }}" onInput="{{ cfm.onReason }}" style="height:46px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;font-size:14px;outline:none"></label></sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end"><button onClick="{{ closeCfm }}" style="{{ ghostBtn }};height:46px">{{ cfm.back }}</button><button onClick="{{ confirmCfm }}" style="{{ cfm.okStyle }}">{{ cfm.label }}</button></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100% - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:{{ toastColor }};display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">{{ toastMark }}</span>{{ toast }}
+  </div>
+</sc-if>
+</div>
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Inicial&quot;,&quot;Filtros aplicados&quot;,&quot;Lista vazia&quot;,&quot;Carregando&quot;,&quot;Documento&quot;,&quot;Validação&quot;,&quot;Pré-visualização&quot;,&quot;Detalhes&quot;,&quot;Recebimento&quot;,&quot;Cancelamento&quot;],&quot;default&quot;:&quot;Inicial&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Desktop&quot;,&quot;Mobile&quot;],&quot;default&quot;:&quot;Desktop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: null, w: 1400, navOpen: false, dataState: 'ready', cur: 'Inicial', empty: false,
+    query: '', openFilter: '', filters: { st: 'Todos', sup: 'Todos', obra: 'Todas', per: 'Todo o período', resp: 'Todos' },
+    sort: { key: 'date', dir: 'desc' }, page: 1, recs: this.seed(), detailNo: '', doc: null, dirty: false, submitted: false, empOpen: false, empPick: '', docMenu: false, showPrev: false, showHist: false, moreOpen: false, calcOpen: false, editCard: '', menuAt: null, sx: 0, pick: -1, hi: -1, localExtra: [], newOpen: false, np: { name: '', code: '', un: 'un', price: '', cat: 'Materiais diversos', tax: '23' }, npErr: '',
+    rcpt: null, menuNo: '', cfm: null, toast: '', toastErr: false
+  };
+
+  TODAY = '2026-09-24';
+  PAGE = 8;
+  OBRAS = ['Residencial Jardim Europa', 'Edifício Central', 'Casa Oliveira', 'Reforma Comercial Delta'];
+  RESP = ['Carlos Mendes', 'Marta Ribeiro', 'João Pacheco', 'Ana Duarte'];
+  REQ = ['Rui Matos', 'Inês Barros', 'Paulo Gomes', 'Sofia Lima'];
+  CATS = ['', 'Aço e ferragens', 'Cimento e argamassa', 'Concreto usinado', 'Locação de equipamentos', 'Materiais elétricos e hidráulicos', 'Transporte de materiais', 'Serviços terceirizados', 'Madeira e acabamentos'];
+  UNITS = ['un', 'm', 'm²', 'm³', 'kg', 'L', 'h', 't', 'saco', 'rolo', 'chapa', 'barra', 'viagem', 'mês', 'módulo', 'serviço', 'balde'];
+  PAYS = ['Transferência bancária', 'Débito direto SEPA', 'Cheque', 'À vista'];
+  PZS = ['À vista', '15 dias', '30 dias', '45 dias', '60 dias'];
+  SC = {
+    'Rascunho': ['#F1F5F9', '#475569', '#94A3B8'], 'Aguardando aprovação': ['#FFFBEB', '#B45309', '#F59E0B'], 'Aprovado': ['#EEF0FE', '#4338CA', '#6D5DFB'],
+    'Enviado ao fornecedor': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Parcialmente recebido': ['#ECFEFF', '#0E7490', '#06B6D4'], 'Recebido': ['#ECFDF5', '#047857', '#10B981'],
+    'Concluído': ['#D1FAE5', '#065F46', '#059669'], 'Cancelado': ['#FEF2F2', '#B91C1C', '#EF4444']
+  };
+  STS = ['Rascunho', 'Aguardando aprovação', 'Aprovado', 'Enviado ao fornecedor', 'Parcialmente recebido', 'Recebido', 'Concluído', 'Cancelado'];
+  OPEN = ['Aguardando aprovação', 'Aprovado', 'Enviado ao fornecedor', 'Parcialmente recebido'];
+  SUPI = {
+    'Betão Pronto': ['501 234 567', 'Helena Cruz', 'comercial@betaopronto.exemplo', '+351 21 000 1101', 'Lisboa'],
+    'Madeireira Sul': ['502 345 678', 'Tomás Faria', 'vendas@madeireirasul.exemplo', '+351 21 000 1102', 'Setúbal'],
+    'Ferro & Aço Ltda': ['503 456 789', 'Rita Salgado', 'pedidos@ferroaco.exemplo', '+351 22 000 1103', 'Porto'],
+    'Fornecedor ABC': ['504 567 890', 'Nuno Teles', 'contacto@fornecedorabc.exemplo', '+351 22 000 1104', 'Braga'],
+    'Cimentos do Norte': ['505 678 901', 'Vera Antunes', 'encomendas@cimentosnorte.exemplo', '+351 25 000 1105', 'Braga'],
+    'Hidrosul Distribuição': ['506 789 012', 'Gil Moreira', 'vendas@hidrosul.exemplo', '+351 21 000 1106', 'Almada'],
+    'EletroSul': ['507 890 123', 'Paula Reis', 'pedidos@eletrosul.exemplo', '+351 21 000 1107', 'Amadora'],
+    'MaqRent': ['508 901 234', 'Luís Barata', 'aluguer@maqrent.exemplo', '+351 21 000 1108', 'Sintra'],
+    'TransLog': ['509 012 345', 'Bruno Lopes', 'operacoes@translog.exemplo', '+351 21 000 1109', 'Loures'],
+    'Cimex Materiais': ['510 123 456', 'Cátia Neves', 'comercial@cimex.exemplo', '+351 21 000 1110', 'Cascais'],
+    'Guindastes Delta Max': ['511 234 567', 'Fábio Dias', 'reservas@deltamax.exemplo', '+351 21 000 1111', 'Seixal'],
+    'SiderNorte': ['512 345 678', 'Marta Pinho', 'vendas@sidernorte.exemplo', '+351 22 000 1112', 'Porto']
+  };
+  ORCS = [
+    { no: 'ORC-2026-038', sup: 'Guindastes Delta Max', obra: 'Edifício Central', valid: '2026-09-30', prazo: 2, pay: '30 dias', order: '', items: [{ code: 'LOC-GT01', d: 'Guindaste torre — locação mensal', cat: 'Locação de equipamentos', un: 'serviço', q: '1', p: '5700', disc: '', tax: '0' }] },
+    { no: 'ORC-2026-037', sup: 'Madeireira Sul', obra: 'Reforma Comercial Delta', valid: '2026-09-30', prazo: 7, pay: '30 dias', order: 'PC-2026-049', items: [{ code: 'MAD-118', d: 'Compensado resinado 18 mm', cat: 'Madeira e acabamentos', un: 'chapa', q: '120', p: '58', disc: '', tax: '0' }, { code: 'MAD-203', d: 'Pontaletes de eucalipto 3 m', cat: 'Madeira e acabamentos', un: 'un', q: '200', p: '12,2', disc: '', tax: '0' }] },
+    { no: 'ORC-2026-027', sup: 'Betão Pronto', obra: 'Edifício Central', valid: '2026-09-30', prazo: 3, pay: '30 dias', order: 'PC-2026-052', items: [{ code: 'CON-F30', d: 'Concreto usinado fck 30', cat: 'Concreto usinado', un: 'm³', q: '140', p: '125', disc: '', tax: '0' }, { code: 'CON-BMB', d: 'Bombeamento', cat: 'Concreto usinado', un: 'serviço', q: '1', p: '1100', disc: '', tax: '0' }] }
+  ];
+
+  EMPRESAS = [['Construtora Alvorada, Lda.', 'Obras e empreitadas'], ['Alvorada Engenharia e Projetos, S.A.', 'Projetos e fiscalização'], ['Alvorada Instalações, Lda.', 'Elétrica e hidráulica']];
+  PCATS = ['Cimento e argamassa', 'Concreto', 'Aço e ferragens', 'Agregados', 'Hidráulica', 'Elétrica', 'Tintas e revestimentos', 'Equipamentos e ferramentas', 'Serviços', 'Materiais diversos'];
+  RATES = ['0', '6', '13', '23'];
+  KINDS = { title: 'Título', subtitle: 'Subtítulo', comment: 'Comentário', break: 'Quebra de página' };
+  CATALOG = [
+    ['CI-0001', 'Cimento CP-II 32 — saco 50 kg', 'Cimento e argamassa', 'saco', 9.5, 23], ['CI-0003', 'Argamassa colante AC-II — saco 20 kg', 'Cimento e argamassa', 'saco', 11.75, 23], ['CI-0004', 'Argamassa de assentamento — saco 25 kg', 'Cimento e argamassa', 'saco', 6.9, 23], ['CI-0005', 'Cal hidratada — saco 20 kg', 'Cimento e argamassa', 'saco', 5.4, 23],
+    ['CO-0010', 'Concreto usinado fck 25', 'Concreto', 'm³', 118, 23], ['CO-0011', 'Concreto usinado fck 30', 'Concreto', 'm³', 125, 23], ['CO-0012', 'Bombeamento de concreto', 'Concreto', 'serviço', 1100, 23],
+    ['AC-0125', 'Vergalhão CA-50 Ø12,5 mm', 'Aço e ferragens', 't', 1240, 23], ['AC-0100', 'Vergalhão CA-50 Ø10 mm', 'Aço e ferragens', 't', 1255, 23], ['AC-0080', 'Vergalhão CA-50 Ø8 mm', 'Aço e ferragens', 't', 1270, 23], ['AC-0630', 'Arame recozido nº 18', 'Aço e ferragens', 'kg', 1.95, 23], ['AC-MQ196', 'Malha eletrossoldada Q196', 'Aço e ferragens', 'm²', 5.8, 23],
+    ['AG-0001', 'Areia média lavada', 'Agregados', 'm³', 24, 13], ['AG-0002', 'Brita 1', 'Agregados', 'm³', 27, 13], ['AG-0003', 'Pedra britada 2', 'Agregados', 'm³', 26, 13], ['AG-0004', 'Pó de pedra', 'Agregados', 'm³', 21, 13],
+    ['HI-0050', 'Tubo PVC 50 mm — barra 6 m', 'Hidráulica', 'barra', 17.5, 23], ['HI-0100', 'Tubo PVC 100 mm — barra 6 m', 'Hidráulica', 'barra', 38, 23], ['HI-0200', 'Conexões PVC sortidas', 'Hidráulica', 'un', 12.5, 23], ['HI-0300', 'Registro de gaveta 3/4"', 'Hidráulica', 'un', 90, 23], ['HI-0400', 'Caixa d’água 1000 L', 'Hidráulica', 'un', 185, 23],
+    ['EL-0025', 'Cabo flexível 2,5 mm² — rolo 100 m', 'Elétrica', 'rolo', 120, 23], ['EL-0060', 'Cabo flexível 6 mm² — rolo 100 m', 'Elétrica', 'rolo', 285, 23], ['EL-0200', 'Disjuntor bipolar 25 A', 'Elétrica', 'un', 50, 23], ['EL-0300', 'Quadro de distribuição 24 módulos', 'Elétrica', 'un', 650, 23], ['EL-0400', 'Eletroduto corrugado 3/4" — rolo 50 m', 'Elétrica', 'rolo', 38, 23],
+    ['TI-0001', 'Tinta acrílica fosca — balde 18 L', 'Tintas e revestimentos', 'balde', 92, 23], ['TI-0002', 'Selador acrílico — balde 18 L', 'Tintas e revestimentos', 'balde', 64, 23], ['TI-0003', 'Massa corrida — 25 kg', 'Tintas e revestimentos', 'un', 28, 23], ['RV-0001', 'Porcelanato 60×60 cm', 'Tintas e revestimentos', 'm²', 22.5, 23], ['RV-0002', 'Cerâmica de parede 30×60 cm', 'Tintas e revestimentos', 'm²', 14.8, 23],
+    ['EQ-0001', 'Betoneira 400 L — locação mensal', 'Equipamentos e ferramentas', 'mês', 420, 23], ['EQ-0002', 'Andaime fachadeiro — módulo, 45 dias', 'Equipamentos e ferramentas', 'módulo', 140, 23], ['EQ-0003', 'Vibrador de imersão — locação mensal', 'Equipamentos e ferramentas', 'mês', 95, 23], ['EQ-0004', 'Furadeira de impacto', 'Equipamentos e ferramentas', 'un', 148, 23],
+    ['SV-0001', 'Mão de obra — pedreiro', 'Serviços', 'h', 14.5, 6], ['SV-0002', 'Mão de obra — servente', 'Serviços', 'h', 10.2, 6], ['SV-0003', 'Transporte de materiais — viagem', 'Serviços', 'viagem', 162.5, 23], ['SV-0004', 'Locação de guindaste torre — mensal', 'Serviços', 'mês', 5700, 23]
+  ].map(a => ({ code: a[0], name: a[1], cat: a[2], un: a[3], price: a[4], tax: a[5] }));
+
+  locFor(o) { return ({ 'Residencial Jardim Europa': 'Rua das Acácias, 120 — Cascais', 'Edifício Central': 'Av. da República, 48 — Lisboa', 'Casa Oliveira': 'Quinta do Souto, lote 7 — Sintra', 'Reforma Comercial Delta': 'Rua do Comércio, 215 — Setúbal' })[o] || ''; }
+
+  seed() {
+    const I = (code, d, cat, un, q, p, disc, tax) => ({ code, d, cat, un, q, p, disc: disc || 0, tax: tax || 0 });
+    const RK = { 'Rascunho': 0, 'Aguardando aprovação': 1, 'Aprovado': 2, 'Enviado ao fornecedor': 3, 'Parcialmente recebido': 4, 'Recebido': 5, 'Concluído': 6 };
+    const EC = 'Edifício Central', RJ = 'Residencial Jardim Europa', CO = 'Casa Oliveira', RD = 'Reforma Comercial Delta';
+    const O = (no, date, sup, obra, resp, req, eta, st, o, items, rc) => {
+      o = o || {}; const rk = o.cancel ? o.cancel.rank : RK[st], h = [], E = (d, ev, by, k) => h.push({ d, ev, by, k });
+      E(date, 'Pedido criado', req, 'c');
+      if (rk >= 1) E(date, 'Enviado para aprovação', req, 's');
+      if (rk >= 2) E(this.addDays(date, 1), 'Pedido aprovado', 'Carlos Mendes', 'a');
+      if (rk >= 3) E(this.addDays(date, 1), 'Enviado ao fornecedor (registro demonstrativo)', resp, 's');
+      const receipts = (rc || []).map((r, n) => ({ id: 'REC-' + no.slice(-3) + '-' + (n + 1), date: r[0], by: resp, note: r[1], q: r[2], div: false }));
+      receipts.forEach(r => E(r.date, 'Recebimento ' + r.id + ' registrado', r.by, 'r'));
+      if (st === 'Concluído') E(o.done, 'Pedido concluído', resp, 'd');
+      if (o.cancel) E(o.cancel.date, 'Pedido cancelado — ' + o.cancel.why, resp, 'x');
+      return { no, date, sup, obra, resp, req, eta, st, orc: o.orc || '', pay: o.pay || 'Transferência bancária', pz: o.pz || '30 dias', local: this.locFor(obra), obsI: o.obsI || '', obsF: o.obsF || '', frete: o.frete || 0, items, receipts, invoices: o.inv || [], history: h.sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0) };
+    };
+    return [
+      O('PC-2026-056', '2026-09-23', 'Fornecedor ABC', EC, 'Marta Ribeiro', 'Rui Matos', '2026-10-08', 'Aguardando aprovação', { frete: 180, obsI: 'Aguardando alçada do diretor de obra.', obsF: 'Entrega em carga única, com guia de remessa.' }, [{ type: 'title', d: 'Armaduras — Edifício Central' }, I('ACO-125', 'Aço CA-50 Ø12,5 mm', 'Aço e ferragens', 't', 12, 1240), I('ACO-008', 'Aço CA-50 Ø8 mm', 'Aço e ferragens', 't', 8, 1240), { type: 'comment', d: 'Cortar e dobrar conforme projeto de armaduras.' }]),
+      O('PC-2026-055', '2026-09-22', 'Hidrosul Distribuição', EC, 'Ana Duarte', 'Paulo Gomes', '2026-10-10', 'Rascunho', { obsI: 'Rascunho — falta confirmar marca dos registros.', pz: '45 dias' }, [I('HID-100', 'Tubo PVC 100 mm', 'Materiais elétricos e hidráulicos', 'barra', 60, 38, 0, 23), I('HID-CNX', 'Conexões PVC sortidas', 'Materiais elétricos e hidráulicos', 'un', 120, 12.5, 0, 23), I('HID-RG34', 'Registro de gaveta 3/4"', 'Materiais elétricos e hidráulicos', 'un', 40, 90, 5, 23)]),
+      O('PC-2026-054', '2026-09-21', 'Cimentos do Norte', RJ, 'Carlos Mendes', 'Inês Barros', '2026-10-01', 'Aprovado', { obsF: 'Paletizado, descarga com empilhadora.' }, [I('CIM-CP2', 'Cimento CP-II 50 kg', 'Cimento e argamassa', 'saco', 400, 9.5), I('ARG-AC2', 'Argamassa colante AC-II 20 kg', 'Cimento e argamassa', 'saco', 200, 11.75)]),
+      O('PC-2026-053', '2026-09-18', 'Ferro & Aço Ltda', EC, 'Marta Ribeiro', 'Rui Matos', '2026-10-02', 'Enviado ao fornecedor', { pay: 'Débito direto SEPA', pz: '45 dias', frete: 220 }, [I('ACO-125', 'Aço CA-50 Ø12,5 mm', 'Aço e ferragens', 't', 12, 1285), I('ACO-008', 'Aço CA-50 Ø8 mm', 'Aço e ferragens', 't', 8, 1285)]),
+      O('PC-2026-049', '2026-09-14', 'Madeireira Sul', RD, 'Carlos Mendes', 'Sofia Lima', '2026-09-21', 'Enviado ao fornecedor', { orc: 'ORC-2026-037', obsI: 'Entrega atrasada — contactar o fornecedor.' }, [I('MAD-118', 'Compensado resinado 18 mm', 'Madeira e acabamentos', 'chapa', 120, 58), I('MAD-203', 'Pontaletes de eucalipto 3 m', 'Madeira e acabamentos', 'un', 200, 12.2)]),
+      O('PC-2026-052', '2026-09-03', 'Betão Pronto', EC, 'Marta Ribeiro', 'Paulo Gomes', '2026-09-30', 'Parcialmente recebido', { orc: 'ORC-2026-027', obsF: 'Entrega em três concretagens.', inv: [{ no: 'FT-BP-2291', date: '2026-09-16', val: 6250, st: 'Pendente' }] }, [I('CON-F30', 'Concreto usinado fck 30', 'Concreto usinado', 'm³', 140, 125), I('CON-BMB', 'Bombeamento', 'Concreto usinado', 'serviço', 1, 1100)], [['2026-09-08', 'Guia GR-30112', [50, 1]], ['2026-09-15', 'Guia GR-30177', [40, 0]]]),
+      O('PC-2026-051', '2026-09-02', 'EletroSul', RD, 'Ana Duarte', 'Sofia Lima', '2026-09-16', 'Recebido', { inv: [{ no: 'FT-ES-118', date: '2026-09-17', val: 10086, st: 'Pendente' }] }, [I('ELE-QD24', 'Quadro de distribuição 24 módulos', 'Materiais elétricos e hidráulicos', 'un', 4, 650, 0, 23), I('ELE-CB25', 'Cabo flexível 2,5 mm² (100 m)', 'Materiais elétricos e hidráulicos', 'rolo', 30, 120, 0, 23), I('ELE-DJ25', 'Disjuntor bipolar 25 A', 'Materiais elétricos e hidráulicos', 'un', 40, 50, 0, 23)], [['2026-09-09', 'Guia GR-5521', [4, 30, 0]], ['2026-09-16', 'Guia GR-5560', [0, 0, 40]]]),
+      O('PC-2026-050', '2026-09-01', 'MaqRent', EC, 'João Pacheco', 'Paulo Gomes', '2026-09-04', 'Recebido', { pz: 'À vista', inv: [{ no: 'FT-MR-771', date: '2026-09-10', val: 11200, st: 'Pendente' }] }, [I('AND-FCH', 'Módulo de andaime fachadeiro — 45 dias', 'Locação de equipamentos', 'módulo', 80, 140)], [['2026-09-04', 'Montagem concluída', [80]]]),
+      O('PC-2026-048', '2026-08-27', 'TransLog', CO, 'João Pacheco', 'Inês Barros', '2026-09-05', 'Cancelado', { cancel: { rank: 3, date: '2026-08-30', why: 'contratado diretamente com outro transportador' }, pz: '15 dias' }, [I('TRP-BSC', 'Viagem de caminhão basculante', 'Transporte de materiais', 'viagem', 12, 162.5)]),
+      O('PC-2026-047', '2026-08-20', 'Cimex Materiais', RJ, 'Ana Duarte', 'Inês Barros', '2026-09-10', 'Parcialmente recebido', { pz: '28 dias', obsI: 'Saldo de argamassa pendente no fornecedor.' }, [I('CIM-CP2', 'Cimento CP-II 50 kg', 'Cimento e argamassa', 'saco', 300, 9.9), I('ARG-AC2', 'Argamassa colante AC-II 20 kg', 'Cimento e argamassa', 'saco', 150, 11.2)], [['2026-09-02', 'Guia GR-8841 — só cimento', [150, 0]]]),
+      O('PC-2026-046', '2026-08-12', 'Guindastes Delta Max', EC, 'Carlos Mendes', 'Paulo Gomes', '2026-08-14', 'Concluído', { done: '2026-08-25', inv: [{ no: 'FT-GD-0412', date: '2026-08-20', val: 5700, st: 'Paga' }] }, [I('LOC-GT01', 'Guindaste torre — locação mensal', 'Locação de equipamentos', 'serviço', 1, 5700)], [['2026-08-14', 'Montagem e vistoria', [1]]])
+    ];
+  }
+
+  pl(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+  eur(n) { return '€ ' + (n || 0).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  fmtN(n) { return n.toLocaleString('de-DE', { maximumFractionDigits: 2 }); }
+  fmtD(s) { if (!s) return '—'; const a = s.split('-'); return a[2] + '/' + a[1] + '/' + a[0]; }
+  ms(s) { const a = s.split('-').map(Number); return Date.UTC(a[0], a[1] - 1, a[2]); }
+  days(a, b) { return Math.round((this.ms(a) - this.ms(b)) / 864e5); }
+  addDays(s, k) { return new Date(this.ms(s) + k * 864e5).toISOString().slice(0, 10); }
+  r2(x) { return Math.round(x * 100) / 100; }
+  num(v) { let t = String(v == null ? '' : v).replace(/[^\d,.-]/g, ''); if (t.indexOf(',') >= 0) t = t.replace(/\./g, '').replace(',', '.'); const n = parseFloat(t); return isNaN(n) ? 0 : n; }
+  lineCalc(i) {
+    const q = Math.max(this.num(i.q), 0), p = Math.max(this.num(i.p), 0), gross = this.r2(q * p);
+    const dn = Math.max(this.num(i.disc), 0), disc = this.r2(i.discT === '€' ? Math.min(dn, gross) : gross * Math.min(dn, 100) / 100), base = this.r2(gross - disc), rate = Math.min(Math.max(this.num(i.tax), 0), 100), tax = this.r2(base * rate / 100);
+    return { gross, disc, base, rate, tax, total: this.r2(base + tax) };
+  }
+  calc(r) {
+    const Z = { gross: 0, disc: 0, base: 0, rate: 0, tax: 0, total: 0 }, L = r.items.map(i => this.isLine(i) ? this.lineCalc(i) : Z), sum = k => this.r2(L.reduce((a, l) => a + l[k], 0)), frete = Math.max(this.num(r.frete), 0), lines = sum('total');
+    return { L, sub: sum('gross'), disc: sum('disc'), tax: sum('tax'), lines, frete, v: this.r2(lines + frete) };
+  }
+  recv(r, c) {
+    const rq = r.items.map((_, i) => (r.receipts || []).reduce((a, x) => a + (+x.q[i] || 0), 0)); let val = 0;
+    r.items.forEach((it, i) => { const q = this.num(it.q); if (this.isLine(it) && q > 0) val += Math.min(rq[i], q) / q * c.L[i].total; });
+    val = this.r2(val);
+    return { rq, val, pct: c.lines > 0 ? Math.min(val / c.lines, 1) : 0, div: r.items.some((it, i) => this.isLine(it) && rq[i] > this.num(it.q) + 1e-9) };
+  }
+  enrich(recs) {
+    const T = this.TODAY;
+    return recs.map(r => { const c = this.calc(r), rv = this.recv(r, c); return Object.assign({}, r, { c, rv, v: c.v, pct: r.st === 'Cancelado' ? 0 : rv.pct, status: r.st, open: this.OPEN.indexOf(r.st) >= 0, late: ['Aprovado', 'Enviado ao fornecedor', 'Parcialmente recebido'].indexOf(r.st) >= 0 && r.eta < T, invd: this.r2((r.invoices || []).reduce((a, x) => a + x.val, 0)) }); });
+  }
+  flash(msg, err) { clearTimeout(this.tT); this.setState({ toast: msg, toastErr: !!err }); this.tT = setTimeout(() => this.setState({ toast: '' }), 3000); }
+  nextNo() { const m = Math.max.apply(null, this.state.recs.map(r => parseInt(r.no.slice(-3), 10))); return 'PC-2026-' + String(m + 1).padStart(3, '0'); }
+  updRec(no, fn) { this.setState(s => ({ recs: s.recs.map(r => r.no === no ? fn(r) : r) })); }
+  ev(r, ev, k, by) { return r.history.concat([{ d: this.TODAY, ev, by: by || r.resp, k }]); }
+
+  acts(r) {
+    const st = r.st, rc = (r.receipts || []).length, inv = (r.invoices || []).length, canc = st === 'Cancelado';
+    const A = (key, label, ok, why, kind) => ({ key, label, ok, why: ok ? '' : why, kind: kind || '' });
+    return [
+      A('view', 'Visualizar detalhes', true),
+      A('edit', 'Editar pedido', ['Rascunho', 'Aguardando aprovação', 'Aprovado'].indexOf(st) >= 0, canc ? 'Pedido cancelado' : 'Indisponível após o envio ao fornecedor'),
+      A('dup', 'Duplicar pedido', true),
+      A('submit', 'Enviar para aprovação', st === 'Rascunho', 'Disponível apenas para rascunhos', 'p'),
+      A('approve', 'Aprovar pedido', st === 'Aguardando aprovação', 'Disponível apenas aguardando aprovação', 'g'),
+      A('reject', 'Rejeitar pedido', st === 'Aguardando aprovação', 'Disponível apenas aguardando aprovação', 'd'),
+      A('send', 'Enviar ao fornecedor', st === 'Aprovado', 'Requer pedido aprovado', 'p'),
+      A('receive', 'Registrar recebimento', st === 'Enviado ao fornecedor' || st === 'Parcialmente recebido', canc ? 'Pedido cancelado' : st === 'Recebido' || st === 'Concluído' ? 'Pedido totalmente recebido' : 'Disponível após o envio ao fornecedor', 'c'),
+      A('receipts', 'Consultar recebimentos', rc > 0, 'Nenhum recebimento registrado'),
+      A('invoices', 'Consultar faturas', inv > 0, 'Nenhuma fatura relacionada'),
+      A('complete', 'Concluir pedido', st === 'Recebido', 'Disponível quando totalmente recebido', 'g'),
+      A('cancel', 'Cancelar pedido', ['Rascunho', 'Aguardando aprovação', 'Aprovado', 'Enviado ao fornecedor'].indexOf(st) >= 0, canc ? 'Pedido já cancelado' : st === 'Concluído' ? 'Pedido concluído' : 'Há recebimentos registrados', 'd')
+    ];
+  }
+  run(key, no) {
+    const r = this.state.recs.filter(x => x.no === no)[0]; if (!r) return;
+    const a = this.acts(r).filter(x => x.key === key)[0]; if (!a || !a.ok) { this.flash(a ? a.why : 'Ação indisponível', true); return; }
+    const o = { menuNo: '' };
+    if (key === 'view') this.setState(Object.assign(o, { detailNo: no }));
+    else if (key === 'edit') this.openDoc(r);
+    else if (key === 'dup') this.openDoc(r, true);
+    else if (key === 'receive') this.openRcpt(no);
+    else if (key === 'receipts') { this.setState(Object.assign(o, { detailNo: no })); this.scrollTo('sec-rec'); }
+    else if (key === 'invoices') { this.setState(Object.assign(o, { detailNo: no })); this.scrollTo('sec-fat'); }
+    else if (key === 'approve') { this.setState(o); this.updRec(no, x => Object.assign({}, x, { st: 'Aprovado', history: this.ev(x, 'Pedido aprovado', 'a', 'Carlos Mendes') })); this.flash(no + ' aprovado. Nenhuma fatura ou recebimento foi criado.'); }
+    else if (key === 'submit') {
+      if (!r.items.length || this.errors(this.draftFrom(r), true).count) { this.flash('Complete o pedido antes de enviar para aprovação', true); this.openDoc(r, false, '', true); return; }
+      this.setState({ menuNo: '', cfm: { key, no, reason: '' } });
+    } else this.setState({ menuNo: '', cfm: { key, no, reason: '' } });
+  }
+  scrollTo(id) { setTimeout(() => { const d = document.getElementById('pg-drawer'), e = document.getElementById(id); if (d && e) d.scrollTo({ top: e.offsetTop - 12, behavior: 'smooth' }); }, 120); }
+  cfmInfo(c) {
+    const m = {
+      cancel: ['Cancelar o pedido ' + c.no + '?', 'O pedido passa a Cancelado e deixa de contar como ativo. Nenhuma comunicação é enviada ao fornecedor (demonstrativo).', 'Cancelar pedido', true, 'Motivo (opcional)', 'Manter pedido'],
+      reject: ['Rejeitar o pedido ' + c.no + '?', 'O pedido volta para Rascunho e pode ser corrigido e enviado novamente para aprovação.', 'Rejeitar', true, 'Motivo da rejeição (opcional)', 'Voltar'],
+      send: ['Enviar ' + c.no + ' ao fornecedor?', 'Registra o envio no histórico. Nenhum e-mail ou integração real é acionado neste protótipo.', 'Marcar como enviado', false, '', 'Voltar'],
+      submit: ['Enviar ' + c.no + ' para aprovação?', 'O pedido ficará Aguardando aprovação e não poderá ser enviado ao fornecedor até ser aprovado.', 'Enviar para aprovação', false, '', 'Voltar'],
+      complete: ['Concluir o pedido ' + c.no + '?', 'Marca o pedido como Concluído. Recebimentos e faturas permanecem registrados separadamente.', 'Concluir pedido', false, '', 'Voltar'],
+      discard: ['Descartar as alterações?', 'Os dados preenchidos neste formulário serão perdidos.', 'Descartar', true, '', 'Continuar editando'],
+      saveSubmit: ['Salvar e enviar para aprovação?', 'O pedido será salvo e ficará Aguardando aprovação.', 'Salvar e enviar', false, '', 'Voltar']
+    }[c.key];
+    return { title: m[0], text: m[1], label: m[2], danger: m[3], hasInput: !!m[4], inputLabel: m[4], back: m[5] };
+  }
+  confirmCfm() {
+    const c = this.state.cfm; if (!c) return; const no = c.no, why = c.reason.trim();
+    this.setState({ cfm: null });
+    if (c.key === 'cancel') { this.updRec(no, x => Object.assign({}, x, { st: 'Cancelado', history: this.ev(x, 'Pedido cancelado' + (why ? ' — ' + why : ''), 'x') })); this.flash(no + ' cancelado (demonstrativo)'); }
+    else if (c.key === 'reject') { this.updRec(no, x => Object.assign({}, x, { st: 'Rascunho', history: this.ev(x, 'Pedido rejeitado' + (why ? ' — ' + why : '') + ' · devolvido para rascunho', 'x', 'Carlos Mendes') })); this.flash(no + ' rejeitado e devolvido para rascunho'); }
+    else if (c.key === 'send') { this.updRec(no, x => Object.assign({}, x, { st: 'Enviado ao fornecedor', history: this.ev(x, 'Enviado ao fornecedor (registro demonstrativo)', 's') })); this.flash(no + ' marcado como enviado'); }
+    else if (c.key === 'submit') { this.updRec(no, x => Object.assign({}, x, { st: 'Aguardando aprovação', history: this.ev(x, 'Enviado para aprovação', 's') })); this.flash(no + ' enviado para aprovação'); }
+    else if (c.key === 'complete') { this.updRec(no, x => Object.assign({}, x, { st: 'Concluído', history: this.ev(x, 'Pedido concluído', 'd') })); this.flash(no + ' concluído'); }
+    else if (c.key === 'discard') this.setState({ doc: null, dirty: false, submitted: false });
+  }
+
+  isLine(it) { return !it.type || it.type === 'item'; }
+  norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  products() { return this.CATALOG.concat(this.state.localExtra); }
+  numbering(items) {
+    const nums = [], cnt = [0, 0, 0, 0, 0]; let ic = 0;
+    items.forEach(it => {
+      if (it.type === 'title') { cnt[1]++; cnt[2] = cnt[3] = cnt[4] = 0; ic = 0; nums.push(String(cnt[1])); }
+      else if (it.type === 'subtitle') { const l = Math.min(Math.max(it.lvl || 2, 2), 4); cnt[l]++; for (let k = l + 1; k <= 4; k++) cnt[k] = 0; ic = 0; nums.push(cnt.slice(1, l + 1).join('.')); }
+      else if (this.isLine(it)) { ic++; let deep = 0; for (let k = 1; k <= 4; k++) if (cnt[k] > 0) deep = k; nums.push((deep ? cnt.slice(1, deep + 1).join('.') + '.' : '') + ic); }
+      else nums.push('');
+    });
+    return nums;
+  }
+  newRow(type, lvl) { return type === 'item' ? { type: 'item', pid: '', code: '', cat: '', d: '', un: 'un', q: '1', p: '', discT: '%', disc: '', tax: '0' } : { type, d: '', lvl: lvl || (type === 'subtitle' ? 2 : 1) }; }
+  blankDraft(emp) { return { no: this.nextNo(), empresa: emp || this.EMPRESAS[0][0], sup: '', supContato: '', supEnd: '', obra: '', date: this.TODAY, req: '', resp: 'Carlos Mendes', eta: '', local: '', instr: '', pay: this.PAYS[0], pz: '30 dias', cur: 'EUR', obsI: '', obsF: '', orc: '', frete: '0', st: 'Rascunho', history: [], items: [] }; }
+  draftFrom(r) {
+    const si = this.SUPI[r.sup];
+    return { no: r.no, empresa: r.empresa || this.EMPRESAS[0][0], sup: r.sup, supContato: r.supContato || (si ? si[2] + ' · ' + si[3] : ''), supEnd: r.supEnd || (si ? si[4] : ''), obra: r.obra, date: r.date, req: r.req, resp: r.resp, eta: r.eta, local: r.local, instr: r.instr || '', pay: r.pay, pz: r.pz, cur: 'EUR', obsI: r.obsI, obsF: r.obsF, orc: r.orc, frete: String(r.frete || 0).replace('.', ','), st: r.st, history: r.history,
+      items: r.items.map(i => !this.isLine(i) ? { type: i.type, d: i.d || '', lvl: i.lvl || (i.type === 'subtitle' ? 2 : 1) } : { type: 'item', pid: i.code || '', code: i.code || '', cn: i.d, cat: i.cat || '', d: i.d, un: i.un, q: String(i.q).replace('.', ','), p: String(i.p).replace('.', ','), discT: i.discT || '%', disc: i.disc ? String(i.disc).replace('.', ',') : '', tax: String(i.tax || 0) }) };
+  }
+  openDoc(r, dup, emp, sub) {
+    let d;
+    if (r) { d = this.draftFrom(r); if (dup) { d.no = this.nextNo(); d.orc = ''; d.st = 'Rascunho'; d.history = []; d.date = this.TODAY; d.eta = ''; d.obsI = 'Duplicado de ' + r.no + '.'; } } else d = this.blankDraft(emp);
+    this.setState({ doc: d, dirty: !!dup, submitted: sub ? 'full' : false, detailNo: '', menuNo: '', empOpen: false, showPrev: false, showHist: false, moreOpen: false, editCard: '', pick: -1, menuAt: null, docMenu: false, newOpen: false });
+    if (dup) this.flash('Pedido duplicado como rascunho — revise e salve');
+  }
+  upd(fn) { this.setState(x => ({ doc: fn(x.doc), dirty: true })); }
+  setF(k, v) { this.upd(d => Object.assign({}, d, { [k]: v })); }
+  setSup(v) { const si = this.SUPI[v]; this.upd(d => Object.assign({}, d, { sup: v }, si && !d.supContato ? { supContato: si[2] + ' · ' + si[3], supEnd: si[4] } : {})); }
+  setObra(v) { this.upd(d => Object.assign({}, d, { obra: v }, !d.local || d.local === this.locFor(d.obra) ? { local: this.locFor(v) } : {})); }
+  setItem(n, k, v) { this.upd(d => Object.assign({}, d, { items: d.items.map((it, i) => i === n ? Object.assign({}, it, { [k]: v }) : it) })); }
+  setOrc(v) {
+    const o = this.ORCS.filter(x => x.no === v)[0];
+    if (!o) { this.setF('orc', ''); return; }
+    const blank = !this.state.doc.items.some(i => this.isLine(i) && String(i.d).trim());
+    this.upd(d => Object.assign({}, d, { orc: v, sup: o.sup, obra: o.obra, pz: o.pay, local: d.local || this.locFor(o.obra), eta: d.eta || this.addDays(d.date || this.TODAY, o.prazo), supContato: d.supContato || ((this.SUPI[o.sup] || [])[2] || ''), supEnd: d.supEnd || ((this.SUPI[o.sup] || [])[4] || '') }, blank ? { items: o.items.map(i => ({ type: 'item', pid: i.code, code: i.code, cn: i.d, cat: i.cat, d: i.d, un: i.un, q: i.q, p: i.p, discT: '%', disc: '', tax: i.tax || '0' })) } : {}));
+    this.flash(blank ? 'Dados e itens preenchidos a partir de ' + v : 'Vínculo com ' + v + ' definido; itens mantidos');
+  }
+  errors(d, full) {
+    const e = {}, rows = []; const add = k => { }; 
+    if (!String(d.sup).trim()) e.sup = 'Informe o fornecedor';
+    if (this.num(d.frete) < 0) e.frete = 'Frete não pode ser negativo';
+    if (full) {
+      if (!d.obra) e.obra = 'Selecione a obra'; if (!d.date) e.date = 'Informe a data de emissão'; if (!d.req) e.req = 'Selecione o solicitante'; if (!d.resp) e.resp = 'Informe o responsável';
+      if (!d.eta) e.eta = 'Informe a data prevista'; else if (d.date && d.eta < d.date) e.eta = 'Entrega anterior à emissão';
+      if (!String(d.local).trim()) e.local = 'Informe o local de entrega';
+    }
+    let count = 0;
+    d.items.forEach((it, n) => {
+      if (!this.isLine(it)) return; count++;
+      const c = this.lineCalc(it); let m = '';
+      if (this.num(it.q) < 0) m = 'quantidade não pode ser negativa';
+      else if (this.num(it.p) < 0) m = 'valor unitário não pode ser negativo';
+      else if (full && !String(it.d).trim()) m = 'informe a descrição do item';
+      else if (full && !(this.num(it.q) > 0)) m = 'quantidade deve ser maior que zero';
+      else if (full && !(this.num(it.p) > 0)) m = 'informe o valor unitário';
+      else if (it.discT === '%' && this.num(it.disc) > 100) m = 'desconto não pode passar de 100%';
+      else if (it.discT === '€' && this.num(it.disc) > c.gross) m = 'desconto maior que o valor bruto da linha';
+      rows[n] = m;
+    });
+    if (full && !count) e.items = 'Adicione ao menos um produto ou serviço';
+    return { e, rows, count: Object.keys(e).filter(k => k !== 'items').length + rows.filter(Boolean).length + (e.items ? 1 : 0) };
+  }
+  persist(d, fin) {
+    const full = fin || d.st !== 'Rascunho', r = this.errors(d, full);
+    if (r.count) { this.setState({ submitted: full ? 'full' : 'draft' }); this.flash(this.pl(r.count, 'ponto precisa', 'pontos precisam') + ' de correção', true); return; }
+    const ex = this.state.recs.filter(x => x.no === d.no)[0], st = fin ? 'Aguardando aprovação' : d.st, T = this.TODAY;
+    const hist = (ex ? ex.history : []).slice();
+    hist.push(ex ? { d: T, ev: 'Pedido editado', by: d.resp, k: 'c' } : { d: T, ev: 'Pedido criado' + (d.orc ? ' a partir de ' + d.orc : ''), by: d.req || d.resp, k: 'c' });
+    if (fin) hist.push({ d: T, ev: 'Enviado para aprovação', by: d.req || d.resp, k: 's' });
+    const rec = Object.assign({}, d, { st, frete: this.num(d.frete), items: d.items.map(i => Object.assign({}, i)), receipts: ex ? ex.receipts : [], invoices: ex ? ex.invoices : [], history: hist });
+    this.setState(s => ({ recs: ex ? s.recs.map(x => x.no === d.no ? rec : x) : [rec].concat(s.recs), doc: Object.assign({}, d, { st, history: hist }), dirty: false, submitted: false }));
+    this.flash(fin ? d.no + ' salvo e enviado para aprovação' : (st === 'Rascunho' ? 'Rascunho ' + d.no + ' salvo' : 'Pedido ' + d.no + ' salvo'));
+  }
+  focusLater(fn) { [60, 200].forEach(ms => setTimeout(fn, ms)); }
+  focusRow(n) { this.focusLater(() => { const el = this.rootEl && this.rootEl.querySelector('[data-prod="' + n + '"],[data-txt="' + n + '"]'); if (el) el.focus(); }); }
+  addLine(type, at, rel) {
+    const items = this.state.doc.items, pos = at == null || at < 0 ? items.length : at + 1;
+    let lvl = 2;
+    if (type === 'subtitle') {
+      let base = 1;
+      for (let i = pos - 1; i >= 0; i--) { const it = items[i]; if (it.type === 'title') { base = 1; break; } if (it.type === 'subtitle') { base = Math.max(it.lvl || 2, 2); break; } }
+      lvl = rel === 'down' ? Math.min(base + 1, 4) : (base === 1 ? 2 : base);
+    }
+    this.upd(d => { const a = d.items.slice(); a.splice(pos, 0, this.newRow(type, lvl)); return Object.assign({}, d, { items: a }); });
+    this.setState({ menuAt: null, pick: type === 'item' ? pos : -1, hi: -1 });
+    this.focusRow(pos);
+  }
+  choose(n, p) {
+    this.upd(d => Object.assign({}, d, { items: d.items.map((it, i) => i === n ? Object.assign({}, it, { pid: p.code, code: p.code, cn: p.name, cat: p.cat, d: p.name, un: p.un, p: String(p.price).replace('.', ','), tax: String(p.tax), q: it.q || '1' }) : it) }));
+    this.setState({ pick: -1, hi: -1 });
+    this.focusLater(() => { const el = this.rootEl && this.rootEl.querySelector('[data-qty="' + n + '"]'); if (el && this.state.pick === -1) { el.focus(); if (el.select) el.select(); } });
+  }
+  anchor(sel, right, w) {
+    const wr = this.wrapEl, el = this.rootEl && this.rootEl.querySelector(sel);
+    if (!wr || !el) return null;
+    const a = el.getBoundingClientRect(), b = wr.getBoundingClientRect(), ww = Math.min(w || Math.max(a.width, 480), b.width - 16);
+    let left = right ? a.right - b.left - ww : a.left - b.left;
+    left = Math.max(8, Math.min(left, b.width - ww - 8));
+    return { left, top: a.bottom - b.top + 4, w: ww };
+  }
+  rootRef = (el) => { this.rootEl = el; };
+  wrapRef = (el) => { this.wrapEl = el; };
+  rowActs(r, kindStyle, stop, p) {
+    const out = [], H = this.touch ? 44 : 36, st = k => 'height:' + H + 'px;padding:0 12px;border-radius:10px;font-size:12.5px;font-weight:700;white-space:nowrap;' + kindStyle(k);
+    const L = { approve: 'Aprovar', receive: 'Receber', send: 'Enviar ao fornecedor', submit: 'Enviar p/ aprovação', complete: 'Concluir' };
+    if (p) out.push({ label: L[p.key], run: stop(() => this.run(p.key, r.no)), style: st(p.kind) });
+    if (this.acts(r).filter(a => a.key === 'edit')[0].ok) out.push({ label: 'Editar', run: stop(() => this.run('edit', r.no)), style: st('') });
+    out.push({ label: 'Ver', run: stop(() => this.setState({ detailNo: r.no })), style: st('') });
+    return out;
+  }
+  docVals() {
+    const s = this.state, d = s.doc; if (!d) return {};
+    const touch = this.touch, T = this.TODAY, ex = s.recs.filter(r => r.no === d.no)[0];
+    const errs = s.submitted ? this.errors(d, s.submitted === 'full') : { e: {}, rows: [], count: 0 };
+    const ZERO = { gross: 0, disc: 0, base: 0, rate: 0, tax: 0, total: 0 };
+    const calcs = d.items.map(i => this.isLine(i) ? this.lineCalc(i) : ZERO);
+    const sum = k => this.r2(calcs.reduce((a, c) => a + c[k], 0));
+    const gross = sum('gross'), disc = sum('disc'), base = sum('base'), tax = sum('tax'), lines = sum('total'), frete = Math.max(this.num(d.frete), 0), grand = this.r2(lines + frete);
+    const nLines = d.items.filter(i => this.isLine(i)).length, mono = 'font-family:\'JetBrains Mono\',monospace;', H = touch ? 44 : 40, nums = this.numbering(d.items);
+    const inpBase = 'width:100%;min-height:' + H + 'px;padding:0 10px;border-radius:9px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;outline:none;color:#0F172A';
+    const GRID = '52px minmax(250px,2.4fr) 98px 84px 84px 108px 156px 112px 150px 116px 140px';
+    const heads = [['Nº', 0], ['Produto', 0], ['Código', 0], ['Un.', 0], ['Quantidade', 1], ['Valor unit. (€)', 1], ['Desconto', 0], ['Base tributável', 1], ['Imposto', 0], ['Total da linha', 1], ['Ações', 1]].map(h => ({ name: h[0], style: 'font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B;white-space:nowrap;' + (h[1] ? 'text-align:right;' : '') }));
+    const opt = (list, cur) => list.map(v => ({ v: v.v != null ? v.v : v, l: v.l != null ? v.l : (v || 'Selecione'), sel: (v.v != null ? v.v : v) === cur }));
+    const bld = (k, label, o) => { o = o || {}; const err = errs.e[k] || ''; const val = d[k] == null ? '' : d[k]; return { label, err, hasErr: !!err, isSelect: !!o.opts, isArea: !!o.area, isInput: !o.opts && !o.area, type: o.type || 'text', ph: o.ph || '', list: o.list || '', value: val, opts: o.opts ? opt(o.opts, val) : [], onInput: ev => { const v = ev.target.value; if (k === 'sup') this.setSup(v); else if (k === 'orc') this.setOrc(v); else if (k === 'obra') this.setObra(v); else this.setF(k, v); }, wrapStyle: 'display:flex;flex-direction:column;gap:6px;min-width:0;grid-column:' + (o.full ? '1 / -1' : 'auto'), inpStyle: 'width:100%;min-height:' + H + 'px;padding:' + (o.area ? '10px 12px' : '0 12px') + ';border-radius:10px;border:1px solid ' + (err ? '#EF4444' : '#E2E8F0') + ';background:' + (err ? '#FEF2F2' : '#F8FAFC') + ';font-size:14px;outline:none;color:#0F172A;' + (o.area ? 'resize:vertical;' : '') }; };
+    const dash = v => (v && String(v).trim()) ? v : '—', apv = (d.history || []).filter(h => h.k === 'a')[0];
+    const cardDefs = [
+      { id: 'info', title: 'Informações', keys: ['date', 'req', 'resp'], fields: [bld('date', 'Data de emissão', { type: 'date' }), bld('orc', 'Orçamento de origem (opcional)', { opts: [{ v: '', l: 'Sem orçamento — pedido direto' }].concat(this.ORCS.map(o => ({ v: o.no, l: o.no + ' · ' + o.sup }))) }), bld('req', 'Solicitante', { opts: [''].concat(this.REQ) }), bld('resp', 'Responsável pela compra', { list: 'pg-resp', ph: 'Nome do responsável' })], lines: [['Nº', d.no, mono], ['Emissão', this.fmtD(d.date), mono], ['Aprovação', apv ? this.fmtD(apv.d) : 'pendente', mono], ['Origem', d.orc ? d.orc : 'Pedido direto', mono], ['Solicitante', dash(d.req)], ['Responsável', dash(d.resp)]] },
+      { id: 'ent', title: 'Entrega', keys: ['eta', 'local', 'frete'], fields: [bld('eta', 'Data prevista de entrega', { type: 'date' }), bld('frete', 'Frete (€)', { ph: '0,00' }), bld('local', 'Endereço / local de entrega', { full: true, ph: 'Endereço ou obra de destino' }), bld('instr', 'Instruções de entrega', { area: true, full: true, ph: 'Horário, acesso, contacto no local' })], lines: [['Previsão', this.fmtD(d.eta), mono], ['Local', dash(d.local)], ['Frete', this.eur(frete), mono], ['Instruções', dash(d.instr)]] },
+      { id: 'sup', title: 'Fornecedor', keys: ['sup'], fields: [bld('sup', 'Nome do fornecedor', { full: true, list: 'pg-sups', ph: 'Pesquisar ou digitar o nome' }), bld('supContato', 'Contato', { ph: 'E-mail · telefone' }), bld('supEnd', 'Localidade', { ph: 'Cidade ou morada' })], lines: [['Nome', d.sup ? d.sup : 'Nenhum fornecedor selecionado', 'font-weight:700'], ['Contato', dash(d.supContato)], ['Localidade', dash(d.supEnd)]] },
+      { id: 'obra', title: 'Obra / Projeto', keys: ['obra'], fields: [bld('obra', 'Obra ou projeto', { full: true, opts: [''].concat(this.OBRAS) })], lines: [['Nome', d.obra ? d.obra : 'Nenhuma obra associada', 'font-weight:700'], ['Endereço', d.obra ? this.locFor(d.obra) : '—']] }
+    ];
+    const cards = cardDefs.map(c => {
+      const err = c.keys.some(k => errs.e[k]), editing = s.editCard === c.id || err, empty = c.id === 'sup' && !d.sup || c.id === 'obra' && !d.obra;
+      return { title: c.title, editing, summary: !editing, fields: c.fields, lines: c.lines.map(l => ({ k: l[0], v: l[1], style: 'min-width:0;overflow-wrap:anywhere;font-weight:600;' + (l[2] || '') })), btn: editing ? (err ? 'Corrigir' : 'Concluir') : (empty ? 'Selecionar' : 'Editar'), toggle: () => this.setState(x => ({ editCard: x.editCard === c.id ? '' : c.id })), style: 'border:1px solid ' + (err ? '#FECACA' : '#E2E8F0') + ';border-radius:16px;background:#fff;padding:clamp(12px,1.4vw,16px);display:flex;flex-direction:column;gap:8px;min-width:0' + (editing ? ';grid-column:1 / -1' : '') };
+    });
+    const secondary = [bld('pay', 'Condição de pagamento', { opts: this.PAYS }), bld('pz', 'Prazo de pagamento', { opts: this.PZS }), Object.assign(bld('cur', 'Moeda', { opts: [{ v: 'EUR', l: 'Euro (€)' }] }), { value: 'EUR' }), bld('obsI', 'Observações internas', { area: true, full: true, ph: 'Visíveis apenas internamente' }), bld('obsF', 'Instruções para o fornecedor', { area: true, full: true, ph: 'Condições adicionais, referência, horário de descarga' })];
+    const qtxt = s.pick >= 0 && d.items[s.pick] && this.isLine(d.items[s.pick]) ? d.items[s.pick].d : '', qt = this.norm(qtxt).split(/\s+/).filter(Boolean);
+    const hits = qt.length ? this.products().filter(p => { const h = this.norm(p.name + ' ' + p.code + ' ' + p.cat); return qt.every(x => h.indexOf(x) >= 0); }).slice(0, 8) : [];
+    const rows = d.items.map((it, n) => {
+      const common = { n: String(n), num: String(n + 1).padStart(2, '0'), actStyle: 'width:' + H + 'px;min-height:' + H + 'px;border-radius:9px;background:#F1F5F9;color:#475569;font-size:13px;font-weight:700', rmStyle: 'width:' + H + 'px;min-height:' + H + 'px;border-radius:9px;border:1px solid #E2E8F0;background:#fff;color:#B91C1C;font-size:12px', ins: () => this.setState({ menuAt: n, pick: -1 }), remove: () => { this.upd(x => Object.assign({}, x, { items: x.items.filter((_, i) => i !== n) })); if (s.pick === n) this.setState({ pick: -1 }); else if (s.pick > n) this.setState({ pick: s.pick - 1 }); } };
+      if (!this.isLine(it)) {
+        const k = it.type, lv = Math.min(Math.max(it.lvl || 2, 2), 4), st = { title: ['font-size:16px;font-weight:800;letter-spacing:-.01em;color:#0F172A', '#E4E7FD', '#312E81'], subtitle: ['font-size:' + (lv === 2 ? 14.5 : 13.5) + 'px;font-weight:700;color:#4338CA', lv === 2 ? '#F1F2FE' : '#fff', '#4338CA'], comment: ['font-size:13px;font-style:italic;color:#475569', '#F8FAFC', '#64748B'], break: ['', '#fff', '#64748B'] }[k];
+        const rowS = 'display:grid;grid-template-columns:52px minmax(0,1fr) 140px;gap:10px;align-items:center;padding:6px clamp(14px,1.6vw,18px);background:' + st[1];
+        if (k === 'break') return Object.assign(common, { isItem: false, isText: false, isBreak: true, textRow: rowS, badgeStyle: '' });
+        return Object.assign(common, { isItem: false, isText: true, isBreak: false, d: it.d, badge: nums[n] || '', ph: { title: 'Título da seção', subtitle: 'Subtítulo', comment: 'Comentário ou instrução para esta parte do documento' }[k], textRow: rowS, badgeStyle: mono + 'font-size:12px;font-weight:700;color:' + st[2], textStyle: 'width:100%;min-height:' + H + 'px;padding:0 10px 0 ' + (10 + (k === 'subtitle' ? (lv - 2) * 18 : 0)) + 'px;border-radius:9px;border:1px solid transparent;background:transparent;outline:none;' + st[0], setD: e => this.setItem(n, 'd', e.target.value) });
+      }
+      const c = calcs[n], bad = errs.rows[n] || '', empty = !String(it.d).trim();
+      const calcSt = mono + 'display:flex;align-items:center;justify-content:flex-end;min-height:' + H + 'px;padding:0 10px;border-radius:9px;background:#F1F5F9;font-size:13px;color:#334155;white-space:nowrap';
+      const badF = w => bad && bad.indexOf(w) >= 0 ? 'border-color:#EF4444;background:#FEF2F2;' : '';
+      return Object.assign(common, {
+        isItem: true, isText: false, isBreak: false, numTxt: nums[n], numStyle: mono + 'font-size:12px;font-weight:700;color:#64748B', d: it.d, code: it.pid ? it.code : 'Livre', un: it.un, units: opt(this.UNITS, it.un), unStyle: inpBase + ';padding:0 6px', setUn: e => this.setItem(n, 'un', e.target.value),
+        setD: e => { const v = e.target.value; this.upd(x => Object.assign({}, x, { items: x.items.map((y, i) => i === n ? Object.assign({}, y, { d: v }, y.pid && v !== y.cn ? { pid: '', code: '' } : {}) : y) })); this.setState({ pick: n, hi: -1 }); },
+        openPick: () => { if (this.state.pick !== n) this.setState({ pick: n, hi: -1, menuAt: null }); },
+        blur: () => { if (this.state.pick === n) this.setState({ pick: -1, hi: -1 }); },
+        key: e => {
+          const k = e.key;
+          if (k === 'ArrowDown') { e.preventDefault(); this.setState(x => ({ pick: n, hi: Math.min(x.hi + 1, hits.length - 1) })); }
+          else if (k === 'ArrowUp') { e.preventDefault(); this.setState(x => ({ hi: Math.max(x.hi - 1, -1) })); }
+          else if (k === 'Enter') { e.preventDefault(); if (this.state.pick === n && this.state.hi >= 0 && hits[this.state.hi]) this.choose(n, hits[this.state.hi]); else { this.setState({ pick: -1, hi: -1 }); const el = this.rootEl && this.rootEl.querySelector('[data-qty="' + n + '"]'); if (el) el.focus(); } }
+          else if (k === 'Escape') this.setState({ pick: -1, hi: -1 });
+        },
+        q: it.q, p: it.p, disc: it.disc, discT: it.discT, tax: it.tax, taxVal: this.eur(c.tax), base: this.eur(c.base), total: this.eur(c.total), rates: opt(this.RATES.map(r => ({ v: r, l: r + '%' })), it.tax), hasErr: !!bad, err: bad,
+        prodStyle: 'width:100%;min-height:' + H + 'px;padding:0 10px;border-radius:9px;border:1px solid ' + (bad && empty ? '#EF4444' : it.pid ? '#C7C3FB' : '#E2E8F0') + ';background:' + (bad && empty ? '#FEF2F2' : '#fff') + ';font-size:13.5px;font-weight:600;outline:none;color:#0F172A;min-width:0',
+        codeStyle: mono + 'font-size:12px;font-weight:600;color:' + (it.pid ? '#4338CA' : '#94A3B8'),
+        qStyle: inpBase + ';' + mono + 'text-align:right;' + badF('quantidade'), pStyle: inpBase + ';' + mono + 'text-align:right;' + badF('valor'), dStyle: inpBase + ';' + mono + 'text-align:right;' + badF('desconto'),
+        dtStyle: 'flex:0 0 auto;min-width:' + H + 'px;min-height:' + H + 'px;border-radius:9px;background:#EEF0FE;color:#4338CA;font-size:13px;font-weight:800;' + mono,
+        taxStyle: inpBase + ';width:76px;flex:0 0 auto', calcStyle: calcSt, totalStyle: calcSt + ';font-weight:600;color:#0F172A;background:#EEF0FE',
+        setQ: e => this.setItem(n, 'q', e.target.value), setP: e => this.setItem(n, 'p', e.target.value), setDisc: e => this.setItem(n, 'disc', e.target.value), setTax: e => this.setItem(n, 'tax', e.target.value),
+        toggleDisc: () => this.setItem(n, 'discT', it.discT === '%' ? '€' : '%'),
+        dup: () => { this.upd(x => { const a = x.items.slice(); a.splice(n + 1, 0, Object.assign({}, x.items[n])); return Object.assign({}, x, { items: a }); }); this.flash('Linha duplicada'); }
+      });
+    });
+    const results = hits.map((p, i) => ({ name: p.name, cat: p.cat, code: p.code, un: p.un, price: this.eur(p.price), md: e => e.preventDefault(), pick: () => this.choose(s.pick, p), style: 'display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 12px;border-radius:10px;background:' + (s.hi === i ? '#EEF0FE' : '#fff') + ';border:1px solid ' + (s.hi === i ? '#C7C3FB' : 'transparent') + ';text-align:left;min-height:48px' }));
+    const sugA = s.pick >= 0 && hits.length ? this.anchor('[data-prod="' + s.pick + '"]', false, 0) : null, showSug = !!sugA;
+    const addA = s.menuAt !== null ? this.anchor(s.menuAt === -1 ? '[data-addline]' : '[data-ins="' + s.menuAt + '"]', true, 240) : null, showAdd = !!addA;
+    const addOptions = [['item', 'Produto ou serviço'], ['title', 'Título'], ['subtitle', 'Subtítulo (mesmo nível)', 'same'], ['subtitle', 'Subtítulo (nível inferior)', 'down'], ['comment', 'Comentário'], ['break', 'Quebra de página']].map(a => ({ label: a[1], run: () => this.addLine(a[0], s.menuAt, a[2]) }));
+    const np = s.np, npSet = k => e => { const v = e.target.value; this.setState(x => ({ np: Object.assign({}, x.np, { [k]: v }), npErr: '' })); }, ist = inpBase + ';min-height:44px';
+    const npFields = [
+      { label: 'Nome do produto', value: np.name, ph: 'Ex.: Tijolo cerâmico 8 furos', isInput: true, isSelect: false, onInput: npSet('name'), st: ist },
+      { label: 'Código (opcional)', value: np.code, ph: 'Gerado se vazio', isInput: true, isSelect: false, onInput: npSet('code'), st: ist + ';' + mono },
+      { label: 'Categoria', value: np.cat, isInput: false, isSelect: true, opts: opt(this.PCATS, np.cat), onInput: npSet('cat'), st: ist },
+      { label: 'Unidade', value: np.un, isInput: false, isSelect: true, opts: opt(this.UNITS, np.un), onInput: npSet('un'), st: ist },
+      { label: 'Preço de referência (€)', value: np.price, ph: '0,00', isInput: true, isSelect: false, onInput: npSet('price'), st: ist + ';' + mono },
+      { label: 'Imposto padrão', value: np.tax, isInput: false, isSelect: true, opts: opt(this.RATES.map(r => ({ v: r, l: r + '%' })), np.tax), onInput: npSet('tax'), st: ist }
+    ];
+    const stc = this.SC[d.st] || this.SC['Rascunho'];
+    const rateMap = {}; d.items.forEach((it, n) => { const r = calcs[n].rate; if (calcs[n].tax) rateMap[r] = (rateMap[r] || 0) + calcs[n].tax; });
+    const ghostS = 'height:' + H + 'px;padding:0 14px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;white-space:nowrap';
+    const finS = 'height:' + H + 'px;padding:0 18px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700;white-space:nowrap';
+    const rowSum = (label, value, strong, neg) => ({ label, value, lblStyle: 'font-size:13px;color:' + (strong ? '#0F172A' : '#475569') + ';font-weight:' + (strong ? 600 : 500), valStyle: mono + 'font-size:13.5px;font-weight:' + (strong ? 600 : 500) + ';color:' + (neg ? '#B45309' : '#0F172A') });
+    const sumMain = [rowSum('Subtotal bruto', this.eur(gross))].concat(disc ? [rowSum('Descontos', '− ' + this.eur(disc), false, true)] : []).concat([rowSum('Impostos', this.eur(tax)), rowSum('Frete', this.eur(frete))]);
+    const sumDetail = [rowSum('Base tributável', this.eur(base))].concat(Object.keys(rateMap).sort((a, b) => a - b).map(r => rowSum('Imposto ' + this.fmtN(Number(r)) + '%', this.eur(rateMap[r]))));
+    const col = { c: '#6D5DFB', s: '#3B82F6', a: '#10B981', r: '#06B6D4', x: '#EF4444', d: '#059669' };
+    const histRows = (d.history || []).slice().reverse().map(h => ({ date: this.fmtD(h.d), text: h.ev + ' · ' + h.by, dot: col[h.k] || '#94A3B8' })).concat(s.dirty ? [{ date: 'agora', text: 'Alterações em edição, ainda não salvas', dot: '#F59E0B' }] : []).concat(ex ? [] : [{ date: 'agora', text: 'Documento ainda não salvo', dot: '#F59E0B' }]);
+    const pvRows = d.items.map((i, n) => {
+      const base = { rowS: 'display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:9px 0;border-bottom:1px solid #E2E8F0', numS: mono + 'font-size:12px;font-weight:700;color:#64748B;min-width:44px', num: nums[n] || '' };
+      if (i.type === 'break') return Object.assign(base, { d: '— Página seguinte —', dStyle: 'font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#94A3B8', calc: '', total: '' });
+      if (!this.isLine(i)) return Object.assign(base, { d: i.d || '(sem texto)', dStyle: i.type === 'title' ? 'font-size:15px;font-weight:800' : i.type === 'subtitle' ? 'font-size:14px;font-weight:700;color:#4338CA' : 'font-size:13px;font-style:italic;color:#64748B', calc: '', total: '' });
+      const c = calcs[n]; return Object.assign(base, { d: i.d || '(sem descrição)', dStyle: 'font-size:13.5px;font-weight:700', calc: this.fmtN(this.num(i.q)) + ' ' + i.un + ' × ' + this.eur(this.num(i.p)) + (c.disc ? ' − desc. ' + this.eur(c.disc) : '') + (c.tax ? ' + imposto ' + this.fmtN(c.rate) + '%' : ''), total: this.eur(c.total) });
+    });
+    return {
+      docMode: true, listMode: false, rootRef: this.rootRef, wrapRef: this.wrapRef,
+      title: (ex ? 'Pedido ' : 'Novo pedido ') + d.no, st: d.st, stPill: 'padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;background:' + stc[0] + ';color:' + stc[1],
+      isDirty: s.dirty, saveLabel: d.st === 'Rascunho' ? 'Salvar rascunho' : 'Salvar alterações', ghostS, saveStyle: d.st === 'Rascunho' ? ghostS + ';border-color:#C7C3FB;background:#EEF0FE;color:#4338CA' : finS, finStyle: finS,
+      panelS: 'border:1px solid #E2E8F0;border-radius:16px;background:#fff;padding:clamp(12px,1.4vw,16px);display:flex;flex-direction:column;gap:10px',
+      addStyle: 'height:' + H + 'px;padding:0 16px;border-radius:11px;background:#EEF0FE;color:#4338CA;font-size:13.5px;font-weight:700;white-space:nowrap',
+      doBack: () => { if (s.dirty) this.setState({ cfm: { key: 'discard', no: '', reason: '' } }); else this.setState({ doc: null, submitted: false }); },
+      doSave: () => this.persist(d, false), doFinish: () => this.persist(d, true), canFinish: d.st === 'Rascunho',
+      togglePrev: () => this.setState(x => ({ showPrev: !x.showPrev, showHist: false })), toggleHist: () => this.setState(x => ({ showHist: !x.showHist, showPrev: false })), showPrev: s.showPrev, showHist: s.showHist,
+      docMenuOpen: s.docMenu, toggleMenu: () => this.setState(x => ({ docMenu: !x.docMenu })),
+      menuItems: [{ label: 'Histórico do documento', run: () => this.setState({ showHist: true, showPrev: false, docMenu: false }) }].concat(ex ? [{ label: 'Duplicar pedido', run: () => { this.setState({ docMenu: false }); this.run('dup', d.no); } }] : []).concat([{ label: 'Cancelar edição', run: () => { this.setState({ docMenu: false }); if (s.dirty) this.setState({ cfm: { key: 'discard', no: '', reason: '' } }); else this.setState({ doc: null, submitted: false }); } }]),
+      pvEmpresa: d.empresa, pvNo: d.no, pvRows,
+      pvMeta: [['Fornecedor', d.sup || '—'], ['Contato', d.supContato || '—'], ['Localidade', d.supEnd || '—'], ['Obra', d.obra || '—'], ['Emissão', this.fmtD(d.date)], ['Entrega prevista', this.fmtD(d.eta)], ['Local de entrega', d.local || '—'], ['Pagamento', d.pay + ' · ' + d.pz], ['Solicitante', d.req || '—'], ['Responsável', d.resp || '—'], ['Origem', d.orc || 'Pedido direto']].map(a => ({ k: a[0], v: a[1] })),
+      histRows, showErr: errs.count > 0, errText: errs.count === 1 ? 'Corrija 1 ponto destacado para continuar.' : 'Corrija os ' + errs.count + ' pontos destacados para continuar.',
+      cardsGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px;align-items:stretch', cards,
+      secondary, moreOpen: s.moreOpen, toggleMore: () => this.setState(x => ({ moreOpen: !x.moreOpen })), moreLabel: s.moreOpen ? '‹ Ocultar condições comerciais e observações' : 'Condições comerciais e observações ›',
+      fieldGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px 12px', supOpts: Object.keys(this.SUPI).sort(), respOpts: this.RESP,
+      itemsCount: '· ' + this.pl(nLines, 'item', 'itens') + (d.items.length > nLines ? ' + ' + (d.items.length - nLines) + ' de texto' : ''), noItems: d.items.length === 0, hasItems: d.items.length > 0,
+      heads, rows, gridHead: 'display:grid;grid-template-columns:' + GRID + ';gap:10px;align-items:center;padding:10px clamp(14px,1.6vw,18px);background:#F8FAFC;border-bottom:1px solid #E2E8F0', gridBody: 'display:grid;grid-template-columns:' + GRID + ';gap:10px;align-items:center;padding:5px clamp(14px,1.6vw,18px)',
+      onGridScroll: () => this.setState({ sx: Date.now() }), addItem: () => this.addLine('item', -1), openAddMenu: () => this.setState(x => ({ menuAt: x.menuAt === -1 ? null : -1, pick: -1 })),
+      anyPop: showAdd, closePops: () => this.setState({ menuAt: null, pick: -1 }),
+      showSug, results, sugStyle: showSug ? 'position:absolute;z-index:20;left:' + sugA.left + 'px;top:' + sugA.top + 'px;width:' + sugA.w + 'px;max-height:320px;overflow-y:auto;background:#fff;border:1px solid #C7C3FB;border-radius:12px;box-shadow:0 18px 40px -16px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px' : '',
+      showAdd, addOptions, addMenuStyle: showAdd ? 'position:absolute;z-index:20;left:' + addA.left + 'px;top:' + addA.top + 'px;width:' + addA.w + 'px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 18px 40px -16px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;animation:pgPop .15s' : '',
+      toggleNew: () => this.setState(x => ({ newOpen: !x.newOpen, npErr: '' })), newOpen: s.newOpen, newBtn: s.newOpen ? 'Fechar cadastro' : 'Cadastrar produto na sessão', npFields, npErr: s.npErr,
+      saveNew: () => {
+        if (!np.name.trim()) { this.setState({ npErr: 'Informe o nome do produto' }); return; }
+        if (!(this.num(np.price) > 0)) { this.setState({ npErr: 'Informe um preço de referência maior que zero' }); return; }
+        const code = (np.code.trim() || 'NV-' + String(this.products().length + 1).padStart(4, '0')).toUpperCase();
+        if (this.products().some(x => x.code === code)) { this.setState({ npErr: 'Já existe um produto com o código ' + code }); return; }
+        this.setState(x => ({ localExtra: x.localExtra.concat([{ code, name: np.name.trim(), cat: np.cat, un: np.un, price: this.num(np.price), tax: Number(np.tax) }]), newOpen: false, np: { name: '', code: '', un: 'un', price: '', cat: 'Materiais diversos', tax: '23' } }));
+        this.flash('Produto ' + code + ' adicionado ao catálogo desta sessão');
+      },
+      sumMain, sumDetail, grand: this.eur(grand), calcOpen: s.calcOpen, toggleCalc: () => this.setState(x => ({ calcOpen: !x.calcOpen })), calcLabel: s.calcOpen ? 'Ocultar detalhes do cálculo' : 'Detalhes do cálculo'
+    };
+  }
+
+  openRcpt(no) { const r = this.state.recs.filter(x => x.no === no)[0]; this.setState({ menuNo: '', rcpt: { no, date: this.TODAY, note: '', q: r.items.map(() => ''), ok: false, err: '' } }); }
+  confirmRcpt() {
+    const rc = this.state.rcpt, r = this.state.recs.filter(x => x.no === rc.no)[0], c = this.calc(r), cur = this.recv(r, c).rq;
+    const vals = rc.q.map(v => this.num(v)), over = vals.some((v, i) => cur[i] + v > this.num(r.items[i].q) + 1e-9);
+    let err = '';
+    if (!rc.date) err = 'Informe a data da entrega.'; else if (vals.some(v => v < 0)) err = 'Quantidades não podem ser negativas.'; else if (!vals.some(v => v > 0)) err = 'Informe a quantidade recebida em pelo menos um item.'; else if (over && !rc.ok) err = 'Confirme a divergência para registrar quantidade acima do pedido.';
+    if (err) { this.setState({ rcpt: Object.assign({}, rc, { err }) }); return; }
+    const n = (r.receipts || []).length + 1, id = 'REC-' + r.no.slice(-3) + '-' + n, tot = vals.map((v, i) => cur[i] + v), all = r.items.every((it, i) => !this.isLine(it) || tot[i] >= this.num(it.q) - 1e-9);
+    this.updRec(r.no, x => Object.assign({}, x, { st: all ? 'Recebido' : 'Parcialmente recebido', receipts: x.receipts.concat([{ id, date: rc.date, by: x.resp, note: rc.note || 'Sem referência', q: vals, div: over }]), history: this.ev(x, 'Recebimento ' + id + ' registrado' + (over ? ' (com divergência)' : '') + (all ? ' — pedido totalmente recebido' : ' — recebimento parcial'), 'r') }));
+    this.setState({ rcpt: null });
+    this.flash(id + ' registrado' + (all ? ' · pedido totalmente recebido' : ' · recebimento parcial'));
+  }
+
+  applyState(name) {
+    const D = { st: 'Todos', sup: 'Todos', obra: 'Todas', per: 'Todo o período', resp: 'Todos' };
+    this.setState({ cur: name, detailNo: '', doc: null, dirty: false, rcpt: null, menuNo: '', cfm: null, navOpen: false, dataState: 'ready', query: '', openFilter: '', filters: D, empty: false, submitted: false, page: 1 });
+    if (name === 'Filtros aplicados') this.setState({ filters: Object.assign({}, D, { obra: 'Edifício Central', st: 'Parcialmente recebido' }) });
+    if (name === 'Lista vazia') this.setState({ empty: true });
+    if (name === 'Carregando') this.setState({ dataState: 'loading' });
+    if (name === 'Documento') this.openDoc(null);
+    if (name === 'Validação') { this.openDoc(null, false, '', true); this.setState(x => ({ doc: Object.assign({}, x.doc, { items: [this.newRow('item')] }) })); }
+    if (name === 'Pré-visualização') { this.openDoc(this.state.recs.filter(r => r.no === 'PC-2026-054')[0]); this.setState({ showPrev: true }); }
+    if (name === 'Detalhes') this.setState({ detailNo: 'PC-2026-052' });
+    if (name === 'Recebimento') { this.setState({ detailNo: 'PC-2026-049' }); this.openRcpt('PC-2026-049'); }
+    if (name === 'Cancelamento') this.setState({ cfm: { key: 'cancel', no: 'PC-2026-054', reason: '' } });
+  }
+
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() { window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth }); const st = this.props.initialState || 'Inicial'; if (st !== 'Inicial') this.applyState(st); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tT); clearTimeout(this.rT); }
+
+  renderVals() {
+    const s = this.state, T = this.TODAY, F = s.filters, q = s.query.trim().toLowerCase();
+    const view = s.view || this.props.initialView || 'Desktop', phone = view === 'Mobile';
+    const W = phone ? 390 : (this.props.vw || s.w), isMobile = W < 1024, isTable = W >= 1000, avail = W - (isMobile ? 0 : 258) - 68;
+    this.touch = isMobile; const full = this.enrich(s.recs), all = s.empty ? [] : full;
+    const sel = full.filter(x => x.no === s.detailNo)[0] || full[0];
+    const MONTHS = { 'Setembro/2026': '2026-09', 'Agosto/2026': '2026-08' };
+    const perOk = r => F.per === 'Todo o período' || (F.per === 'Últimos 30 dias' ? r.date >= this.addDays(T, -30) : r.date.slice(0, 7) === MONTHS[F.per]);
+    const base = all.filter(r => perOk(r) && (F.sup === 'Todos' || r.sup === F.sup) && (F.obra === 'Todas' || r.obra === F.obra) && (F.resp === 'Todos' || r.resp === F.resp) && (!q || (r.no + ' ' + r.sup + ' ' + r.obra + ' ' + r.resp + ' ' + r.items.map(i => i.d).join(' ')).toLowerCase().includes(q)));
+    let list = base.filter(r => F.st === 'Todos' || r.status === F.st);
+    const sk = s.sort.key;
+    list = list.slice().sort((a, b) => { const x = a[sk], y = b[sk]; const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y)); return (c || b.no.localeCompare(a.no)) * (s.sort.dir === 'asc' ? 1 : -1); });
+    const sumv = arr => this.r2(arr.reduce((a, r) => a + r.v, 0));
+    const pages = Math.max(1, Math.ceil(list.length / this.PAGE)), page = Math.min(s.page, pages), pageRows = list.slice((page - 1) * this.PAGE, page * this.PAGE);
+
+    const neutral = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], violet = ['#4338CA', '#312E81', '#EEF0FE', '#DDD9FD'], amber = ['#B45309', '#92400E', '#FFFBEB', '#FDE68A'], cyan = ['#0E7490', '#164E63', '#ECFEFF', '#A5F3FC'], blue = ['#1D4ED8', '#1E3A8A', '#EFF6FF', '#BFDBFE'];
+    const wait = base.filter(r => r.status === 'Aguardando aprovação'), prog = base.filter(r => r.status === 'Aprovado' || r.status === 'Enviado ao fornecedor'), part = base.filter(r => r.status === 'Parcialmente recebido'), opn = base.filter(r => r.open), canc = base.filter(r => r.status === 'Cancelado');
+    const pendVal = this.r2(opn.reduce((a, r) => a + r.c.lines - r.rv.val, 0));
+    const kcols = avail >= 1000 ? 5 : 2;
+    const kpi = (label, value, hint, color, t, last) => ({ label, value, hint, color, labelColor: t[0], valueColor: t[1], style: 'border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;background:' + t[2] + ';border:1px solid ' + t[3] + (last && kcols === 2 ? ';grid-column:1/-1' : '') });
+    const kpis = [
+      kpi('Total de pedidos', String(base.length), canc.length ? this.pl(canc.length, 'cancelado', 'cancelados') + ' incluído' + (canc.length === 1 ? '' : 's') : 'nenhum cancelado', '#64748B', neutral),
+      kpi('Aguardando aprovação', String(wait.length), wait.length ? this.eur(sumv(wait)) + ' a aprovar' : 'nenhum no momento', '#F59E0B', amber),
+      kpi('Em andamento', String(prog.length), this.pl(base.filter(r => r.status === 'Aprovado').length, 'aprovado', 'aprovados') + ' · ' + this.pl(base.filter(r => r.status === 'Enviado ao fornecedor').length, 'enviado', 'enviados'), '#3B82F6', blue),
+      kpi('Parcialmente recebidos', String(part.length), part.length ? this.eur(this.r2(part.reduce((a, r) => a + r.c.lines - r.rv.val, 0))) + ' ainda por receber' : 'nenhum no momento', '#06B6D4', cyan),
+      kpi('Valor em aberto', this.eur(sumv(opn)), this.pl(opn.length, 'pedido ativo', 'pedidos ativos') + ' · ' + this.eur(pendVal) + ' por receber', '#6D5DFB', violet, true)
+    ];
+
+    const pill = st => 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + this.SC[st][0] + ';color:' + this.SC[st][1] + ';font-size:12px;font-weight:700;white-space:nowrap;flex:0 0 auto';
+    const ghostBtn = 'height:44px;padding:0 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;white-space:nowrap';
+    const mono = 'font-family:\'JetBrains Mono\',monospace;';
+    const stop = fn => e => { if (e && e.stopPropagation) e.stopPropagation(); fn(); };
+    const kindStyle = k => k === 'p' ? 'background:#EEF0FE;color:#4338CA' : k === 'g' ? 'background:#ECFDF5;color:#047857' : k === 'c' ? 'background:#ECFEFF;color:#0E7490' : k === 'd' ? 'background:#FEF2F2;color:#B91C1C' : 'background:#F1F5F9;color:#475569';
+    const primaryOf = r => { const a = this.acts(r).filter(x => x.ok && ['approve', 'receive', 'send', 'submit', 'complete'].indexOf(x.key) >= 0)[0]; return a; };
+
+    const rows = pageRows.map(r => {
+      const p = primaryOf(r), isC = r.status === 'Cancelado', dd = this.days(r.eta, T), started = ['Parcialmente recebido', 'Recebido', 'Concluído', 'Enviado ao fornecedor'].indexOf(r.status) >= 0;
+      const etaSub = isC ? 'cancelado' : r.status === 'Recebido' || r.status === 'Concluído' ? 'entregue' : r.late ? this.pl(-dd, 'dia', 'dias') + ' em atraso' : r.status === 'Rascunho' ? '' : dd === 0 ? 'previsto hoje' : this.pl(dd, 'dia restante', 'dias restantes');
+      const pctLabel = isC || !started ? '—' : Math.round(r.pct * 100) + '%';
+      const recvSub = isC ? 'cancelado' : !started ? (r.status === 'Rascunho' ? 'não enviado' : 'aguardando envio') : (r.rv.div ? 'divergência' : this.pl((r.receipts || []).length, 'entrega', 'entregas'));
+      const barColor = r.status === 'Recebido' || r.status === 'Concluído' ? '#10B981' : '#06B6D4';
+      return {
+        no: r.no, date: this.fmtD(r.date), sup: r.sup, obra: r.obra, resp: r.resp, eta: this.fmtD(r.eta), etaSub,
+        etaStyle: mono + 'font-size:12.5px;white-space:nowrap;font-weight:' + (r.late ? 700 : 500) + ';color:' + (r.late ? '#B91C1C' : '#64748B'),
+        etaSubStyle: 'font-size:11px;font-weight:600;color:' + (r.late ? '#B91C1C' : '#64748B'),
+        total: this.eur(r.v), totalStyle: mono + 'font-size:13.5px;font-weight:600;text-align:right;white-space:nowrap;' + (isC ? 'color:#94A3B8;text-decoration:line-through' : ''),
+        pctLabel, recvSub, barStyle: 'height:100%;border-radius:99px;width:' + (started && !isC ? Math.round(r.pct * 100) : 0) + '%;background:' + (r.rv.div ? '#EF4444' : barColor),
+        status: r.status, pill: pill(r.status), dot: this.SC[r.status][2], cardOpacity: isC ? 'opacity:.7;' : '',
+        acts: this.rowActs(r, kindStyle, stop, p),
+        open: () => this.setState({ detailNo: r.no }),
+        facts: [['Responsável', r.resp, ''], ['Entrega', this.fmtD(r.eta) + (etaSub ? ' · ' + etaSub : ''), mono], ['Valor total', this.eur(r.v), mono], ['Emissão', this.fmtD(r.date), mono]].map(f => ({ k: f[0], v: f[1], style: (f[2] || '') + 'font-size:12.5px;font-weight:600;overflow-wrap:anywhere' })),
+        rowStyle: 'display:grid;grid-template-columns:1.1fr 1.5fr 1.4fr 1.1fr 1.1fr 1.1fr 1.3fr 1.5fr 190px;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s' + (isC ? ';opacity:.72' : '')
+      };
+    });
+    const spec = [['no', 'Pedido'], ['sup', 'Fornecedor'], ['obra', 'Obra'], ['resp', 'Responsável'], ['eta', 'Previsão'], ['v', 'Valor total'], ['pct', 'Recebimento'], ['status', 'Status'], ['', 'Ações']];
+    const cols = spec.map(c => ({ name: c[1], arrow: s.sort.key === c[0] ? (s.sort.dir === 'asc' ? ' ▲' : ' ▼') : '', sort: () => { if (!c[0]) return; this.setState(x => ({ page: 1, sort: { key: c[0], dir: x.sort.key === c[0] && x.sort.dir === 'desc' ? 'asc' : 'desc' } })); }, style: 'text-align:' + (c[0] === 'v' ? 'right' : 'left') + ';font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:0;white-space:nowrap;cursor:' + (c[0] ? 'pointer' : 'default') + ';color:' + (s.sort.key === c[0] ? '#4338CA' : '#64748B') }));
+    const pager = [{ label: '‹', aria: 'Página anterior', dis: page <= 1, n: page - 1 }].concat(Array.from({ length: pages }, (_, i) => ({ label: String(i + 1), aria: 'Página ' + (i + 1), n: i + 1, on: i + 1 === page })), [{ label: '›', aria: 'Próxima página', dis: page >= pages, n: page + 1 }]).map(p => ({ label: p.label, aria: p.aria, go: () => { if (!p.dis) this.setState({ page: p.n }); }, style: 'min-width:40px;height:40px;padding:0 10px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid ' + (p.on ? '#6D5DFB' : '#E2E8F0') + ';background:' + (p.on ? '#EEF0FE' : '#fff') + ';color:' + (p.on ? '#4338CA' : p.dis ? '#CBD5E1' : '#475569') + ';cursor:' + (p.dis ? 'not-allowed' : 'pointer') }));
+
+    const DEF = { st: 'Todos', sup: 'Todos', obra: 'Todas', per: 'Todo o período', resp: 'Todos' };
+    const two = W < 700;
+    const mkFilter = (key, label, options, idx) => ({
+      label: label + ':', value: F[key], open: s.openFilter === key,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === key ? '' : key })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' + (F[key] === DEF[key] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700',
+      menuStyle: 'position:absolute;top:calc(100% + 8px);' + (two && idx % 2 ? 'right:0;' : 'left:0;') + 'min-width:' + (two ? '220px' : '230px') + ';max-height:300px;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50',
+      options: options.map(o => ({ name: o, pick: () => this.setState(x => ({ page: 1, filters: Object.assign({}, x.filters, { [key]: o }), openFilter: '' })), style: 'padding:12px 11px;border-radius:9px;text-align:left;font-size:13.5px;min-height:44px;font-weight:' + (F[key] === o ? 700 : 500) + ';color:' + (F[key] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[key] === o ? '#EEF0FE' : 'transparent') }))
+    });
+    const sups = Array.from(new Set(s.recs.map(r => r.sup))).sort();
+    const filters = [mkFilter('st', 'Status', ['Todos'].concat(this.STS), 0), mkFilter('sup', 'Fornecedor', ['Todos'].concat(sups), 1), mkFilter('obra', 'Obra', ['Todas'].concat(this.OBRAS), 2), mkFilter('per', 'Período', ['Todo o período', 'Setembro/2026', 'Agosto/2026', 'Últimos 30 dias'], 3), mkFilter('resp', 'Responsável', ['Todos'].concat(this.RESP), 4)];
+    const anyFilter = q !== '' || Object.keys(DEF).some(k => F[k] !== DEF[k]);
+    const clearAll = () => this.setState({ query: '', openFilter: '', page: 1, filters: DEF });
+
+    // detail
+    const d = this.detailVals(sel, pill);
+    // menu
+    const mr = full.filter(x => x.no === s.menuNo)[0];
+    const menu = mr ? { no: mr.no, status: mr.status, items: this.acts(mr).map(a => ({ label: a.label, sub: a.ok ? '' : a.why, off: !a.ok, subColor: '#94A3B8', labelStyle: a.ok ? (a.kind === 'd' ? 'color:#B91C1C' : '') : 'color:#94A3B8', run: () => this.run(a.key, mr.no), style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:12px 14px;min-height:50px;border-radius:12px;border:1px solid ' + (a.ok ? '#E2E8F0' : '#F1F5F9') + ';background:' + (a.ok ? '#fff' : '#F8FAFC') + ';cursor:' + (a.ok ? 'pointer' : 'not-allowed') })) } : { no: '', status: '', items: [] };
+
+    // form
+    // receipt
+    const rcv = this.rcptVals(s.rcpt, full);
+    // confirm
+    const cf = s.cfm ? this.cfmInfo(s.cfm) : { title: '', text: '', label: '', hasInput: false, back: '' };
+    const cfm = Object.assign({}, cf, { reason: s.cfm ? s.cfm.reason : '', onReason: e => { const v = e.target.value; this.setState(x => ({ cfm: Object.assign({}, x.cfm, { reason: v }) })); }, okStyle: 'height:46px;padding:0 22px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' + (cf.danger ? '#DC2626' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') });
+
+    const loading = s.dataState === 'loading', hasRows = list.length > 0;
+    const startI = (page - 1) * this.PAGE;
+    const docV = this.docVals();
+    return Object.assign({
+      isMobile, isTable, isCards: !isTable,
+      states: ['Inicial', 'Filtros aplicados', 'Lista vazia', 'Carregando', 'Documento', 'Validação', 'Pré-visualização', 'Detalhes', 'Recebimento', 'Cancelamento'].map(n => ({ name: n, pick: () => this.applyState(n), style: 'height:34px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid ' + (s.cur === n ? '#6D5DFB' : '#E2E8F0') + ';background:' + (s.cur === n ? '#EEF0FE' : '#fff') + ';color:' + (s.cur === n ? '#4338CA' : '#475569') })),
+      views: ['Desktop', 'Mobile'].map(n => ({ name: n, pick: () => this.setState({ view: n, navOpen: false }), style: 'height:30px;padding:0 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:' + (view === n ? '#fff' : 'transparent') + ';color:' + (view === n ? '#4338CA' : '#64748B') })),
+      stageStyle: phone ? 'flex:1;display:flex;justify-content:center;padding:28px 12px' : 'flex:1;display:flex;flex-direction:column',
+      frameStyle: phone ? 'width:390px;height:844px;flex:0 0 auto;border-radius:46px;border:10px solid #0F172A;overflow:hidden;position:relative;transform:translateZ(0);background:#F8FAFC;box-shadow:0 40px 80px -30px rgba(15,23,42,.5)' : 'flex:1;display:flex;flex-direction:column;position:relative',
+      scrollStyle: phone ? 'position:absolute;inset:0;overflow-y:auto;overflow-x:hidden' : 'flex:1;display:flex;flex-direction:column',
+      appStyle: 'display:flex;flex:1;min-height:' + (phone ? '100%' : 'calc(100vh - 56px)') + ';background:#F8FAFC;color:#0F172A;font-family:\'Plus Jakarta Sans\',system-ui,sans-serif',
+      showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen && isMobile,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:calc(100vh - 56px);flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      navGroups: [['Comercial', '#EC4899', ['CRM', 'Leads']], ['Clientes', '#3B82F6', ['Clientes']], ['Projetos', '#F97316', ['Projetos / Obras']], ['Compras', '#06B6D4', ['Visão geral', 'Orçamentos de compra', 'Pedidos de compra', 'Recebimentos', 'Faturas de compra']], ['Financeiro', '#10B981', ['Contas a pagar']], ['Relatórios', '#8B5CF6', ['Consultas e Relatórios']], ['Configurações', '#64748B', ['Empresa']]].map(g => ({
+        name: g[0], dot: g[1], open: g[0] === 'Compras',
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        items: g[2].map(n => { const on = n === 'Pedidos de compra'; return { name: n, style: 'display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:13px;font-weight:' + (on ? 700 : 500) + ';color:' + (on ? '#fff' : '#8C9AAE') + ';background:' + (on ? 'rgba(109,93,251,.26)' : 'transparent'), dotStyle: 'width:5px;height:5px;border-radius:50%;background:' + (on ? '#6D5DFB' : '#475569') }; })
+      })),
+      ghostBtn, todayLabel: this.fmtD(T), secTitle: 'font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B',
+      openNew: () => this.setState({ empOpen: true, empPick: this.EMPRESAS[0][0] }),
+      doRefresh: () => { clearTimeout(this.rT); this.setState({ dataState: 'loading', cur: 'Carregando' }); this.rT = setTimeout(() => { this.setState({ dataState: 'ready', cur: 'Inicial' }); this.flash('Dados demonstrativos atualizados'); }, 1000); },
+      doExport: () => {
+        try {
+          const csv = [['Pedido', 'Emissão', 'Fornecedor', 'Obra', 'Responsável', 'Previsão de entrega', 'Valor total', 'Recebido (%)', 'Status']].concat(list.map(r => [r.no, this.fmtD(r.date), r.sup, r.obra, r.resp, this.fmtD(r.eta), r.v.toFixed(2), Math.round(r.pct * 100), r.status])).map(l => l.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';')).join('\n');
+          const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' })); a.download = 'pedidos-de-compra-demonstrativo.csv'; a.click();
+        } catch (e) { /* demo */ }
+        this.flash('Exportação demonstrativa: ' + this.pl(list.length, 'pedido', 'pedidos'));
+      },
+      stLoading: loading, stReady: !loading, sk5: [1, 2, 3, 4, 5], sk7: [1, 2, 3, 4, 5, 6, 7],
+      kpiGrid: 'display:grid;grid-template-columns:repeat(' + kcols + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)', kpis,
+      query: s.query, hasQuery: s.query !== '', onQuery: e => this.setState({ query: e.target.value, page: 1 }), clearQuery: () => this.setState({ query: '', page: 1 }),
+      filterRow: two ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px' : 'display:flex;flex-wrap:wrap;gap:10px;align-items:center',
+      filters, anyFilter, clearAll,
+      hasRows, isEmpty: !hasRows,
+      emptyTitle: s.empty ? 'Nenhum pedido cadastrado' : 'Nenhum pedido encontrado',
+      emptyText: s.empty ? 'Crie o primeiro pedido de compra. O pedido pode ser criado diretamente, sem orçamento anterior.' : 'Nenhum pedido corresponde à pesquisa ou aos filtros aplicados. Tente alterar os filtros ou realizar uma nova busca.',
+      emptyLabel: s.empty ? 'Novo pedido' : 'Limpar filtros',
+      emptyAction: s.empty ? () => this.setState({ empOpen: true, empPick: this.EMPRESAS[0][0] }) : clearAll,
+      gridHead: 'display:grid;grid-template-columns:1.1fr 1.5fr 1.4fr 1.1fr 1.1fr 1.1fr 1.3fr 1.5fr 190px;gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
+      cols, rows, pager,
+      countLabel: 'Exibindo ' + (startI + 1) + '–' + (startI + pageRows.length) + ' de ' + this.pl(list.length, 'pedido', 'pedidos'),
+      listTotal: this.eur(sumv(list.filter(r => r.status !== 'Cancelado'))),
+      detailOpen: !!s.detailNo, d, closeDetail: () => this.setState({ detailNo: '' }),
+      drawerStyle: 'position:relative;width:' + (phone || W < 600 ? '100%' : 'min(640px,100%)') + ';height:100%;overflow-y:auto;background:#fff;border-left:1px solid #E2E8F0;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:24px;box-shadow:-30px 0 70px -30px rgba(15,23,42,.5);animation:pgDrawer .3s cubic-bezier(.22,.7,.2,1)',
+      formPad: phone || W < 700 ? '0' : '20px', listMode: !s.doc, docMode: !!s.doc,
+      empOpen: s.empOpen, closeEmp: () => this.setState({ empOpen: false }), confirmEmp: () => this.openDoc(null, false, s.empPick),
+      empresas: this.EMPRESAS.map(e => { const on = s.empPick === e[0]; return { name: e[0], sub: e[1], pick: () => this.setState({ empPick: e[0] }), mark: on ? '●' : '○', style: 'display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;border:1px solid ' + (on ? '#6D5DFB' : '#E2E8F0') + ';background:' + (on ? '#EEF0FE' : '#fff') + ';text-align:left;min-height:56px' }; }),
+      rcptOpen: !!s.rcpt, rc: rcv, closeRcpt: () => this.setState({ rcpt: null }), confirmRcpt: () => this.confirmRcpt(),
+      menuOpen: !!mr, menu, closeMenu: () => this.setState({ menuNo: '' }),
+      cfmOpen: !!s.cfm, cfm, closeCfm: () => this.setState({ cfm: null }), confirmCfm: () => this.confirmCfm(),
+      toast: s.toast, toastColor: s.toastErr ? '#F87171' : '#10B981', toastMark: s.toastErr ? '!' : '✓'
+    }, docV);
+  }
+
+  detailVals(sel, pill) {
+    const mono = 'font-family:\'JetBrains Mono\',monospace;', c = sel.c, rv = sel.rv, isC = sel.status === 'Cancelado';
+    const nl = sel.receipts.length, nums = this.numbering(sel.items);
+    const started = ['Parcialmente recebido', 'Recebido', 'Concluído', 'Enviado ao fornecedor'].indexOf(sel.status) >= 0;
+    const box = (k, v, sub, t) => ({ k, v, sub, lc: t[0], vc: t[1], style: 'display:flex;flex-direction:column;gap:6px;padding:12px 13px;border-radius:13px;background:' + t[2] + ';border:1px solid ' + t[3] });
+    const N = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], CY = ['#0E7490', '#164E63', '#ECFEFF', '#A5F3FC'], VI = ['#4338CA', '#312E81', '#EEF0FE', '#DDD9FD'], GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'];
+    const pend = this.r2(c.lines - rv.val);
+    let note, nc = '#94A3B8';
+    if (isC) { note = 'Pedido cancelado — não é tratado como ativo e não há recebimento esperado.'; nc = '#EF4444'; }
+    else if (sel.status === 'Rascunho') note = 'Rascunho ainda não enviado para aprovação.';
+    else if (sel.status === 'Aguardando aprovação') { note = 'Aguardando aprovação. A aprovação não cria recebimentos nem faturas.'; nc = '#F59E0B'; }
+    else if (sel.status === 'Aprovado') { note = 'Aprovado — ainda não enviado ao fornecedor.'; nc = '#6D5DFB'; }
+    else if (sel.status === 'Enviado ao fornecedor') { note = 'Enviado ao fornecedor · nenhum recebimento registrado' + (sel.late ? ' · entrega prevista em atraso.' : '.'); nc = sel.late ? '#EF4444' : '#3B82F6'; }
+    else if (sel.status === 'Parcialmente recebido') { note = 'Recebido parcialmente em ' + this.pl(nl, 'entrega', 'entregas') + '. Ainda há quantidades pendentes' + (sel.late ? ' · entrega prevista em atraso.' : '.'); nc = '#06B6D4'; }
+    else { note = (sel.status === 'Concluído' ? 'Pedido concluído' : 'Totalmente recebido') + ' em ' + this.pl(nl, 'entrega', 'entregas') + '.'; nc = '#10B981'; }
+    const ia = sel.invd, invNote = ia > 0 ? this.fmtN(Math.round(ia / c.v * 100)) + '% do pedido' : 'sem faturas';
+    const T = (k, v, bold) => ({ k, v, ls: 'font-size:' + (bold ? 14 : 13) + 'px;font-weight:' + (bold ? 800 : 600) + ';color:' + (bold ? '#0F172A' : '#64748B'), vs: mono + 'font-size:' + (bold ? 17 : 13.5) + 'px;font-weight:600' });
+    const lineStyle = i => ({ k: '' });
+    const hist = sel.history.slice().sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0), col = { c: '#6D5DFB', s: '#3B82F6', a: '#10B981', r: '#06B6D4', x: '#EF4444', d: '#059669' };
+    const acts = this.acts(sel).filter(a => a.ok && ['view', 'receipts', 'invoices'].indexOf(a.key) < 0);
+    const aStyle = k => 'height:46px;padding:0 17px;border-radius:12px;font-size:13.5px;font-weight:700;' + (k === 'p' ? 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff' : k === 'g' ? 'background:#ECFDF5;color:#047857' : k === 'c' ? 'background:#ECFEFF;color:#0E7490;border:1px solid #A5F3FC' : k === 'd' ? 'border:1px solid #FECACA;background:#FEF2F2;color:#B91C1C' : 'border:1px solid #E2E8F0;background:#fff');
+    const si = this.SUPI[sel.sup] || ['—', '—', '—', '—', '—'], orc = this.ORCS.filter(o => o.no === sel.orc)[0];
+    const docs = [{ tag: 'PDF', t: 'Pedido ' + sel.no, s: 'Visualização demonstrativa do documento', bg: '#EEF0FE', fg: '#4338CA' }];
+    if (sel.orc) docs.push({ tag: 'ORC', t: sel.orc, s: 'Orçamento de compra de origem' + (orc ? ' · ' + orc.sup : ''), bg: '#FFFBEB', fg: '#B45309' });
+    sel.receipts.forEach(x => docs.push({ tag: 'REC', t: x.id, s: 'Recebimento de ' + this.fmtD(x.date), bg: '#ECFEFF', fg: '#0E7490' }));
+    sel.invoices.forEach(x => docs.push({ tag: 'FT', t: x.no, s: 'Fatura do fornecedor · ' + this.fmtD(x.date), bg: '#ECFDF5', fg: '#047857' }));
+    const ok = this.acts(sel).filter(a => a.key === 'receive')[0].ok;
+    return {
+      no: sel.no, date: this.fmtD(sel.date), sup: sel.sup, obra: sel.obra, status: sel.status, pill: pill(sel.status), dot: this.SC[sel.status][2],
+      actions: acts.map(a => ({ label: a.label, run: () => this.run(a.key, sel.no), style: aStyle(a.kind) })).concat([{ label: 'Todas as ações ⋯', run: () => this.setState({ menuNo: sel.no }), style: aStyle('') }]),
+      boxes: [box('Valor do pedido', this.eur(c.v), c.frete ? 'inclui frete ' + this.eur(c.frete) : 'sem frete', N), box('Recebido', isC || !started ? '€ 0,00' : this.eur(rv.val), isC || !started ? '—' : Math.round(rv.pct * 100) + '% do valor dos itens', CY), box('Pendente de recebimento', isC ? '€ 0,00' : this.eur(Math.max(pend, 0)), isC ? 'cancelado' : this.pl(sel.items.filter((it, i) => rv.rq[i] < this.num(it.q) - 1e-9).length, 'item pendente', 'itens pendentes'), N), box('Faturado', this.eur(ia), invNote, VI)],
+      note, noteColor: nc, hasDiv: rv.div,
+      items: sel.items.map((it, i) => {
+        if (!this.isLine(it)) return { isLine: false, d: (nums[i] ? nums[i] + ' · ' : '') + (it.type === 'break' ? '— quebra de página —' : (it.d || '(sem texto)')), calc: ({ title: 'Título', subtitle: 'Subtítulo', comment: 'Comentário', break: 'Quebra de página' })[it.type], sub: '', ord: '', rec: '', pend: '', recStyle: '' };
+        const l = c.L[i], oq = this.num(it.q), rq = rv.rq[i], pq = Math.max(oq - rq, 0);
+        return { isLine: true, d: (nums[i] ? nums[i] + '  ' : '') + (it.code ? it.code + ' · ' : '') + it.d, calc: this.fmtN(oq) + ' ' + it.un + ' × ' + this.eur(this.num(it.p)) + (l.disc ? ' − desc. ' + this.eur(l.disc) : '') + (l.tax ? ' + imposto ' + this.fmtN(l.rate) + '% (' + this.eur(l.tax) + ')' : ''), sub: this.eur(l.total), ord: this.fmtN(oq) + ' ' + it.un, rec: this.fmtN(rq) + ' ' + it.un + (rq > oq ? ' (+' + this.fmtN(rq - oq) + ')' : ''), pend: this.fmtN(pq) + ' ' + it.un, recStyle: mono + 'font-size:12.5px;font-weight:600;color:' + (rq > oq ? '#B91C1C' : '#0F172A') };
+      }),
+      totals: [T('Subtotal dos itens', this.eur(c.sub)), T('Descontos', c.disc ? '− ' + this.eur(c.disc) : this.eur(0)), T('Impostos / encargos', this.eur(c.tax)), T('Frete', this.eur(c.frete)), T('Valor total do pedido', this.eur(c.v), true)],
+      noRec: nl === 0, noRecText: isC ? 'Pedido cancelado — nenhum recebimento esperado.' : started ? 'Nenhum recebimento registrado até agora.' : 'O recebimento só pode ser registrado após o envio ao fornecedor.',
+      receipts: sel.receipts.map(x => ({ id: x.id, date: this.fmtD(x.date), div: x.div, note: x.note + ' · por ' + x.by, lines: sel.items.map((it, i) => x.q[i] > 0 ? this.fmtN(x.q[i]) + ' ' + it.un + ' — ' + it.d : '').filter(Boolean).join(' · ') })),
+      canReceive: ok, receive: () => this.run('receive', sel.no),
+      noInv: sel.invoices.length === 0,
+      invoices: sel.invoices.map(x => ({ no: x.no, date: this.fmtD(x.date), val: this.eur(x.val), pct: Math.round(x.val / c.v * 100) + '%', st: x.st, pill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:700;' + (x.st === 'Paga' ? 'background:#ECFDF5;color:#047857' : 'background:#FFFBEB;color:#B45309') })),
+      supInfo: [['Fornecedor', sel.sup], ['NIF', si[0]], ['Contacto', si[1]], ['E-mail', si[2]], ['Telefone', si[3]], ['Localidade', si[4]]].map(a => ({ k: a[0], v: a[1] })),
+      info: [['Obra', sel.obra], ['Local de entrega', sel.local || '—'], ['Solicitante', sel.req], ['Responsável pela compra', sel.resp], ['Emissão', this.fmtD(sel.date)], ['Previsão de entrega', this.fmtD(sel.eta)], ['Condição de pagamento', sel.pay], ['Prazo de pagamento', sel.pz], ['Moeda', 'Euro (€)'], ['Orçamento de origem', sel.orc || 'Sem orçamento (pedido direto)'], ['Empresa emissora', sel.empresa || this.EMPRESAS[0][0]], ['Aprovação', (hist.filter(e => e.k === 'a')[0] || {}).d ? this.fmtD(hist.filter(e => e.k === 'a')[0].d) : 'pendente']].map(a => ({ k: a[0], v: a[1] })),
+      obs: [{ k: 'Observações internas', v: sel.obsI || '—' }, { k: 'Instruções para o fornecedor', v: sel.obsF || '—' }],
+      timeline: hist.map((e, i) => ({ ev: e.ev, date: this.fmtD(e.d), by: e.by, color: col[e.k] || '#94A3B8', lineStyle: 'width:2px;flex:1;background:#E2E8F0;margin-top:2px;' + (i === hist.length - 1 ? 'opacity:0' : '') })),
+      docs: docs.map(x => Object.assign({}, x, { open: () => this.flash('Pré-visualização demonstrativa de ' + x.t) }))
+    };
+  }
+
+  fieldStyle(err) { return 'width:100%;height:46px;padding:0 13px;border-radius:11px;border:1px solid ' + (err ? '#F87171' : '#E2E8F0') + ';background:' + (err ? '#FEF8F8' : '#fff') + ';font-size:14px;font-weight:500;color:#0F172A;outline:none;font-family:inherit'; }
+  mkField(o) {
+    const e = o.err || '';
+    return { label: o.label, star: o.req ? ' *' : '', wrap: 'display:flex;flex-direction:column;gap:5px;min-width:0;' + (o.full ? 'grid-column:1/-1' : ''), isInput: o.kind === 'input', isSelect: o.kind === 'select', isArea: o.kind === 'area', type: o.type || 'text', mode: o.mode || 'text', value: o.value, ph: o.ph || '', options: o.options || [], on: o.on, err: e, hasErr: !!e, style: this.fieldStyle(e) };
+  }
+  rcptVals(rc, full) {
+    if (!rc) return { title: '', lines: [], date: '', note: '' };
+    const r = full.filter(x => x.no === rc.no)[0], inp = (e) => e.target.value;
+    const lines = r.items.map((it, i) => ({ it, i })).filter(x => this.isLine(x.it)).map(({ it, i }) => {
+      const oq = this.num(it.q), cur = r.rv.rq[i], add = this.num(rc.q[i]), tot = cur + add, over = tot > oq + 1e-9, neg = add < 0;
+      return { d: it.d, un: it.un, calc: 'Pedido ' + this.fmtN(oq) + ' · recebido ' + this.fmtN(cur) + ' · pendente ' + this.fmtN(Math.max(oq - cur, 0)), value: rc.q[i], warn: over || neg, warnText: neg ? 'Quantidade não pode ser negativa' : 'Divergência: acumulado ' + this.fmtN(tot) + ' ' + it.un + ' > pedido ' + this.fmtN(oq), border: over || neg ? '#FECACA' : '#E2E8F0', bg: over || neg ? '#FFF7F7' : '#fff', style: this.fieldStyle(over || neg), on: e => { const v = inp(e); this.setState(x => ({ rcpt: Object.assign({}, x.rcpt, { q: x.rcpt.q.map((a, n) => n === i ? v : a), err: '' }) })); } };
+    });
+    const needsOk = lines.some(l => l.warn && l.warnText.indexOf('negativa') < 0);
+    return { title: r.no + ' · ' + r.sup, lines, date: rc.date, note: rc.note, dateStyle: this.fieldStyle(false), noteStyle: this.fieldStyle(false), onDate: e => { const v = inp(e); this.setState(x => ({ rcpt: Object.assign({}, x.rcpt, { date: v, err: '' }) })); }, onNote: e => { const v = inp(e); this.setState(x => ({ rcpt: Object.assign({}, x.rcpt, { note: v }) })); }, needsOk, ok: rc.ok, okBg: rc.ok ? '#B91C1C' : '#fff', okMark: rc.ok ? '✓' : '', toggleOk: () => this.setState(x => ({ rcpt: Object.assign({}, x.rcpt, { ok: !x.rcpt.ok, err: '' }) })), hasErr: !!rc.err, err: rc.err };
+  }
+}
+
+</script>
+</body>
+</html>
