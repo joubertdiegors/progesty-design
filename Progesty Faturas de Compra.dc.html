@@ -462,7 +462,7 @@ class Component extends DCLogic {
   DEF = { st: 'Todos', fin: 'Todos', sup: 'Todos', obra: 'Todas', em: 'Todo o período', ven: 'Qualquer', po: 'Todas' };
   STS = ['Rascunho', 'Aguardando conferência', 'Em conferência', 'Conferida', 'Com divergência', 'Cancelada'];
   FINS = ['Não lançado', 'Em aberto', 'Parcialmente pago', 'Pago', 'Vencido'];
-  SC = { 'Rascunho': ['#F1F5F9', '#475569', '#94A3B8'], 'Aguardando conferência': ['#FFFBEB', '#B45309', '#F59E0B'], 'Em conferência': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Conferida': ['#ECFDF5', '#047857', '#10B981'], 'Com divergência': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Cancelada': ['#F1F5F9', '#64748B', '#CBD5E1'], 'Não lançado': ['#F1F5F9', '#475569', '#94A3B8'], 'Em aberto': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Parcialmente pago': ['#ECFEFF', '#0E7490', '#06B6D4'], 'Pago': ['#ECFDF5', '#047857', '#10B981'], 'Vencido': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Paga': ['#ECFDF5', '#047857', '#10B981'], 'Parcial': ['#ECFEFF', '#0E7490', '#06B6D4'], 'Vencida': ['#FEF2F2', '#B91C1C', '#EF4444'] };
+  SC = { 'Rascunho': ['#F1F5F9', '#475569', '#94A3B8'], 'Aguardando conferência': ['#FFFBEB', '#B45309', '#F59E0B'], 'Em conferência': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Conferida': ['#ECFDF5', '#047857', '#10B981'], 'Com divergência': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Cancelada': ['#F1F5F9', '#64748B', '#CBD5E1'], 'Não lançado': ['#F1F5F9', '#475569', '#94A3B8'], 'Em aberto': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Parcialmente pago': ['#ECFEFF', '#0E7490', '#06B6D4'], 'Pago': ['#ECFDF5', '#047857', '#10B981'], 'Vencido': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Paga': ['#ECFDF5', '#047857', '#10B981'], 'Parcial': ['#ECFEFF', '#0E7490', '#06B6D4'], 'Vencida': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Não lançada': ['#F1F5F9', '#475569', '#94A3B8'] };
   FORN = ['Cimentos do Norte, Lda.', 'Aços do Minho, S.A.', 'Ferragens Silva & Filhos', 'ElectroNorte Materiais', 'Tintas Lusitânia, Lda.'];
   OBRAS = ['Edifício Aurora — Porto', 'Moradia Quinta do Vale', 'Reabilitação Rua das Flores'];
   RESP = ['Carlos Mendes', 'Marta Ribeiro', 'João Pacheco', 'Inês Carvalho'];
@@ -523,21 +523,23 @@ class Component extends DCLogic {
     const sum = f => this.r2(L.reduce((a, x) => a + x[f], 0)), fr = this.num(frete);
     return { L, sub: sum('g'), disc: sum('d'), base: sum('b'), tax: sum('t'), frete: fr, total: this.r2(sum('b') + sum('t') + fr) };
   }
-  parState(p) { const v = this.num(p.val), pd = this.num(p.paid); return pd >= v - 0.005 && v > 0 ? 'Paga' : p.due && p.due < this.TODAY ? 'Vencida' : pd > 0.005 ? 'Parcial' : 'Em aberto'; }
-  finOf(inv, c) {
-    if (inv.status === 'Cancelada' || inv.status === 'Rascunho' || !inv.lanc) return 'Não lançado';
-    const paid = this.r2(inv.pars.reduce((a, p) => a + this.num(p.paid), 0)), saldo = this.r2(c.total - paid);
-    if (saldo <= 0.005 && c.total > 0) return 'Pago';
-    if (inv.pars.some(p => this.num(p.val) - this.num(p.paid) > 0.005 && p.due && p.due < this.TODAY)) return 'Vencido';
-    return paid > 0.005 ? 'Parcialmente pago' : 'Em aberto';
+  parState(p, act) {
+    const v = this.num(p.val), pd = Math.min(Math.max(this.num(p.paid), 0), v);
+    if (pd >= v - 0.005 && v > 0) return 'Paga';
+    if (!act) return 'Não lançada';
+    if (p.due && p.due < this.TODAY) return 'Vencida';
+    return pd > 0.005 ? 'Parcial' : 'Em aberto';
   }
   enrich(invs) {
+    const T = this.TODAY;
     return invs.map(r => {
-      const c = this.calc(r.lines, r.frete), paid = this.r2(r.pars.reduce((a, p) => a + this.num(p.paid), 0)), fin = this.finOf(r, c);
-      const open = r.pars.filter(p => this.num(p.val) - this.num(p.paid) > 0.005 && p.due).sort((a, b) => a.due < b.due ? -1 : 1);
-      const parSum = this.r2(r.pars.reduce((a, p) => a + this.num(p.val), 0));
-      const ovVal = this.r2(r.pars.filter(p => p.due && p.due < this.TODAY).reduce((a, p) => a + Math.max(this.num(p.val) - this.num(p.paid), 0), 0));
-      return Object.assign({}, r, { c, total: c.total, paid, saldo: this.r2(c.total - paid), fin, nextDue: open.length ? open[0].due : '', parSum, parOk: Math.abs(parSum - c.total) < 0.005, ovVal, n: r.lines.length });
+      const c = this.calc(r.lines, r.frete), act = !!r.lanc && r.status !== 'Rascunho' && r.status !== 'Cancelada';
+      const P = r.pars.map(p => { const v = Math.max(this.num(p.val), 0), pd = Math.min(Math.max(this.num(p.paid), 0), v); return { p, v, pd, rest: this.r2(v - pd) }; });
+      const parSum = this.r2(P.reduce((a, x) => a + x.v, 0)), rawPaid = this.r2(P.reduce((a, x) => a + x.pd, 0)), rawSaldo = P.length ? this.r2(P.reduce((a, x) => a + x.rest, 0)) : c.total;
+      const open = P.filter(x => x.rest > 0.005 && x.p.due).sort((a, b) => a.p.due < b.p.due ? -1 : 1), overdue = act ? open.filter(x => x.p.due < T) : [];
+      let fin = 'Não lançado';
+      if (act) fin = P.length && rawSaldo <= 0.005 && parSum > 0 ? 'Pago' : overdue.length ? 'Vencido' : rawPaid > 0.005 ? 'Parcialmente pago' : 'Em aberto';
+      return Object.assign({}, r, { c, total: c.total, active: act, paid: act ? rawPaid : 0, saldo: act ? rawSaldo : 0, fin, nextDue: r.status === 'Cancelada' || !open.length ? '' : open[0].p.due, opens: open.map(x => x.p.due), parSum, parOk: Math.abs(parSum - c.total) < 0.005, ovVal: this.r2(overdue.reduce((a, x) => a + x.rest, 0)), ovN: overdue.length, nParPaid: P.filter(x => x.v > 0 && x.rest <= 0.005).length, n: r.lines.length });
     });
   }
   cmp(inv, c) {
@@ -583,7 +585,7 @@ class Component extends DCLogic {
   seed() {
     const M = this.mkI.bind(this), O = this.OBRAS, R = this.RESP;
     return [
-      M('FC-2026-0031', 'FT 2026/1180', 'Fatura', 'Cimentos do Norte, Lda.', '2026-09-24', '2026-09-25', O[0], R[1], 'PC-2026-0041', ['RC-2026-0028'], 'ORC-2026-0112', '30 dias', 0, 'Conferida', true, [['CIM-001', 200], ['AGR-010', 15], ['AGR-011', 10]], [['T', '2026-10-24', 'T']]),
+      M('FC-2026-0031', 'FT 2026/1180', 'Fatura', 'Cimentos do Norte, Lda.', '2026-09-24', '2026-09-25', O[0], R[1], 'PC-2026-0041', ['RC-2026-0028'], 'ORC-2026-0112', '30 dias', 0, 'Conferida', true, [['CIM-001', 200], ['AGR-010', 15], ['AGR-011', 10]], [['T', '2026-10-10', 'T']]),
       M('FC-2026-0032', '2026-77', 'Fatura', 'Cimentos do Norte, Lda.', '2026-09-10', '2026-09-11', O[0], R[0], '', [], '', '30 dias', 0, 'Cancelada', false, [['AGR-010', 40]], [['T', '2026-10-10', 0]], { cancelReason: 'documento duplicado pelo fornecedor' }),
       M('FC-2026-0033', 'LU-0412', 'Fatura', 'Tintas Lusitânia, Lda.', '2026-08-28', '2026-09-01', O[1], R[3], '', [], '', '30/60 dias', 0, 'Conferida', true, [['TIN-301', 20]], [['H', '2026-09-27', 'H'], ['H', '2026-10-27', 0]]),
       M('FC-2026-0034', 'FT 4471', 'Fatura', 'Aços do Minho, S.A.', '2026-10-01', '2026-10-02', O[0], R[0], 'PC-2026-0044', ['RC-2026-0030'], 'ORC-2026-0118', '30/60 dias', 0, 'Conferida', true, [['ACO-112', 300], ['ACO-116', 100], ['ACO-901', 20]], [['H', '2026-10-31', 0], ['H', '2026-11-30', 0]]),
@@ -594,7 +596,7 @@ class Component extends DCLogic {
       M('FC-2026-0039', 'FT 2026/1301', 'Fatura', 'Cimentos do Norte, Lda.', '2026-10-02', '2026-10-05', O[0], R[1], 'PC-2026-0041', ['RC-2026-0033'], '', '30/60 dias', 0, 'Aguardando conferência', false, [['CIM-001', 150], ['AGR-010', 15], ['AGR-011', 10]], [['H', '2026-11-01', 0], ['H', '2026-12-01', 0]]),
       M('FC-2026-0040', 'AM-9901', 'Fatura', 'Aços do Minho, S.A.', '2026-10-16', '2026-10-17', O[0], R[0], 'PC-2026-0044', ['RC-2026-0037'], '', '30 dias', 0, 'Aguardando conferência', false, [['ACO-116', 70, { p: 17.5 }]], [['T', '2026-11-16', 0]]),
       M('FC-2026-0041', 'FS-3320', 'Fatura simplificada', 'Ferragens Silva & Filhos', '2026-10-18', '2026-10-19', O[0], R[1], '', [], '', '30 dias', 0, 'Rascunho', false, [['FER-300', 20]], [[100, '2026-11-18', 0]]),
-      M('FC-2026-0042', 'EL-1190', 'Fatura', 'ElectroNorte Materiais', '2026-10-19', '2026-10-20', O[2], R[2], 'PC-2026-0049', ['RC-2026-0039'], '', '30 dias', 0, 'Aguardando conferência', false, [['ELE-201', 25], ['ELE-202', 6], ['ELE-203', 48]], [['T', '2026-11-18', 0]])
+      M('FC-2026-0042', 'EL-1190', 'Fatura', 'ElectroNorte Materiais', '2026-10-19', '2026-10-20', O[2], R[2], 'PC-2026-0049', ['RC-2026-0039'], '', '30 dias', 0, 'Aguardando conferência', true, [['ELE-201', 25], ['ELE-202', 6], ['ELE-203', 48]], [['T', '2026-11-18', 0]])
     ];
   }
 
@@ -658,6 +660,8 @@ class Component extends DCLogic {
       if (!msg && Object.keys(perr).length) msg = 'Corrija as parcelas sinalizadas.';
       if (!msg && Object.keys(errs).length) msg = 'Preencha os campos obrigatórios destacados.';
     } else if (errs.sup) msg = 'Para salvar o rascunho, selecione ao menos o fornecedor.';
+    d.pars.forEach((p, i) => { if (perr[i]) return; const pd = parseFloat(String(p.paid).replace(',', '.')); if (String(p.paid).trim() !== '' && (isNaN(pd) || pd < 0)) perr[i] = 'valor pago inválido (não pode ser negativo).'; else if (pd > this.num(p.val) + 0.005) perr[i] = 'valor pago maior que o da parcela.'; });
+    if (!msg && Object.keys(perr).length) msg = 'Corrija as parcelas sinalizadas.';
     return { errs, lerr, perr, msg, ok: !msg && !Object.keys(errs).length && !Object.keys(lerr).length && !Object.keys(perr).length };
   }
   buildInv(d, status) {
@@ -698,7 +702,7 @@ class Component extends DCLogic {
       { key: 'view', label: 'Ver detalhes', ok: true, why: '', kind: '' },
       { key: 'docs', label: 'Documentos relacionados', ok: true, why: '', kind: '' },
       { key: 'pars', label: 'Consultar parcelas', ok: st !== 'Rascunho', why: 'Rascunho: parcelas ainda em edição.', kind: '' },
-      { key: 'lanc', label: 'Lançar em Contas a Pagar', ok: st === 'Conferida' && !r.lanc, why: canc ? 'Fatura cancelada.' : r.lanc ? 'Já lançada em Contas a Pagar.' : 'Disponível após a fatura ser conferida.', kind: '' },
+      { key: 'lanc', label: 'Lançar em Contas a Pagar', ok: st !== 'Rascunho' && !canc && !r.lanc, why: canc ? 'Fatura cancelada.' : st === 'Rascunho' ? 'Registre a fatura antes de lançar.' : 'Já lançada em Contas a Pagar.', kind: '' },
       st === 'Rascunho' ? { key: 'delete', label: 'Excluir rascunho', ok: true, why: '', kind: 'd' } : { key: 'cancel', label: 'Cancelar fatura', ok: !canc && !(r.paid > 0), why: canc ? 'Fatura já cancelada.' : 'Há pagamentos registrados — estorne em Contas a Pagar antes.', kind: 'd' }
     ];
   }
@@ -706,6 +710,8 @@ class Component extends DCLogic {
   addHist(no, patch, ev, k) { this.upd(rs => rs.map(r => r.no === no ? Object.assign({}, r, patch, { hist: r.hist.concat([{ d: this.nowDT(), ev, by: 'Carlos Mendes', k }]) }) : r)); }
   run(key, no) {
     this.setState({ menuNo: '' });
+    const cur = this.enrich(this.curInvs()).filter(x => x.no === no)[0], ac = cur ? this.acts(cur).filter(a => a.key === key)[0] : null;
+    if (ac && !ac.ok) { this.flash(ac.why, true); return; }
     if (key === 'view') this.setState({ detailNo: no });
     else if (key === 'docs') { this.setState({ detailNo: no }); this.scrollTo('sec-rel'); }
     else if (key === 'pars') { this.setState({ detailNo: no }); this.scrollTo('sec-par'); }
@@ -765,7 +771,7 @@ class Component extends DCLogic {
     const full = this.enrich(this.curInvs()), all = s.empty ? [] : full, mono = "font-family:'JetBrains Mono',monospace;";
     const MONTHS = { 'Outubro/2026': '2026-10', 'Setembro/2026': '2026-09', 'Agosto/2026': '2026-08' };
     const emOk = r => F.em === 'Todo o período' || r.emit.slice(0, 7) === MONTHS[F.em];
-    const venOk = r => F.ven === 'Qualquer' || (F.ven === 'Vencidas' ? r.ovVal > 0.005 : F.ven === 'Sem saldo a vencer' ? !r.nextDue : r.nextDue && r.nextDue >= T && r.nextDue <= this.addDays(T, F.ven === 'Próximos 7 dias' ? 7 : 30));
+    const venOk = r => F.ven === 'Qualquer' || (r.active && (F.ven === 'Vencidas' ? r.ovVal > 0.005 : F.ven === 'Sem saldo a vencer' ? !r.opens.length : r.opens.some(dd => dd >= T && dd <= this.addDays(T, F.ven === 'Próximos 7 dias' ? 7 : 30))));
     const poOk = r => F.po === 'Todas' || (F.po === 'Com pedido' ? !!r.po : !r.po);
     const base = all.filter(r => emOk(r) && venOk(r) && poOk(r) && (F.sup === 'Todos' || r.sup === F.sup) && (F.obra === 'Todas' || r.obra === F.obra) && (!q || (r.no + ' ' + r.docNo + ' ' + r.sup + ' ' + r.po + ' ' + r.recs.join(' ') + ' ' + r.obra + ' ' + r.lines.map(i => i.d + ' ' + i.code).join(' ')).toLowerCase().includes(q)));
     let list = base.filter(r => (F.st === 'Todos' || r.status === F.st) && (F.fin === 'Todos' || r.fin === F.fin));
@@ -794,13 +800,13 @@ class Component extends DCLogic {
     const rowActs = r => [primaryOf(r), { label: 'Detalhes', run: () => this.setState({ detailNo: r.no }), style: 'height:40px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;border:1px solid #E2E8F0;background:#fff', aria: 'Detalhes ' + r.no }, { label: '⋯', run: () => this.setState({ menuNo: r.no }), style: 'height:40px;min-width:40px;padding:0 10px;border-radius:10px;font-size:16px;font-weight:700;border:1px solid #E2E8F0;background:#fff', aria: 'Mais ações ' + r.no }].filter(Boolean).map(a => Object.assign({}, a, { run: stop(a.run) }));
     const rows = pageRows.map(r => {
       const isC = r.status === 'Cancelada', late = r.fin === 'Vencido' && r.nextDue, dd = r.nextDue ? this.daysBetween(r.nextDue, T) : 0;
-      const dueSub = isC ? 'cancelada' : r.fin === 'Pago' ? 'quitada' : !r.nextDue ? '' : late ? this.pl(-dd, 'dia', 'dias') + ' em atraso' : dd === 0 ? 'vence hoje' : this.pl(dd, 'dia restante', 'dias restantes');
+      const dueSub = isC ? 'cancelada' : !r.active ? (r.status === 'Rascunho' ? 'rascunho' : 'não lançada') : r.fin === 'Pago' ? 'quitada' : !r.nextDue ? '' : late ? this.pl(-dd, 'dia', 'dias') + ' em atraso' : dd === 0 ? 'vence hoje' : dd > 0 ? this.pl(dd, 'dia restante', 'dias restantes') : '';
       return {
         no: r.no, docNo: r.docNo, sup: r.sup, emit: this.fmtD(r.emit), reg: this.fmtD(r.reg), due: r.nextDue ? this.fmtD(r.nextDue) : '—', dueSub,
         dueStyle: mono + 'font-size:12.5px;white-space:nowrap;font-weight:' + (late ? 700 : 500) + ';color:' + (late ? '#B91C1C' : '#0F172A'), dueSubStyle: 'font-size:11px;font-weight:600;color:' + (late ? '#B91C1C' : '#64748B'),
         po: r.po || 'Sem pedido', poStyle: mono + 'font-size:12.5px;white-space:nowrap;font-weight:' + (r.po ? 600 : 500) + ';color:' + (r.po ? '#4338CA' : '#94A3B8'), obra: r.obra || '—',
-        total: this.eur(r.total), totalStyle: mono + 'font-size:13.5px;font-weight:600;white-space:nowrap;' + (isC ? 'color:#94A3B8;text-decoration:line-through' : ''), totalSub: isC ? '' : r.paid > 0 ? 'pago ' + this.eur(r.paid) : r.fin === 'Não lançado' ? 'não lançada' : 'saldo ' + this.eur(r.saldo),
-        status: r.status, pill: pill(r.status), dot: this.SC[r.status][2], fin: isC ? 'Não lançado' : r.fin, finPill: pill(isC ? 'Não lançado' : r.fin), finDot: this.SC[isC ? 'Não lançado' : r.fin][2], cardOpacity: isC ? 'opacity:.7;' : '',
+        total: this.eur(r.total), totalStyle: mono + 'font-size:13.5px;font-weight:600;white-space:nowrap;' + (isC ? 'color:#94A3B8;text-decoration:line-through' : ''), totalSub: isC ? '' : !r.active ? 'não lançada' : r.paid > 0 ? 'pago ' + this.eur(r.paid) + ' · saldo ' + this.eur(r.saldo) : 'saldo ' + this.eur(r.saldo),
+        status: r.status, pill: pill(r.status), dot: this.SC[r.status][2], fin: r.fin, finPill: pill(r.fin), finDot: this.SC[r.fin][2], cardOpacity: isC ? 'opacity:.7;' : '',
         acts: rowActs(r), open: () => this.setState({ detailNo: r.no }),
         facts: [['Emissão', this.fmtD(r.emit), mono], ['Vencimento', r.nextDue ? this.fmtD(r.nextDue) + (dueSub ? ' · ' + dueSub : '') : '—', mono], ['Pedido', r.po || 'Sem pedido', mono], ['Valor total', this.eur(r.total), mono], ['Pago', this.eur(r.paid), mono], ['Saldo', this.eur(isC ? 0 : r.saldo), mono]].map(f => ({ k: f[0], v: f[1], style: (f[2] || '') + 'font-size:12.5px;font-weight:600;overflow-wrap:anywhere' })),
         rowStyle: 'display:grid;grid-template-columns:1.2fr 1.6fr 1.1fr 1.1fr 1.2fr 1.5fr 1.2fr 1.5fr 1.4fr 200px;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s' + (isC ? ';opacity:.72' : '')
@@ -879,12 +885,12 @@ class Component extends DCLogic {
   detailVals(sel, pill, full) {
     const mono = "font-family:'JetBrains Mono',monospace;", c = sel.c, isC = sel.status === 'Cancelada', T = this.TODAY;
     const box = (k, v, sub, t) => ({ k, v, sub, lc: t[0], vc: t[1], style: 'display:flex;flex-direction:column;gap:6px;padding:12px 13px;border-radius:13px;background:' + t[2] + ';border:1px solid ' + t[3] });
-    const N = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'], RD = ['#B91C1C', '#7F1D1D', '#FEF2F2', '#FECACA'], CY = ['#0E7490', '#164E63', '#ECFEFF', '#A5F3FC'], BL = ['#1D4ED8', '#1E3A8A', '#EFF6FF', '#BFDBFE'];
-    const fin = isC ? 'Não lançado' : sel.fin, cm = this.cmp(sel, c);
+    const N = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'], RD = ['#B91C1C', '#7F1D1D', '#FEF2F2', '#FECACA'], CY = ['#0E7490', '#164E63', '#ECFEFF', '#A5F3FC'], BL = ['#1D4ED8', '#1E3A8A', '#EFF6FF', '#BFDBFE'], AM = ['#B45309', '#92400E', '#FFFBEB', '#FDE68A'];
+    const fin = sel.fin, cm = this.cmp(sel, c);
     let note, nc = '#94A3B8';
     if (isC) { note = 'Fatura cancelada — não conta nos totais e não pode ser lançada nem editada.'; nc = '#EF4444'; }
     else if (sel.status === 'Rascunho') note = 'Rascunho: ainda não registrado e sem efeito financeiro.';
-    else if (fin === 'Não lançado') { note = 'Ainda não lançada em Contas a Pagar — estado financeiro “Não lançado”. Registrar a fatura não significa que foi paga.'; nc = '#F59E0B'; }
+    else if (fin === 'Não lançado') { note = 'Ainda não lançada em Contas a Pagar — situação financeira “Não lançado”: sem saldo, vencimento ou atraso. Registrar a fatura não significa que foi paga.'; nc = '#F59E0B'; }
     else if (fin === 'Pago') { note = 'Quitada: o saldo em aberto é zero. Uma fatura paga não é tratada como vencida.'; nc = '#10B981'; }
     else if (fin === 'Vencido') { note = 'Vencida: há parcela(s) com saldo e vencimento anterior a ' + this.fmtD(T) + ' — ' + this.eur(sel.ovVal) + ' em atraso.'; nc = '#EF4444'; }
     else if (fin === 'Parcialmente pago') { note = 'Pagamento parcial: ' + this.eur(sel.paid) + ' pagos; saldo de ' + this.eur(sel.saldo) + ' em aberto.'; nc = '#06B6D4'; }
@@ -902,10 +908,10 @@ class Component extends DCLogic {
     return {
       no: sel.no, docNo: sel.docNo, sup: sel.sup, obra: sel.obra || 'Sem obra associada', status: sel.status, pill: pill(sel.status), dot: this.SC[sel.status][2], fin, finPill: pill(fin), finDot: this.SC[fin][2],
       actions: acts.map(a => ({ label: a.label, run: () => this.run(a.key, sel.no), style: aStyle(a.kind) })),
-      boxes: [box('Valor total', this.eur(c.total), this.pl(sel.n, 'item', 'itens') + ' · ' + sel.moeda, N), box('Valor pago', this.eur(isC ? 0 : sel.paid), sel.paid > 0 ? this.fmtN(Math.round(sel.paid / c.total * 100)) + '% do total' : 'sem pagamentos', CY), box('Saldo em aberto', this.eur(isC ? 0 : sel.saldo), isC ? 'cancelada' : fin === 'Vencido' ? this.eur(sel.ovVal) + ' vencidos' : fin === 'Pago' ? 'quitada' : 'a vencer em ' + (sel.nextDue ? this.fmtD(sel.nextDue) : '—'), fin === 'Vencido' ? RD : N), box('Conferência', sel.status, sel.status === 'Com divergência' ? 'ver divergência abaixo' : sel.status === 'Conferida' ? 'sem pendências' : sel.status === 'Cancelada' ? '—' : 'em andamento ou pendente', sel.status === 'Com divergência' ? RD : sel.status === 'Conferida' ? GR : N)],
+      boxes: [box('Situação documental', sel.status, sel.status === 'Com divergência' ? 'ver divergência abaixo' : sel.status === 'Conferida' ? 'conferência concluída' : sel.status === 'Cancelada' ? 'sem efeito' : sel.status === 'Rascunho' ? 'ainda não registrada' : 'conferência pendente', sel.status === 'Conferida' ? GR : sel.status === 'Com divergência' ? RD : sel.status === 'Aguardando conferência' ? AM : sel.status === 'Em conferência' ? BL : N), box('Situação financeira', fin, sel.active ? 'lançada em Contas a Pagar' : isC ? 'cancelada' : 'não lançada financeiramente', fin === 'Pago' ? GR : fin === 'Vencido' ? RD : fin === 'Parcialmente pago' ? CY : fin === 'Em aberto' ? BL : N), box('Valor total da fatura', this.eur(c.total), this.pl(sel.n, 'item', 'itens') + ' · ' + sel.moeda, N), box('Total pago', this.eur(sel.paid), sel.paid > 0 ? this.fmtN(Math.round(sel.paid / (sel.parSum || c.total) * 100)) + '% das parcelas' : 'sem pagamentos', CY), box('Saldo em aberto', this.eur(sel.saldo), !sel.active ? 'não aplicável' : fin === 'Pago' ? 'quitada' : 'soma dos saldos das parcelas', sel.saldo > 0 && fin === 'Vencido' ? RD : N), box('Próximo vencimento pendente', sel.nextDue ? this.fmtD(sel.nextDue) : '—', !sel.active ? 'sem efeito financeiro' : fin === 'Pago' ? 'quitada' : sel.nextDue ? (sel.nextDue < T ? this.pl(-this.daysBetween(sel.nextDue, T), 'dia', 'dias') + ' em atraso' : this.pl(this.daysBetween(sel.nextDue, T), 'dia restante', 'dias restantes')) : '—', fin === 'Vencido' ? RD : N), box('Parcelas vencidas', sel.ovN ? this.pl(sel.ovN, 'parcela', 'parcelas') : 'nenhuma', sel.ovN ? this.eur(sel.ovVal) + ' em atraso' : '—', sel.ovN ? RD : N), box('Parcelas pagas', sel.nParPaid + ' de ' + sel.pars.length, sel.pars.length ? 'integralmente pagas' : 'sem parcelas', N)],
       note, noteColor: nc, hasDivNote: sel.status === 'Com divergência' && !!sel.divNote, divNote: sel.divNote,
       noPars: sel.pars.length === 0,
-      pars: sel.pars.map((p, i) => { const stt = this.parState(p), v = this.num(p.val), pd = this.num(p.paid); return { n: i + 1, due: this.fmtD(p.due), val: this.eur(v), paidTxt: pd > 0 ? 'pago ' + this.eur(pd) + (pd < v - 0.005 ? ' · saldo ' + this.eur(v - pd) : '') : 'sem pagamento', state: stt, pill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;background:' + this.SC[stt][0] + ';color:' + this.SC[stt][1] }; }),
+      pars: sel.pars.map((p, i) => { const stt = this.parState(p, sel.active), v = this.num(p.val), pd = Math.min(Math.max(this.num(p.paid), 0), this.num(p.val)); return { n: i + 1, due: this.fmtD(p.due), val: this.eur(v), paidTxt: pd > 0 ? 'pago ' + this.eur(pd) + (pd < v - 0.005 ? ' · saldo ' + this.eur(v - pd) : '') : 'sem pagamento', state: stt, pill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;background:' + this.SC[stt][0] + ';color:' + this.SC[stt][1] }; }),
       parWarn: !sel.parOk && sel.pars.length > 0, parWarnText: 'A soma das parcelas (' + this.eur(sel.parSum) + ') difere do total da fatura (' + this.eur(c.total) + ') em ' + this.eur(this.r2(sel.parSum - c.total)) + '. Os valores não foram ajustados.',
       items: sel.lines.map((l, i) => { const x = c.L[i]; return { d: l.d, calc: (l.code ? l.code + ' · ' : '') + this.fmtN(x.q) + ' ' + l.un + ' × ' + this.eur(x.p) + (x.d ? ' − desc. ' + this.eur(x.d) : '') + (x.t ? ' + imposto ' + this.fmtN(x.rate) + '% (' + this.eur(x.t) + ')' : ''), total: this.eur(x.total) }; }),
       totals: [T2('Subtotal', this.eur(c.sub)), T2('Descontos', c.disc ? '− ' + this.eur(c.disc) : this.eur(0)), T2('Impostos', this.eur(c.tax)), T2('Frete / encargos', this.eur(c.frete)), T2('Total da fatura', this.eur(c.total), true)],
@@ -958,9 +964,9 @@ class Component extends DCLogic {
     });
     const row = (label, value, strong) => ({ label, value, lblStyle: 'font-size:13px;color:' + (strong ? '#0F172A' : '#475569') + ';font-weight:' + (strong ? 600 : 500), valStyle: mono + 'font-size:13.5px;font-weight:600' });
     const sumRows = [row('Subtotal', this.eur(c.sub)), row('Descontos', c.disc ? '− ' + this.eur(c.disc) : this.eur(0)), row('Impostos', this.eur(c.tax))];
-    const parSumV = this.r2(d.pars.reduce((a, p) => a + this.num(p.val), 0)), parPaid = this.r2(d.pars.reduce((a, p) => a + this.num(p.paid), 0)), diff = this.r2(parSumV - c.total);
-    const parSum = [row('Total das parcelas', this.eur(parSumV)), row('Total da fatura', this.eur(c.total)), row('Valor já pago (demo)', this.eur(parPaid)), row('Saldo restante', this.eur(Math.max(this.r2(c.total - parPaid), 0)))];
-    const pars = d.pars.map((p, i) => { const stt = this.parState(p); return { n: i + 1, val: p.val, due: p.due, paid: p.paid, state: stt, pill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;background:' + this.SC[stt][0] + ';color:' + this.SC[stt][1], setVal: e => { const v = inp(e); this.setPar(i, { val: v }); }, setDue: e => { const v = inp(e); this.setPar(i, { due: v }); }, setPaid: e => { const v = inp(e); this.setPar(i, { paid: v }); }, remove: () => this.setState(x => ({ doc: Object.assign({}, x.doc, { pars: x.doc.pars.filter((_, n) => n !== i) }), dirty: true, perr: {} })), hasErr: !!s.perr[i], err: s.perr[i] || '' }; });
+    const parSumV = this.r2(d.pars.reduce((a, p) => a + this.num(p.val), 0)), parPaid = this.r2(d.pars.reduce((a, p) => a + Math.min(Math.max(this.num(p.paid), 0), Math.max(this.num(p.val), 0)), 0)), parRest = this.r2(Math.max(parSumV - parPaid, 0)), diff = this.r2(parSumV - c.total), actE = !!d.lanc && d.status !== 'Rascunho' && d.status !== 'Cancelada';
+    const parSum = [row('Total das parcelas', this.eur(parSumV)), row('Total da fatura', this.eur(c.total)), row('Valor já pago (demo)', this.eur(parPaid)), row('Saldo restante (parcelas)', this.eur(parRest))];
+    const pars = d.pars.map((p, i) => { const stt = this.parState(p, actE); return { n: i + 1, val: p.val, due: p.due, paid: p.paid, state: stt, pill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;background:' + this.SC[stt][0] + ';color:' + this.SC[stt][1], setVal: e => { const v = inp(e); this.setPar(i, { val: v }); }, setDue: e => { const v = inp(e); this.setPar(i, { due: v }); }, setPaid: e => { const v = inp(e); this.setPar(i, { paid: v }); }, remove: () => this.setState(x => ({ doc: Object.assign({}, x.doc, { pars: x.doc.pars.filter((_, n) => n !== i) }), dirty: true, perr: {} })), hasErr: !!s.perr[i], err: s.perr[i] || '' }; });
     const stName = d.status || 'Rascunho';
     return {
       docMode: !!s.doc, listMode: !s.doc,
