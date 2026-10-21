@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #6D5DFB;outline-offset:2px}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgSheet{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pgDrawer{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;background:#E8ECF3;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column">
+
+<div style="background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,2vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+  <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Estado</span>
+  <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ states }}" as="x" hint-placeholder-count="10"><button onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.name }}</button></sc-for></div>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:4px;padding:3px;border-radius:10px;background:#F1F5F9"><sc-for list="{{ views }}" as="v" hint-placeholder-count="2"><button onClick="{{ v.pick }}" style="{{ v.style }}">{{ v.name }}</button></sc-for></div>
+</div>
+
+<div style="{{ stageStyle }}">
+<div style="{{ frameStyle }}">
+<div class="pg-scroll" style="{{ scrollStyle }}">
+<div style="{{ appStyle }}">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar menu" style="width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.07);color:#94A3B8;font-size:15px">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <div style="{{ g.headStyle }}"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></span><span style="flex:1;text-align:left">{{ g.name }}</span></div>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5"><div style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span>{{ it.name }}</div></sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Carlos Mendes</span><span style="font-size:11px;color:#64748B">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+<sc-if value="{{ docMode }}" hint-placeholder-val="{{ false }}">
+<div style="background:#F8FAFC;display:flex;flex-direction:column;min-width:0">
+<div style="position:sticky;top:0;z-index:30;background:rgba(248,250,252,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E2E8F0;padding:8px clamp(12px,1.6vw,22px);display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px">
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button></sc-if>
+  <button onClick="{{ doBack }}" style="{{ ghostS }}">‹ Recebimentos</button>
+  <div style="min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-left:4px"><h1 style="margin:0;font-size:clamp(16px,1.6vw,19px);font-weight:800;letter-spacing:-.02em">{{ title }}</h1><span style="{{ stPill }}">{{ st }}</span><sc-if value="{{ isDirty }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B45309">● não salvo</span></sc-if></div>
+  <div style="flex:1"></div>
+  <button onClick="{{ doSaveDraft }}" style="{{ saveStyle }}">Salvar rascunho</button>
+  <button onClick="{{ doConfirm }}" style="{{ finStyle }}">Confirmar recebimento</button>
+</div>
+<div style="padding:clamp(12px,1.6vw,20px) clamp(12px,2vw,26px) 28px;display:flex;flex-direction:column;gap:12px;min-width:0">
+  <sc-if value="{{ showErr }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#FEF2F2;border:1px solid #FECACA"><span style="width:20px;height:20px;border-radius:50%;background:#EF4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 auto">!</span><span style="font-size:13px;font-weight:600;color:#991B1B;line-height:1.4">{{ errText }}</span></div></sc-if>
+
+  <div style="{{ panelS }}">
+    <span style="font-size:13px;font-weight:800;letter-spacing:-.01em">Dados gerais</span>
+    <div style="{{ fieldGrid }}">
+      <sc-for list="{{ fields }}" as="f" hint-placeholder-count="10">
+        <label style="{{ f.wrap }}">
+          <span style="font-size:12px;font-weight:600;color:#475569">{{ f.label }}<span style="color:#EF4444">{{ f.star }}</span></span>
+          <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}"><input type="{{ f.type }}" list="{{ f.list }}" disabled="{{ f.ro }}" value="{{ f.value }}" onInput="{{ f.on }}" placeholder="{{ f.ph }}" style="{{ f.style }}"></sc-if>
+          <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onInput="{{ f.on }}" style="{{ f.style }}"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></sc-if>
+          <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}"><textarea rows="2" value="{{ f.value }}" onInput="{{ f.on }}" placeholder="{{ f.ph }}" style="{{ f.style }}"></textarea></sc-if>
+          <sc-if value="{{ f.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ f.err }}</span></sc-if>
+        </label>
+      </sc-for>
+    </div>
+    <sc-if value="{{ hasPo }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:11px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD"><span style="flex:1 1 260px;font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.45">{{ poNote }}</span><button onClick="{{ reloadPo }}" style="min-height:44px;padding:0 4px;font-size:12.5px;font-weight:700;color:#4338CA">Recarregar itens do pedido</button></div></sc-if>
+    <datalist id="rc-loc"><sc-for list="{{ locOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o }}"></option></sc-for></datalist>
+    <datalist id="rc-cat"><sc-for list="{{ catOpts }}" as="o" hint-placeholder-count="8"><option value="{{ o }}"></option></sc-for></datalist>
+  </div>
+
+  <div style="{{ panelS }}">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px"><span style="font-size:13px;font-weight:800;letter-spacing:-.01em">Estado da conferência</span><div style="flex:1"></div><span style="{{ outPill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ outDot }}"></span>{{ outLabel }}</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ confBtns }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.pick }}" style="{{ b.style }}">{{ b.name }}</button></sc-for></div>
+    <span style="font-size:12.5px;color:#475569;line-height:1.5;text-wrap:pretty">{{ confHint }}</span>
+  </div>
+
+  <div style="position:relative;background:#fff;border:1px solid #E2E8F0;border-radius:16px">
+    <div style="padding:12px clamp(14px,1.6vw,18px);display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px">
+      <span style="font-size:15px;font-weight:700;letter-spacing:-.01em">Itens recebidos <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#64748B">{{ itemsCount }}</span></span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ hasPo }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#64748B">Itens avulsos também são permitidos.</span></sc-if>
+      <button onClick="{{ addLine }}" style="{{ addStyle }}">+ Adicionar item avulso</button>
+    </div>
+    <sc-if value="{{ noLines }}" hint-placeholder-val="{{ false }}"><div style="padding:14px clamp(14px,1.6vw,18px) 18px;border-top:1px solid #F1F5F9;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px"><span style="font-size:13.5px;color:#64748B">Nenhum item. Selecione um pedido para carregar os itens ou adicione um item avulso.</span><button onClick="{{ addLine }}" style="min-height:44px;padding:0 4px;font-size:13.5px;font-weight:700;color:#4338CA">Adicionar primeiro item</button></div></sc-if>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ lines }}" as="r" hint-placeholder-count="2">
+        <div style="{{ r.cardStyle }}">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px">
+            <span style="width:28px;height:28px;border-radius:9px;background:#F1F5F9;color:#475569;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:0 0 auto">{{ r.num }}</span>
+            <input data-prod="{{ r.n }}" list="rc-cat" value="{{ r.d }}" onInput="{{ r.setD }}" placeholder="Produto ou serviço — digite para pesquisar" autocomplete="off" style="{{ r.dStyle }}">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;flex:0 1 auto"><sc-for list="{{ r.chips }}" as="c" hint-placeholder-count="2"><span style="{{ c.style }}">{{ c.t }}</span></sc-for></div>
+            <button onClick="{{ r.remove }}" aria-label="Remover item" title="Remover item" style="width:44px;height:44px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:13px;color:#64748B;flex:0 0 auto">✕</button>
+          </div>
+          <div style="{{ qGrid }}">
+            <label style="{{ lblS }}"><span style="{{ capS }}">Código</span><input value="{{ r.code }}" onInput="{{ r.setCode }}" placeholder="—" style="{{ r.monoStyle }}"></label>
+            <label style="{{ lblS }}"><span style="{{ capS }}">Unidade</span><select value="{{ r.un }}" onInput="{{ r.setUn }}" style="{{ r.inpStyle }}"><sc-for list="{{ r.units }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></label>
+            <label style="{{ lblS }}"><span style="{{ capS }}">Preço ref. (€)</span><input value="{{ r.p }}" onInput="{{ r.setP }}" inputmode="decimal" placeholder="0,00" style="{{ r.monoStyle }}"></label>
+            <div style="{{ lblS }}"><span style="{{ capS }}">Prevista</span><span style="{{ r.roS }}">{{ r.exp }}</span></div>
+            <div style="{{ lblS }}"><span style="{{ capS }}">Acum. anterior</span><span style="{{ r.roS }}">{{ r.ant }}</span></div>
+            <label style="{{ lblS }}"><span style="{{ capS }}">Recebida agora</span><input data-qty="{{ r.n }}" value="{{ r.rec }}" onInput="{{ r.setRec }}" inputmode="decimal" placeholder="0" style="{{ r.recStyle }}"></label>
+            <div style="{{ lblS }}"><span style="{{ capS }}">Pendente após</span><span style="{{ r.pendS }}">{{ r.pend }}</span></div>
+          </div>
+          <div style="padding:12px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0;display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">Conferência</span>
+            <div style="{{ qGrid }}">
+              <label style="{{ lblS }}"><span style="{{ capS }}">Conforme</span><input value="{{ r.ok }}" onInput="{{ r.setOk }}" inputmode="decimal" placeholder="0" style="{{ r.monoStyle }}"></label>
+              <label style="{{ lblS }}"><span style="{{ capS }}">Danificada</span><input value="{{ r.dam }}" onInput="{{ r.setDam }}" inputmode="decimal" placeholder="0" style="{{ r.monoStyle }}"></label>
+              <label style="{{ lblS }}"><span style="{{ capS }}">Em falta</span><input value="{{ r.miss }}" onInput="{{ r.setMiss }}" inputmode="decimal" placeholder="0" style="{{ r.monoStyle }}"></label>
+              <div style="{{ lblS }}"><span style="{{ capS }}">Excedente (auto)</span><span style="{{ r.overS }}">{{ r.over }}</span></div>
+              <label style="{{ lblS }}"><span style="{{ capS }}">Condição</span><select value="{{ r.cond }}" onInput="{{ r.setCond }}" style="{{ r.inpStyle }}"><sc-for list="{{ r.conds }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></label>
+              <label style="{{ lblS }}"><span style="{{ capS }}">Decisão</span><select value="{{ r.dec }}" onInput="{{ r.setDec }}" style="{{ r.inpStyle }}"><sc-for list="{{ r.decs }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></label>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+              <button onClick="{{ r.toggleSpec }}" role="checkbox" aria-checked="{{ r.spec }}" style="{{ r.specBtn }}"><span style="{{ r.specBox }}">{{ r.specMark }}</span>Divergência de produto ou especificação</button>
+              <input value="{{ r.note }}" onInput="{{ r.setNote }}" placeholder="Observações da conferência" style="{{ r.noteStyle }}">
+            </div>
+          </div>
+          <sc-if value="{{ r.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">Item {{ r.num }}: {{ r.err }}</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="{{ panelS }}">
+    <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px"><span style="font-size:13px;font-weight:800;letter-spacing:-.01em">Resumo da conferência</span><div style="flex:1"></div><span style="font-size:12.5px;font-weight:600;color:#64748B">Valor de referência</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600">{{ docValue }}</span></div>
+    <div style="{{ tileGrid }}"><sc-for list="{{ tiles }}" as="t" hint-placeholder-count="6"><div style="{{ t.style }}"><span style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:3px;background:{{ t.color }};flex:0 0 auto"></span><span style="font-size:12px;font-weight:600;color:{{ t.lc }}">{{ t.k }}</span></span><span style="font-size:20px;font-weight:800;letter-spacing:-.03em;color:{{ t.vc }}">{{ t.v }}</span><span style="font-size:11.5px;font-weight:600;color:{{ t.lc }};line-height:1.4">{{ t.sub }}</span></div></sc-for></div>
+    <sc-if value="{{ hasDiv }}" hint-placeholder-val="{{ false }}"><div style="padding:11px 14px;border-radius:12px;background:#FEF2F2;border:1px solid #FECACA;font-size:12.5px;font-weight:700;color:#991B1B;line-height:1.45">{{ divText }}</div></sc-if>
+    <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;font-weight:600;color:#475569">Justificativa / observações da conferência<span style="color:#EF4444">{{ justStar }}</span></span><textarea rows="2" value="{{ justif }}" onInput="{{ onJustif }}" placeholder="Descreva as divergências e a decisão tomada" style="{{ justStyle }}"></textarea><sc-if value="{{ justErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ justErr }}</span></sc-if></label>
+  </div>
+  <span style="font-size:11.5px;color:#94A3B8;line-height:1.5">Dados demonstrativos; o documento fica guardado só nesta sessão. O recebimento regista a entrega física; não cria fatura nem altera silenciosamente o pedido de origem. Quantidades acima do pedido são sinalizadas como excedente e nunca corrigidas automaticamente.</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+  <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Recebimentos</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Registo e acompanhamento de entregas de materiais e serviços. O pedido de compra é opcional.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <button onClick="{{ doExport }}" style="{{ ghostBtn }}">Exportar</button>
+        <button onClick="{{ doRefresh }}" style="{{ ghostBtn }}">Atualizar</button>
+        <button onClick="{{ openNew }}" style="display:flex;align-items:center;gap:9px;height:46px;padding:0 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s" style-hover="transform:translateY(-1px)"><span style="font-size:17px;line-height:1">+</span>Novo recebimento</button>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px);min-width:0">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD">
+      <span style="width:7px;height:7px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>
+      <span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.4">Dados demonstrativos e fictícios · data de referência {{ todayLabel }}. Alterações ficam apenas nesta sessão.</span>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="{{ kpiGrid }}"><sc-for list="{{ sk5 }}" as="k" hint-placeholder-count="5"><div class="pg-sk" style="height:112px;border-radius:18px"></div></sc-for></div>
+        <div class="pg-sk" style="height:58px;border-radius:14px"></div>
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px"><sc-for list="{{ sk7 }}" as="k" hint-placeholder-count="7"><div class="pg-sk" style="height:46px"></div></sc-for></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ kpiGrid }}">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+          <div style="{{ k.style }}">
+            <span style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:{{ k.labelColor }}">{{ k.label }}</span></span>
+            <span style="font-size:clamp(22px,2.2vw,27px);font-weight:800;letter-spacing:-.035em;color:{{ k.valueColor }};font-variant-numeric:tabular-nums">{{ k.value }}</span>
+            <span style="font-size:11.5px;font-weight:600;color:{{ k.labelColor }};line-height:1.4">{{ k.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0">
+          <span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+          <input value="{{ query }}" onInput="{{ onQuery }}" aria-label="Pesquisar recebimentos" placeholder="Número, fornecedor, pedido ou descrição do item..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+          <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" aria-label="Limpar pesquisa" style="width:28px;height:28px;border-radius:8px;background:#F1F5F9;color:#64748B;font-size:12px">✕</button></sc-if>
+        </div>
+        <div style="{{ filterRow }}">
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+            <div style="position:relative;min-width:0;max-width:100%">
+              <button onClick="{{ f.toggle }}" aria-haspopup="listbox" style="{{ f.btnStyle }}"><span style="color:#64748B;font-weight:600">{{ f.label }}</span><span style="flex:1;text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.value }}</span><span style="font-size:9px;color:#64748B">▼</span></button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div class="pg-scroll" style="{{ f.menuStyle }}">
+                  <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button></sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearAll }}" style="{{ ghostBtn }}">Limpar filtros</button></sc-if>
+        </div>
+      </div>
+
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+          <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">{{ emptyTitle }}</span>
+          <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">{{ emptyText }}</span>
+          <button onClick="{{ emptyAction }}" style="margin-top:4px;height:46px;padding:0 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">{{ emptyLabel }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+          <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+            <div class="pg-scroll" style="overflow-x:auto">
+              <div style="min-width:1440px">
+                <div style="{{ gridHead }}"><sc-for list="{{ cols }}" as="h" hint-placeholder-count="9"><button onClick="{{ h.sort }}" style="{{ h.style }}">{{ h.name }}<span style="font-size:9px;color:#6D5DFB">{{ h.arrow }}</span></button></sc-for></div>
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                  <div onClick="{{ r.open }}" style="{{ r.rowStyle }}" style-hover="background:#F8FAFC">
+                    <div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;white-space:nowrap">{{ r.no }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">{{ r.date }}</span></div>
+                    <span style="font-size:14px;font-weight:700;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sup }}</span>
+                    <span style="{{ r.poStyle }}">{{ r.po }}</span>
+                    <span style="font-size:13px;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.obra }}</span>
+                    <span style="font-size:13px;color:#475569;white-space:nowrap">{{ r.resp }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">{{ r.n }}</span>
+                    <span style="{{ r.totalStyle }}">{{ r.total }}</span>
+                    <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-start;min-width:0"><span style="{{ r.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span>{{ r.status }}</span><sc-if value="{{ r.hasDivTag }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;color:#B91C1C">{{ r.divTag }}</span></sc-if></div>
+                    <div style="display:flex;gap:6px;justify-content:flex-end"><sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" aria-label="{{ a.aria }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isCards }}" hint-placeholder-val="{{ false }}">
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+              <div onClick="{{ r.open }}" style="padding:15px 16px;border-bottom:1px solid #F1F5F9;display:flex;flex-direction:column;gap:11px;{{ r.cardOpacity }}">
+                <div style="display:flex;align-items:flex-start;gap:10px">
+                  <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#4338CA">{{ r.no }} · {{ r.date }}</span><span style="font-size:14.5px;font-weight:700">{{ r.sup }}</span><span style="font-size:13px;color:#475569;text-wrap:pretty">{{ r.obra }}</span></div>
+                  <span style="{{ r.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span>{{ r.status }}</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;padding:12px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0">
+                  <sc-for list="{{ r.facts }}" as="f" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">{{ f.k }}</span><span style="{{ f.style }}">{{ f.v }}</span></div></sc-for>
+                </div>
+                <sc-if value="{{ r.hasDivTag }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:700;color:#B91C1C">{{ r.divTag }}</span></sc-if>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end"><sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" aria-label="{{ a.aria }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+              </div>
+            </sc-for>
+          </sc-if>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 20px;background:#F8FAFC;border-top:1px solid #E2E8F0">
+            <span style="font-size:13px;font-weight:700;color:#475569">{{ countLabel }}</span>
+            <div style="display:flex;gap:6px;align-items:center"><sc-for list="{{ pager }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.go }}" aria-label="{{ p.aria }}" style="{{ p.style }}">{{ p.label }}</button></sc-for></div>
+            <div style="flex:1"></div>
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Valor de referência (sem cancelados)</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">{{ listTotal }}</span>
+          </div>
+        </div>
+      </sc-if>
+    </sc-if>
+  </div>
+</sc-if>
+</main>
+
+</div>
+</div>
+
+<sc-if value="{{ detailOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;justify-content:flex-end">
+    <div onClick="{{ closeDetail }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div id="pg-drawer" class="pg-scroll" style="{{ drawerStyle }}">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:8px">
+          <span style="{{ d.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ d.dot }}"></span>{{ d.status }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#4338CA">{{ d.no }} · {{ d.dt }}</span>
+          <span style="font-size:20px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ d.sup }}</span>
+          <span style="font-size:13.5px;color:#475569;text-wrap:pretty">{{ d.obra }}</span>
+        </div>
+        <button onClick="{{ closeDetail }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px"><sc-for list="{{ d.actions }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Resultado da conferência</span>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px">
+          <sc-for list="{{ d.boxes }}" as="c" hint-placeholder-count="4"><div style="{{ c.style }}"><span style="font-size:11.5px;font-weight:600;color:{{ c.lc }}">{{ c.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:clamp(13px,1.4vw,16px);font-weight:600;color:{{ c.vc }};overflow-wrap:anywhere">{{ c.v }}</span><span style="font-size:11.5px;font-weight:600;color:{{ c.lc }};line-height:1.4">{{ c.sub }}</span></div></sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0"><span style="width:4px;align-self:stretch;min-height:28px;border-radius:99px;background:{{ d.noteColor }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:#334155;line-height:1.45">{{ d.note }}</span></div>
+        <sc-if value="{{ d.hasDiv }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:13px;background:#FEF2F2;border:1px solid #FECACA"><span style="font-size:12.5px;font-weight:800;color:#991B1B">Divergências identificadas</span><sc-for list="{{ d.divs }}" as="x" hint-placeholder-count="2"><span style="font-size:12.5px;font-weight:600;color:#991B1B;line-height:1.45">{{ x }}</span></sc-for></div></sc-if>
+        <sc-if value="{{ d.hasJust }}" hint-placeholder-val="{{ false }}"><div style="padding:12px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0;display:flex;flex-direction:column;gap:3px"><span style="font-size:11.5px;font-weight:700;color:#64748B">Justificativa da conferência</span><span style="font-size:13px;color:#334155;line-height:1.5;text-wrap:pretty">{{ d.just }}</span></div></sc-if>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Itens e quantidades</span>
+        <sc-for list="{{ d.items }}" as="i" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:9px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+            <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px 12px">
+              <div style="min-width:0;flex:1 1 160px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700">{{ i.d }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ i.code }}</span></div>
+              <span style="{{ i.decStyle }}">{{ i.dec }}</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:9px 11px;border-radius:10px;background:#F8FAFC">
+              <sc-for list="{{ i.q }}" as="q" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748B">{{ q.k }}</span><span style="{{ q.style }}">{{ q.v }}</span></div></sc-for>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ i.chips }}" as="c" hint-placeholder-count="2"><span style="{{ c.style }}">{{ c.t }}</span></sc-for></div>
+            <sc-if value="{{ i.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#64748B;line-height:1.45">{{ i.note }}</span></sc-if>
+          </div>
+        </sc-for>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:4px 14px">
+          <sc-for list="{{ d.totals }}" as="t" hint-placeholder-count="6"><div style="display:flex;align-items:center;gap:10px"><span style="{{ t.ls }}">{{ t.k }}</span><div style="flex:1"></div><span style="{{ t.vs }}">{{ t.v }}</span></div></sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Dados gerais, local e responsáveis</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 14px"><sc-for list="{{ d.info }}" as="i" hint-placeholder-count="10"><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ i.k }}</span><span style="font-size:13.5px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div></sc-for></div>
+        <div style="padding:12px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0;display:flex;flex-direction:column;gap:3px"><span style="font-size:11.5px;font-weight:700;color:#64748B">Observações</span><span style="font-size:13px;color:#334155;line-height:1.5;text-wrap:pretty">{{ d.obs }}</span></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Pedido de compra relacionado</span>
+        <sc-if value="{{ d.noPo }}" hint-placeholder-val="{{ false }}"><span style="padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">Recebimento direto, sem pedido de compra. O vínculo é opcional.</span></sc-if>
+        <sc-if value="{{ d.hasPo }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0"><div style="min-width:0;flex:1 1 150px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#4338CA">{{ d.poNo }}</span><span style="font-size:12px;color:#64748B">{{ d.poSub }}</span></div><span style="{{ d.poPill }}">{{ d.poState }}</span></div>
+            <span style="font-size:12px;color:#64748B;line-height:1.5;text-wrap:pretty">{{ d.poNote }}</span>
+            <span style="font-size:12px;font-weight:700;color:#475569">Posição por item (todos os recebimentos ativos do pedido)</span>
+            <sc-for list="{{ d.pos }}" as="p" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:8px;padding:11px 13px;border-radius:13px;border:1px solid #E2E8F0">
+                <span style="font-size:13px;font-weight:700">{{ p.d }}</span>
+                <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+                  <sc-for list="{{ p.q }}" as="q" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748B">{{ q.k }}</span><span style="{{ q.style }}">{{ q.v }}</span></div></sc-for>
+                </div>
+              </div>
+            </sc-for>
+            <span style="font-size:12px;font-weight:700;color:#475569">Recebimentos do pedido</span>
+            <sc-for list="{{ d.poRecs }}" as="x" hint-placeholder-count="2">
+              <button onClick="{{ x.open }}" style="{{ x.style }}"><div style="min-width:0;flex:1 1 140px;display:flex;flex-direction:column;gap:2px;text-align:left"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#0E7490">{{ x.no }}{{ x.here }}</span><span style="font-size:12px;color:#64748B">{{ x.date }} · {{ x.sum }}</span></div><span style="{{ x.pill }}">{{ x.status }}</span></button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Faturas relacionadas</span>
+        <sc-if value="{{ d.noInv }}" hint-placeholder-val="{{ false }}"><span style="padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">{{ d.noInvText }}</span></sc-if>
+        <sc-for list="{{ d.invoices }}" as="x" hint-placeholder-count="1">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+            <div style="min-width:0;flex:1 1 150px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600">{{ x.no }}</span><span style="font-size:12px;color:#64748B">{{ x.date }}</span></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">{{ x.val }}</span>
+            <span style="{{ x.pill }}">{{ x.st }}</span>
+          </div>
+        </sc-for>
+        <span style="font-size:12px;color:#64748B;line-height:1.5;text-wrap:pretty">Recebimento e fatura são documentos independentes: registrar a entrega não cria nem baixa faturas, e uma fatura não confirma a entrega.</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Histórico</span>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ d.timeline }}" as="e" hint-placeholder-count="4">
+            <div style="display:flex;gap:13px">
+              <div style="display:flex;flex-direction:column;align-items:center;flex:0 0 14px"><span style="width:12px;height:12px;border-radius:50%;background:{{ e.color }};border:3px solid #fff;box-shadow:0 0 0 2px {{ e.color }};margin-top:4px"></span><span style="{{ e.lineStyle }}"></span></div>
+              <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:16px;min-width:0"><span style="font-size:13.5px;font-weight:700;text-wrap:pretty">{{ e.ev }}</span><span style="font-size:12px;color:#64748B"><span style="font-family:'JetBrains Mono',monospace">{{ e.date }}</span> · {{ e.by }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:94;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeMenu }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(440px,100%);max-height:100%;overflow-y:auto;background:#fff;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:10px;padding:2px 4px 6px"><div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;letter-spacing:-.02em">Ações do recebimento</span><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#4338CA;font-weight:600">{{ menu.no }} · {{ menu.status }}</span></div><button onClick="{{ closeMenu }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B">✕</button></div>
+      <sc-for list="{{ menu.items }}" as="a" hint-placeholder-count="5"><button onClick="{{ a.run }}" aria-disabled="{{ a.off }}" style="{{ a.style }}"><span style="font-size:13.5px;font-weight:700;{{ a.labelStyle }}">{{ a.label }}</span><span style="font-size:11.5px;font-weight:600;color:{{ a.subColor }};line-height:1.35">{{ a.sub }}</span></button></sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ cfmOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:96;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeCfm }}" style="position:absolute;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(480px,100%);max-height:100%;overflow-y:auto;background:#fff;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:14px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <span style="font-size:19px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ cfm.title }}</span>
+      <span style="font-size:13.5px;color:#475569;line-height:1.55;text-wrap:pretty">{{ cfm.text }}</span>
+      <sc-if value="{{ cfm.hasInput }}" hint-placeholder-val="{{ false }}"><label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;font-weight:700;color:#475569">{{ cfm.inputLabel }}</span><input type="text" value="{{ cfm.reason }}" onInput="{{ cfm.onReason }}" style="height:46px;padding:0 13px;border-radius:11px;border:1px solid #E2E8F0;font-size:14px;outline:none"></label></sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end"><button onClick="{{ closeCfm }}" style="{{ ghostBtn }};height:46px">{{ cfm.back }}</button><button onClick="{{ confirmCfm }}" style="{{ cfm.okStyle }}">{{ cfm.label }}</button></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100% - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:{{ toastColor }};display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">{{ toastMark }}</span>{{ toast }}
+  </div>
+</sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Inicial&quot;,&quot;Filtros aplicados&quot;,&quot;Lista vazia&quot;,&quot;Carregando&quot;,&quot;Novo recebimento&quot;,&quot;Recebimento de pedido&quot;,&quot;Validação&quot;,&quot;Conferência com divergência&quot;,&quot;Detalhes&quot;,&quot;Cancelamento&quot;],&quot;default&quot;:&quot;Inicial&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Desktop&quot;,&quot;Mobile&quot;],&quot;default&quot;:&quot;Desktop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  TODAY = '2026-10-20'; PAGE = 8;
+  DEF = { st: 'Todos', sup: 'Todos', obra: 'Todas', per: 'Todo o período', po: 'Todos' };
+  STS = ['Rascunho', 'Aguardando conferência', 'Em conferência', 'Recebido parcialmente', 'Recebido e conferido', 'Com divergência', 'Cancelado'];
+  SC = { 'Rascunho': ['#F1F5F9', '#475569', '#94A3B8'], 'Aguardando conferência': ['#FFFBEB', '#B45309', '#F59E0B'], 'Em conferência': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Recebido parcialmente': ['#ECFEFF', '#0E7490', '#06B6D4'], 'Recebido e conferido': ['#ECFDF5', '#047857', '#10B981'], 'Com divergência': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Cancelado': ['#F1F5F9', '#64748B', '#CBD5E1'] };
+  FORN = ['Cimentos do Norte, Lda.', 'Aços do Minho, S.A.', 'Ferragens Silva & Filhos', 'ElectroNorte Materiais', 'Tintas Lusitânia, Lda.'];
+  OBRAS = ['Edifício Aurora — Porto', 'Moradia Quinta do Vale', 'Reabilitação Rua das Flores'];
+  RESP = ['Carlos Mendes', 'Marta Ribeiro', 'João Pacheco', 'Inês Carvalho'];
+  CARR = ['Entrega do fornecedor', 'Transportes Moura', 'DHL Freight', 'Retirada no balcão'];
+  LOCAIS = ['Estaleiro — Edifício Aurora', 'Estaleiro — Quinta do Vale', 'Estaleiro — Rua das Flores', 'Armazém Central (Maia)'];
+  UNITS = ['un', 'saco', 'm³', 'barra', 'rolo', 'cx', 'balde', 'par', 'kg', 'm', 'dia', 'serviço'];
+  CONDS = ['Boa condição', 'Embalagem danificada', 'Material danificado', 'Fora de especificação', 'Validade curta', 'Serviço executado'];
+  DECS = ['Aceitar', 'Aceitar parcialmente', 'Rejeitar'];
+  SUPI = { 'Cimentos do Norte, Lda.': ['NIF 508 112 340', 'Rui Teixeira', 'comercial@cimentosnorte.example', '+351 22 000 1100', 'Maia'], 'Aços do Minho, S.A.': ['NIF 502 887 611', 'Paula Fonseca', 'vendas@acosminho.example', '+351 253 000 220', 'Braga'], 'Ferragens Silva & Filhos': ['NIF 501 330 982', 'António Silva', 'geral@ferragenssilva.example', '+351 22 000 3300', 'Porto'], 'ElectroNorte Materiais': ['NIF 509 441 207', 'Sandra Lopes', 'obras@electronorte.example', '+351 22 000 4400', 'Matosinhos'], 'Tintas Lusitânia, Lda.': ['NIF 507 905 118', 'Hugo Barros', 'pedidos@tintaslusitania.example', '+351 22 000 5500', 'Gaia'] };
+  CAT = {
+    'CIM-001': ['Cimento CEM II 32,5 — saco 25 kg', 'saco', 5.85], 'AGR-010': ['Areia lavada', 'm³', 24], 'AGR-011': ['Brita 1', 'm³', 26],
+    'ACO-112': ['Varão A500 Ø12 mm', 'barra', 9.4], 'ACO-116': ['Varão A500 Ø16 mm', 'barra', 16.8], 'ACO-901': ['Arame recozido', 'rolo', 14],
+    'FER-101': ['Parafuso 5×60 (caixa 50)', 'cx', 8.9], 'FER-102': ['Bucha nylon Ø8 (caixa 80)', 'cx', 4.2], 'FER-103': ['Dobradiça inox', 'un', 6.5], 'FER-300': ['Trena 5 m', 'un', 7.9],
+    'ELE-201': ['Cabo H07V-K 2,5 mm² (rolo 100 m)', 'rolo', 62], 'ELE-202': ['Quadro elétrico 12 módulos', 'un', 94], 'ELE-203': ['Disjuntor 16 A', 'un', 7.8], 'ELE-070': ['Fita isoladora', 'rolo', 1.9],
+    'TIN-301': ['Tinta plástica branca 15 L', 'balde', 48], 'TIN-302': ['Primário selador 15 L', 'balde', 52], 'TIN-303': ['Fita de pintor', 'rolo', 2.1], 'QUI-050': ['Diluente universal 5 L', 'un', 11.5],
+    'EPI-010': ['Luvas de proteção', 'par', 3.2], 'EPI-020': ['Capacete de obra', 'un', 9.5], 'SRV-010': ['Aluguer de grua — diária', 'dia', 320]
+  };
+  PO = [
+    { no: 'PC-2026-0041', sup: 'Cimentos do Norte, Lda.', obra: 'Edifício Aurora — Porto', local: 'Estaleiro — Edifício Aurora', items: [['CIM-001', 400], ['AGR-010', 30], ['AGR-011', 20]] },
+    { no: 'PC-2026-0044', sup: 'Aços do Minho, S.A.', obra: 'Edifício Aurora — Porto', local: 'Estaleiro — Edifício Aurora', items: [['ACO-112', 300], ['ACO-116', 150], ['ACO-901', 20]] },
+    { no: 'PC-2026-0047', sup: 'Ferragens Silva & Filhos', obra: 'Moradia Quinta do Vale', local: 'Estaleiro — Quinta do Vale', items: [['FER-101', 60], ['FER-102', 80], ['FER-103', 40]] },
+    { no: 'PC-2026-0049', sup: 'ElectroNorte Materiais', obra: 'Reabilitação Rua das Flores', local: 'Estaleiro — Rua das Flores', items: [['ELE-201', 25], ['ELE-202', 6], ['ELE-203', 48]] },
+    { no: 'PC-2026-0052', sup: 'Tintas Lusitânia, Lda.', obra: 'Moradia Quinta do Vale', local: 'Estaleiro — Quinta do Vale', items: [['TIN-301', 30], ['TIN-302', 12], ['TIN-303', 60]] },
+    { no: 'PC-2026-0053', sup: 'Cimentos do Norte, Lda.', obra: 'Reabilitação Rua das Flores', local: 'Estaleiro — Rua das Flores', items: [['CIM-001', 200], ['AGR-010', 25]] }
+  ];
+  INV = { 'PC-2026-0041': [{ no: 'FT-2026-1180', date: '2026-09-25', val: 1640, st: 'Paga' }], 'PC-2026-0044': [{ no: 'FT-AM-7741', date: '2026-10-01', val: 2920, st: 'Pendente' }] };
+
+  state = { view: null, w: 1400, navOpen: false, dataState: 'ready', cur: 'Inicial', empty: false, recs: null, query: '', filters: { st: 'Todos', sup: 'Todos', obra: 'Todas', per: 'Todo o período', po: 'Todos' }, openFilter: '', sort: { key: 'dt', dir: 'desc' }, page: 1, detailNo: '', menuNo: '', cfm: null, toast: '', toastErr: false, doc: null, dirty: false, errs: {}, lerr: {}, banner: '' };
+
+  // ---------- helpers ----------
+  num(v) { const n = parseFloat(String(v == null ? '' : v).trim().replace(',', '.')); return isNaN(n) ? 0 : n; }
+  r2(n) { return Math.round(n * 100) / 100; }
+  fmtN(n) { return Number(n).toLocaleString('de-DE', { maximumFractionDigits: 2 }); }
+  fmtIn(n) { return String(this.r2(n)).replace('.', ','); }
+  eur(n) { return '€ ' + Number(n).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  fmtD(iso) { const p = String(iso).slice(0, 10).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  fmtDT(dt) { return this.fmtD(dt) + (dt.length > 10 ? ' · ' + dt.slice(11, 16) : ''); }
+  addDays(iso, n) { const d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  pl(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+  poOf(no) { return this.PO.filter(x => x.no === no)[0] || null; }
+  active(r) { return r.status !== 'Rascunho' && r.status !== 'Cancelado'; }
+  curRecs() { return this.state.recs || this._seed || (this._seed = this.seed()); }
+  upd(fn, extra) { this.setState(x => Object.assign({ recs: fn(x.recs || this._seed || (this._seed = this.seed())) }, extra || {})); }
+  flash(msg, err) { clearTimeout(this.tT); this.setState({ toast: msg, toastErr: !!err }); this.tT = setTimeout(() => this.setState({ toast: '' }), 3400); }
+  nextNo() { const m = this.curRecs().reduce((a, r) => Math.max(a, parseInt(r.no.slice(8), 10) || 0), 0); return 'RC-2026-' + String(m + 1).padStart(4, '0'); }
+  nowDT() { return this.TODAY + 'T10:30'; }
+
+  // ---------- seed ----------
+  mkR(no, dt, sup, po, obra, local, resp, carr, ref, status, conf, lines, extra) {
+    const P = this.poOf(po);
+    const ls = lines.map(a => {
+      const c = this.CAT[a[0]], o = a[2] || {}, it = P ? P.items.filter(i => i[0] === a[0])[0] : null, dam = o.dam || 0;
+      return { code: a[0], d: c[0], un: c[1], p: String(c[2]).replace('.', ','), ord: it ? it[1] : null, rec: String(a[1]), dam: String(dam), ok: String(a[1] - dam), miss: String(o.miss || 0), spec: !!o.spec, cond: o.cond || (dam ? 'Material danificado' : 'Boa condição'), note: o.note || '', dec: o.dec || 'Aceitar' };
+    });
+    const d0 = dt.slice(0, 10), tm = dt.slice(11);
+    let h = [{ d: dt, ev: status === 'Rascunho' ? 'Rascunho criado' : 'Recebimento registrado' + (po ? ' a partir do pedido ' + po : ' sem pedido de compra'), by: resp, k: status === 'Rascunho' ? 'r' : 'c' }];
+    if (['Em conferência', 'Recebido parcialmente', 'Recebido e conferido', 'Com divergência'].indexOf(status) >= 0) h.push({ d: d0 + 'T' + String(parseInt(tm, 10) + 1).padStart(2, '0') + tm.slice(2), ev: 'Conferência iniciada', by: resp, k: 's' });
+    if (conf === 2) h.push({ d: d0 + 'T' + String(parseInt(tm, 10) + 2).padStart(2, '0') + tm.slice(2), ev: 'Conferência concluída — ' + status, by: resp, k: status === 'Com divergência' ? 'x' : 'a' });
+    if (status === 'Cancelado') h.push({ d: d0 + 'T16:00', ev: 'Recebimento cancelado — ' + ((extra || {}).cancelReason || 'sem motivo informado'), by: 'Carlos Mendes', k: 'x' });
+    return Object.assign({ no, dt, sup, po, obra, local, resp, carr, ref, status, conf, lines: ls, obs: '', justif: '', hist: h }, extra || {});
+  }
+  seed() {
+    const M = this.mkR.bind(this);
+    return [
+      M('RC-2026-0028', '2026-09-22T09:40', 'Cimentos do Norte, Lda.', 'PC-2026-0041', this.OBRAS[0], this.LOCAIS[0], 'Marta Ribeiro', 'Entrega do fornecedor', 'GR-88210', 'Recebido parcialmente', 2, [['CIM-001', 200], ['AGR-010', 15], ['AGR-011', 10]], { obs: 'Primeira entrega acordada com o fornecedor; restante na semana seguinte.' }),
+      M('RC-2026-0029', '2026-09-26T14:15', 'ElectroNorte Materiais', '', this.OBRAS[2], this.LOCAIS[2], 'João Pacheco', 'Retirada no balcão', 'FT-balcão 4471', 'Recebido e conferido', 2, [['ELE-070', 12]], { obs: 'Compra avulsa de reposição.' }),
+      M('RC-2026-0030', '2026-09-30T11:05', 'Aços do Minho, S.A.', 'PC-2026-0044', this.OBRAS[0], this.LOCAIS[0], 'Carlos Mendes', 'Transportes Moura', 'GR-7702', 'Recebido parcialmente', 2, [['ACO-112', 300], ['ACO-116', 100], ['ACO-901', 20]], { obs: 'Varão Ø16 em duas entregas.' }),
+      M('RC-2026-0033', '2026-10-02T14:10', 'Cimentos do Norte, Lda.', 'PC-2026-0041', this.OBRAS[0], this.LOCAIS[0], 'Marta Ribeiro', 'Entrega do fornecedor', 'GR-88344', 'Com divergência', 2, [['CIM-001', 150, { dam: 10, cond: 'Embalagem danificada', note: '10 sacos rasgados no transporte', dec: 'Aceitar parcialmente' }], ['AGR-010', 15], ['AGR-011', 10]], { justif: '10 sacos de cimento danificados; devolução a combinar com o fornecedor.' }),
+      M('RC-2026-0034', '2026-10-09T10:20', 'ElectroNorte Materiais', 'PC-2026-0049', this.OBRAS[2], this.LOCAIS[2], 'João Pacheco', 'DHL Freight', 'DHL-55120', 'Cancelado', 0, [['ELE-201', 10]], { cancelReason: 'entrega recusada, material enviado por engano' }),
+      M('RC-2026-0035', '2026-10-08T15:30', 'Ferragens Silva & Filhos', 'PC-2026-0047', this.OBRAS[1], this.LOCAIS[1], 'Inês Carvalho', 'Transportes Moura', 'GR-3391', 'Com divergência', 2, [['FER-101', 60], ['FER-102', 60, { miss: 20, note: 'Guia indicava 80; chegaram 60' }], ['FER-103', 40]], { justif: 'Faltaram 20 caixas de buchas em relação à guia de remessa; fornecedor notificado.' }),
+      M('RC-2026-0036', '2026-10-12T09:00', 'Tintas Lusitânia, Lda.', '', this.OBRAS[1], this.LOCAIS[1], 'Inês Carvalho', 'Entrega do fornecedor', 'GR-1209', 'Recebido e conferido', 2, [['QUI-050', 12]]),
+      M('RC-2026-0037', '2026-10-15T10:45', 'Aços do Minho, S.A.', 'PC-2026-0044', this.OBRAS[0], this.LOCAIS[0], 'Carlos Mendes', 'Transportes Moura', 'GR-7790', 'Com divergência', 2, [['ACO-116', 70, { note: 'Acumulado supera o pedido' }]], { justif: 'Fornecedor enviou 20 barras a mais; decisão sobre devolução ou faturação pendente.' }),
+      M('RC-2026-0038', '2026-10-16T16:20', 'Ferragens Silva & Filhos', '', this.OBRAS[0], this.LOCAIS[0], 'Marta Ribeiro', 'Retirada no balcão', 'Balcão 8812', 'Aguardando conferência', 0, [['FER-300', 5]]),
+      M('RC-2026-0039', '2026-10-17T08:50', 'ElectroNorte Materiais', 'PC-2026-0049', this.OBRAS[2], this.LOCAIS[2], 'João Pacheco', 'DHL Freight', 'DHL-55311', 'Aguardando conferência', 0, [['ELE-201', 25], ['ELE-202', 6], ['ELE-203', 48]]),
+      M('RC-2026-0040', '2026-10-19T11:30', 'Tintas Lusitânia, Lda.', 'PC-2026-0052', this.OBRAS[1], this.LOCAIS[1], 'Inês Carvalho', 'Entrega do fornecedor', 'GR-1244', 'Em conferência', 1, [['TIN-301', 20], ['TIN-302', 12], ['TIN-303', 60]]),
+      M('RC-2026-0041', '2026-10-20T09:10', 'Ferragens Silva & Filhos', '', this.OBRAS[0], this.LOCAIS[0], 'Marta Ribeiro', 'Retirada no balcão', '', 'Rascunho', 0, [['EPI-010', 30], ['EPI-020', 10]])
+    ];
+  }
+
+  // ---------- cálculos ----------
+  antsFor(r, recs) {
+    const m = {};
+    if (!r.po) return m;
+    recs.forEach(o => { if (o.no !== r.no && o.po === r.po && this.active(o) && o.dt < r.dt) o.lines.forEach(l => { m[l.code] = this.r2((m[l.code] || 0) + this.num(l.rec)); }); });
+    return m;
+  }
+  lc(l, ant) {
+    const rec = this.num(l.rec), dam = this.num(l.dam), ok = this.num(l.ok), miss = this.num(l.miss), po = l.ord != null, ord = po ? l.ord : null, a = po ? (ant || 0) : null;
+    const over = po ? Math.max(this.r2(a + rec - ord), 0) : 0, exp = po ? Math.max(this.r2(ord - a), 0) : null, pend = po ? Math.max(this.r2(ord - a - rec), 0) : null;
+    const rej = l.dec === 'Rejeitar' ? rec : l.dec === 'Aceitar parcialmente' ? Math.max(this.r2(rec - ok), 0) : 0;
+    return { rec, dam, ok, miss, ord, ant: a, over, exp, pend, spec: !!l.spec, rej, div: dam > 0 || miss > 0 || over > 0 || !!l.spec, v: this.r2(rec * this.num(l.p)), un: l.un };
+  }
+  enrich(recs) {
+    return recs.map(r => {
+      const ants = this.antsFor(r, recs), lcs = r.lines.map(l => this.lc(l, ants[l.code] || 0));
+      return Object.assign({}, r, { lcs, v: this.r2(lcs.reduce((a, x) => a + x.v, 0)), n: r.lines.length, hasDiv: lcs.some(x => x.div), nDiv: lcs.filter(x => x.div).length });
+    });
+  }
+  position(poNo, recs) {
+    const P = this.poOf(poNo), act = recs.filter(r => r.po === poNo && this.active(r));
+    const items = P.items.map(it => {
+      const c = this.CAT[it[0]]; let rec = 0, dv = 0;
+      act.forEach(r => r.lines.forEach(l => { if (l.code === it[0]) { rec += this.num(l.rec); dv += this.num(l.dam) + this.num(l.miss); } }));
+      rec = this.r2(rec); const over = Math.max(this.r2(rec - it[1]), 0);
+      return { code: it[0], d: c[0], un: c[1], ord: it[1], rec, pend: Math.max(this.r2(it[1] - rec), 0), over, div: this.r2(dv + over) };
+    });
+    const none = act.length === 0, complete = !none && items.every(x => x.pend === 0), pendN = items.filter(x => x.pend > 0).length;
+    return { P, items, act, none, complete, pendN, state: none ? 'Sem recebimentos' : complete ? (items.some(x => x.over > 0) ? 'Totalmente recebido (com excedente)' : 'Totalmente recebido') : 'Parcialmente recebido', unconf: act.filter(r => r.conf < 2).length };
+  }
+  outcome(conf, po, lcs) {
+    if (conf === 0) return 'Aguardando conferência';
+    if (conf === 1) return 'Em conferência';
+    if (lcs.some(x => x.div)) return 'Com divergência';
+    if (po && lcs.some(x => x.pend > 0)) return 'Recebido parcialmente';
+    return 'Recebido e conferido';
+  }
+  agg(lcs, f) { const m = {}; lcs.forEach(x => { const q = f(x); if (q > 0) m[x.un] = this.r2((m[x.un] || 0) + q); }); const k = Object.keys(m); return k.length ? k.map(u => this.fmtN(m[u]) + ' ' + u).join(' · ') : '—'; }
+  cats(lcs) {
+    const c = (f, g) => { const s = lcs.filter(x => g(x) > 0); return { n: s.length, q: this.agg(s, g) }; };
+    return { ok: c(0, x => x.ok), dam: c(0, x => x.dam), miss: c(0, x => x.miss), over: c(0, x => x.over), rej: c(0, x => x.rej), spec: { n: lcs.filter(x => x.spec).length, q: '' } };
+  }
+  isUsed(l) { return this.num(l.rec) > 0 || this.num(l.dam) > 0 || this.num(l.miss) > 0 || l.spec || String(l.note).trim() !== '' || (l.ord == null && String(l.d).trim() !== ''); }
+
+  // ---------- documento ----------
+  blankLine() { return { code: '', d: '', un: 'un', p: '', ord: null, rec: '', dam: '', ok: '', miss: '', spec: false, cond: 'Boa condição', note: '', dec: 'Aceitar' }; }
+  blankDoc() { return { id: null, no: this.nextNo(), dt: this.nowDT(), sup: '', po: '', obra: '', local: '', resp: 'Carlos Mendes', carr: '', ref: '', obs: '', conf: 0, justif: '', lines: [this.blankLine()], hist: [] }; }
+  poLines(poNo) { return this.poOf(poNo).items.map(it => { const c = this.CAT[it[0]]; return Object.assign(this.blankLine(), { code: it[0], d: c[0], un: c[1], p: String(c[2]).replace('.', ','), ord: it[1] }); }); }
+  openNew(poNo) {
+    const d = this.blankDoc();
+    if (poNo) { const P = this.poOf(poNo); Object.assign(d, { po: poNo, sup: P.sup, obra: P.obra, local: P.local, lines: this.poLines(poNo) }); }
+    this.setState({ doc: d, dirty: false, errs: {}, lerr: {}, banner: '', detailNo: '', menuNo: '', cfm: null });
+  }
+  openEdit(no) {
+    const r = this.curRecs().filter(x => x.no === no)[0]; if (!r) return;
+    const d = JSON.parse(JSON.stringify(r)); d.id = r.no;
+    if (d.conf === 0 && d.status !== 'Rascunho') d.conf = 1;
+    this.setState({ doc: d, dirty: false, errs: {}, lerr: {}, banner: '', detailNo: '', menuNo: '', cfm: null });
+  }
+  setDoc(p) { this.setState(x => ({ doc: Object.assign({}, x.doc, p), dirty: true, banner: '', errs: {}, lerr: {} })); }
+  setLine(i, fn) { this.setState(x => ({ doc: Object.assign({}, x.doc, { lines: x.doc.lines.map((l, n) => n === i ? Object.assign({}, l, fn(l)) : l) }), dirty: true, banner: '', lerr: {} })); }
+  syncOk(rec, dam) { return String(rec).trim() === '' ? '' : this.fmtIn(Math.max(this.num(rec) - this.num(dam), 0)); }
+  onSup(v) { this.setState(x => { const d = Object.assign({}, x.doc, { sup: v }); const P = this.poOf(d.po); if (P && P.sup !== v) { d.po = ''; d.lines = d.lines.map(l => Object.assign({}, l, { ord: null })); } return { doc: d, dirty: true, banner: '', errs: {} }; }); }
+  onPo(v) {
+    if (!v) { this.setState(x => ({ doc: Object.assign({}, x.doc, { po: '', lines: x.doc.lines.map(l => Object.assign({}, l, { ord: null })) }), dirty: true })); return; }
+    const P = this.poOf(v);
+    this.setState(x => ({ doc: Object.assign({}, x.doc, { po: v, sup: P.sup, obra: P.obra, local: P.local, lines: this.poLines(v) }), dirty: true, banner: '', errs: {}, lerr: {} }));
+    this.flash('Itens carregados do pedido ' + v + ' — quantidades a receber em branco; o pedido não é alterado');
+  }
+  pickProd(i, v) {
+    const k = Object.keys(this.CAT).filter(c => this.CAT[c][0] === v)[0];
+    this.setLine(i, l => k ? { d: v, code: k, un: this.CAT[k][1], p: String(this.CAT[k][2]).replace('.', ',') } : { d: v });
+  }
+  validate(d, strict) {
+    const errs = {}, lerr = {}; let msg = '';
+    if (!d.sup) errs.sup = 'Selecione o fornecedor.';
+    if (strict) {
+      if (!d.resp) errs.resp = 'Informe o responsável pelo recebimento.';
+      if (!d.dt) errs.dt = 'Informe data e hora.';
+      const used = d.lines.map((l, i) => ({ l, i })).filter(x => this.isUsed(x.l));
+      if (!used.length || !used.some(x => this.num(x.l.rec) > 0)) msg = 'Informe ao menos um item com quantidade recebida maior que zero.';
+      const bad = v => String(v).trim() !== '' && (isNaN(parseFloat(String(v).replace(',', '.'))) || parseFloat(String(v).replace(',', '.')) < 0);
+      used.forEach(({ l, i }) => {
+        const rec = this.num(l.rec), dam = this.num(l.dam), ok = this.num(l.ok);
+        if (!String(l.d).trim()) lerr[i] = 'descreva o produto ou serviço.';
+        else if (bad(l.rec) || bad(l.dam) || bad(l.miss) || bad(l.ok)) lerr[i] = 'quantidades devem ser números maiores ou iguais a zero.';
+        else if (rec <= 0 && this.num(l.miss) <= 0) lerr[i] = 'informe a quantidade recebida (ou a quantidade em falta).';
+        else if (dam > rec) lerr[i] = 'quantidade danificada (' + this.fmtN(dam) + ') maior que a recebida (' + this.fmtN(rec) + ').';
+        else if (d.conf > 0 && Math.abs(ok + dam - rec) > 1e-9) lerr[i] = 'conforme (' + this.fmtN(ok) + ') + danificada (' + this.fmtN(dam) + ') difere da quantidade recebida (' + this.fmtN(rec) + ').';
+      });
+      if (!msg && Object.keys(lerr).length) msg = 'Corrija os itens sinalizados.';
+      if (!msg && Object.keys(errs).length) msg = 'Preencha os campos obrigatórios destacados.';
+      if (d.conf === 2 && !String(d.justif).trim()) {
+        const ants = this.antsFor(d, this.curRecs());
+        if (used.some(x => this.lc(x.l, ants[x.l.code] || 0).div)) { errs.justif = 'Há divergências: registre a justificativa antes de concluir a conferência.'; if (!msg) msg = 'Registre a justificativa das divergências.'; }
+      }
+    } else if (errs.sup) msg = 'Para salvar o rascunho, selecione ao menos o fornecedor.';
+    return { errs, lerr, msg, ok: !msg && !Object.keys(errs).length && !Object.keys(lerr).length };
+  }
+  buildRec(d, status) {
+    const base = this.curRecs(), ants = this.antsFor(d, base);
+    const lines = d.lines.filter(l => this.isUsed(l)).map(l => Object.assign({}, l, { ok: String(l.ok).trim() === '' && d.conf === 0 ? this.fmtIn(this.num(l.rec) - this.num(l.dam)) : l.ok }));
+    const ev = (t, k) => ({ d: this.nowDT(), ev: t, by: 'Carlos Mendes', k });
+    const isNew = !d.id, h = (d.hist || []).slice();
+    if (status === 'Rascunho') h.push(ev(isNew ? 'Rascunho criado' : 'Rascunho atualizado', 'r'));
+    else if (isNew || d.status === 'Rascunho') h.push(ev('Recebimento registrado' + (d.po ? ' a partir do pedido ' + d.po : ' sem pedido de compra'), 'c'));
+    else h.push(ev('Recebimento editado', 's'));
+    if (status !== 'Rascunho' && d.conf >= 1) h.push(ev(d.conf === 1 ? 'Conferência em andamento' : 'Conferência concluída — ' + status, status === 'Com divergência' ? 'x' : 'a'));
+    return { no: d.no, dt: d.dt, sup: d.sup, po: d.po, obra: d.obra, local: d.local, resp: d.resp, carr: d.carr, ref: d.ref, obs: d.obs, justif: d.justif, conf: d.conf, status, lines, hist: h };
+  }
+  commit(status) {
+    const d = this.state.doc, rec = this.buildRec(d, status);
+    this.upd(rs => rs.some(r => r.no === rec.no) ? rs.map(r => r.no === rec.no ? rec : r) : rs.concat([rec]), { doc: null, dirty: false, cfm: null, errs: {}, lerr: {}, banner: '', detailNo: status === 'Rascunho' ? '' : rec.no });
+    this.flash(status === 'Rascunho' ? 'Rascunho ' + rec.no + ' salvo' : 'Recebimento ' + rec.no + ' confirmado — ' + status);
+  }
+  doSaveDraft() {
+    const d = this.state.doc, v = this.validate(d, false);
+    if (!v.ok) { this.setState({ errs: v.errs, lerr: v.lerr, banner: v.msg }); return; }
+    this.commit('Rascunho');
+  }
+  doConfirm() {
+    const d = this.state.doc, v = this.validate(d, true);
+    if (!v.ok) { this.setState({ errs: v.errs, lerr: v.lerr, banner: v.msg }); return; }
+    const ants = this.antsFor(d, this.curRecs()), lcs = d.lines.filter(l => this.isUsed(l)).map(l => this.lc(l, ants[l.code] || 0)), st = this.outcome(d.conf, !!d.po, lcs);
+    this.setState({ cfm: { type: 'confirm', no: d.no, status: st, nDiv: lcs.filter(x => x.div).length, reason: '' } });
+  }
+  doBack() { if (this.state.dirty) this.setState({ cfm: { type: 'discard', reason: '' } }); else this.setState({ doc: null, errs: {}, lerr: {}, banner: '' }); }
+
+  // ---------- ações ----------
+  acts(r) {
+    const canc = r.status === 'Cancelado', P = r.po ? this.position(r.po, this.curRecs()) : null;
+    return [
+      { key: 'edit', label: r.status === 'Rascunho' ? 'Editar rascunho' : r.conf < 2 ? 'Conferir' : 'Editar / reconferir', ok: !canc, why: 'Recebimento cancelado não pode ser editado.', kind: r.status === 'Rascunho' ? 'p' : r.conf < 2 ? 'c' : '' },
+      { key: 'start', label: 'Iniciar conferência', ok: r.status === 'Aguardando conferência', why: 'Disponível apenas quando o recebimento aguarda conferência.', kind: 'c' },
+      { key: 'view', label: 'Ver detalhes', ok: true, why: '', kind: '' },
+      { key: 'again', label: 'Novo recebimento deste pedido', ok: !!P && !canc && r.status !== 'Rascunho' && P.pendN > 0, why: !r.po ? 'Recebimento sem pedido de compra.' : canc ? 'Recebimento cancelado.' : r.status === 'Rascunho' ? 'Confirme este rascunho primeiro.' : 'Pedido sem quantidades pendentes.', kind: '' },
+      r.status === 'Rascunho' ? { key: 'delete', label: 'Excluir rascunho', ok: true, why: '', kind: 'd' } : { key: 'cancel', label: 'Cancelar recebimento', ok: !canc, why: 'Recebimento já cancelado.', kind: 'd' }
+    ];
+  }
+  run(key, no) {
+    this.setState({ menuNo: '' });
+    if (key === 'view') this.setState({ detailNo: no });
+    else if (key === 'edit') this.openEdit(no);
+    else if (key === 'start') { this.upd(rs => rs.map(r => r.no === no ? Object.assign({}, r, { status: 'Em conferência', conf: 1, hist: r.hist.concat([{ d: this.nowDT(), ev: 'Conferência iniciada', by: 'Carlos Mendes', k: 's' }]) }) : r)); this.flash('Conferência iniciada em ' + no); }
+    else if (key === 'again') { const r = this.curRecs().filter(x => x.no === no)[0]; this.openNew(r.po); }
+    else if (key === 'cancel') this.setState({ cfm: { type: 'cancel', no, reason: '' } });
+    else if (key === 'delete') this.setState({ cfm: { type: 'delete', no, reason: '' } });
+  }
+  cfmInfo(c) {
+    const t = c.type;
+    if (t === 'cancel') return { title: 'Cancelar ' + c.no + '?', text: 'O recebimento deixa de ser tratado como ativo e suas quantidades deixam de contar no acumulado do pedido. O pedido e as faturas não são alterados. Esta ação não pode ser desfeita.', label: 'Cancelar recebimento', back: 'Voltar', danger: true, hasInput: true, inputLabel: 'Motivo do cancelamento (opcional)' };
+    if (t === 'delete') return { title: 'Excluir rascunho ' + c.no + '?', text: 'O rascunho será removido. Nenhum pedido ou fatura é afetado.', label: 'Excluir rascunho', back: 'Voltar', danger: true, hasInput: false };
+    if (t === 'discard') return { title: 'Descartar alterações?', text: 'Há alterações não salvas neste recebimento. Se sair agora, elas serão perdidas.', label: 'Descartar', back: 'Continuar editando', danger: true, hasInput: false };
+    return { title: 'Confirmar recebimento ' + c.no + '?', text: 'Status resultante: ' + c.status + '. ' + (c.nDiv ? this.pl(c.nDiv, 'item com divergência será registrado', 'itens com divergência serão registrados') + ' sem correção automática das quantidades. ' : '') + 'Registrar a entrega não cria fatura nem altera o pedido de compra de origem.', label: 'Confirmar recebimento', back: 'Voltar', danger: false, hasInput: false };
+  }
+  confirmCfm() {
+    const c = this.state.cfm; if (!c) return;
+    if (c.type === 'confirm') { this.commit(c.status); return; }
+    if (c.type === 'discard') { this.setState({ cfm: null, doc: null, dirty: false, errs: {}, lerr: {}, banner: '' }); return; }
+    if (c.type === 'delete') { this.upd(rs => rs.filter(r => r.no !== c.no), { cfm: null, detailNo: '' }); this.flash('Rascunho ' + c.no + ' excluído'); return; }
+    if (c.type === 'cancel') { this.upd(rs => rs.map(r => r.no === c.no ? Object.assign({}, r, { status: 'Cancelado', hist: r.hist.concat([{ d: this.nowDT(), ev: 'Recebimento cancelado — ' + (c.reason.trim() || 'sem motivo informado'), by: 'Carlos Mendes', k: 'x' }]) }) : r), { cfm: null }); this.flash('Recebimento ' + c.no + ' cancelado'); }
+  }
+  applyState(n) {
+    const DEF = this.DEF;
+    clearTimeout(this.rT);
+    this.setState({ cur: n, doc: null, detailNo: '', cfm: null, menuNo: '', dataState: 'ready', empty: false, query: '', filters: Object.assign({}, DEF), openFilter: '', page: 1, dirty: false, errs: {}, lerr: {}, banner: '', navOpen: false });
+    if (n === 'Filtros aplicados') this.setState({ filters: Object.assign({}, DEF, { st: 'Com divergência' }), query: 'aços' });
+    else if (n === 'Lista vazia') this.setState({ empty: true });
+    else if (n === 'Carregando') this.setState({ dataState: 'loading' });
+    else if (n === 'Novo recebimento') this.openNew();
+    else if (n === 'Recebimento de pedido') { this.openNew('PC-2026-0041'); this.setState(x => ({ doc: Object.assign({}, x.doc, { ref: 'GR-88401', conf: 1, lines: x.doc.lines.map((l, i) => i === 0 ? Object.assign({}, l, { rec: '50', ok: '50' }) : l) }), dirty: true })); }
+    else if (n === 'Validação') { this.openNew(); setTimeout(() => this.doConfirm(), 30); }
+    else if (n === 'Conferência com divergência') this.openEdit('RC-2026-0037');
+    else if (n === 'Detalhes') this.setState({ detailNo: 'RC-2026-0037' });
+    else if (n === 'Cancelamento') this.setState({ cfm: { type: 'cancel', no: 'RC-2026-0038', reason: '' } });
+  }
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() { window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth }); const st = this.props.initialState || 'Inicial'; if (st !== 'Inicial') this.applyState(st); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tT); clearTimeout(this.rT); }
+
+  // ---------- render ----------
+  fieldStyle(err, mono) { return 'width:100%;height:46px;padding:0 13px;border-radius:11px;border:1px solid ' + (err ? '#F87171' : '#E2E8F0') + ';background:' + (err ? '#FEF8F8' : '#fff') + ';font-size:14px;font-weight:500;color:#0F172A;outline:none;font-family:' + (mono ? "'JetBrains Mono',monospace" : 'inherit'); }
+  renderVals() {
+    const s = this.state, F = s.filters, q = s.query.trim().toLowerCase(), T = this.TODAY;
+    const view = s.view || this.props.initialView || 'Desktop', phone = view === 'Mobile';
+    const W = phone ? 390 : (this.props.vw || s.w), isMobile = W < 1024, isTable = W >= 1000, avail = W - (isMobile ? 0 : 258) - 68;
+    const recs = this.curRecs(), full = this.enrich(recs), all = s.empty ? [] : full;
+    const mono = "font-family:'JetBrains Mono',monospace;";
+    const MONTHS = { 'Outubro/2026': '2026-10', 'Setembro/2026': '2026-09' };
+    const perOk = r => F.per === 'Todo o período' || (F.per === 'Últimos 30 dias' ? r.dt.slice(0, 10) >= this.addDays(T, -30) : r.dt.slice(0, 7) === MONTHS[F.per]);
+    const poOk = r => F.po === 'Todos' || (F.po === 'Sem pedido' ? !r.po : r.po === F.po);
+    const base = all.filter(r => perOk(r) && poOk(r) && (F.sup === 'Todos' || r.sup === F.sup) && (F.obra === 'Todas' || r.obra === F.obra) && (!q || (r.no + ' ' + r.sup + ' ' + r.po + ' ' + r.obra + ' ' + r.ref + ' ' + r.lines.map(i => i.d + ' ' + i.code).join(' ')).toLowerCase().includes(q)));
+    let list = base.filter(r => F.st === 'Todos' || r.status === F.st);
+    const sk = s.sort.key;
+    list = list.slice().sort((a, b) => { const x = a[sk], y = b[sk]; const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y)); return (c || b.no.localeCompare(a.no)) * (s.sort.dir === 'asc' ? 1 : -1); });
+    const pages = Math.max(1, Math.ceil(list.length / this.PAGE)), page = Math.min(s.page, pages), pageRows = list.slice((page - 1) * this.PAGE, page * this.PAGE);
+    const pill = st => 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + this.SC[st][0] + ';color:' + this.SC[st][1] + ';font-size:12px;font-weight:700;white-space:nowrap;flex:0 0 auto';
+    const ghostBtn = 'height:44px;padding:0 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;white-space:nowrap';
+    const stop = fn => e => { if (e && e.stopPropagation) e.stopPropagation(); fn(); };
+    const N = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], AM = ['#B45309', '#92400E', '#FFFBEB', '#FDE68A'], CY = ['#0E7490', '#164E63', '#ECFEFF', '#A5F3FC'], GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'], RD = ['#B91C1C', '#7F1D1D', '#FEF2F2', '#FECACA'], OR = ['#C2410C', '#9A3412', '#FFF7ED', '#FED7AA'], PK = ['#BE185D', '#9D174D', '#FDF2F8', '#FBCFE8'], BL = ['#1D4ED8', '#1E3A8A', '#EFF6FF', '#BFDBFE'];
+
+    // KPIs
+    const by = st => base.filter(r => r.status === st), kcols = avail >= 1000 ? 5 : 2;
+    const kpi = (label, value, hint, color, t, last) => ({ label, value, hint, color, labelColor: t[0], valueColor: t[1], style: 'border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;background:' + t[2] + ';border:1px solid ' + t[3] + (last && kcols === 2 ? ';grid-column:1/-1' : '') });
+    const canc = by('Cancelado'), divR = by('Com divergência');
+    const kpis = [
+      kpi('Total de recebimentos', String(base.length), canc.length ? this.pl(canc.length, 'cancelado incluído', 'cancelados incluídos') : 'nenhum cancelado', '#64748B', N),
+      kpi('Aguardando conferência', String(by('Aguardando conferência').length), this.pl(by('Em conferência').length, 'em conferência', 'em conferência') + ' · ' + this.pl(by('Rascunho').length, 'rascunho', 'rascunhos'), '#F59E0B', AM),
+      kpi('Recebidos parcialmente', String(by('Recebido parcialmente').length), by('Recebido parcialmente').length ? 'pedido com quantidades pendentes' : 'nenhum no momento', '#06B6D4', CY),
+      kpi('Recebidos e conferidos', String(by('Recebido e conferido').length), 'conferência concluída sem divergência', '#10B981', GR),
+      kpi('Divergências identificadas', String(divR.length), divR.length ? this.pl(divR.reduce((a, r) => a + r.nDiv, 0), 'item com divergência', 'itens com divergência') : 'nenhuma no momento', '#EF4444', RD, true)
+    ];
+
+    // linhas da lista
+    const primaryOf = r => r.status === 'Rascunho' ? { label: 'Editar', run: () => this.run('edit', r.no), style: 'height:40px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff', aria: 'Editar ' + r.no } : (r.status === 'Aguardando conferência' || r.status === 'Em conferência') ? { label: 'Conferir', run: () => this.run('edit', r.no), style: 'height:40px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;background:#ECFEFF;color:#0E7490;border:1px solid #A5F3FC', aria: 'Conferir ' + r.no } : null;
+    const rowActs = r => [primaryOf(r), { label: 'Detalhes', run: () => this.setState({ detailNo: r.no }), style: 'height:40px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;border:1px solid #E2E8F0;background:#fff', aria: 'Detalhes ' + r.no }, { label: '⋯', run: () => this.setState({ menuNo: r.no }), style: 'height:40px;min-width:40px;padding:0 10px;border-radius:10px;font-size:16px;font-weight:700;border:1px solid #E2E8F0;background:#fff', aria: 'Mais ações ' + r.no }].filter(Boolean).map(a => Object.assign({}, a, { run: stop(a.run) }));
+    const rows = pageRows.map(r => {
+      const isC = r.status === 'Cancelado', dvTag = r.hasDiv && r.status !== 'Cancelado' && r.status !== 'Rascunho' ? this.pl(r.nDiv, 'item com divergência', 'itens com divergência') : '';
+      return {
+        no: r.no, date: this.fmtD(r.dt), sup: r.sup, po: r.po || 'Sem pedido', poStyle: mono + 'font-size:12.5px;white-space:nowrap;font-weight:' + (r.po ? 600 : 500) + ';color:' + (r.po ? '#4338CA' : '#94A3B8'), obra: r.obra || '—', resp: r.resp, n: r.n,
+        total: this.eur(r.v), totalStyle: mono + 'font-size:13.5px;font-weight:600;text-align:right;white-space:nowrap;' + (isC ? 'color:#94A3B8;text-decoration:line-through' : ''),
+        status: r.status, pill: pill(r.status), dot: this.SC[r.status][2], hasDivTag: !!dvTag, divTag: dvTag, cardOpacity: isC ? 'opacity:.7;' : '',
+        acts: rowActs(r), open: () => this.setState({ detailNo: r.no }),
+        facts: [['Pedido', r.po || 'Sem pedido', mono], ['Responsável', r.resp, ''], ['Itens', String(r.n), mono], ['Valor de ref.', this.eur(r.v), mono]].map(f => ({ k: f[0], v: f[1], style: (f[2] || '') + 'font-size:12.5px;font-weight:600;overflow-wrap:anywhere' })),
+        rowStyle: 'display:grid;grid-template-columns:1.1fr 1.6fr 1.2fr 1.5fr 1.1fr .5fr 1.1fr 1.6fr 200px;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s' + (isC ? ';opacity:.72' : '')
+      };
+    });
+    const spec = [['no', 'Recebimento'], ['sup', 'Fornecedor'], ['po', 'Pedido'], ['obra', 'Obra'], ['resp', 'Responsável'], ['n', 'Itens'], ['v', 'Valor ref.'], ['status', 'Status'], ['', 'Ações']];
+    const cols = spec.map(c => ({ name: c[1], arrow: s.sort.key === c[0] || (c[0] === 'no' && s.sort.key === 'dt') ? (s.sort.dir === 'asc' ? ' ▲' : ' ▼') : '', sort: () => { if (!c[0]) return; const key = c[0] === 'no' ? 'dt' : c[0]; this.setState(x => ({ page: 1, sort: { key, dir: x.sort.key === key && x.sort.dir === 'desc' ? 'asc' : 'desc' } })); }, style: 'text-align:' + (c[0] === 'v' ? 'right' : 'left') + ';font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:0;white-space:nowrap;cursor:' + (c[0] ? 'pointer' : 'default') + ';color:' + (s.sort.key === c[0] || (c[0] === 'no' && s.sort.key === 'dt') ? '#4338CA' : '#64748B') }));
+    const pager = [{ label: '‹', aria: 'Página anterior', dis: page <= 1, n: page - 1 }].concat(Array.from({ length: pages }, (_, i) => ({ label: String(i + 1), aria: 'Página ' + (i + 1), n: i + 1, on: i + 1 === page })), [{ label: '›', aria: 'Próxima página', dis: page >= pages, n: page + 1 }]).map(p => ({ label: p.label, aria: p.aria, go: () => { if (!p.dis) this.setState({ page: p.n }); }, style: 'min-width:40px;height:40px;padding:0 10px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid ' + (p.on ? '#6D5DFB' : '#E2E8F0') + ';background:' + (p.on ? '#EEF0FE' : '#fff') + ';color:' + (p.on ? '#4338CA' : p.dis ? '#CBD5E1' : '#475569') + ';cursor:' + (p.dis ? 'not-allowed' : 'pointer') }));
+
+    // filtros
+    const two = W < 700, DEF = this.DEF;
+    const mkFilter = (key, label, options, idx) => ({
+      label: label + ':', value: F[key], open: s.openFilter === key,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === key ? '' : key })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' + (F[key] === DEF[key] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700',
+      menuStyle: 'position:absolute;top:calc(100% + 8px);' + (two && idx % 2 ? 'right:0;' : 'left:0;') + 'min-width:230px;max-height:300px;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50',
+      options: options.map(o => ({ name: o, pick: () => this.setState(x => ({ page: 1, filters: Object.assign({}, x.filters, { [key]: o }), openFilter: '' })), style: 'padding:12px 11px;border-radius:9px;text-align:left;font-size:13.5px;min-height:44px;font-weight:' + (F[key] === o ? 700 : 500) + ';color:' + (F[key] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[key] === o ? '#EEF0FE' : 'transparent') }))
+    });
+    const filters = [mkFilter('st', 'Status', ['Todos'].concat(this.STS), 0), mkFilter('sup', 'Fornecedor', ['Todos'].concat(this.FORN), 1), mkFilter('obra', 'Obra', ['Todas'].concat(this.OBRAS), 2), mkFilter('per', 'Período', ['Todo o período', 'Outubro/2026', 'Setembro/2026', 'Últimos 30 dias'], 3), mkFilter('po', 'Pedido', ['Todos', 'Sem pedido'].concat(this.PO.map(p => p.no)), 4)];
+    const anyFilter = q !== '' || Object.keys(DEF).some(k => F[k] !== DEF[k]);
+    const clearAll = () => this.setState({ query: '', openFilter: '', page: 1, filters: Object.assign({}, DEF) });
+
+    // menu / confirmação
+    const mr = full.filter(x => x.no === s.menuNo)[0];
+    const menu = mr ? { no: mr.no, status: mr.status, items: this.acts(mr).map(a => ({ label: a.label, sub: a.ok ? '' : a.why, off: !a.ok, subColor: '#94A3B8', labelStyle: a.ok ? (a.kind === 'd' ? 'color:#B91C1C' : '') : 'color:#94A3B8', run: () => { if (a.ok) this.run(a.key, mr.no); }, style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:12px 14px;min-height:50px;border-radius:12px;border:1px solid ' + (a.ok ? '#E2E8F0' : '#F1F5F9') + ';background:' + (a.ok ? '#fff' : '#F8FAFC') + ';cursor:' + (a.ok ? 'pointer' : 'not-allowed') })) } : { no: '', status: '', items: [] };
+    const cf = s.cfm ? this.cfmInfo(s.cfm) : { title: '', text: '', label: '', hasInput: false, back: '' };
+    const cfm = Object.assign({}, cf, { reason: s.cfm ? s.cfm.reason : '', onReason: e => { const v = e.target.value; this.setState(x => ({ cfm: Object.assign({}, x.cfm, { reason: v }) })); }, okStyle: 'height:46px;padding:0 22px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' + (cf.danger ? '#DC2626' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') });
+
+    const loading = s.dataState === 'loading', hasRows = list.length > 0, startI = (page - 1) * this.PAGE;
+    const sel = full.filter(x => x.no === s.detailNo)[0] || full[0];
+    const d = this.detailVals(sel, pill, full);
+    const docV = this.docVals(phone, W);
+    return Object.assign({
+      isMobile, isTable, isCards: !isTable,
+      states: ['Inicial', 'Filtros aplicados', 'Lista vazia', 'Carregando', 'Novo recebimento', 'Recebimento de pedido', 'Validação', 'Conferência com divergência', 'Detalhes', 'Cancelamento'].map(n => ({ name: n, pick: () => this.applyState(n), style: 'height:34px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid ' + (s.cur === n ? '#6D5DFB' : '#E2E8F0') + ';background:' + (s.cur === n ? '#EEF0FE' : '#fff') + ';color:' + (s.cur === n ? '#4338CA' : '#475569') })),
+      views: ['Desktop', 'Mobile'].map(n => ({ name: n, pick: () => this.setState({ view: n, navOpen: false }), style: 'height:30px;padding:0 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:' + (view === n ? '#fff' : 'transparent') + ';color:' + (view === n ? '#4338CA' : '#64748B') })),
+      stageStyle: phone ? 'flex:1;display:flex;justify-content:center;padding:28px 12px' : 'flex:1;display:flex;flex-direction:column',
+      frameStyle: phone ? 'width:390px;height:844px;flex:0 0 auto;border-radius:46px;border:10px solid #0F172A;overflow:hidden;position:relative;transform:translateZ(0);background:#F8FAFC;box-shadow:0 40px 80px -30px rgba(15,23,42,.5)' : 'flex:1;display:flex;flex-direction:column;position:relative',
+      scrollStyle: phone ? 'position:absolute;inset:0;overflow-y:auto;overflow-x:hidden' : 'flex:1;display:flex;flex-direction:column',
+      appStyle: 'display:flex;flex:1;min-height:' + (phone ? '100%' : 'calc(100vh - 56px)') + ";background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif",
+      showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen && isMobile,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:calc(100vh - 56px);flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      navGroups: [['Comercial', '#EC4899', ['CRM', 'Leads']], ['Clientes', '#3B82F6', ['Clientes']], ['Projetos', '#F97316', ['Projetos / Obras']], ['Compras', '#06B6D4', ['Visão geral', 'Orçamentos de compra', 'Pedidos de compra', 'Recebimentos', 'Faturas de compra']], ['Financeiro', '#10B981', ['Contas a pagar']], ['Relatórios', '#8B5CF6', ['Consultas e Relatórios']], ['Configurações', '#64748B', ['Empresa']]].map(g => ({
+        name: g[0], dot: g[1], open: g[0] === 'Compras',
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        items: g[2].map(n => { const on = n === 'Recebimentos'; return { name: n, style: 'display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:13px;font-weight:' + (on ? 700 : 500) + ';color:' + (on ? '#fff' : '#8C9AAE') + ';background:' + (on ? 'rgba(109,93,251,.26)' : 'transparent'), dotStyle: 'width:5px;height:5px;border-radius:50%;background:' + (on ? '#6D5DFB' : '#475569') }; })
+      })),
+      ghostBtn, todayLabel: this.fmtD(T), secTitle: 'font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B',
+      openNew: () => this.openNew(),
+      doRefresh: () => { clearTimeout(this.rT); this.setState({ dataState: 'loading', cur: 'Carregando' }); this.rT = setTimeout(() => { this.setState({ dataState: 'ready', cur: 'Inicial' }); this.flash('Dados demonstrativos atualizados'); }, 1000); },
+      doExport: () => {
+        try {
+          const csv = [['Recebimento', 'Data', 'Fornecedor', 'Pedido', 'Obra', 'Responsável', 'Itens', 'Valor de referência', 'Status']].concat(list.map(r => [r.no, this.fmtD(r.dt), r.sup, r.po || 'Sem pedido', r.obra, r.resp, r.n, r.v.toFixed(2), r.status])).map(l => l.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';')).join('\n');
+          const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' })); a.download = 'recebimentos-demonstrativo.csv'; a.click();
+        } catch (e) { /* demo */ }
+        this.flash('Exportação demonstrativa: ' + this.pl(list.length, 'recebimento', 'recebimentos'));
+      },
+      stLoading: loading, stReady: !loading, sk5: [1, 2, 3, 4, 5], sk7: [1, 2, 3, 4, 5, 6, 7],
+      kpiGrid: 'display:grid;grid-template-columns:repeat(' + kcols + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)', kpis,
+      query: s.query, hasQuery: s.query !== '', onQuery: e => this.setState({ query: e.target.value, page: 1 }), clearQuery: () => this.setState({ query: '', page: 1 }),
+      filterRow: two ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px' : 'display:flex;flex-wrap:wrap;gap:10px;align-items:center',
+      filters, anyFilter, clearAll, hasRows, isEmpty: !hasRows,
+      emptyTitle: s.empty ? 'Nenhum recebimento registrado' : 'Nenhum recebimento encontrado',
+      emptyText: s.empty ? 'Registre a primeira entrega. O recebimento pode ser criado diretamente, sem pedido de compra anterior.' : 'Nenhum recebimento corresponde à pesquisa ou aos filtros aplicados. Tente alterar os filtros ou realizar uma nova busca.',
+      emptyLabel: s.empty ? 'Novo recebimento' : 'Limpar filtros', emptyAction: s.empty ? () => this.openNew() : clearAll,
+      gridHead: 'display:grid;grid-template-columns:1.1fr 1.6fr 1.2fr 1.5fr 1.1fr .5fr 1.1fr 1.6fr 200px;gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
+      cols, rows, pager,
+      countLabel: 'Exibindo ' + (hasRows ? (startI + 1) + '–' + (startI + pageRows.length) : '0') + ' de ' + this.pl(list.length, 'recebimento', 'recebimentos'),
+      listTotal: this.eur(this.r2(list.filter(r => r.status !== 'Cancelado').reduce((a, r) => a + r.v, 0))),
+      detailOpen: !!s.detailNo, d, closeDetail: () => this.setState({ detailNo: '' }),
+      drawerStyle: 'position:relative;width:' + (phone || W < 600 ? '100%' : 'min(640px,100%)') + ';height:100%;overflow-y:auto;background:#fff;border-left:1px solid #E2E8F0;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:24px;box-shadow:-30px 0 70px -30px rgba(15,23,42,.5);animation:pgDrawer .3s cubic-bezier(.22,.7,.2,1)',
+      menuOpen: !!mr, menu, closeMenu: () => this.setState({ menuNo: '' }),
+      cfmOpen: !!s.cfm, cfm, closeCfm: () => this.setState({ cfm: null }), confirmCfm: () => this.confirmCfm(),
+      toast: s.toast, toastColor: s.toastErr ? '#F87171' : '#10B981', toastMark: s.toastErr ? '!' : '✓'
+    }, docV);
+  }
+
+  detailVals(sel, pill, full) {
+    const mono = "font-family:'JetBrains Mono',monospace;", isC = sel.status === 'Cancelado', isD = sel.status === 'Rascunho';
+    const box = (k, v, sub, t) => ({ k, v, sub, lc: t[0], vc: t[1], style: 'display:flex;flex-direction:column;gap:6px;padding:12px 13px;border-radius:13px;background:' + t[2] + ';border:1px solid ' + t[3] });
+    const N = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'], RD = ['#B91C1C', '#7F1D1D', '#FEF2F2', '#FECACA'], CY = ['#0E7490', '#164E63', '#ECFEFF', '#A5F3FC'];
+    const cat = this.cats(sel.lcs), conf = sel.conf;
+    const confTxt = conf === 2 ? 'Conferência concluída' : conf === 1 ? 'Conferência em andamento' : 'Conferência não iniciada';
+    let note, nc = '#94A3B8';
+    if (isC) { note = 'Recebimento cancelado — não é tratado como recebimento ativo e não conta no acumulado do pedido.'; nc = '#EF4444'; }
+    else if (isD) note = 'Rascunho: ainda não confirmado; não conta no acumulado do pedido.';
+    else if (sel.status === 'Aguardando conferência') { note = 'Entrega registrada; aguardando conferência. As quantidades já contam no acumulado do pedido.'; nc = '#F59E0B'; }
+    else if (sel.status === 'Em conferência') { note = 'Conferência em andamento.'; nc = '#3B82F6'; }
+    else if (sel.status === 'Recebido parcialmente') { note = 'Conferência concluída; ainda há quantidades pendentes do pedido.'; nc = '#06B6D4'; }
+    else if (sel.status === 'Com divergência') { note = 'Conferência concluída com divergências registradas — nenhuma quantidade foi corrigida automaticamente.'; nc = '#EF4444'; }
+    else { note = 'Conferência concluída sem divergências.'; nc = '#10B981'; }
+    const divs = [];
+    sel.lines.forEach((l, i) => { const x = sel.lcs[i], u = ' ' + l.un + ' — ' + l.d; if (x.dam > 0) divs.push('Danificada: ' + this.fmtN(x.dam) + u); if (x.miss > 0) divs.push('Em falta: ' + this.fmtN(x.miss) + u); if (x.over > 0) divs.push('Excedente: +' + this.fmtN(x.over) + u + ' (acumulado ' + this.fmtN(x.ant + x.rec) + ' > pedido ' + this.fmtN(x.ord) + ')'); if (x.spec) divs.push('Produto/especificação divergente — ' + l.d); });
+    const T = (k, v, bold) => ({ k, v, ls: 'font-size:' + (bold ? 14 : 13) + 'px;font-weight:' + (bold ? 800 : 600) + ';color:' + (bold ? '#0F172A' : '#64748B'), vs: mono + 'font-size:' + (bold ? 17 : 13.5) + 'px;font-weight:600' });
+    const qS = (k, v, color) => ({ k, v, style: mono + 'font-size:12.5px;font-weight:600;color:' + (color || '#0F172A') });
+    const chip = (t, c) => ({ t, style: 'padding:3px 9px;border-radius:99px;font-size:11.5px;font-weight:800;background:' + c[2] + ';color:' + c[0] + ';border:1px solid ' + c[3] });
+    const AM = ['#B45309', '', '#FFFBEB', '#FDE68A'], OR = ['#C2410C', '', '#FFF7ED', '#FED7AA'], PK = ['#BE185D', '', '#FDF2F8', '#FBCFE8'];
+    const decC = { 'Aceitar': 'background:#ECFDF5;color:#047857', 'Aceitar parcialmente': 'background:#FFFBEB;color:#B45309', 'Rejeitar': 'background:#FEF2F2;color:#B91C1C' };
+    const items = sel.lines.map((l, i) => {
+      const x = sel.lcs[i], u = ' ' + l.un, ch = [];
+      if (x.dam > 0) ch.push(chip('Danificada ' + this.fmtN(x.dam), RD)); if (x.miss > 0) ch.push(chip('Em falta ' + this.fmtN(x.miss), AM)); if (x.over > 0) ch.push(chip('Excedente +' + this.fmtN(x.over), OR)); if (x.spec) ch.push(chip('Espec. divergente', PK));
+      if (!ch.length && !isD && conf === 2) ch.push(chip('Conforme', GR));
+      return { d: l.d, code: (l.code ? l.code + ' · ' : '') + l.cond, dec: l.dec, decStyle: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;align-self:flex-start;' + decC[l.dec], hasNote: !!l.note, note: l.note, chips: ch,
+        q: [qS('Prevista', x.exp == null ? '—' : this.fmtN(x.exp) + u), qS('Recebida', this.fmtN(x.rec) + u), qS('Conforme', this.fmtN(x.ok) + u, '#047857'), qS('Pendente', x.pend == null ? '—' : this.fmtN(x.pend) + u, x.pend > 0 ? '#B45309' : '#0F172A')] };
+    });
+    const c2 = (n, g) => n ? n + ' · ' + g : '—';
+    const poP = sel.po ? this.position(sel.po, full) : null;
+    const inv = sel.po ? (this.INV[sel.po] || []) : [];
+    const col = { c: '#6D5DFB', s: '#3B82F6', a: '#10B981', r: '#94A3B8', x: '#EF4444' };
+    const hist = sel.hist.slice().sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0);
+    const acts = this.acts(sel).filter(a => a.ok && ['view'].indexOf(a.key) < 0);
+    const aStyle = k => 'height:46px;padding:0 17px;border-radius:12px;font-size:13.5px;font-weight:700;' + (k === 'p' ? 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff' : k === 'c' ? 'background:#ECFEFF;color:#0E7490;border:1px solid #A5F3FC' : k === 'd' ? 'border:1px solid #FECACA;background:#FEF2F2;color:#B91C1C' : 'border:1px solid #E2E8F0;background:#fff');
+    const si = this.SUPI[sel.sup] || [];
+    const poQ = p => [qS('Pedido', this.fmtN(p.ord) + ' ' + p.un), qS('Recebido acum.', this.fmtN(p.rec) + ' ' + p.un, p.over > 0 ? '#B91C1C' : '#0F172A'), qS('Pendente', this.fmtN(p.pend) + ' ' + p.un, p.pend > 0 ? '#B45309' : '#0F172A'), qS('Divergência', p.div > 0 ? this.fmtN(p.div) + ' ' + p.un : '—', p.div > 0 ? '#B91C1C' : '#64748B')];
+    return {
+      no: sel.no, dt: this.fmtDT(sel.dt), sup: sel.sup, obra: sel.obra || 'Sem obra associada', status: sel.status, pill: pill(sel.status), dot: this.SC[sel.status][2],
+      actions: acts.map(a => ({ label: a.label, run: () => this.run(a.key, sel.no), style: aStyle(a.kind) })),
+      boxes: [box('Itens', String(sel.n), this.eur(sel.v) + ' de referência', N), box('Conforme', c2(cat.ok.n, cat.ok.q), isD ? 'rascunho' : confTxt, GR), box('Divergências', String(divs.length), divs.length ? 'ver lista abaixo' : 'nenhuma registrada', divs.length ? RD : N), box('Rejeitado', c2(cat.rej.n, cat.rej.q), 'decisões de rejeição', cat.rej.n ? RD : N)],
+      note, noteColor: nc, hasDiv: divs.length > 0 && !isD, divs, hasJust: !!String(sel.justif).trim(), just: sel.justif,
+      items,
+      totals: [T('Conforme', c2(cat.ok.n, cat.ok.q)), T('Danificada', c2(cat.dam.n, cat.dam.q)), T('Em falta', c2(cat.miss.n, cat.miss.q)), T('Excedente', c2(cat.over.n, cat.over.q)), T('Divergência de especificação', cat.spec.n ? this.pl(cat.spec.n, 'item', 'itens') : '—'), T('Valor de referência', this.eur(sel.v), true)],
+      info: [['Data e hora', this.fmtDT(sel.dt)], ['Fornecedor', sel.sup], ['Local de entrega', sel.local || '—'], ['Obra / projeto', sel.obra || '—'], ['Responsável', sel.resp], ['Transportadora', sel.carr || '—'], ['Referência da entrega', sel.ref || '—'], ['Contacto do fornecedor', si[1] || '—'], ['E-mail', si[2] || '—'], ['Conferência', confTxt]].map(a => ({ k: a[0], v: a[1] })),
+      obs: sel.obs || '—',
+      noPo: !sel.po, hasPo: !!sel.po,
+      poNo: sel.po, poSub: poP ? poP.P.sup + ' · ' + poP.P.obra : '', poState: poP ? poP.state : '', poPill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;' + (poP && poP.complete ? 'background:#ECFDF5;color:#047857' : poP && poP.none ? 'background:#F1F5F9;color:#475569' : 'background:#ECFEFF;color:#0E7490'),
+      poNote: poP ? 'Estado derivado dos recebimentos ativos: o pedido só consta como totalmente recebido quando não há quantidades pendentes' + (poP.pendN ? ' (' + this.pl(poP.pendN, 'item pendente', 'itens pendentes') + ')' : '') + (poP.unconf ? ' · ' + this.pl(poP.unconf, 'recebimento ainda sem conferência concluída', 'recebimentos ainda sem conferência concluída') : '') + '. O pedido original não é alterado.' : '',
+      pos: poP ? poP.items.map(p => ({ d: p.d, q: poQ(p) })) : [],
+      poRecs: poP ? full.filter(r => r.po === sel.po && r.status !== 'Rascunho').sort((a, b) => a.dt < b.dt ? -1 : 1).map(r => ({ no: r.no, here: r.no === sel.no ? ' (este)' : '', date: this.fmtDT(r.dt), sum: this.pl(r.n, 'item', 'itens') + (r.status === 'Cancelado' ? ' · não conta no acumulado' : ''), status: r.status, pill: pill(r.status), open: () => this.setState({ detailNo: r.no }), style: 'display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:11px 14px;border-radius:13px;border:1px solid ' + (r.no === sel.no ? '#C7C3FB' : '#E2E8F0') + ';background:' + (r.no === sel.no ? '#F5F4FF' : '#fff') + ';min-height:52px' })) : [],
+      noInv: inv.length === 0, noInvText: sel.po ? 'Nenhuma fatura do fornecedor vinculada ao pedido ' + sel.po + '.' : 'Sem pedido de compra — nenhuma fatura vinculada. A associação é opcional.',
+      invoices: inv.map(x => ({ no: x.no, date: this.fmtD(x.date) + ' · fatura do pedido ' + sel.po, val: this.eur(x.val), st: x.st, pill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:700;' + (x.st === 'Paga' ? 'background:#ECFDF5;color:#047857' : 'background:#FFFBEB;color:#B45309') })),
+      timeline: hist.map((e, i) => ({ ev: e.ev, date: this.fmtDT(e.d), by: e.by, color: col[e.k] || '#94A3B8', lineStyle: 'width:2px;flex:1;background:#E2E8F0;margin-top:2px;' + (i === hist.length - 1 ? 'opacity:0' : '') }))
+    };
+  }
+
+  docVals(phone, W) {
+    const s = this.state, d = s.doc || this.blankDoc(), recs = this.curRecs(), mono = "font-family:'JetBrains Mono',monospace;";
+    const ants = this.antsFor(d, recs), lcs = d.lines.map(l => this.lc(l, ants[l.code] || 0));
+    const usedL = d.lines.map((l, i) => i).filter(i => this.isUsed(d.lines[i])), ulcs = usedL.map(i => lcs[i]);
+    const cat = this.cats(ulcs), divN = ulcs.filter(x => x.div).length, st = this.outcome(d.conf, !!d.po, ulcs);
+    const SC = this.SC[st], P = this.poOf(d.po), pos = P ? this.position(d.po, recs) : null;
+    const sel = (opts, v, ph) => (ph ? [{ v: '', l: ph, sel: v === '' }] : []).concat(opts.map(o => ({ v: o.v != null ? o.v : o, l: o.l != null ? o.l : o, sel: (o.v != null ? o.v : o) === v })));
+    const inp = e => e.target.value;
+    const mk = (o) => ({ label: o.label, star: o.req ? ' *' : '', wrap: 'display:flex;flex-direction:column;gap:5px;min-width:0;' + (o.full ? 'grid-column:1/-1' : ''), isInput: o.kind === 'input', isSelect: o.kind === 'select', isArea: o.kind === 'area', type: o.type || 'text', list: o.list || '', ro: !!o.ro, value: o.value, ph: o.ph || '', options: o.options || [], on: o.on || (() => {}), err: o.err || '', hasErr: !!o.err, style: this.fieldStyle(o.err, o.mono) + (o.ro ? ';background:#F8FAFC;color:#475569' : '') });
+    const poOpts = this.PO.filter(p => !d.sup || p.sup === d.sup).map(p => { const ps = this.position(p.no, recs); return { v: p.no, l: p.no + (d.sup ? '' : ' · ' + p.sup) + ' · ' + ps.state }; });
+    const fields = [
+      mk({ label: 'Número do recebimento', kind: 'input', value: d.no, ro: true, mono: true }),
+      mk({ label: 'Data e hora do recebimento', req: true, kind: 'input', type: 'datetime-local', value: d.dt, on: e => this.setDoc({ dt: inp(e) }), err: s.errs.dt }),
+      mk({ label: 'Fornecedor', req: true, kind: 'select', value: d.sup, options: sel(this.FORN, d.sup, 'Selecione o fornecedor'), on: e => this.onSup(inp(e)), err: s.errs.sup }),
+      mk({ label: 'Pedido de compra (opcional)', kind: 'select', value: d.po, options: sel(poOpts, d.po, 'Sem pedido — recebimento direto'), on: e => this.onPo(inp(e)) }),
+      mk({ label: 'Obra ou projeto (opcional)', kind: 'select', value: d.obra, options: sel(this.OBRAS, d.obra, 'Sem obra associada'), on: e => this.setDoc({ obra: inp(e) }) }),
+      mk({ label: 'Local de entrega', kind: 'input', list: 'rc-loc', value: d.local, ph: 'Ex.: Estaleiro — Edifício Aurora', on: e => this.setDoc({ local: inp(e) }) }),
+      mk({ label: 'Responsável pelo recebimento', req: true, kind: 'select', value: d.resp, options: sel(this.RESP, d.resp, 'Selecione o responsável'), on: e => this.setDoc({ resp: inp(e) }), err: s.errs.resp }),
+      mk({ label: 'Transportadora', kind: 'select', value: d.carr, options: sel(this.CARR, d.carr, 'Não aplicável'), on: e => this.setDoc({ carr: inp(e) }) }),
+      mk({ label: 'Referência da entrega (guia de remessa)', kind: 'input', value: d.ref, ph: 'Ex.: GR-7815', on: e => this.setDoc({ ref: inp(e) }) }),
+      mk({ label: 'Observações', kind: 'area', full: true, value: d.obs, ph: 'Informações adicionais sobre a entrega', on: e => this.setDoc({ obs: inp(e) }) })
+    ];
+    const isWide = !phone && W >= 700;
+    const lines = d.lines.map((l, i) => {
+      const x = lcs[i], u = ' ' + l.un, err = s.lerr[i], hasPo = l.ord != null, ch = [];
+      const chp = (t, c) => ({ t, style: 'padding:3px 9px;border-radius:99px;font-size:11.5px;font-weight:800;background:' + c[0] + ';color:' + c[1] });
+      if (x.over > 0) ch.push(chp('Excedente +' + this.fmtN(x.over) + u, ['#FFF7ED', '#C2410C'])); if (x.dam > 0) ch.push(chp('Danificada ' + this.fmtN(x.dam), ['#FEF2F2', '#B91C1C'])); if (x.miss > 0) ch.push(chp('Em falta ' + this.fmtN(x.miss), ['#FFFBEB', '#B45309'])); if (x.spec) ch.push(chp('Espec. divergente', ['#FDF2F8', '#BE185D']));
+      if (hasPo && x.exp === 0 && !x.rec) ch.push(chp('Pedido já completo', ['#F1F5F9', '#475569']));
+      const inpStyle = this.fieldStyle(false), monoStyle = this.fieldStyle(false, true);
+      return {
+        n: i, num: i + 1, d: l.d, code: l.code, un: l.un, p: l.p, rec: l.rec, dam: l.dam, ok: l.ok, miss: l.miss, cond: l.cond, dec: l.dec, note: l.note, spec: l.spec,
+        cardStyle: 'padding:' + (isWide ? '16px 18px' : '14px') + ';border-top:1px solid #E2E8F0;display:flex;flex-direction:column;gap:12px;' + (x.over > 0 ? 'background:#FFFBF7' : ''),
+        dStyle: this.fieldStyle(false) + ';flex:1 1 220px;width:auto;font-weight:600', inpStyle, monoStyle,
+        roS: 'display:flex;align-items:center;height:46px;padding:0 13px;border-radius:11px;background:#F1F5F9;font-size:13.5px;font-weight:600;color:#475569;' + mono,
+        recStyle: this.fieldStyle(x.over > 0 || (err && /recebida/.test(err)), true) + ';font-weight:700',
+        pendS: 'display:flex;align-items:center;height:46px;padding:0 13px;border-radius:11px;background:#F1F5F9;font-size:13.5px;font-weight:600;' + mono + 'color:' + (x.pend > 0 ? '#B45309' : '#475569'),
+        overS: 'display:flex;align-items:center;height:46px;padding:0 13px;border-radius:11px;font-size:13.5px;font-weight:700;' + mono + (x.over > 0 ? 'background:#FFF7ED;border:1px solid #FED7AA;color:#C2410C' : 'background:#F1F5F9;color:#475569'),
+        exp: x.exp == null ? '—' : this.fmtN(x.exp) + u, ant: x.ant == null ? '—' : this.fmtN(x.ant) + u, pend: x.pend == null ? '—' : this.fmtN(x.pend) + u, over: x.over > 0 ? '+' + this.fmtN(x.over) + u : (hasPo ? '0' : '—'),
+        units: sel(this.UNITS, l.un), conds: sel(this.CONDS, l.cond), decs: sel(this.DECS, l.dec),
+        setD: e => this.pickProd(i, inp(e)), setCode: e => { const v = inp(e); this.setLine(i, () => ({ code: v })); }, setUn: e => { const v = inp(e); this.setLine(i, () => ({ un: v })); }, setP: e => { const v = inp(e); this.setLine(i, () => ({ p: v })); },
+        setRec: e => { const v = inp(e); this.setLine(i, ln => ({ rec: v, ok: this.syncOk(v, ln.dam) })); },
+        setDam: e => { const v = inp(e); this.setLine(i, ln => ({ dam: v, ok: this.syncOk(ln.rec, v) })); },
+        setOk: e => { const v = inp(e); this.setLine(i, () => ({ ok: v })); }, setMiss: e => { const v = inp(e); this.setLine(i, () => ({ miss: v })); },
+        setCond: e => { const v = inp(e); this.setLine(i, () => ({ cond: v })); }, setDec: e => { const v = inp(e); this.setLine(i, () => ({ dec: v })); }, setNote: e => { const v = inp(e); this.setLine(i, () => ({ note: v })); },
+        toggleSpec: () => this.setLine(i, ln => ({ spec: !ln.spec })),
+        specBtn: 'display:flex;align-items:center;gap:10px;min-height:44px;padding:0 4px;font-size:13px;font-weight:700;color:' + (l.spec ? '#BE185D' : '#475569') + ';text-align:left',
+        specBox: 'width:22px;height:22px;border-radius:7px;border:2px solid ' + (l.spec ? '#BE185D' : '#94A3B8') + ';background:' + (l.spec ? '#BE185D' : '#fff') + ';color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto',
+        specMark: l.spec ? '✓' : '', noteStyle: this.fieldStyle(false) + ';flex:1 1 240px;width:auto',
+        chips: ch, hasErr: !!err, err: err || '',
+        remove: () => this.setState(x2 => ({ doc: Object.assign({}, x2.doc, { lines: x2.doc.lines.filter((_, n) => n !== i) }), dirty: true, lerr: {} }))
+      };
+    });
+    const tc = (k, n, q, t, sub) => ({ k, v: n ? q : '—', sub: sub || (n ? this.pl(n, 'linha', 'linhas') : 'nenhuma'), lc: t[0], vc: t[1], color: t[4], style: 'border-radius:14px;padding:13px;display:flex;flex-direction:column;gap:6px;background:' + t[2] + ';border:1px solid ' + t[3] });
+    const GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0', '#10B981'], RD = ['#B91C1C', '#7F1D1D', '#FEF2F2', '#FECACA', '#EF4444'], AM = ['#B45309', '#92400E', '#FFFBEB', '#FDE68A', '#F59E0B'], OR = ['#C2410C', '#9A3412', '#FFF7ED', '#FED7AA', '#F97316'], PK = ['#BE185D', '#9D174D', '#FDF2F8', '#FBCFE8', '#EC4899'], NN = ['#64748B', '#0F172A', '#fff', '#E2E8F0', '#94A3B8'];
+    const tiles = [tc('Conforme', cat.ok.n, cat.ok.q, GR), tc('Danificada', cat.dam.n, cat.dam.q, RD), tc('Em falta', cat.miss.n, cat.miss.q, AM), tc('Excedente', cat.over.n, cat.over.q, OR), tc('Espec. divergente', cat.spec.n, this.pl(cat.spec.n, 'item', 'itens'), PK, 'divergência de produto'), tc('Rejeitado', cat.rej.n, cat.rej.q, NN)];
+    const divMsgs = []; if (cat.over.n) divMsgs.push('excedente em ' + this.pl(cat.over.n, 'item', 'itens') + ' (acumulado acima do pedido)'); if (cat.dam.n) divMsgs.push(this.pl(cat.dam.n, 'item danificado', 'itens danificados')); if (cat.miss.n) divMsgs.push(this.pl(cat.miss.n, 'item com falta', 'itens com falta')); if (cat.spec.n) divMsgs.push(this.pl(cat.spec.n, 'divergência de especificação', 'divergências de especificação'));
+    const needJ = divN > 0 && d.conf === 2;
+    const confBtns = [['Não iniciada', 0], ['Em andamento', 1], ['Concluída', 2]].map(b => ({ name: b[0], pick: () => this.setDoc({ conf: b[1] }), style: 'min-height:44px;padding:0 16px;border-radius:11px;font-size:13.5px;font-weight:700;border:1px solid ' + (d.conf === b[1] ? '#6D5DFB' : '#E2E8F0') + ';background:' + (d.conf === b[1] ? '#EEF0FE' : '#fff') + ';color:' + (d.conf === b[1] ? '#4338CA' : '#475569') }));
+    const confHint = d.conf === 0 ? 'A entrega fica registrada como aguardando conferência. As quantidades já contam no acumulado do pedido.' : d.conf === 1 ? 'Conferência em andamento: preencha conforme, danificada e em falta por item. O excedente é calculado automaticamente.' : 'Ao concluir, o status é definido pelo resultado: divergência (danificada, falta, excedente ou especificação), parcial (pedido com pendências) ou conferido.';
+    const hasErr = !!s.banner;
+    return {
+      docMode: !!s.doc, listMode: !s.doc,
+      ghostS: 'height:44px;padding:0 14px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;white-space:nowrap',
+      saveStyle: 'height:44px;padding:0 16px;border-radius:11px;border:1px solid #C7C3FB;background:#EEF0FE;color:#4338CA;font-size:13.5px;font-weight:700;white-space:nowrap',
+      finStyle: 'height:44px;padding:0 18px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700;white-space:nowrap',
+      title: (d.id ? 'Recebimento ' : 'Novo recebimento ') + d.no, st: d.status || 'Rascunho', stPill: 'padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;background:' + this.SC[d.status || 'Rascunho'][0] + ';color:' + this.SC[d.status || 'Rascunho'][1],
+      isDirty: s.dirty, showErr: hasErr, errText: s.banner,
+      doBack: () => this.doBack(), doSaveDraft: () => this.doSaveDraft(), doConfirm: () => this.doConfirm(),
+      panelS: 'border:1px solid #E2E8F0;border-radius:16px;background:#fff;padding:clamp(12px,1.4vw,16px);display:flex;flex-direction:column;gap:12px',
+      fieldGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px 14px',
+      qGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,128px),1fr));gap:10px', lblS: 'display:flex;flex-direction:column;gap:5px;min-width:0', capS: 'font-size:11.5px;font-weight:600;color:#64748B',
+      fields, locOpts: this.LOCAIS, catOpts: Object.keys(this.CAT).map(k => this.CAT[k][0]),
+      hasPo: !!P, poNote: P ? 'Itens carregados de ' + P.no + ' (' + pos.state.toLowerCase() + '). Previsto = pedido − acumulado anterior; o pedido original não é alterado por este recebimento.' : '', reloadPo: () => this.onPo(d.po),
+      outPill: 'display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:700;background:' + SC[0] + ';color:' + SC[1], outDot: SC[2], outLabel: 'Status ao confirmar: ' + st, confBtns, confHint,
+      itemsCount: String(d.lines.length), noLines: d.lines.length === 0, lines,
+      addLine: () => this.setState(x => ({ doc: Object.assign({}, x.doc, { lines: x.doc.lines.concat([this.blankLine()]) }), dirty: true })),
+      addStyle: 'height:44px;padding:0 16px;border-radius:11px;background:#EEF0FE;color:#4338CA;font-size:13.5px;font-weight:700;white-space:nowrap',
+      tiles, tileGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px', docValue: this.eur(this.r2(ulcs.reduce((a, x) => a + x.v, 0))),
+      hasDiv: divMsgs.length > 0, divText: 'Divergências: ' + divMsgs.join(' · ') + '. Os valores não são corrigidos automaticamente.',
+      justif: d.justif, onJustif: e => this.setDoc({ justif: inp(e) }), justStar: needJ ? ' *' : '', justErr: s.errs.justif || '', justStyle: 'width:100%;padding:11px 13px;border-radius:11px;border:1px solid ' + (s.errs.justif ? '#F87171' : '#E2E8F0') + ';background:' + (s.errs.justif ? '#FEF8F8' : '#fff') + ';font-size:14px;color:#0F172A;outline:none;font-family:inherit;resize:vertical'
+    };
+  }
+}
+</script>
+</body>
+</html>
