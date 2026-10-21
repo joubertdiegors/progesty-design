@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5145CD;text-decoration:none}
+a:hover{color:#6D5DFB}
+button{font-family:inherit;border:0;background:none;cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #6D5DFB;outline-offset:2px}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(109,93,251,.18)}
+.pg-scroll::-webkit-scrollbar{width:8px;height:8px}
+.pg-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:99px}
+.pg-scroll::-webkit-scrollbar-track{background:transparent}
+@keyframes pgShimmer{0%{background-position:-380px 0}100%{background-position:380px 0}}
+@keyframes pgToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pgSheet{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pgDrawer{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.pg-sk{background:linear-gradient(90deg,#EEF2F7 0px,#F8FAFC 190px,#EEF2F7 380px);background-size:760px 100%;animation:pgShimmer 1.3s linear infinite;border-radius:8px}
+</style>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#0F172A"/><rect x="120" y="120" width="160" height="160" rx="46" fill="#6D5DFB"/><text x="200" y="258" font-family="Helvetica,Arial,sans-serif" font-size="128" font-weight="bold" fill="#fff" text-anchor="middle">P</text></svg>
+</template>
+</helmet>
+<div style="min-height:100vh;background:#E8ECF3;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column">
+
+<div style="background:#fff;border-bottom:1px solid #E2E8F0;padding:10px clamp(12px,2vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+  <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748B">Estado</span>
+  <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ states }}" as="x" hint-placeholder-count="10"><button onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.name }}</button></sc-for></div>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:4px;padding:3px;border-radius:10px;background:#F1F5F9"><sc-for list="{{ views }}" as="v" hint-placeholder-count="2"><button onClick="{{ v.pick }}" style="{{ v.style }}">{{ v.name }}</button></sc-for></div>
+</div>
+
+<div style="{{ stageStyle }}">
+<div style="{{ frameStyle }}">
+<div class="pg-scroll" style="{{ scrollStyle }}">
+<div style="{{ appStyle }}">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside class="pg-scroll" style="{{ sidebarStyle }}">
+    <div style="display:flex;align-items:center;gap:11px;padding:4px 8px 20px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6D5DFB,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(109,93,251,1)">P</div>
+      <span style="font-size:16px;font-weight:800;letter-spacing:.06em;color:#fff">PROGESTY</span>
+      <div style="flex:1"></div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ closeNav }}" aria-label="Fechar menu" style="width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.07);color:#94A3B8;font-size:15px">✕</button></sc-if>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:3px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+          <div style="{{ g.headStyle }}"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><span style="width:11px;height:11px;border-radius:3.5px;background:{{ g.dot }}"></span></span><span style="flex:1;text-align:left">{{ g.name }}</span></div>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 4px 0;margin-left:26px;border-left:1px solid rgba(255,255,255,.1)">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5"><div style="{{ it.style }}"><span style="{{ it.dotStyle }}"></span>{{ it.name }}</div></sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="flex:1;min-height:18px"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px;border-radius:13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F97316);flex:0 0 auto"></div>
+      <div style="min-width:0;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:700;color:#E2E8F0">Carlos Mendes</span><span style="font-size:11px;color:#64748B">Administrador</span></div>
+    </div>
+  </aside>
+</sc-if>
+<sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(2px);z-index:70"></div></sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+<sc-if value="{{ docMode }}" hint-placeholder-val="{{ false }}">
+<div style="background:#F8FAFC;display:flex;flex-direction:column;min-width:0">
+<div style="position:sticky;top:0;z-index:30;background:rgba(248,250,252,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E2E8F0;padding:8px clamp(12px,1.6vw,22px);display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px">
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button></sc-if>
+  <button onClick="{{ doBack }}" style="{{ ghostS }}">‹ Faturas de Compra</button>
+  <div style="min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-left:4px"><h1 style="margin:0;font-size:clamp(16px,1.6vw,19px);font-weight:800;letter-spacing:-.02em">{{ title }}</h1><span style="{{ stPill }}">{{ st }}</span><sc-if value="{{ isDirty }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B45309">● não salvo</span></sc-if></div>
+  <div style="flex:1"></div>
+  <button onClick="{{ doSave }}" style="{{ saveStyle }}">{{ saveLabel }}</button>
+  <sc-if value="{{ showFin }}" hint-placeholder-val="{{ true }}"><button onClick="{{ doConfirm }}" style="{{ finStyle }}">Registrar fatura</button></sc-if>
+</div>
+<div style="padding:clamp(12px,1.6vw,20px) clamp(12px,2vw,26px) 28px;display:flex;flex-direction:column;gap:12px;min-width:0">
+  <sc-if value="{{ showErr }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#FEF2F2;border:1px solid #FECACA"><span style="width:20px;height:20px;border-radius:50%;background:#EF4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 auto">!</span><span style="font-size:13px;font-weight:600;color:#991B1B;line-height:1.4">{{ errText }}</span></div></sc-if>
+
+  <div style="{{ panelS }}">
+    <span style="font-size:13px;font-weight:800;letter-spacing:-.01em">Identificação</span>
+    <div style="{{ fieldGrid }}">
+      <sc-for list="{{ fields }}" as="f" hint-placeholder-count="12">
+        <label style="{{ f.wrap }}">
+          <span style="font-size:12px;font-weight:600;color:#475569">{{ f.label }}<span style="color:#EF4444">{{ f.star }}</span></span>
+          <sc-if value="{{ f.isInput }}" hint-placeholder-val="{{ true }}"><input type="{{ f.type }}" disabled="{{ f.ro }}" value="{{ f.value }}" onInput="{{ f.on }}" placeholder="{{ f.ph }}" style="{{ f.style }}"></sc-if>
+          <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onInput="{{ f.on }}" style="{{ f.style }}"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></sc-if>
+          <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}"><textarea rows="2" value="{{ f.value }}" onInput="{{ f.on }}" placeholder="{{ f.ph }}" style="{{ f.style }}"></textarea></sc-if>
+          <sc-if value="{{ f.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ f.err }}</span></sc-if>
+        </label>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="{{ panelS }}">
+    <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:13px;font-weight:800;letter-spacing:-.01em">Vínculos opcionais</span><span style="font-size:12.5px;color:#64748B;line-height:1.45">A fatura pode ser registrada diretamente. Os vínculos servem só de referência: não criam pedido nem recebimento e não os alteram.</span></div>
+    <div style="{{ fieldGrid }}">
+      <sc-for list="{{ linkFields }}" as="f" hint-placeholder-count="2">
+        <label style="{{ f.wrap }}"><span style="font-size:12px;font-weight:600;color:#475569">{{ f.label }}</span>
+          <select value="{{ f.value }}" onInput="{{ f.on }}" style="{{ f.style }}"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select>
+        </label>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:12px;font-weight:600;color:#475569">Recebimentos relacionados (um ou mais)</span>
+      <sc-if value="{{ noRecChoices }}" hint-placeholder-val="{{ false }}"><span style="padding:12px 14px;border-radius:12px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">Nenhum recebimento disponível para o fornecedor/pedido selecionado.</span></sc-if>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:8px"><sc-for list="{{ recChoices }}" as="x" hint-placeholder-count="3"><button onClick="{{ x.toggle }}" role="checkbox" aria-checked="{{ x.on }}" style="{{ x.style }}"><span style="{{ x.box }}">{{ x.mark }}</span><div style="min-width:0;display:flex;flex-direction:column;gap:1px;text-align:left"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#0E7490">{{ x.no }}</span><span style="font-size:12px;color:#64748B">{{ x.sub }}</span></div></button></sc-for></div>
+    </div>
+    <sc-if value="{{ canImport }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:11px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD"><span style="flex:1 1 260px;font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.45">{{ importNote }}</span><button onClick="{{ doImport }}" style="min-height:44px;padding:0 4px;font-size:12.5px;font-weight:700;color:#4338CA">Importar itens como ponto de partida</button></div></sc-if>
+  </div>
+
+  <div style="position:relative;background:#fff;border:1px solid #E2E8F0;border-radius:16px">
+    <div style="padding:12px clamp(14px,1.6vw,18px);display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px">
+      <span style="font-size:15px;font-weight:700;letter-spacing:-.01em">Itens e valores <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#64748B">{{ itemsCount }}</span></span>
+      <div style="flex:1"></div>
+      <button onClick="{{ addLine }}" style="{{ addStyle }}">+ Adicionar item</button>
+    </div>
+    <sc-if value="{{ noLines }}" hint-placeholder-val="{{ false }}"><div style="padding:14px clamp(14px,1.6vw,18px) 18px;border-top:1px solid #F1F5F9;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px"><span style="font-size:13.5px;color:#64748B">Nenhum item. Adicione linhas ou importe dos documentos vinculados.</span><button onClick="{{ addLine }}" style="min-height:44px;padding:0 4px;font-size:13.5px;font-weight:700;color:#4338CA">Adicionar primeiro item</button></div></sc-if>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ lines }}" as="r" hint-placeholder-count="2">
+        <div style="{{ r.cardStyle }}">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px">
+            <span style="width:28px;height:28px;border-radius:9px;background:#F1F5F9;color:#475569;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:0 0 auto">{{ r.num }}</span>
+            <input list="fc-cat" value="{{ r.d }}" onInput="{{ r.setD }}" placeholder="Descrição — digite para pesquisar" autocomplete="off" style="{{ r.dStyle }}">
+            <button onClick="{{ r.dup }}" aria-label="Duplicar item" title="Duplicar item" style="width:44px;height:44px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:14px;color:#64748B;flex:0 0 auto">⧉</button>
+            <button onClick="{{ r.remove }}" aria-label="Remover item" title="Remover item" style="width:44px;height:44px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:13px;color:#64748B;flex:0 0 auto">✕</button>
+          </div>
+          <div style="{{ qGrid }}">
+            <label style="{{ lblS }}"><span style="{{ capS }}">Código / ref.</span><input value="{{ r.code }}" onInput="{{ r.setCode }}" placeholder="—" style="{{ r.monoStyle }}"></label>
+            <label style="{{ lblS }}"><span style="{{ capS }}">Unidade</span><select value="{{ r.un }}" onInput="{{ r.setUn }}" style="{{ r.inpStyle }}"><sc-for list="{{ r.units }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></label>
+            <label style="{{ lblS }}"><span style="{{ capS }}">Quantidade</span><input value="{{ r.q }}" onInput="{{ r.setQ }}" inputmode="decimal" placeholder="0" style="{{ r.qStyle }}"></label>
+            <label style="{{ lblS }}"><span style="{{ capS }}">Preço unit. (€)</span><input value="{{ r.p }}" onInput="{{ r.setP }}" inputmode="decimal" placeholder="0,00" style="{{ r.monoStyle }}"></label>
+            <div style="{{ lblS }}"><span style="{{ capS }}">Desconto</span><div style="display:flex;gap:4px;min-width:0"><input value="{{ r.disc }}" onInput="{{ r.setDisc }}" inputmode="decimal" placeholder="0" style="{{ r.monoStyle }}"><button onClick="{{ r.toggleDisc }}" title="Alternar entre percentual e valor em euros" style="{{ r.dtStyle }}">{{ r.dt }}</button></div></div>
+            <label style="{{ lblS }}"><span style="{{ capS }}">Imposto</span><select value="{{ r.tax }}" onInput="{{ r.setTax }}" style="{{ r.inpStyle }}"><sc-for list="{{ r.rates }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></label>
+            <div style="{{ lblS }}"><span style="{{ capS }}">Total da linha</span><span style="{{ r.totS }}">{{ r.total }}</span></div>
+          </div>
+          <sc-if value="{{ r.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">Item {{ r.num }}: {{ r.err }}</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="border-top:1px solid #E2E8F0;padding:12px clamp(14px,1.6vw,18px);display:flex;justify-content:flex-end">
+      <div style="width:min(100%,360px);display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{ sumRows }}" as="s" hint-placeholder-count="4"><div style="display:flex;align-items:baseline;gap:10px"><span style="{{ s.lblStyle }}">{{ s.label }}</span><div style="flex:1"></div><span style="{{ s.valStyle }}">{{ s.value }}</span></div></sc-for>
+        <label style="display:flex;align-items:center;gap:10px"><span style="font-size:13px;color:#475569;font-weight:500">Frete / encargos (€)</span><div style="flex:1"></div><input value="{{ frete }}" onInput="{{ onFrete }}" inputmode="decimal" placeholder="0,00" style="{{ freteStyle }}"></label>
+        <div style="display:flex;align-items:baseline;gap:10px;padding-top:8px;border-top:1px solid #E2E8F0"><span style="font-size:15px;font-weight:700">Total da fatura</span><div style="flex:1"></div><span style="font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:600;letter-spacing:-.02em">{{ grand }}</span></div>
+      </div>
+    </div>
+    <datalist id="fc-cat"><sc-for list="{{ catOpts }}" as="o" hint-placeholder-count="8"><option value="{{ o }}"></option></sc-for></datalist>
+  </div>
+
+  <sc-if value="{{ cmpE.has }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ panelS }}">
+      <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:13px;font-weight:800;letter-spacing:-.01em">Comparação com documentos vinculados</span><span style="font-size:12.5px;color:#64748B;line-height:1.45">Valores sem imposto. Diferenças são apenas sinalizadas — faturas parciais e cobranças adicionais são possíveis e nada é ajustado automaticamente.</span></div>
+      <div style="{{ tileGrid }}"><sc-for list="{{ cmpE.tiles }}" as="t" hint-placeholder-count="4"><div style="{{ t.style }}"><span style="font-size:12px;font-weight:600;color:{{ t.lc }}">{{ t.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:{{ t.vc }}">{{ t.v }}</span><span style="font-size:11.5px;font-weight:600;color:{{ t.lc }};line-height:1.4">{{ t.sub }}</span></div></sc-for></div>
+      <sc-for list="{{ cmpE.rows }}" as="p" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:8px;padding:11px 13px;border-radius:13px;border:1px solid {{ p.border }}">
+          <span style="font-size:13px;font-weight:700">{{ p.d }}</span>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,110px),1fr));gap:8px"><sc-for list="{{ p.q }}" as="q" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748B">{{ q.k }}</span><span style="{{ q.style }}">{{ q.v }}</span></div></sc-for></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ p.flags }}" as="c" hint-placeholder-count="1"><span style="{{ c.style }}">{{ c.t }}</span></sc-for></div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <div style="{{ panelS }}">
+    <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:13px;font-weight:800;letter-spacing:-.01em">Condições financeiras e parcelas</span><span style="font-size:12.5px;color:#64748B;line-height:1.45">Parcelas demonstrativas. O pagamento e o acompanhamento de vencimentos pertencem a Financeiro / Contas a Pagar; o valor pago aqui é apenas ilustrativo.</span></div>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 12px">
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 200px;min-width:0"><span style="font-size:12px;font-weight:600;color:#475569">Condição de pagamento</span><select value="{{ cond }}" onInput="{{ onCond }}" style="{{ inpS }}"><sc-for list="{{ condOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.l }}</option></sc-for></select></label>
+      <button onClick="{{ genPars }}" style="{{ ghostS }}">Gerar parcelas</button>
+      <button onClick="{{ addPar }}" style="{{ addStyle }}">+ Parcela</button>
+    </div>
+    <sc-if value="{{ noPars }}" hint-placeholder-val="{{ false }}"><span style="padding:12px 14px;border-radius:12px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">Nenhuma parcela. Gere a partir da condição de pagamento ou adicione manualmente.</span></sc-if>
+    <sc-for list="{{ pars }}" as="p" hint-placeholder-count="2">
+      <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px"><span style="font-size:13px;font-weight:700">Parcela {{ p.n }}</span><span style="{{ p.pill }}">{{ p.state }}</span><div style="flex:1"></div><button onClick="{{ p.remove }}" aria-label="Remover parcela" style="width:44px;height:44px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;font-size:13px;color:#64748B">✕</button></div>
+        <div style="{{ qGrid }}">
+          <label style="{{ lblS }}"><span style="{{ capS }}">Valor (€)</span><input value="{{ p.val }}" onInput="{{ p.setVal }}" inputmode="decimal" placeholder="0,00" style="{{ monoS }}"></label>
+          <label style="{{ lblS }}"><span style="{{ capS }}">Vencimento</span><input type="date" value="{{ p.due }}" onInput="{{ p.setDue }}" style="{{ monoS }}"></label>
+          <label style="{{ lblS }}"><span style="{{ capS }}">Valor pago (demo)</span><input value="{{ p.paid }}" onInput="{{ p.setPaid }}" inputmode="decimal" placeholder="0,00" style="{{ monoS }}"></label>
+        </div>
+        <sc-if value="{{ p.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ p.err }}</span></sc-if>
+      </div>
+    </sc-for>
+    <div style="display:flex;flex-direction:column;gap:6px;align-self:flex-end;width:min(100%,360px)">
+      <sc-for list="{{ parSum }}" as="s" hint-placeholder-count="4"><div style="display:flex;align-items:baseline;gap:10px"><span style="{{ s.lblStyle }}">{{ s.label }}</span><div style="flex:1"></div><span style="{{ s.valStyle }}">{{ s.value }}</span></div></sc-for>
+    </div>
+    <sc-if value="{{ parWarn }}" hint-placeholder-val="{{ false }}"><div style="padding:11px 14px;border-radius:12px;background:#FFFBEB;border:1px solid #FDE68A;font-size:12.5px;font-weight:700;color:#92400E;line-height:1.45">{{ parWarnText }}</div></sc-if>
+  </div>
+  <span style="font-size:11.5px;color:#94A3B8;line-height:1.5">Dados demonstrativos; o documento fica guardado só nesta sessão. A fatura registra a cobrança do fornecedor: não cria pedido, recebimento nem pagamento, e não altera os documentos vinculados. Sem integração fiscal ou financeira.</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+  <header style="position:sticky;top:0;z-index:40;background:rgba(248,250,252,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #E2E8F0">
+    <div style="padding:clamp(14px,1.8vw,22px) clamp(16px,2.4vw,34px);display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" aria-label="Menu" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:0 0 auto"><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span><span style="width:16px;height:2px;border-radius:2px;background:#0F172A"></span></button>
+      </sc-if>
+      <div style="min-width:0;flex:1 1 280px;display:flex;flex-direction:column;gap:3px">
+        <h1 style="margin:0;font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em">Faturas de Compra</h1>
+        <p style="margin:0;font-size:clamp(13.5px,1.2vw,15px);color:#64748B;text-wrap:pretty">Registo e acompanhamento das faturas dos fornecedores. Pedido e recebimento são opcionais; o pagamento é tratado em Contas a Pagar.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <button onClick="{{ doExport }}" style="{{ ghostBtn }}">Exportar</button>
+        <button onClick="{{ doRefresh }}" style="{{ ghostBtn }}">Atualizar</button>
+        <button onClick="{{ openNew }}" style="display:flex;align-items:center;gap:9px;height:46px;padding:0 19px;border-radius:12px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 14px 28px -14px rgba(109,93,251,1);transition:transform .18s" style-hover="transform:translateY(-1px)"><span style="font-size:17px;line-height:1">+</span>Nova fatura</button>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:clamp(16px,2.4vw,26px) clamp(16px,2.4vw,34px) clamp(34px,4vw,54px);display:flex;flex-direction:column;gap:clamp(12px,1.5vw,16px);min-width:0">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#EEF0FE;border:1px solid #DDD9FD">
+      <span style="width:7px;height:7px;border-radius:50%;background:#6D5DFB;flex:0 0 auto"></span>
+      <span style="font-size:12.5px;font-weight:600;color:#4338CA;line-height:1.4">Dados demonstrativos e fictícios · data de referência {{ todayLabel }}. Alterações ficam apenas nesta sessão.</span>
+    </div>
+
+    <sc-if value="{{ stLoading }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="{{ kpiGrid }}"><sc-for list="{{ sk5 }}" as="k" hint-placeholder-count="5"><div class="pg-sk" style="height:112px;border-radius:18px"></div></sc-for></div>
+        <div class="pg-sk" style="height:58px;border-radius:14px"></div>
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px"><sc-for list="{{ sk7 }}" as="k" hint-placeholder-count="7"><div class="pg-sk" style="height:46px"></div></sc-for></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stReady }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ kpiGrid }}">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+          <div style="{{ k.style }}">
+            <span style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:3px;background:{{ k.color }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:{{ k.labelColor }}">{{ k.label }}</span></span>
+            <span style="font-size:clamp(22px,2.2vw,27px);font-weight:800;letter-spacing:-.035em;color:{{ k.valueColor }};font-variant-numeric:tabular-nums">{{ k.value }}</span>
+            <span style="font-size:11.5px;font-weight:600;color:{{ k.labelColor }};line-height:1.4">{{ k.hint }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 14px;height:46px;border-radius:12px;background:#fff;border:1px solid #E2E8F0">
+          <span style="width:14px;height:14px;border-radius:50%;border:2px solid #94A3B8;flex:0 0 auto"></span>
+          <input value="{{ query }}" onInput="{{ onQuery }}" aria-label="Pesquisar faturas" placeholder="Número interno, nº do documento, fornecedor, pedido ou descrição..." style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:14.5px;font-weight:500;color:#0F172A">
+          <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" aria-label="Limpar pesquisa" style="width:28px;height:28px;border-radius:8px;background:#F1F5F9;color:#64748B;font-size:12px">✕</button></sc-if>
+        </div>
+        <div style="{{ filterRow }}">
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="7">
+            <div style="position:relative;min-width:0;max-width:100%">
+              <button onClick="{{ f.toggle }}" aria-haspopup="listbox" style="{{ f.btnStyle }}"><span style="color:#64748B;font-weight:600">{{ f.label }}</span><span style="flex:1;text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.value }}</span><span style="font-size:9px;color:#64748B">▼</span></button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <div class="pg-scroll" style="{{ f.menuStyle }}">
+                  <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button></sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ anyFilter }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearAll }}" style="{{ ghostBtn }}">Limpar filtros</button></sc-if>
+        </div>
+      </div>
+
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:clamp(30px,4.5vw,60px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <span style="width:60px;height:60px;border-radius:19px;background:#F1F5F9;display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;border-radius:50%;border:3px solid #94A3B8"></span></span>
+          <span style="font-size:20px;font-weight:800;letter-spacing:-.025em">{{ emptyTitle }}</span>
+          <span style="font-size:14.5px;color:#64748B;max-width:46ch;text-wrap:pretty">{{ emptyText }}</span>
+          <button onClick="{{ emptyAction }}" style="margin-top:4px;height:46px;padding:0 22px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:14.5px;font-weight:700">{{ emptyLabel }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden">
+          <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
+            <div class="pg-scroll" style="overflow-x:auto">
+              <div style="min-width:1560px">
+                <div style="{{ gridHead }}"><sc-for list="{{ cols }}" as="h" hint-placeholder-count="10"><button onClick="{{ h.sort }}" style="{{ h.style }}">{{ h.name }}<span style="font-size:9px;color:#6D5DFB">{{ h.arrow }}</span></button></sc-for></div>
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                  <div onClick="{{ r.open }}" style="{{ r.rowStyle }}" style-hover="background:#F8FAFC">
+                    <div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;white-space:nowrap">{{ r.no }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.docNo }}</span></div>
+                    <span style="font-size:14px;font-weight:700;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sup }}</span>
+                    <div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500">{{ r.emit }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#64748B">reg. {{ r.reg }}</span></div>
+                    <div style="display:flex;flex-direction:column;gap:3px"><span style="{{ r.dueStyle }}">{{ r.due }}</span><span style="{{ r.dueSubStyle }}">{{ r.dueSub }}</span></div>
+                    <span style="{{ r.poStyle }}">{{ r.po }}</span>
+                    <span style="font-size:13px;color:#475569;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.obra }}</span>
+                    <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end"><span style="{{ r.totalStyle }}">{{ r.total }}</span><span style="font-size:11px;font-weight:600;color:#64748B;white-space:nowrap">{{ r.totalSub }}</span></div>
+                    <span style="{{ r.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span>{{ r.status }}</span>
+                    <span style="{{ r.finPill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.finDot }}"></span>{{ r.fin }}</span>
+                    <div style="display:flex;gap:6px;justify-content:flex-end"><sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" aria-label="{{ a.aria }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isCards }}" hint-placeholder-val="{{ false }}">
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+              <div onClick="{{ r.open }}" style="padding:15px 16px;border-bottom:1px solid #F1F5F9;display:flex;flex-direction:column;gap:11px;{{ r.cardOpacity }}">
+                <div style="min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#4338CA">{{ r.no }} · {{ r.docNo }}</span><span style="font-size:14.5px;font-weight:700">{{ r.sup }}</span><span style="font-size:13px;color:#475569;text-wrap:pretty">{{ r.obra }}</span></div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="{{ r.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span>{{ r.status }}</span><span style="{{ r.finPill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.finDot }}"></span>{{ r.fin }}</span></div>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;padding:12px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0">
+                  <sc-for list="{{ r.facts }}" as="f" hint-placeholder-count="6"><div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748B">{{ f.k }}</span><span style="{{ f.style }}">{{ f.v }}</span></div></sc-for>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end"><sc-for list="{{ r.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" aria-label="{{ a.aria }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+              </div>
+            </sc-for>
+          </sc-if>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 20px;background:#F8FAFC;border-top:1px solid #E2E8F0">
+            <span style="font-size:13px;font-weight:700;color:#475569">{{ countLabel }}</span>
+            <div style="display:flex;gap:6px;align-items:center"><sc-for list="{{ pager }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.go }}" aria-label="{{ p.aria }}" style="{{ p.style }}">{{ p.label }}</button></sc-for></div>
+            <div style="flex:1"></div>
+            <span style="font-size:12.5px;font-weight:600;color:#64748B">Valor listado (sem canceladas)</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600">{{ listTotal }}</span>
+          </div>
+        </div>
+      </sc-if>
+    </sc-if>
+  </div>
+</sc-if>
+</main>
+
+</div>
+</div>
+
+<sc-if value="{{ detailOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;justify-content:flex-end">
+    <div onClick="{{ closeDetail }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div id="pg-drawer" class="pg-scroll" style="{{ drawerStyle }}">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="{{ d.pill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ d.dot }}"></span>{{ d.status }}</span><span style="{{ d.finPill }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ d.finDot }}"></span>{{ d.fin }}</span></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#4338CA">{{ d.no }} · doc. {{ d.docNo }}</span>
+          <span style="font-size:20px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ d.sup }}</span>
+          <span style="font-size:13.5px;color:#475569;text-wrap:pretty">{{ d.obra }}</span>
+        </div>
+        <button onClick="{{ closeDetail }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B;flex:0 0 auto">✕</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px"><sc-for list="{{ d.actions }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.run }}" style="{{ a.style }}">{{ a.label }}</button></sc-for></div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Valores, pagamento e conferência</span>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px">
+          <sc-for list="{{ d.boxes }}" as="c" hint-placeholder-count="4"><div style="{{ c.style }}"><span style="font-size:11.5px;font-weight:600;color:{{ c.lc }}">{{ c.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:clamp(13px,1.4vw,16px);font-weight:600;color:{{ c.vc }};overflow-wrap:anywhere">{{ c.v }}</span><span style="font-size:11.5px;font-weight:600;color:{{ c.lc }};line-height:1.4">{{ c.sub }}</span></div></sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0"><span style="width:4px;align-self:stretch;min-height:28px;border-radius:99px;background:{{ d.noteColor }};flex:0 0 auto"></span><span style="font-size:12.5px;font-weight:600;color:#334155;line-height:1.45">{{ d.note }}</span></div>
+        <sc-if value="{{ d.hasDivNote }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:13px;background:#FEF2F2;border:1px solid #FECACA"><span style="font-size:12.5px;font-weight:800;color:#991B1B">Divergência registrada na conferência</span><span style="font-size:12.5px;font-weight:600;color:#991B1B;line-height:1.45">{{ d.divNote }}</span></div></sc-if>
+      </div>
+
+      <div id="sec-par" style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Parcelas e vencimentos</span>
+        <sc-if value="{{ d.noPars }}" hint-placeholder-val="{{ false }}"><span style="padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">Nenhuma parcela registrada.</span></sc-if>
+        <sc-for list="{{ d.pars }}" as="p" hint-placeholder-count="2">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+            <div style="min-width:0;flex:1 1 140px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700">Parcela {{ p.n }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">vence {{ p.due }}</span></div>
+            <div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end"><span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">{{ p.val }}</span><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ p.paidTxt }}</span></div>
+            <span style="{{ p.pill }}">{{ p.state }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ d.parWarn }}" hint-placeholder-val="{{ false }}"><div style="padding:11px 14px;border-radius:12px;background:#FFFBEB;border:1px solid #FDE68A;font-size:12.5px;font-weight:700;color:#92400E;line-height:1.45">{{ d.parWarnText }}</div></sc-if>
+        <span style="font-size:12px;color:#64748B;line-height:1.5;text-wrap:pretty">Pagamentos e vencimentos são geridos em Financeiro / Contas a Pagar. Aqui são exibidos apenas como referência demonstrativa.</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Itens e totais</span>
+        <sc-for list="{{ d.items }}" as="i" hint-placeholder-count="3">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px 12px;padding:12px 14px;border-radius:13px;border:1px solid #E2E8F0">
+            <div style="min-width:0;flex:1 1 160px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700">{{ i.d }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748B">{{ i.calc }}</span></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600">{{ i.total }}</span>
+          </div>
+        </sc-for>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:4px 14px">
+          <sc-for list="{{ d.totals }}" as="t" hint-placeholder-count="6"><div style="display:flex;align-items:center;gap:10px"><span style="{{ t.ls }}">{{ t.k }}</span><div style="flex:1"></div><span style="{{ t.vs }}">{{ t.v }}</span></div></sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ d.cmp.has }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="{{ secTitle }}">Comparação com pedido e recebimentos</span>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px"><sc-for list="{{ d.cmp.tiles }}" as="t" hint-placeholder-count="4"><div style="{{ t.style }}"><span style="font-size:11.5px;font-weight:600;color:{{ t.lc }}">{{ t.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:{{ t.vc }}">{{ t.v }}</span><span style="font-size:11.5px;font-weight:600;color:{{ t.lc }};line-height:1.4">{{ t.sub }}</span></div></sc-for></div>
+          <sc-for list="{{ d.cmp.rows }}" as="p" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:8px;padding:11px 13px;border-radius:13px;border:1px solid {{ p.border }}">
+              <span style="font-size:13px;font-weight:700">{{ p.d }}</span>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px"><sc-for list="{{ p.q }}" as="q" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748B">{{ q.k }}</span><span style="{{ q.style }}">{{ q.v }}</span></div></sc-for></div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ p.flags }}" as="c" hint-placeholder-count="1"><span style="{{ c.style }}">{{ c.t }}</span></sc-for></div>
+            </div>
+          </sc-for>
+          <span style="font-size:12px;color:#64748B;line-height:1.5;text-wrap:pretty">Valores sem imposto. As diferenças são apenas sinalizadas: a fatura não é ajustada e o pedido/recebimentos originais permanecem inalterados.</span>
+        </div>
+      </sc-if>
+
+      <div id="sec-rel" style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Documentos relacionados</span>
+        <sc-if value="{{ d.noRel }}" hint-placeholder-val="{{ false }}"><span style="padding:13px 14px;border-radius:13px;background:#F8FAFC;border:1px dashed #CBD5E1;font-size:13px;color:#475569;line-height:1.45">Fatura direta, sem pedido, recebimento ou orçamento vinculado. Os vínculos são opcionais.</span></sc-if>
+        <sc-for list="{{ d.rels }}" as="x" hint-placeholder-count="3"><button onClick="{{ x.open }}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:13px;border:1px solid #E2E8F0;background:#fff;text-align:left;min-height:52px"><span style="width:32px;height:32px;border-radius:9px;background:{{ x.bg }};color:{{ x.fg }};display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;flex:0 0 auto">{{ x.tag }}</span><div style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:700">{{ x.t }}</span><span style="font-size:12px;color:#64748B">{{ x.s }}</span></div></button></sc-for>
+        <span style="font-size:12px;color:#64748B;line-height:1.5;text-wrap:pretty">Fatura (cobrança), recebimento (entrega física) e pagamento (Contas a Pagar) são documentos independentes.</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Identificação</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 14px"><sc-for list="{{ d.info }}" as="i" hint-placeholder-count="12"><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:11.5px;font-weight:600;color:#64748B">{{ i.k }}</span><span style="font-size:13.5px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div></sc-for></div>
+        <div style="padding:12px 14px;border-radius:13px;background:#F8FAFC;border:1px solid #E2E8F0;display:flex;flex-direction:column;gap:3px"><span style="font-size:11.5px;font-weight:700;color:#64748B">Observações internas</span><span style="font-size:13px;color:#334155;line-height:1.5;text-wrap:pretty">{{ d.obs }}</span></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="{{ secTitle }}">Histórico</span>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ d.timeline }}" as="e" hint-placeholder-count="4">
+            <div style="display:flex;gap:13px">
+              <div style="display:flex;flex-direction:column;align-items:center;flex:0 0 14px"><span style="width:12px;height:12px;border-radius:50%;background:{{ e.color }};border:3px solid #fff;box-shadow:0 0 0 2px {{ e.color }};margin-top:4px"></span><span style="{{ e.lineStyle }}"></span></div>
+              <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:16px;min-width:0"><span style="font-size:13.5px;font-weight:700;text-wrap:pretty">{{ e.ev }}</span><span style="font-size:12px;color:#64748B"><span style="font-family:'JetBrains Mono',monospace">{{ e.date }}</span> · {{ e.by }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:94;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeMenu }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(3px)"></div>
+    <div class="pg-scroll" style="position:relative;width:min(440px,100%);max-height:100%;overflow-y:auto;background:#fff;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <div style="display:flex;align-items:center;gap:10px;padding:2px 4px 6px"><div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;letter-spacing:-.02em">Ações da fatura</span><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#4338CA;font-weight:600">{{ menu.no }} · {{ menu.status }}</span></div><button onClick="{{ closeMenu }}" aria-label="Fechar" style="width:44px;height:44px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:15px;color:#64748B">✕</button></div>
+      <sc-for list="{{ menu.items }}" as="a" hint-placeholder-count="6"><button onClick="{{ a.run }}" aria-disabled="{{ a.off }}" style="{{ a.style }}"><span style="font-size:13.5px;font-weight:700;{{ a.labelStyle }}">{{ a.label }}</span><span style="font-size:11.5px;font-weight:600;color:{{ a.subColor }};line-height:1.35">{{ a.sub }}</span></button></sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ cfmOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:96;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ closeCfm }}" style="position:absolute;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(3px)"></div>
+    <div style="position:relative;width:min(480px,100%);max-height:100%;overflow-y:auto;background:#fff;border-radius:22px;padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:14px;box-shadow:0 40px 80px -30px rgba(15,23,42,.7);animation:pgSheet .25s cubic-bezier(.22,.7,.2,1)">
+      <span style="font-size:19px;font-weight:800;letter-spacing:-.025em;line-height:1.25">{{ cfm.title }}</span>
+      <span style="font-size:13.5px;color:#475569;line-height:1.55;text-wrap:pretty">{{ cfm.text }}</span>
+      <sc-if value="{{ cfm.hasInput }}" hint-placeholder-val="{{ false }}"><label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;font-weight:700;color:#475569">{{ cfm.inputLabel }}</span><input type="text" value="{{ cfm.reason }}" onInput="{{ cfm.onReason }}" style="{{ cfm.inpStyle }}"><sc-if value="{{ cfm.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#B91C1C">{{ cfm.err }}</span></sc-if></label></sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end"><button onClick="{{ closeCfm }}" style="{{ ghostBtn }};height:46px">{{ cfm.back }}</button><button onClick="{{ confirmCfm }}" style="{{ cfm.okStyle }}">{{ cfm.label }}</button></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;background:#0F172A;color:#fff;font-size:14px;font-weight:600;box-shadow:0 26px 50px -24px rgba(15,23,42,.9);animation:pgToast .28s cubic-bezier(.22,.7,.2,1);max-width:calc(100% - 32px)">
+    <span style="width:20px;height:20px;border-radius:50%;background:{{ toastColor }};display:flex;align-items:center;justify-content:center;color:#052E20;font-size:12px;font-weight:800;flex:0 0 auto">{{ toastMark }}</span>{{ toast }}
+  </div>
+</sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Inicial&quot;,&quot;Filtros aplicados&quot;,&quot;Lista vazia&quot;,&quot;Carregando&quot;,&quot;Nova fatura&quot;,&quot;Fatura de pedido&quot;,&quot;Validação&quot;,&quot;Parcelas divergentes&quot;,&quot;Detalhes&quot;,&quot;Cancelamento&quot;],&quot;default&quot;:&quot;Inicial&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;},&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Desktop&quot;,&quot;Mobile&quot;],&quot;default&quot;:&quot;Desktop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tela&quot;}}">
+class Component extends DCLogic {
+  TODAY = '2026-10-20'; PAGE = 8;
+  DEF = { st: 'Todos', fin: 'Todos', sup: 'Todos', obra: 'Todas', em: 'Todo o período', ven: 'Qualquer', po: 'Todas' };
+  STS = ['Rascunho', 'Aguardando conferência', 'Em conferência', 'Conferida', 'Com divergência', 'Cancelada'];
+  FINS = ['Não lançado', 'Em aberto', 'Parcialmente pago', 'Pago', 'Vencido'];
+  SC = { 'Rascunho': ['#F1F5F9', '#475569', '#94A3B8'], 'Aguardando conferência': ['#FFFBEB', '#B45309', '#F59E0B'], 'Em conferência': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Conferida': ['#ECFDF5', '#047857', '#10B981'], 'Com divergência': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Cancelada': ['#F1F5F9', '#64748B', '#CBD5E1'], 'Não lançado': ['#F1F5F9', '#475569', '#94A3B8'], 'Em aberto': ['#EFF6FF', '#1D4ED8', '#3B82F6'], 'Parcialmente pago': ['#ECFEFF', '#0E7490', '#06B6D4'], 'Pago': ['#ECFDF5', '#047857', '#10B981'], 'Vencido': ['#FEF2F2', '#B91C1C', '#EF4444'], 'Paga': ['#ECFDF5', '#047857', '#10B981'], 'Parcial': ['#ECFEFF', '#0E7490', '#06B6D4'], 'Vencida': ['#FEF2F2', '#B91C1C', '#EF4444'] };
+  FORN = ['Cimentos do Norte, Lda.', 'Aços do Minho, S.A.', 'Ferragens Silva & Filhos', 'ElectroNorte Materiais', 'Tintas Lusitânia, Lda.'];
+  OBRAS = ['Edifício Aurora — Porto', 'Moradia Quinta do Vale', 'Reabilitação Rua das Flores'];
+  RESP = ['Carlos Mendes', 'Marta Ribeiro', 'João Pacheco', 'Inês Carvalho'];
+  TIPOS = ['Fatura', 'Fatura-recibo', 'Fatura simplificada', 'Nota de débito'];
+  CONDS = { 'À vista': [0], '30 dias': [30], '60 dias': [60], '30/60 dias': [30, 60], '30/60/90 dias': [30, 60, 90], 'Personalizado': null };
+  UNITS = ['un', 'saco', 'm³', 'barra', 'rolo', 'cx', 'balde', 'par', 'kg', 'm', 'dia', 'serviço'];
+  TAXES = ['0', '6', '13', '23'];
+  ORCS = [{ no: 'ORC-2026-0112', sup: 'Cimentos do Norte, Lda.' }, { no: 'ORC-2026-0118', sup: 'Aços do Minho, S.A.' }, { no: 'ORC-2026-0121', sup: 'Ferragens Silva & Filhos' }];
+  SUPI = { 'Cimentos do Norte, Lda.': ['NIF 508 112 340', 'Maia'], 'Aços do Minho, S.A.': ['NIF 502 887 611', 'Braga'], 'Ferragens Silva & Filhos': ['NIF 501 330 982', 'Porto'], 'ElectroNorte Materiais': ['NIF 509 441 207', 'Matosinhos'], 'Tintas Lusitânia, Lda.': ['NIF 507 905 118', 'Gaia'] };
+  CAT = {
+    'CIM-001': ['Cimento CEM II 32,5 — saco 25 kg', 'saco', 5.85], 'AGR-010': ['Areia lavada', 'm³', 24], 'AGR-011': ['Brita 1', 'm³', 26],
+    'ACO-112': ['Varão A500 Ø12 mm', 'barra', 9.4], 'ACO-116': ['Varão A500 Ø16 mm', 'barra', 16.8], 'ACO-901': ['Arame recozido', 'rolo', 14],
+    'FER-101': ['Parafuso 5×60 (caixa 50)', 'cx', 8.9], 'FER-102': ['Bucha nylon Ø8 (caixa 80)', 'cx', 4.2], 'FER-103': ['Dobradiça inox', 'un', 6.5], 'FER-300': ['Trena 5 m', 'un', 7.9],
+    'ELE-201': ['Cabo H07V-K 2,5 mm² (rolo 100 m)', 'rolo', 62], 'ELE-202': ['Quadro elétrico 12 módulos', 'un', 94], 'ELE-203': ['Disjuntor 16 A', 'un', 7.8],
+    'TIN-301': ['Tinta plástica branca 15 L', 'balde', 48], 'TIN-302': ['Primário selador 15 L', 'balde', 52], 'TIN-303': ['Fita de pintor', 'rolo', 2.1], 'QUI-050': ['Diluente universal 5 L', 'un', 11.5]
+  };
+  PO = [
+    { no: 'PC-2026-0041', sup: 'Cimentos do Norte, Lda.', obra: 'Edifício Aurora — Porto', items: [['CIM-001', 400], ['AGR-010', 30], ['AGR-011', 20]] },
+    { no: 'PC-2026-0044', sup: 'Aços do Minho, S.A.', obra: 'Edifício Aurora — Porto', items: [['ACO-112', 300], ['ACO-116', 150], ['ACO-901', 20]] },
+    { no: 'PC-2026-0047', sup: 'Ferragens Silva & Filhos', obra: 'Moradia Quinta do Vale', items: [['FER-101', 60], ['FER-102', 80], ['FER-103', 40]] },
+    { no: 'PC-2026-0049', sup: 'ElectroNorte Materiais', obra: 'Reabilitação Rua das Flores', items: [['ELE-201', 25], ['ELE-202', 6], ['ELE-203', 48]] },
+    { no: 'PC-2026-0052', sup: 'Tintas Lusitânia, Lda.', obra: 'Moradia Quinta do Vale', items: [['TIN-301', 30], ['TIN-302', 12], ['TIN-303', 60]] }
+  ];
+  RECS = [
+    { no: 'RC-2026-0028', po: 'PC-2026-0041', sup: 'Cimentos do Norte, Lda.', date: '2026-09-22', items: [['CIM-001', 200], ['AGR-010', 15], ['AGR-011', 10]] },
+    { no: 'RC-2026-0033', po: 'PC-2026-0041', sup: 'Cimentos do Norte, Lda.', date: '2026-10-02', items: [['CIM-001', 150], ['AGR-010', 15], ['AGR-011', 10]] },
+    { no: 'RC-2026-0030', po: 'PC-2026-0044', sup: 'Aços do Minho, S.A.', date: '2026-09-30', items: [['ACO-112', 300], ['ACO-116', 100], ['ACO-901', 20]] },
+    { no: 'RC-2026-0037', po: 'PC-2026-0044', sup: 'Aços do Minho, S.A.', date: '2026-10-15', items: [['ACO-116', 70]] },
+    { no: 'RC-2026-0035', po: 'PC-2026-0047', sup: 'Ferragens Silva & Filhos', date: '2026-10-08', items: [['FER-101', 60], ['FER-102', 60], ['FER-103', 40]] },
+    { no: 'RC-2026-0039', po: 'PC-2026-0049', sup: 'ElectroNorte Materiais', date: '2026-10-17', items: [['ELE-201', 25], ['ELE-202', 6], ['ELE-203', 48]] },
+    { no: 'RC-2026-0040', po: 'PC-2026-0052', sup: 'Tintas Lusitânia, Lda.', date: '2026-10-19', items: [['TIN-301', 20], ['TIN-302', 12], ['TIN-303', 60]] },
+    { no: 'RC-2026-0036', po: '', sup: 'Tintas Lusitânia, Lda.', date: '2026-10-12', items: [['QUI-050', 12]] }
+  ];
+
+  state = { view: null, w: 1400, navOpen: false, dataState: 'ready', cur: 'Inicial', empty: false, invs: null, query: '', filters: { st: 'Todos', fin: 'Todos', sup: 'Todos', obra: 'Todas', em: 'Todo o período', ven: 'Qualquer', po: 'Todas' }, openFilter: '', sort: { key: 'emit', dir: 'desc' }, page: 1, detailNo: '', menuNo: '', cfm: null, toast: '', toastErr: false, doc: null, dirty: false, errs: {}, lerr: {}, perr: {}, banner: '' };
+
+  // ---------- helpers ----------
+  num(v) { const n = parseFloat(String(v == null ? '' : v).trim().replace(',', '.')); return isNaN(n) ? 0 : n; }
+  r2(n) { return Math.round((n + Number.EPSILON) * 100) / 100; }
+  fmtN(n) { return Number(n).toLocaleString('de-DE', { maximumFractionDigits: 2 }); }
+  fmtIn(n) { return String(this.r2(n)).replace('.', ','); }
+  eur(n) { return (n < 0 ? '− ' : '') + '€ ' + Math.abs(Number(n)).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  fmtD(iso) { if (!iso) return '—'; const p = String(iso).slice(0, 10).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+  fmtDT(dt) { return this.fmtD(dt) + (dt.length > 10 ? ' · ' + dt.slice(11, 16) : ''); }
+  addDays(iso, n) { const d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  daysBetween(a, b) { return Math.round((new Date(a + 'T12:00:00Z') - new Date(b + 'T12:00:00Z')) / 864e5); }
+  pl(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+  poOf(no) { return this.PO.filter(x => x.no === no)[0] || null; }
+  curInvs() { return this.state.invs || this._seed || (this._seed = this.seed()); }
+  upd(fn, extra) { this.setState(x => Object.assign({ invs: fn(x.invs || this._seed || (this._seed = this.seed())) }, extra || {})); }
+  flash(msg, err) { clearTimeout(this.tT); this.setState({ toast: msg, toastErr: !!err }); this.tT = setTimeout(() => this.setState({ toast: '' }), 3400); }
+  nextNo() { const m = this.curInvs().reduce((a, r) => Math.max(a, parseInt(r.no.slice(8), 10) || 0), 0); return 'FC-2026-' + String(m + 1).padStart(4, '0'); }
+  nowDT() { return this.TODAY + 'T10:30'; }
+  recVal(r) { return this.r2(r.items.reduce((a, i) => a + i[1] * this.CAT[i[0]][2], 0)); }
+
+  calc(lines, frete) {
+    const L = lines.map(l => { const q = this.num(l.q), p = this.num(l.p), g = this.r2(q * p), dv = this.num(l.disc), d = l.dt === '€' ? Math.min(dv, g) : this.r2(g * Math.min(dv, 100) / 100), b = this.r2(g - d), rate = this.num(l.tax), t = this.r2(b * rate / 100); return { q, p, g, d, b, rate, t, total: this.r2(b + t) }; });
+    const sum = f => this.r2(L.reduce((a, x) => a + x[f], 0)), fr = this.num(frete);
+    return { L, sub: sum('g'), disc: sum('d'), base: sum('b'), tax: sum('t'), frete: fr, total: this.r2(sum('b') + sum('t') + fr) };
+  }
+  parState(p) { const v = this.num(p.val), pd = this.num(p.paid); return pd >= v - 0.005 && v > 0 ? 'Paga' : p.due && p.due < this.TODAY ? 'Vencida' : pd > 0.005 ? 'Parcial' : 'Em aberto'; }
+  finOf(inv, c) {
+    if (inv.status === 'Cancelada' || inv.status === 'Rascunho' || !inv.lanc) return 'Não lançado';
+    const paid = this.r2(inv.pars.reduce((a, p) => a + this.num(p.paid), 0)), saldo = this.r2(c.total - paid);
+    if (saldo <= 0.005 && c.total > 0) return 'Pago';
+    if (inv.pars.some(p => this.num(p.val) - this.num(p.paid) > 0.005 && p.due && p.due < this.TODAY)) return 'Vencido';
+    return paid > 0.005 ? 'Parcialmente pago' : 'Em aberto';
+  }
+  enrich(invs) {
+    return invs.map(r => {
+      const c = this.calc(r.lines, r.frete), paid = this.r2(r.pars.reduce((a, p) => a + this.num(p.paid), 0)), fin = this.finOf(r, c);
+      const open = r.pars.filter(p => this.num(p.val) - this.num(p.paid) > 0.005 && p.due).sort((a, b) => a.due < b.due ? -1 : 1);
+      const parSum = this.r2(r.pars.reduce((a, p) => a + this.num(p.val), 0));
+      const ovVal = this.r2(r.pars.filter(p => p.due && p.due < this.TODAY).reduce((a, p) => a + Math.max(this.num(p.val) - this.num(p.paid), 0), 0));
+      return Object.assign({}, r, { c, total: c.total, paid, saldo: this.r2(c.total - paid), fin, nextDue: open.length ? open[0].due : '', parSum, parOk: Math.abs(parSum - c.total) < 0.005, ovVal, n: r.lines.length });
+    });
+  }
+  cmp(inv, c) {
+    if (!inv.po && !(inv.recs || []).length) return { has: false, tiles: [], rows: [] };
+    const P = this.poOf(inv.po), recs = inv.recs.map(n => this.RECS.filter(r => r.no === n)[0]).filter(Boolean), recQ = {};
+    recs.forEach(r => r.items.forEach(i => { recQ[i[0]] = (recQ[i[0]] || 0) + i[1]; }));
+    const recV = this.r2(recs.reduce((a, r) => a + this.recVal(r), 0)), poV = P ? this.r2(P.items.reduce((a, i) => a + i[1] * this.CAT[i[0]][2], 0)) : null;
+    const mono = "font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:";
+    let nDiff = 0;
+    const rows = inv.lines.map((l, i) => {
+      const x = c.L[i], it = P ? P.items.filter(a => a[0] === l.code)[0] : null, rq = recs.length && l.code ? (recQ[l.code] || 0) : null, flags = [];
+      const fl = (t, k) => flags.push({ t, style: 'padding:3px 9px;border-radius:99px;font-size:11.5px;font-weight:800;' + (k === 'ok' ? 'background:#ECFDF5;color:#047857' : k === 'info' ? 'background:#F1F5F9;color:#475569' : 'background:#FEF2F2;color:#B91C1C') });
+      if (!l.code) fl('Sem código — não comparável', 'info');
+      else {
+        if (P && !it) fl('Item fora do pedido', 'bad');
+        if (it && x.q > it[1] + 1e-9) fl('Faturado acima do pedido (+' + this.fmtN(x.q - it[1]) + ')', 'bad');
+        if (rq != null && x.q > rq + 1e-9) fl('Faturado acima do recebido (+' + this.fmtN(x.q - rq) + ')', 'bad');
+        if (it && Math.abs(x.p - this.CAT[l.code][2]) > 0.005) fl('Preço difere do pedido (' + this.eur(this.CAT[l.code][2]) + ')', 'bad');
+        if (!flags.length) fl('Conforme', 'ok');
+      }
+      const bad = flags.some(f => /FEF2F2/.test(f.style)); if (bad) nDiff++;
+      return { d: l.d || '(sem descrição)', border: bad ? '#FECACA' : '#E2E8F0', flags, q: [{ k: 'Faturada', v: this.fmtN(x.q) + ' ' + l.un, style: mono + '#0F172A' }, { k: 'Pedida', v: it ? this.fmtN(it[1]) + ' ' + l.un : '—', style: mono + '#0F172A' }, { k: 'Recebida', v: rq == null ? '—' : this.fmtN(rq) + ' ' + l.un, style: mono + '#0F172A' }, { k: 'Preço unit.', v: this.eur(x.p), style: mono + (it && Math.abs(x.p - this.CAT[l.code][2]) > 0.005 ? '#B91C1C' : '#0F172A') }] };
+    });
+    const tile = (k, v, sub, t) => ({ k, v, sub, lc: t[0], vc: t[1], style: 'display:flex;flex-direction:column;gap:5px;padding:12px 13px;border-radius:13px;background:' + t[2] + ';border:1px solid ' + t[3] });
+    const N = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], RD = ['#B91C1C', '#7F1D1D', '#FEF2F2', '#FECACA'], GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'], dv = poV == null ? 0 : this.r2(c.base - poV);
+    const tiles = [tile('Faturado (s/ imposto)', this.eur(c.base), this.pl(inv.lines.length, 'linha', 'linhas'), N), tile('Pedido (s/ imposto)', poV == null ? '—' : this.eur(poV), P ? P.no : 'sem pedido vinculado', N), tile('Recebido vinculado', recs.length ? this.eur(recV) : '—', recs.length ? this.pl(recs.length, 'recebimento', 'recebimentos') : 'sem recebimento vinculado', N), tile('Diferença vs. pedido', poV == null ? '—' : this.eur(dv), poV == null ? '' : dv === 0 ? 'valores iguais' : dv < 0 ? 'faturado abaixo do pedido (fatura parcial?)' : 'faturado acima do pedido', dv > 0 ? RD : dv === 0 ? GR : N)];
+    return { has: true, tiles, rows, nDiff, recV, poV };
+  }
+
+  // ---------- seed ----------
+  mkI(no, docNo, tipo, sup, emit, reg, obra, resp, po, recs, orc, cond, frete, status, lanc, items, pars, extra) {
+    const lines = items.map(a => { const c = this.CAT[a[0]], o = a[2] || {}; return { code: a[0], d: c[0], un: c[1], q: String(a[1]), p: String(o.p != null ? o.p : c[2]).replace('.', ','), disc: String(o.disc || 0), dt: o.dt || '%', tax: String(o.tax != null ? o.tax : 23) }; });
+    const c = this.calc(lines, frete);
+    const ps = pars.map((p, i) => ({ val: this.fmtIn(p[0] === 'T' ? c.total : p[0] === 'H' ? this.r2(c.total / 2) : p[0]), due: p[1], paid: String(p[2] === 'T' ? this.fmtIn(c.total) : p[2] === 'H' ? this.fmtIn(this.r2(c.total / 2)) : p[2] || 0).replace('.', ',') }));
+    const ex = extra || {}, h = [{ d: reg + 'T09:20', ev: status === 'Rascunho' ? 'Rascunho criado' : 'Fatura registada' + (po ? ' com pedido ' + po : ' diretamente, sem pedido'), by: resp, k: status === 'Rascunho' ? 'r' : 'c' }];
+    if (['Em conferência', 'Conferida', 'Com divergência'].indexOf(status) >= 0) h.push({ d: this.addDays(reg, 1) + 'T10:00', ev: 'Conferência iniciada', by: 'Carlos Mendes', k: 's' });
+    if (status === 'Conferida') h.push({ d: this.addDays(reg, 2) + 'T11:30', ev: 'Conferência concluída — fatura conferida', by: 'Carlos Mendes', k: 'a' });
+    if (status === 'Com divergência') h.push({ d: this.addDays(reg, 2) + 'T11:30', ev: 'Divergência registrada — ' + (ex.divNote || ''), by: 'Carlos Mendes', k: 'x' });
+    if (lanc) h.push({ d: this.addDays(reg, 3) + 'T09:00', ev: 'Lançada em Contas a Pagar', by: 'Marta Ribeiro', k: 'f' });
+    if (status === 'Cancelada') h.push({ d: this.addDays(reg, 1) + 'T15:00', ev: 'Fatura cancelada — ' + (ex.cancelReason || 'sem motivo'), by: 'Carlos Mendes', k: 'x' });
+    return Object.assign({ no, docNo, tipo, sup, emit, reg, due: pars.length ? pars[0][1] : '', moeda: 'EUR (€)', obra, resp, po, recs, orc, cond, frete: String(frete).replace('.', ','), status, lanc, lines, pars: ps, obs: '', divNote: '', hist: h }, ex);
+  }
+  seed() {
+    const M = this.mkI.bind(this), O = this.OBRAS, R = this.RESP;
+    return [
+      M('FC-2026-0031', 'FT 2026/1180', 'Fatura', 'Cimentos do Norte, Lda.', '2026-09-24', '2026-09-25', O[0], R[1], 'PC-2026-0041', ['RC-2026-0028'], 'ORC-2026-0112', '30 dias', 0, 'Conferida', true, [['CIM-001', 200], ['AGR-010', 15], ['AGR-011', 10]], [['T', '2026-10-24', 'T']]),
+      M('FC-2026-0032', '2026-77', 'Fatura', 'Cimentos do Norte, Lda.', '2026-09-10', '2026-09-11', O[0], R[0], '', [], '', '30 dias', 0, 'Cancelada', false, [['AGR-010', 40]], [['T', '2026-10-10', 0]], { cancelReason: 'documento duplicado pelo fornecedor' }),
+      M('FC-2026-0033', 'LU-0412', 'Fatura', 'Tintas Lusitânia, Lda.', '2026-08-28', '2026-09-01', O[1], R[3], '', [], '', '30/60 dias', 0, 'Conferida', true, [['TIN-301', 20]], [['H', '2026-09-27', 'H'], ['H', '2026-10-27', 0]]),
+      M('FC-2026-0034', 'FT 4471', 'Fatura', 'Aços do Minho, S.A.', '2026-10-01', '2026-10-02', O[0], R[0], 'PC-2026-0044', ['RC-2026-0030'], 'ORC-2026-0118', '30/60 dias', 0, 'Conferida', true, [['ACO-112', 300], ['ACO-116', 100], ['ACO-901', 20]], [['H', '2026-10-31', 0], ['H', '2026-11-30', 0]]),
+      M('FC-2026-0035', 'EN-7710', 'Fatura', 'ElectroNorte Materiais', '2026-09-14', '2026-09-15', O[2], R[2], '', [], '', '30 dias', 25, 'Conferida', true, [['ELE-201', 10]], [['T', '2026-10-14', 300]]),
+      M('FC-2026-0036', 'FT-22/0897', 'Fatura', 'ElectroNorte Materiais', '2026-09-05', '2026-09-08', O[2], R[2], '', [], '', '30 dias', 0, 'Conferida', true, [['ELE-203', 100]], [['T', '2026-10-08', 0]]),
+      M('FC-2026-0037', '8812', 'Fatura', 'Ferragens Silva & Filhos', '2026-10-09', '2026-10-12', O[1], R[3], 'PC-2026-0047', ['RC-2026-0035'], 'ORC-2026-0121', '30 dias', 0, 'Com divergência', true, [['FER-101', 60], ['FER-102', 80], ['FER-103', 40]], [['T', '2026-11-11', 0]], { divNote: 'Faturadas 80 caixas de buchas; só 60 foram recebidas (RC-2026-0035).' }),
+      M('FC-2026-0038', 'TL-5530', 'Fatura-recibo', 'Tintas Lusitânia, Lda.', '2026-10-13', '2026-10-14', O[1], R[3], '', ['RC-2026-0036'], '', 'À vista', 0, 'Em conferência', false, [['QUI-050', 12]], [['T', '2026-10-13', 'T']]),
+      M('FC-2026-0039', 'FT 2026/1301', 'Fatura', 'Cimentos do Norte, Lda.', '2026-10-02', '2026-10-05', O[0], R[1], 'PC-2026-0041', ['RC-2026-0033'], '', '30/60 dias', 0, 'Aguardando conferência', false, [['CIM-001', 150], ['AGR-010', 15], ['AGR-011', 10]], [['H', '2026-11-01', 0], ['H', '2026-12-01', 0]]),
+      M('FC-2026-0040', 'AM-9901', 'Fatura', 'Aços do Minho, S.A.', '2026-10-16', '2026-10-17', O[0], R[0], 'PC-2026-0044', ['RC-2026-0037'], '', '30 dias', 0, 'Aguardando conferência', false, [['ACO-116', 70, { p: 17.5 }]], [['T', '2026-11-16', 0]]),
+      M('FC-2026-0041', 'FS-3320', 'Fatura simplificada', 'Ferragens Silva & Filhos', '2026-10-18', '2026-10-19', O[0], R[1], '', [], '', '30 dias', 0, 'Rascunho', false, [['FER-300', 20]], [[100, '2026-11-18', 0]]),
+      M('FC-2026-0042', 'EL-1190', 'Fatura', 'ElectroNorte Materiais', '2026-10-19', '2026-10-20', O[2], R[2], 'PC-2026-0049', ['RC-2026-0039'], '', '30 dias', 0, 'Aguardando conferência', false, [['ELE-201', 25], ['ELE-202', 6], ['ELE-203', 48]], [['T', '2026-11-18', 0]])
+    ];
+  }
+
+  // ---------- documento ----------
+  blankLine() { return { code: '', d: '', un: 'un', q: '', p: '', disc: '', dt: '%', tax: '23' }; }
+  blankDoc() { return { id: null, no: this.nextNo(), docNo: '', tipo: 'Fatura', sup: '', emit: this.TODAY, reg: this.TODAY, due: '', moeda: 'EUR (€)', obra: '', resp: 'Carlos Mendes', po: '', recs: [], orc: '', cond: '30 dias', frete: '', status: 'Rascunho', lanc: false, lines: [this.blankLine()], pars: [], obs: '', divNote: '', hist: [] }; }
+  openNew(preset) {
+    const d = this.blankDoc();
+    if (preset) Object.assign(d, preset);
+    this.setState({ doc: d, dirty: false, errs: {}, lerr: {}, perr: {}, banner: '', detailNo: '', menuNo: '', cfm: null });
+  }
+  openEdit(no) {
+    const r = this.curInvs().filter(x => x.no === no)[0]; if (!r) return;
+    this.setState({ doc: JSON.parse(JSON.stringify(Object.assign({}, r, { id: r.no }))), dirty: false, errs: {}, lerr: {}, perr: {}, banner: '', detailNo: '', menuNo: '', cfm: null });
+  }
+  setDoc(p) { this.setState(x => ({ doc: Object.assign({}, x.doc, p), dirty: true, banner: '', errs: {} })); }
+  setLine(i, fn) { this.setState(x => ({ doc: Object.assign({}, x.doc, { lines: x.doc.lines.map((l, n) => n === i ? Object.assign({}, l, fn(l)) : l) }), dirty: true, banner: '', lerr: {} })); }
+  setPar(i, patch) { this.setState(x => ({ doc: Object.assign({}, x.doc, { pars: x.doc.pars.map((p, n) => n === i ? Object.assign({}, p, patch) : p) }), dirty: true, banner: '', perr: {} })); }
+  onSup(v) { this.setState(x => { const d = Object.assign({}, x.doc, { sup: v }); const P = this.poOf(d.po); if (P && P.sup !== v) { d.po = ''; d.recs = []; } d.recs = d.recs.filter(n => { const r = this.RECS.filter(a => a.no === n)[0]; return r && r.sup === v; }); return { doc: d, dirty: true, banner: '', errs: {} }; }); }
+  onPo(v) { this.setState(x => { const P = this.poOf(v), d = Object.assign({}, x.doc, { po: v }); if (P) { d.sup = P.sup; if (!d.obra) d.obra = P.obra; } d.recs = d.recs.filter(n => { const r = this.RECS.filter(a => a.no === n)[0]; return r && (!v || r.po === v); }); return { doc: d, dirty: true, banner: '', errs: {} }; }); }
+  toggleRec(n) { this.setState(x => { const has = x.doc.recs.indexOf(n) >= 0, r = this.RECS.filter(a => a.no === n)[0], d = Object.assign({}, x.doc, { recs: has ? x.doc.recs.filter(a => a !== n) : x.doc.recs.concat([n]) }); if (!has && r && !d.sup) d.sup = r.sup; if (!has && r && r.po && !d.po) d.po = r.po; return { doc: d, dirty: true, banner: '' }; }); }
+  pickProd(i, v) { const k = Object.keys(this.CAT).filter(c => this.CAT[c][0] === v)[0]; this.setLine(i, () => k ? { d: v, code: k, un: this.CAT[k][1], p: String(this.CAT[k][2]).replace('.', ',') } : { d: v }); }
+  doImport() {
+    const d = this.state.doc, recs = d.recs.map(n => this.RECS.filter(r => r.no === n)[0]).filter(Boolean), P = this.poOf(d.po), q = {}, order = [];
+    if (recs.length) recs.forEach(r => r.items.forEach(i => { if (!(i[0] in q)) { q[i[0]] = 0; order.push(i[0]); } q[i[0]] += i[1]; }));
+    else if (P) P.items.forEach(i => { q[i[0]] = i[1]; order.push(i[0]); });
+    if (!order.length) return;
+    const lines = order.map(k => { const c = this.CAT[k]; return { code: k, d: c[0], un: c[1], q: String(q[k]), p: String(c[2]).replace('.', ','), disc: '', dt: '%', tax: '23' }; });
+    this.setState(x => ({ doc: Object.assign({}, x.doc, { lines }), dirty: true, banner: '', lerr: {} }));
+    this.flash('Itens importados ' + (recs.length ? 'dos recebimentos' : 'do pedido') + ' — ajuste as quantidades e preços conforme a fatura do fornecedor');
+  }
+  genPars() {
+    const d = this.state.doc, days = this.CONDS[d.cond], total = this.calc(d.lines, d.frete).total;
+    if (!days) { this.flash('Condição personalizada: adicione as parcelas manualmente', true); return; }
+    if (total <= 0) { this.flash('Adicione itens com valor antes de gerar as parcelas', true); return; }
+    if (!d.emit) { this.flash('Informe a data de emissão para calcular os vencimentos', true); return; }
+    const n = days.length, each = Math.floor(total / n * 100) / 100; let acc = 0;
+    const pars = days.map((dd, k) => { const v = k === n - 1 ? this.r2(total - acc) : each; acc = this.r2(acc + v); return { val: this.fmtIn(v), due: this.addDays(d.emit, dd), paid: '' }; });
+    this.setState(x => ({ doc: Object.assign({}, x.doc, { pars, due: pars[0].due }), dirty: true, banner: '', perr: {} }));
+    this.flash(this.pl(n, 'parcela gerada', 'parcelas geradas') + ' a partir da emissão — editáveis');
+  }
+  validate(d, strict) {
+    const errs = {}, lerr = {}, perr = {}; let msg = '';
+    if (!d.sup) errs.sup = 'Selecione o fornecedor.';
+    if (strict) {
+      if (!String(d.docNo).trim()) errs.docNo = 'Informe o número do documento do fornecedor.';
+      else if (this.curInvs().some(r => r.no !== d.no && r.sup === d.sup && r.docNo.trim().toLowerCase() === String(d.docNo).trim().toLowerCase() && r.status !== 'Cancelada')) errs.docNo = 'Já existe fatura deste fornecedor com este número.';
+      if (!d.emit) errs.emit = 'Informe a data de emissão.';
+      if (!d.reg) errs.reg = 'Informe a data de registo.';
+      if (!d.due) errs.due = 'Informe o vencimento.';
+      if (!d.resp) errs.resp = 'Informe o responsável.';
+      if (d.emit && d.reg && d.reg < d.emit) errs.reg = 'O registo não pode ser anterior à emissão.';
+      if (d.emit && d.due && d.due < d.emit) errs.due = 'O vencimento não pode ser anterior à emissão.';
+      const used = d.lines.map((l, i) => ({ l, i })).filter(x => String(x.l.d).trim() || this.num(x.l.q) > 0);
+      if (!used.length) msg = 'Adicione ao menos um item à fatura.';
+      const bad = v => String(v).trim() !== '' && (isNaN(parseFloat(String(v).replace(',', '.'))) || parseFloat(String(v).replace(',', '.')) < 0);
+      used.forEach(({ l, i }) => { if (!String(l.d).trim()) lerr[i] = 'descreva o item.'; else if (bad(l.q) || bad(l.p) || bad(l.disc)) lerr[i] = 'valores devem ser números maiores ou iguais a zero.'; else if (this.num(l.q) <= 0) lerr[i] = 'informe a quantidade.'; });
+      if (!d.pars.length) { if (!msg) msg = 'Gere ou adicione ao menos uma parcela.'; }
+      d.pars.forEach((p, i) => { if (bad(p.val) || this.num(p.val) <= 0) perr[i] = 'informe o valor da parcela.'; else if (!p.due) perr[i] = 'informe o vencimento da parcela.'; else if (bad(p.paid)) perr[i] = 'valor pago inválido.'; else if (this.num(p.paid) > this.num(p.val) + 0.005) perr[i] = 'valor pago maior que o da parcela.'; });
+      if (!msg && Object.keys(lerr).length) msg = 'Corrija os itens sinalizados.';
+      if (!msg && Object.keys(perr).length) msg = 'Corrija as parcelas sinalizadas.';
+      if (!msg && Object.keys(errs).length) msg = 'Preencha os campos obrigatórios destacados.';
+    } else if (errs.sup) msg = 'Para salvar o rascunho, selecione ao menos o fornecedor.';
+    return { errs, lerr, perr, msg, ok: !msg && !Object.keys(errs).length && !Object.keys(lerr).length && !Object.keys(perr).length };
+  }
+  buildInv(d, status) {
+    const lines = d.lines.filter(l => String(l.d).trim() || this.num(l.q) > 0), pars = d.pars.slice(), due = pars.length ? pars.map(p => p.due).filter(Boolean).sort()[0] || d.due : d.due;
+    const ev = (t, k) => ({ d: this.nowDT(), ev: t, by: 'Carlos Mendes', k }), h = (d.hist || []).slice();
+    if (status === 'Rascunho') h.push(ev(d.id ? 'Rascunho atualizado' : 'Rascunho criado', 'r'));
+    else if (!d.id || d.status === 'Rascunho') h.push(ev('Fatura registada' + (d.po ? ' com pedido ' + d.po : ' diretamente, sem pedido'), 'c'));
+    else h.push(ev('Fatura editada', 's'));
+    return Object.assign({}, d, { id: undefined, due, lines, pars, status, hist: h });
+  }
+  commit(status) {
+    const rec = this.buildInv(this.state.doc, status);
+    this.upd(rs => rs.some(r => r.no === rec.no) ? rs.map(r => r.no === rec.no ? rec : r) : rs.concat([rec]), { doc: null, dirty: false, cfm: null, errs: {}, lerr: {}, perr: {}, banner: '', detailNo: status === 'Rascunho' ? '' : rec.no });
+    this.flash(status === 'Rascunho' ? 'Rascunho ' + rec.no + ' salvo' : 'Fatura ' + rec.no + ' registada — ' + status);
+  }
+  doSave() {
+    const d = this.state.doc, isDraft = !d.id || d.status === 'Rascunho', v = this.validate(d, !isDraft);
+    if (!v.ok) { this.setState({ errs: v.errs, lerr: v.lerr, perr: v.perr, banner: v.msg }); return; }
+    if (isDraft) this.commit('Rascunho'); else this.commit(d.status);
+  }
+  doConfirm() {
+    const d = this.state.doc, v = this.validate(d, true);
+    if (!v.ok) { this.setState({ errs: v.errs, lerr: v.lerr, perr: v.perr, banner: v.msg }); return; }
+    const c = this.calc(d.lines, d.frete), ps = this.r2(d.pars.reduce((a, p) => a + this.num(p.val), 0)), cm = this.cmp(d, c);
+    this.setState({ cfm: { type: 'confirm', no: d.no, parDiff: this.r2(ps - c.total), diffs: cm.has ? cm.nDiff : 0, reason: '' } });
+  }
+  doBack() { if (this.state.dirty) this.setState({ cfm: { type: 'discard', reason: '' } }); else this.setState({ doc: null, errs: {}, lerr: {}, perr: {}, banner: '' }); }
+
+  // ---------- ações ----------
+  acts(r) {
+    const canc = r.status === 'Cancelada', st = r.status;
+    return [
+      { key: 'edit', label: st === 'Rascunho' ? 'Editar rascunho' : 'Editar', ok: !canc && st !== 'Conferida', why: canc ? 'Fatura cancelada não pode ser editada.' : 'Reabra a conferência para editar.', kind: st === 'Rascunho' ? 'p' : '' },
+      { key: 'start', label: 'Iniciar conferência', ok: st === 'Aguardando conferência', why: 'Disponível quando a fatura aguarda conferência.', kind: 'c' },
+      { key: 'conclude', label: 'Concluir conferência', ok: st === 'Em conferência', why: 'Disponível durante a conferência.', kind: 'g' },
+      { key: 'diverge', label: 'Registrar divergência', ok: st === 'Em conferência', why: 'Disponível durante a conferência.', kind: 'd' },
+      { key: 'reopen', label: 'Reabrir conferência', ok: st === 'Conferida' || st === 'Com divergência', why: 'Disponível para faturas conferidas ou com divergência.', kind: '' },
+      { key: 'view', label: 'Ver detalhes', ok: true, why: '', kind: '' },
+      { key: 'docs', label: 'Documentos relacionados', ok: true, why: '', kind: '' },
+      { key: 'pars', label: 'Consultar parcelas', ok: st !== 'Rascunho', why: 'Rascunho: parcelas ainda em edição.', kind: '' },
+      { key: 'lanc', label: 'Lançar em Contas a Pagar', ok: st === 'Conferida' && !r.lanc, why: canc ? 'Fatura cancelada.' : r.lanc ? 'Já lançada em Contas a Pagar.' : 'Disponível após a fatura ser conferida.', kind: '' },
+      st === 'Rascunho' ? { key: 'delete', label: 'Excluir rascunho', ok: true, why: '', kind: 'd' } : { key: 'cancel', label: 'Cancelar fatura', ok: !canc && !(r.paid > 0), why: canc ? 'Fatura já cancelada.' : 'Há pagamentos registrados — estorne em Contas a Pagar antes.', kind: 'd' }
+    ];
+  }
+  scrollTo(id) { setTimeout(() => { const dr = document.getElementById('pg-drawer'), el = document.getElementById(id); if (dr && el) dr.scrollTop = el.offsetTop - 12; }, 80); }
+  addHist(no, patch, ev, k) { this.upd(rs => rs.map(r => r.no === no ? Object.assign({}, r, patch, { hist: r.hist.concat([{ d: this.nowDT(), ev, by: 'Carlos Mendes', k }]) }) : r)); }
+  run(key, no) {
+    this.setState({ menuNo: '' });
+    if (key === 'view') this.setState({ detailNo: no });
+    else if (key === 'docs') { this.setState({ detailNo: no }); this.scrollTo('sec-rel'); }
+    else if (key === 'pars') { this.setState({ detailNo: no }); this.scrollTo('sec-par'); }
+    else if (key === 'edit') this.openEdit(no);
+    else if (key === 'start') { this.addHist(no, { status: 'Em conferência' }, 'Conferência iniciada', 's'); this.flash('Conferência iniciada em ' + no); }
+    else if (key === 'reopen') { this.addHist(no, { status: 'Em conferência', divNote: '' }, 'Conferência reaberta', 's'); this.flash('Conferência reaberta em ' + no); }
+    else if (key === 'lanc') { this.addHist(no, { lanc: true }, 'Lançada em Contas a Pagar', 'f'); this.flash('Lançamento demonstrativo em Contas a Pagar — o pagamento é tratado no módulo Financeiro'); }
+    else if (key === 'conclude') { const r = this.enrich(this.curInvs()).filter(x => x.no === no)[0], cm = this.cmp(r, r.c); this.setState({ cfm: { type: 'conclude', no, reason: '', diffs: cm.has ? cm.nDiff : 0, parOk: r.parOk } }); }
+    else if (key === 'diverge') this.setState({ cfm: { type: 'diverge', no, reason: '' } });
+    else if (key === 'cancel') this.setState({ cfm: { type: 'cancel', no, reason: '' } });
+    else if (key === 'delete') this.setState({ cfm: { type: 'delete', no, reason: '' } });
+  }
+  cfmInfo(c) {
+    const t = c.type;
+    if (t === 'cancel') return { title: 'Cancelar ' + c.no + '?', text: 'A fatura deixa de contar nos totais e não poderá ser editada nem lançada. Pedido, recebimentos e pagamentos vinculados não são alterados. Esta ação não pode ser desfeita.', label: 'Cancelar fatura', back: 'Voltar', danger: true, hasInput: true, inputLabel: 'Motivo do cancelamento (opcional)' };
+    if (t === 'delete') return { title: 'Excluir rascunho ' + c.no + '?', text: 'O rascunho será removido. Nenhum documento relacionado é afetado.', label: 'Excluir rascunho', back: 'Voltar', danger: true, hasInput: false };
+    if (t === 'discard') return { title: 'Descartar alterações?', text: 'Há alterações não salvas nesta fatura. Se sair agora, elas serão perdidas.', label: 'Descartar', back: 'Continuar editando', danger: true, hasInput: false };
+    if (t === 'diverge') return { title: 'Registrar divergência em ' + c.no + '?', text: 'A fatura passa para “Com divergência”. Nenhum valor é ajustado e os documentos vinculados permanecem inalterados.', label: 'Registrar divergência', back: 'Voltar', danger: true, hasInput: true, inputLabel: 'Descrição da divergência (obrigatório)', required: true };
+    if (t === 'conclude') return { title: 'Concluir conferência de ' + c.no + '?', text: 'A fatura passa para “Conferida”.' + (c.diffs ? ' Atenção: há ' + this.pl(c.diffs, 'linha', 'linhas') + ' com diferenças em relação ao pedido/recebimentos — considere registrar uma divergência.' : '') + (c.parOk ? '' : ' A soma das parcelas não corresponde ao total da fatura.'), label: 'Concluir conferência', back: 'Voltar', danger: false, hasInput: false };
+    return { title: 'Registrar fatura ' + c.no + '?', text: 'A fatura entra como “Aguardando conferência”.' + (Math.abs(c.parDiff) > 0.005 ? ' Atenção: a soma das parcelas difere do total em ' + this.eur(c.parDiff) + ' (não é corrigida automaticamente).' : '') + (c.diffs ? ' Há ' + this.pl(c.diffs, 'linha', 'linhas') + ' com diferenças em relação aos documentos vinculados.' : '') + ' Registrar não cria pedido, recebimento nem pagamento.', label: 'Registrar fatura', back: 'Voltar', danger: false, hasInput: false };
+  }
+  confirmCfm() {
+    const c = this.state.cfm; if (!c) return;
+    if (c.type === 'confirm') { const d = this.state.doc; this.commit(d.id && d.status !== 'Rascunho' ? d.status : 'Aguardando conferência'); return; }
+    if (c.type === 'discard') { this.setState({ cfm: null, doc: null, dirty: false, errs: {}, lerr: {}, perr: {}, banner: '' }); return; }
+    if (c.type === 'delete') { this.upd(rs => rs.filter(r => r.no !== c.no), { cfm: null, detailNo: '' }); this.flash('Rascunho ' + c.no + ' excluído'); return; }
+    if (c.type === 'cancel') { this.addHist(c.no, { status: 'Cancelada' }, 'Fatura cancelada — ' + (c.reason.trim() || 'sem motivo informado'), 'x'); this.setState({ cfm: null }); this.flash('Fatura ' + c.no + ' cancelada'); return; }
+    if (c.type === 'conclude') { this.addHist(c.no, { status: 'Conferida', divNote: '' }, 'Conferência concluída — fatura conferida', 'a'); this.setState({ cfm: null }); this.flash('Fatura ' + c.no + ' conferida'); return; }
+    if (c.type === 'diverge') {
+      if (!c.reason.trim()) { this.setState(x => ({ cfm: Object.assign({}, x.cfm, { err: 'Descreva a divergência para registrá-la.' }) })); return; }
+      this.addHist(c.no, { status: 'Com divergência', divNote: c.reason.trim() }, 'Divergência registrada — ' + c.reason.trim(), 'x'); this.setState({ cfm: null }); this.flash('Divergência registrada em ' + c.no);
+    }
+  }
+  applyState(n) {
+    clearTimeout(this.rT);
+    this.setState({ cur: n, doc: null, detailNo: '', cfm: null, menuNo: '', dataState: 'ready', empty: false, query: '', filters: Object.assign({}, this.DEF), openFilter: '', page: 1, dirty: false, errs: {}, lerr: {}, perr: {}, banner: '', navOpen: false });
+    if (n === 'Filtros aplicados') this.setState({ filters: Object.assign({}, this.DEF, { fin: 'Vencido' }), query: 'electro' });
+    else if (n === 'Lista vazia') this.setState({ empty: true });
+    else if (n === 'Carregando') this.setState({ dataState: 'loading' });
+    else if (n === 'Nova fatura') this.openNew();
+    else if (n === 'Fatura de pedido') { this.openNew({ sup: 'Cimentos do Norte, Lda.', po: 'PC-2026-0041', obra: this.OBRAS[0], recs: ['RC-2026-0033'], docNo: 'FT 2026/1388', due: '2026-11-19', lines: [{ code: 'CIM-001', d: this.CAT['CIM-001'][0], un: 'saco', q: '150', p: '6,10', disc: '', dt: '%', tax: '23' }, { code: 'AGR-010', d: this.CAT['AGR-010'][0], un: 'm³', q: '15', p: '24', disc: '', dt: '%', tax: '23' }] }); }
+    else if (n === 'Validação') { this.openNew(); setTimeout(() => this.doConfirm(), 30); }
+    else if (n === 'Parcelas divergentes') this.openEdit('FC-2026-0041');
+    else if (n === 'Detalhes') this.setState({ detailNo: 'FC-2026-0037' });
+    else if (n === 'Cancelamento') this.setState({ cfm: { type: 'cancel', no: 'FC-2026-0039', reason: '' } });
+  }
+  onResize = () => { if (window.innerWidth !== this.state.w) this.setState({ w: window.innerWidth }); };
+  componentDidMount() { window.addEventListener('resize', this.onResize); this.setState({ w: window.innerWidth }); const st = this.props.initialState || 'Inicial'; if (st !== 'Inicial') this.applyState(st); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tT); clearTimeout(this.rT); }
+
+  // ---------- render ----------
+  fieldStyle(err, mono) { return 'width:100%;height:46px;padding:0 13px;border-radius:11px;border:1px solid ' + (err ? '#F87171' : '#E2E8F0') + ';background:' + (err ? '#FEF8F8' : '#fff') + ';font-size:14px;font-weight:500;color:#0F172A;outline:none;font-family:' + (mono ? "'JetBrains Mono',monospace" : 'inherit'); }
+  renderVals() {
+    const s = this.state, F = s.filters, q = s.query.trim().toLowerCase(), T = this.TODAY;
+    const view = s.view || this.props.initialView || 'Desktop', phone = view === 'Mobile';
+    const W = phone ? 390 : (this.props.vw || s.w), isMobile = W < 1024, isTable = W >= 1000, avail = W - (isMobile ? 0 : 258) - 68;
+    const full = this.enrich(this.curInvs()), all = s.empty ? [] : full, mono = "font-family:'JetBrains Mono',monospace;";
+    const MONTHS = { 'Outubro/2026': '2026-10', 'Setembro/2026': '2026-09', 'Agosto/2026': '2026-08' };
+    const emOk = r => F.em === 'Todo o período' || r.emit.slice(0, 7) === MONTHS[F.em];
+    const venOk = r => F.ven === 'Qualquer' || (F.ven === 'Vencidas' ? r.ovVal > 0.005 : F.ven === 'Sem saldo a vencer' ? !r.nextDue : r.nextDue && r.nextDue >= T && r.nextDue <= this.addDays(T, F.ven === 'Próximos 7 dias' ? 7 : 30));
+    const poOk = r => F.po === 'Todas' || (F.po === 'Com pedido' ? !!r.po : !r.po);
+    const base = all.filter(r => emOk(r) && venOk(r) && poOk(r) && (F.sup === 'Todos' || r.sup === F.sup) && (F.obra === 'Todas' || r.obra === F.obra) && (!q || (r.no + ' ' + r.docNo + ' ' + r.sup + ' ' + r.po + ' ' + r.recs.join(' ') + ' ' + r.obra + ' ' + r.lines.map(i => i.d + ' ' + i.code).join(' ')).toLowerCase().includes(q)));
+    let list = base.filter(r => (F.st === 'Todos' || r.status === F.st) && (F.fin === 'Todos' || r.fin === F.fin));
+    const sk = s.sort.key;
+    list = list.slice().sort((a, b) => { const x = a[sk], y = b[sk]; const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y)); return (c || b.no.localeCompare(a.no)) * (s.sort.dir === 'asc' ? 1 : -1); });
+    const pages = Math.max(1, Math.ceil(list.length / this.PAGE)), page = Math.min(s.page, pages), pageRows = list.slice((page - 1) * this.PAGE, page * this.PAGE);
+    const pill = st => 'display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 11px;border-radius:999px;background:' + this.SC[st][0] + ';color:' + this.SC[st][1] + ';font-size:12px;font-weight:700;white-space:nowrap;flex:0 0 auto';
+    const ghostBtn = 'height:44px;padding:0 17px;border-radius:12px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;white-space:nowrap';
+    const stop = fn => e => { if (e && e.stopPropagation) e.stopPropagation(); fn(); };
+
+    // KPIs
+    const N = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], AM = ['#B45309', '#92400E', '#FFFBEB', '#FDE68A'], RD = ['#B91C1C', '#7F1D1D', '#FEF2F2', '#FECACA'], BL = ['#1D4ED8', '#1E3A8A', '#EFF6FF', '#BFDBFE'], GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'];
+    const kcols = avail >= 1000 ? 5 : 2, nc = base.filter(r => r.status !== 'Cancelada');
+    const kpi = (label, value, hint, color, t, last) => ({ label, value, hint, color, labelColor: t[0], valueColor: t[1], style: 'border-radius:18px;padding:17px;display:flex;flex-direction:column;gap:8px;background:' + t[2] + ';border:1px solid ' + t[3] + (last && kcols === 2 ? ';grid-column:1/-1' : '') });
+    const venc = nc.filter(r => r.fin === 'Vencido'), abertas = nc.filter(r => ['Em aberto', 'Parcialmente pago', 'Vencido'].indexOf(r.fin) >= 0), sumv = (a, f) => this.r2(a.reduce((x, r) => x + f(r), 0));
+    const kpis = [
+      kpi('Faturas registadas', String(base.length), this.pl(base.filter(r => r.status === 'Cancelada').length, 'cancelada', 'canceladas') + ' · ' + this.pl(base.filter(r => r.status === 'Rascunho').length, 'rascunho', 'rascunhos'), '#64748B', N),
+      kpi('Aguardando conferência', String(base.filter(r => r.status === 'Aguardando conferência').length), this.pl(base.filter(r => r.status === 'Em conferência').length, 'em conferência', 'em conferência') + ' · ' + this.pl(base.filter(r => r.status === 'Com divergência').length, 'com divergência', 'com divergência'), '#F59E0B', AM),
+      kpi('Vencidas e não pagas', String(venc.length), venc.length ? this.eur(sumv(venc, r => r.ovVal)) + ' vencidos' : 'nenhuma no momento', '#EF4444', RD),
+      kpi('Total em aberto', this.eur(sumv(abertas, r => r.saldo)), this.pl(abertas.length, 'fatura com saldo', 'faturas com saldo') + ' · lançadas em Contas a Pagar', '#3B82F6', BL),
+      kpi('Total pago', this.eur(sumv(nc, r => r.paid)), F.em === 'Todo o período' ? 'em todo o período' : 'emitidas em ' + F.em, '#10B981', GR, true)
+    ];
+
+    // linhas
+    const primaryOf = r => r.status === 'Rascunho' ? { label: 'Editar', run: () => this.run('edit', r.no), style: 'height:40px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff', aria: 'Editar ' + r.no } : r.status === 'Aguardando conferência' ? { label: 'Conferir', run: () => this.run('start', r.no), style: 'height:40px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;background:#ECFEFF;color:#0E7490;border:1px solid #A5F3FC', aria: 'Iniciar conferência ' + r.no } : r.status === 'Em conferência' ? { label: 'Concluir', run: () => this.run('conclude', r.no), style: 'height:40px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;background:#ECFDF5;color:#047857;border:1px solid #A7F3D0', aria: 'Concluir conferência ' + r.no } : null;
+    const rowActs = r => [primaryOf(r), { label: 'Detalhes', run: () => this.setState({ detailNo: r.no }), style: 'height:40px;padding:0 13px;border-radius:10px;font-size:12.5px;font-weight:700;border:1px solid #E2E8F0;background:#fff', aria: 'Detalhes ' + r.no }, { label: '⋯', run: () => this.setState({ menuNo: r.no }), style: 'height:40px;min-width:40px;padding:0 10px;border-radius:10px;font-size:16px;font-weight:700;border:1px solid #E2E8F0;background:#fff', aria: 'Mais ações ' + r.no }].filter(Boolean).map(a => Object.assign({}, a, { run: stop(a.run) }));
+    const rows = pageRows.map(r => {
+      const isC = r.status === 'Cancelada', late = r.fin === 'Vencido' && r.nextDue, dd = r.nextDue ? this.daysBetween(r.nextDue, T) : 0;
+      const dueSub = isC ? 'cancelada' : r.fin === 'Pago' ? 'quitada' : !r.nextDue ? '' : late ? this.pl(-dd, 'dia', 'dias') + ' em atraso' : dd === 0 ? 'vence hoje' : this.pl(dd, 'dia restante', 'dias restantes');
+      return {
+        no: r.no, docNo: r.docNo, sup: r.sup, emit: this.fmtD(r.emit), reg: this.fmtD(r.reg), due: r.nextDue ? this.fmtD(r.nextDue) : '—', dueSub,
+        dueStyle: mono + 'font-size:12.5px;white-space:nowrap;font-weight:' + (late ? 700 : 500) + ';color:' + (late ? '#B91C1C' : '#0F172A'), dueSubStyle: 'font-size:11px;font-weight:600;color:' + (late ? '#B91C1C' : '#64748B'),
+        po: r.po || 'Sem pedido', poStyle: mono + 'font-size:12.5px;white-space:nowrap;font-weight:' + (r.po ? 600 : 500) + ';color:' + (r.po ? '#4338CA' : '#94A3B8'), obra: r.obra || '—',
+        total: this.eur(r.total), totalStyle: mono + 'font-size:13.5px;font-weight:600;white-space:nowrap;' + (isC ? 'color:#94A3B8;text-decoration:line-through' : ''), totalSub: isC ? '' : r.paid > 0 ? 'pago ' + this.eur(r.paid) : r.fin === 'Não lançado' ? 'não lançada' : 'saldo ' + this.eur(r.saldo),
+        status: r.status, pill: pill(r.status), dot: this.SC[r.status][2], fin: isC ? 'Não lançado' : r.fin, finPill: pill(isC ? 'Não lançado' : r.fin), finDot: this.SC[isC ? 'Não lançado' : r.fin][2], cardOpacity: isC ? 'opacity:.7;' : '',
+        acts: rowActs(r), open: () => this.setState({ detailNo: r.no }),
+        facts: [['Emissão', this.fmtD(r.emit), mono], ['Vencimento', r.nextDue ? this.fmtD(r.nextDue) + (dueSub ? ' · ' + dueSub : '') : '—', mono], ['Pedido', r.po || 'Sem pedido', mono], ['Valor total', this.eur(r.total), mono], ['Pago', this.eur(r.paid), mono], ['Saldo', this.eur(isC ? 0 : r.saldo), mono]].map(f => ({ k: f[0], v: f[1], style: (f[2] || '') + 'font-size:12.5px;font-weight:600;overflow-wrap:anywhere' })),
+        rowStyle: 'display:grid;grid-template-columns:1.2fr 1.6fr 1.1fr 1.1fr 1.2fr 1.5fr 1.2fr 1.5fr 1.4fr 200px;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s' + (isC ? ';opacity:.72' : '')
+      };
+    });
+    const spec = [['no', 'Fatura'], ['sup', 'Fornecedor'], ['emit', 'Emissão / registo'], ['nextDue', 'Vencimento'], ['po', 'Pedido'], ['obra', 'Obra'], ['total', 'Valor total'], ['status', 'Conferência'], ['fin', 'Financeiro'], ['', 'Ações']];
+    const cols = spec.map(c => ({ name: c[1], arrow: s.sort.key === c[0] ? (s.sort.dir === 'asc' ? ' ▲' : ' ▼') : '', sort: () => { if (!c[0]) return; this.setState(x => ({ page: 1, sort: { key: c[0], dir: x.sort.key === c[0] && x.sort.dir === 'desc' ? 'asc' : 'desc' } })); }, style: 'text-align:' + (c[0] === 'total' ? 'right' : 'left') + ';font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:0;white-space:nowrap;cursor:' + (c[0] ? 'pointer' : 'default') + ';color:' + (s.sort.key === c[0] ? '#4338CA' : '#64748B') }));
+    const pager = [{ label: '‹', aria: 'Página anterior', dis: page <= 1, n: page - 1 }].concat(Array.from({ length: pages }, (_, i) => ({ label: String(i + 1), aria: 'Página ' + (i + 1), n: i + 1, on: i + 1 === page })), [{ label: '›', aria: 'Próxima página', dis: page >= pages, n: page + 1 }]).map(p => ({ label: p.label, aria: p.aria, go: () => { if (!p.dis) this.setState({ page: p.n }); }, style: 'min-width:40px;height:40px;padding:0 10px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid ' + (p.on ? '#6D5DFB' : '#E2E8F0') + ';background:' + (p.on ? '#EEF0FE' : '#fff') + ';color:' + (p.on ? '#4338CA' : p.dis ? '#CBD5E1' : '#475569') + ';cursor:' + (p.dis ? 'not-allowed' : 'pointer') }));
+
+    const two = W < 700, DEF = this.DEF;
+    const mkFilter = (key, label, options, idx) => ({
+      label: label + ':', value: F[key], open: s.openFilter === key,
+      toggle: () => this.setState(x => ({ openFilter: x.openFilter === key ? '' : key })),
+      btnStyle: 'display:flex;align-items:center;gap:7px;width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid ' + (F[key] === DEF[key] ? '#E2E8F0' : '#C7C3FB') + ';background:#fff;font-size:13.5px;font-weight:700',
+      menuStyle: 'position:absolute;top:calc(100% + 8px);' + (two && idx % 2 ? 'right:0;' : 'left:0;') + 'min-width:230px;max-height:300px;overflow-y:auto;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 24px 48px -22px rgba(15,23,42,.35);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:50',
+      options: options.map(o => ({ name: o, pick: () => this.setState(x => ({ page: 1, filters: Object.assign({}, x.filters, { [key]: o }), openFilter: '' })), style: 'padding:12px 11px;border-radius:9px;text-align:left;font-size:13.5px;min-height:44px;font-weight:' + (F[key] === o ? 700 : 500) + ';color:' + (F[key] === o ? '#4338CA' : '#0F172A') + ';background:' + (F[key] === o ? '#EEF0FE' : 'transparent') }))
+    });
+    const filters = [mkFilter('st', 'Conferência', ['Todos'].concat(this.STS), 0), mkFilter('fin', 'Financeiro', ['Todos'].concat(this.FINS), 1), mkFilter('sup', 'Fornecedor', ['Todos'].concat(this.FORN), 2), mkFilter('obra', 'Obra', ['Todas'].concat(this.OBRAS), 3), mkFilter('em', 'Emissão', ['Todo o período', 'Outubro/2026', 'Setembro/2026', 'Agosto/2026'], 4), mkFilter('ven', 'Vencimento', ['Qualquer', 'Vencidas', 'Próximos 7 dias', 'Próximos 30 dias', 'Sem saldo a vencer'], 5), mkFilter('po', 'Pedido', ['Todas', 'Com pedido', 'Sem pedido'], 6)];
+    const anyFilter = q !== '' || Object.keys(DEF).some(k => F[k] !== DEF[k]);
+    const clearAll = () => this.setState({ query: '', openFilter: '', page: 1, filters: Object.assign({}, DEF) });
+
+    const mr = full.filter(x => x.no === s.menuNo)[0];
+    const menu = mr ? { no: mr.no, status: mr.status, items: this.acts(mr).map(a => ({ label: a.label, sub: a.ok ? '' : a.why, off: !a.ok, subColor: '#94A3B8', labelStyle: a.ok ? (a.kind === 'd' ? 'color:#B91C1C' : '') : 'color:#94A3B8', run: () => { if (a.ok) this.run(a.key, mr.no); }, style: 'display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:12px 14px;min-height:50px;border-radius:12px;border:1px solid ' + (a.ok ? '#E2E8F0' : '#F1F5F9') + ';background:' + (a.ok ? '#fff' : '#F8FAFC') + ';cursor:' + (a.ok ? 'pointer' : 'not-allowed') })) } : { no: '', status: '', items: [] };
+    const cf = s.cfm ? this.cfmInfo(s.cfm) : { title: '', text: '', label: '', hasInput: false, back: '' };
+    const cfm = Object.assign({}, cf, { reason: s.cfm ? s.cfm.reason : '', err: s.cfm && s.cfm.err ? s.cfm.err : '', hasErr: !!(s.cfm && s.cfm.err), inpStyle: this.fieldStyle(s.cfm && s.cfm.err), onReason: e => { const v = e.target.value; this.setState(x => ({ cfm: Object.assign({}, x.cfm, { reason: v, err: '' }) })); }, okStyle: 'height:46px;padding:0 22px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:700;background:' + (cf.danger ? '#DC2626' : 'linear-gradient(135deg,#6D5DFB,#5145CD)') });
+
+    const loading = s.dataState === 'loading', hasRows = list.length > 0, startI = (page - 1) * this.PAGE;
+    const sel = full.filter(x => x.no === s.detailNo)[0] || full[0];
+    const d = this.detailVals(sel, pill, full);
+    return Object.assign({
+      isMobile, isTable, isCards: !isTable,
+      states: ['Inicial', 'Filtros aplicados', 'Lista vazia', 'Carregando', 'Nova fatura', 'Fatura de pedido', 'Validação', 'Parcelas divergentes', 'Detalhes', 'Cancelamento'].map(n => ({ name: n, pick: () => this.applyState(n), style: 'height:34px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid ' + (s.cur === n ? '#6D5DFB' : '#E2E8F0') + ';background:' + (s.cur === n ? '#EEF0FE' : '#fff') + ';color:' + (s.cur === n ? '#4338CA' : '#475569') })),
+      views: ['Desktop', 'Mobile'].map(n => ({ name: n, pick: () => this.setState({ view: n, navOpen: false }), style: 'height:30px;padding:0 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:' + (view === n ? '#fff' : 'transparent') + ';color:' + (view === n ? '#4338CA' : '#64748B') })),
+      stageStyle: phone ? 'flex:1;display:flex;justify-content:center;padding:28px 12px' : 'flex:1;display:flex;flex-direction:column',
+      frameStyle: phone ? 'width:390px;height:844px;flex:0 0 auto;border-radius:46px;border:10px solid #0F172A;overflow:hidden;position:relative;transform:translateZ(0);background:#F8FAFC;box-shadow:0 40px 80px -30px rgba(15,23,42,.5)' : 'flex:1;display:flex;flex-direction:column;position:relative',
+      scrollStyle: phone ? 'position:absolute;inset:0;overflow-y:auto;overflow-x:hidden' : 'flex:1;display:flex;flex-direction:column',
+      appStyle: 'display:flex;flex:1;min-height:' + (phone ? '100%' : 'calc(100vh - 56px)') + ";background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',system-ui,sans-serif",
+      showSidebar: !isMobile || s.navOpen, navOpen: s.navOpen && isMobile,
+      sidebarStyle: (isMobile ? 'position:fixed;top:0;left:0;bottom:0;z-index:80;width:272px;box-shadow:0 30px 60px -20px rgba(15,23,42,.6);' : 'position:sticky;top:0;height:calc(100vh - 56px);flex:0 0 258px;') + 'background:#0F172A;padding:20px 14px;display:flex;flex-direction:column;overflow-y:auto',
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      navGroups: [['Comercial', '#EC4899', ['CRM', 'Leads']], ['Clientes', '#3B82F6', ['Clientes']], ['Projetos', '#F97316', ['Projetos / Obras']], ['Compras', '#06B6D4', ['Visão geral', 'Orçamentos de compra', 'Pedidos de compra', 'Recebimentos', 'Faturas de compra']], ['Financeiro', '#10B981', ['Contas a pagar']], ['Relatórios', '#8B5CF6', ['Consultas e Relatórios']], ['Configurações', '#64748B', ['Empresa']]].map(g => ({
+        name: g[0], dot: g[1], open: g[0] === 'Compras',
+        headStyle: 'display:flex;align-items:center;gap:11px;width:100%;padding:10px 11px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CBD5E1',
+        items: g[2].map(n => { const on = n === 'Faturas de compra'; return { name: n, style: 'display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:13px;font-weight:' + (on ? 700 : 500) + ';color:' + (on ? '#fff' : '#8C9AAE') + ';background:' + (on ? 'rgba(109,93,251,.26)' : 'transparent'), dotStyle: 'width:5px;height:5px;border-radius:50%;background:' + (on ? '#6D5DFB' : '#475569') }; })
+      })),
+      ghostBtn, todayLabel: this.fmtD(T), secTitle: 'font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#64748B',
+      openNew: () => this.openNew(),
+      doRefresh: () => { clearTimeout(this.rT); this.setState({ dataState: 'loading', cur: 'Carregando' }); this.rT = setTimeout(() => { this.setState({ dataState: 'ready', cur: 'Inicial' }); this.flash('Dados demonstrativos atualizados'); }, 1000); },
+      doExport: () => {
+        try {
+          const csv = [['Fatura', 'Documento do fornecedor', 'Fornecedor', 'Emissão', 'Registo', 'Próximo vencimento', 'Pedido', 'Obra', 'Valor total', 'Pago', 'Conferência', 'Financeiro']].concat(list.map(r => [r.no, r.docNo, r.sup, this.fmtD(r.emit), this.fmtD(r.reg), this.fmtD(r.nextDue), r.po || 'Sem pedido', r.obra, r.total.toFixed(2), r.paid.toFixed(2), r.status, r.fin])).map(l => l.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';')).join('\n');
+          const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' })); a.download = 'faturas-de-compra-demonstrativo.csv'; a.click();
+        } catch (e) { /* demo */ }
+        this.flash('Exportação demonstrativa: ' + this.pl(list.length, 'fatura', 'faturas'));
+      },
+      stLoading: loading, stReady: !loading, sk5: [1, 2, 3, 4, 5], sk7: [1, 2, 3, 4, 5, 6, 7],
+      kpiGrid: 'display:grid;grid-template-columns:repeat(' + kcols + ',minmax(0,1fr));gap:clamp(12px,1.4vw,16px)', kpis,
+      query: s.query, hasQuery: s.query !== '', onQuery: e => this.setState({ query: e.target.value, page: 1 }), clearQuery: () => this.setState({ query: '', page: 1 }),
+      filterRow: two ? 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px' : 'display:flex;flex-wrap:wrap;gap:10px;align-items:center',
+      filters, anyFilter, clearAll, hasRows, isEmpty: !hasRows,
+      emptyTitle: s.empty ? 'Nenhuma fatura registada' : 'Nenhuma fatura encontrada',
+      emptyText: s.empty ? 'Registe a primeira fatura de fornecedor. Ela pode ser criada diretamente, sem pedido ou recebimento anterior.' : 'Nenhuma fatura corresponde à pesquisa ou aos filtros aplicados. Tente alterar os filtros ou realizar uma nova busca.',
+      emptyLabel: s.empty ? 'Nova fatura' : 'Limpar filtros', emptyAction: s.empty ? () => this.openNew() : clearAll,
+      gridHead: 'display:grid;grid-template-columns:1.2fr 1.6fr 1.1fr 1.1fr 1.2fr 1.5fr 1.2fr 1.5fr 1.4fr 200px;gap:14px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid #E2E8F0',
+      cols, rows, pager,
+      countLabel: 'Exibindo ' + (hasRows ? (startI + 1) + '–' + (startI + pageRows.length) : '0') + ' de ' + this.pl(list.length, 'fatura', 'faturas'),
+      listTotal: this.eur(sumv(list.filter(r => r.status !== 'Cancelada'), r => r.total)),
+      detailOpen: !!s.detailNo, d, closeDetail: () => this.setState({ detailNo: '' }),
+      drawerStyle: 'position:relative;width:' + (phone || W < 600 ? '100%' : 'min(640px,100%)') + ';height:100%;overflow-y:auto;background:#fff;border-left:1px solid #E2E8F0;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:24px;box-shadow:-30px 0 70px -30px rgba(15,23,42,.5);animation:pgDrawer .3s cubic-bezier(.22,.7,.2,1)',
+      menuOpen: !!mr, menu, closeMenu: () => this.setState({ menuNo: '' }),
+      cfmOpen: !!s.cfm, cfm, closeCfm: () => this.setState({ cfm: null }), confirmCfm: () => this.confirmCfm(),
+      toast: s.toast, toastColor: s.toastErr ? '#F87171' : '#10B981', toastMark: s.toastErr ? '!' : '✓'
+    }, this.docVals(phone, W));
+  }
+
+  detailVals(sel, pill, full) {
+    const mono = "font-family:'JetBrains Mono',monospace;", c = sel.c, isC = sel.status === 'Cancelada', T = this.TODAY;
+    const box = (k, v, sub, t) => ({ k, v, sub, lc: t[0], vc: t[1], style: 'display:flex;flex-direction:column;gap:6px;padding:12px 13px;border-radius:13px;background:' + t[2] + ';border:1px solid ' + t[3] });
+    const N = ['#64748B', '#0F172A', '#fff', '#E2E8F0'], GR = ['#047857', '#065F46', '#ECFDF5', '#A7F3D0'], RD = ['#B91C1C', '#7F1D1D', '#FEF2F2', '#FECACA'], CY = ['#0E7490', '#164E63', '#ECFEFF', '#A5F3FC'], BL = ['#1D4ED8', '#1E3A8A', '#EFF6FF', '#BFDBFE'];
+    const fin = isC ? 'Não lançado' : sel.fin, cm = this.cmp(sel, c);
+    let note, nc = '#94A3B8';
+    if (isC) { note = 'Fatura cancelada — não conta nos totais e não pode ser lançada nem editada.'; nc = '#EF4444'; }
+    else if (sel.status === 'Rascunho') note = 'Rascunho: ainda não registrado e sem efeito financeiro.';
+    else if (fin === 'Não lançado') { note = 'Ainda não lançada em Contas a Pagar — estado financeiro “Não lançado”. Registrar a fatura não significa que foi paga.'; nc = '#F59E0B'; }
+    else if (fin === 'Pago') { note = 'Quitada: o saldo em aberto é zero. Uma fatura paga não é tratada como vencida.'; nc = '#10B981'; }
+    else if (fin === 'Vencido') { note = 'Vencida: há parcela(s) com saldo e vencimento anterior a ' + this.fmtD(T) + ' — ' + this.eur(sel.ovVal) + ' em atraso.'; nc = '#EF4444'; }
+    else if (fin === 'Parcialmente pago') { note = 'Pagamento parcial: ' + this.eur(sel.paid) + ' pagos; saldo de ' + this.eur(sel.saldo) + ' em aberto.'; nc = '#06B6D4'; }
+    else { note = 'Lançada em Contas a Pagar; nenhum pagamento registrado e nada vencido.'; nc = '#3B82F6'; }
+    const T2 = (k, v, bold, neg) => ({ k, v, ls: 'font-size:' + (bold ? 14 : 13) + 'px;font-weight:' + (bold ? 800 : 600) + ';color:' + (bold ? '#0F172A' : '#64748B'), vs: mono + 'font-size:' + (bold ? 17 : 13.5) + 'px;font-weight:600' + (neg ? ';color:#047857' : '') });
+    const hist = sel.hist.slice().sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0), col = { c: '#6D5DFB', s: '#3B82F6', a: '#10B981', r: '#94A3B8', x: '#EF4444', f: '#06B6D4' };
+    const acts = this.acts(sel).filter(a => a.ok && ['view', 'docs', 'pars'].indexOf(a.key) < 0);
+    const aStyle = k => 'height:46px;padding:0 17px;border-radius:12px;font-size:13.5px;font-weight:700;' + (k === 'p' ? 'background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff' : k === 'c' ? 'background:#ECFEFF;color:#0E7490;border:1px solid #A5F3FC' : k === 'g' ? 'background:#ECFDF5;color:#047857;border:1px solid #A7F3D0' : k === 'd' ? 'border:1px solid #FECACA;background:#FEF2F2;color:#B91C1C' : 'border:1px solid #E2E8F0;background:#fff');
+    const rels = [], flashDoc = t => () => this.flash('Documento ' + t + ' pertence a outra tela do módulo de Compras (demonstrativo)');
+    if (sel.po) rels.push({ tag: 'PC', t: sel.po, s: 'Pedido de compra', bg: '#EEF0FE', fg: '#4338CA', open: flashDoc(sel.po) });
+    sel.recs.forEach(n => { const r = this.RECS.filter(x => x.no === n)[0]; rels.push({ tag: 'REC', t: n, s: 'Recebimento' + (r ? ' de ' + this.fmtD(r.date) + ' · ' + this.eur(this.recVal(r)) + ' (ref.)' : ''), bg: '#ECFEFF', fg: '#0E7490', open: flashDoc(n) }); });
+    if (sel.orc) rels.push({ tag: 'ORC', t: sel.orc, s: 'Orçamento de origem', bg: '#FFFBEB', fg: '#B45309', open: flashDoc(sel.orc) });
+    if (sel.lanc && !isC) rels.push({ tag: 'CP', t: 'Contas a Pagar', s: 'Lançamento financeiro · pagamentos tratados no módulo Financeiro', bg: '#ECFDF5', fg: '#047857', open: flashDoc('Contas a Pagar') });
+    const si = this.SUPI[sel.sup] || [];
+    return {
+      no: sel.no, docNo: sel.docNo, sup: sel.sup, obra: sel.obra || 'Sem obra associada', status: sel.status, pill: pill(sel.status), dot: this.SC[sel.status][2], fin, finPill: pill(fin), finDot: this.SC[fin][2],
+      actions: acts.map(a => ({ label: a.label, run: () => this.run(a.key, sel.no), style: aStyle(a.kind) })),
+      boxes: [box('Valor total', this.eur(c.total), this.pl(sel.n, 'item', 'itens') + ' · ' + sel.moeda, N), box('Valor pago', this.eur(isC ? 0 : sel.paid), sel.paid > 0 ? this.fmtN(Math.round(sel.paid / c.total * 100)) + '% do total' : 'sem pagamentos', CY), box('Saldo em aberto', this.eur(isC ? 0 : sel.saldo), isC ? 'cancelada' : fin === 'Vencido' ? this.eur(sel.ovVal) + ' vencidos' : fin === 'Pago' ? 'quitada' : 'a vencer em ' + (sel.nextDue ? this.fmtD(sel.nextDue) : '—'), fin === 'Vencido' ? RD : N), box('Conferência', sel.status, sel.status === 'Com divergência' ? 'ver divergência abaixo' : sel.status === 'Conferida' ? 'sem pendências' : sel.status === 'Cancelada' ? '—' : 'em andamento ou pendente', sel.status === 'Com divergência' ? RD : sel.status === 'Conferida' ? GR : N)],
+      note, noteColor: nc, hasDivNote: sel.status === 'Com divergência' && !!sel.divNote, divNote: sel.divNote,
+      noPars: sel.pars.length === 0,
+      pars: sel.pars.map((p, i) => { const stt = this.parState(p), v = this.num(p.val), pd = this.num(p.paid); return { n: i + 1, due: this.fmtD(p.due), val: this.eur(v), paidTxt: pd > 0 ? 'pago ' + this.eur(pd) + (pd < v - 0.005 ? ' · saldo ' + this.eur(v - pd) : '') : 'sem pagamento', state: stt, pill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;background:' + this.SC[stt][0] + ';color:' + this.SC[stt][1] }; }),
+      parWarn: !sel.parOk && sel.pars.length > 0, parWarnText: 'A soma das parcelas (' + this.eur(sel.parSum) + ') difere do total da fatura (' + this.eur(c.total) + ') em ' + this.eur(this.r2(sel.parSum - c.total)) + '. Os valores não foram ajustados.',
+      items: sel.lines.map((l, i) => { const x = c.L[i]; return { d: l.d, calc: (l.code ? l.code + ' · ' : '') + this.fmtN(x.q) + ' ' + l.un + ' × ' + this.eur(x.p) + (x.d ? ' − desc. ' + this.eur(x.d) : '') + (x.t ? ' + imposto ' + this.fmtN(x.rate) + '% (' + this.eur(x.t) + ')' : ''), total: this.eur(x.total) }; }),
+      totals: [T2('Subtotal', this.eur(c.sub)), T2('Descontos', c.disc ? '− ' + this.eur(c.disc) : this.eur(0)), T2('Impostos', this.eur(c.tax)), T2('Frete / encargos', this.eur(c.frete)), T2('Total da fatura', this.eur(c.total), true)],
+      cmp: cm, noRel: rels.length === 0, rels,
+      info: [['Número interno', sel.no], ['Documento do fornecedor', sel.docNo], ['Tipo de documento', sel.tipo], ['Fornecedor', sel.sup], ['NIF / localidade', si.length ? si.join(' · ') : '—'], ['Data de emissão', this.fmtD(sel.emit)], ['Data de registo', this.fmtD(sel.reg)], ['Vencimento mais próximo', sel.nextDue ? this.fmtD(sel.nextDue) : '—'], ['Moeda', sel.moeda], ['Condição de pagamento', sel.cond], ['Obra / projeto', sel.obra || '—'], ['Responsável pelo registo', sel.resp]].map(a => ({ k: a[0], v: a[1] })),
+      obs: sel.obs || '—',
+      timeline: hist.map((e, i) => ({ ev: e.ev, date: this.fmtDT(e.d), by: e.by, color: col[e.k] || '#94A3B8', lineStyle: 'width:2px;flex:1;background:#E2E8F0;margin-top:2px;' + (i === hist.length - 1 ? 'opacity:0' : '') }))
+    };
+  }
+
+  docVals(phone, W) {
+    const s = this.state, d = s.doc || this.blankDoc(), mono = "font-family:'JetBrains Mono',monospace;", inp = e => e.target.value;
+    const c = this.calc(d.lines, d.frete), cm = this.cmp(d, c), isDraft = !d.id || d.status === 'Rascunho';
+    const sel = (opts, v, ph) => (ph ? [{ v: '', l: ph, sel: v === '' }] : []).concat(opts.map(o => ({ v: o.v != null ? o.v : o, l: o.l != null ? o.l : o, sel: (o.v != null ? o.v : o) === v })));
+    const mk = o => ({ label: o.label, star: o.req ? ' *' : '', wrap: 'display:flex;flex-direction:column;gap:5px;min-width:0;' + (o.full ? 'grid-column:1/-1' : ''), isInput: o.kind === 'input', isSelect: o.kind === 'select', isArea: o.kind === 'area', type: o.type || 'text', ro: !!o.ro, value: o.value, ph: o.ph || '', options: o.options || [], on: o.on || (() => {}), err: o.err || '', hasErr: !!o.err, style: this.fieldStyle(o.err, o.mono) + (o.ro ? ';background:#F8FAFC;color:#475569' : '') });
+    const fields = [
+      mk({ label: 'Número interno', kind: 'input', value: d.no, ro: true, mono: true }),
+      mk({ label: 'Nº da fatura / documento do fornecedor', req: true, kind: 'input', value: d.docNo, ph: 'Ex.: FT 2026/1388', on: e => this.setDoc({ docNo: inp(e) }), err: s.errs.docNo }),
+      mk({ label: 'Tipo de documento', kind: 'select', value: d.tipo, options: sel(this.TIPOS, d.tipo), on: e => this.setDoc({ tipo: inp(e) }) }),
+      mk({ label: 'Fornecedor', req: true, kind: 'select', value: d.sup, options: sel(this.FORN, d.sup, 'Selecione o fornecedor'), on: e => this.onSup(inp(e)), err: s.errs.sup }),
+      mk({ label: 'Data de emissão', req: true, kind: 'input', type: 'date', value: d.emit, on: e => this.setDoc({ emit: inp(e) }), err: s.errs.emit }),
+      mk({ label: 'Data de registo / recebimento da fatura', req: true, kind: 'input', type: 'date', value: d.reg, on: e => this.setDoc({ reg: inp(e) }), err: s.errs.reg }),
+      mk({ label: 'Data de vencimento (principal)', req: true, kind: 'input', type: 'date', value: d.due, on: e => this.setDoc({ due: inp(e) }), err: s.errs.due }),
+      mk({ label: 'Moeda', kind: 'select', value: d.moeda, options: sel(['EUR (€)'], d.moeda), on: e => this.setDoc({ moeda: inp(e) }) }),
+      mk({ label: 'Obra ou projeto (opcional)', kind: 'select', value: d.obra, options: sel(this.OBRAS, d.obra, 'Sem obra associada'), on: e => this.setDoc({ obra: inp(e) }) }),
+      mk({ label: 'Responsável pelo registo', req: true, kind: 'select', value: d.resp, options: sel(this.RESP, d.resp, 'Selecione o responsável'), on: e => this.setDoc({ resp: inp(e) }), err: s.errs.resp }),
+      mk({ label: 'Observações internas', kind: 'area', full: true, value: d.obs, ph: 'Informações internas sobre a fatura', on: e => this.setDoc({ obs: inp(e) }) })
+    ];
+    const poOpts = this.PO.filter(p => !d.sup || p.sup === d.sup).map(p => ({ v: p.no, l: p.no + (d.sup ? '' : ' · ' + p.sup) }));
+    const orcOpts = this.ORCS.filter(o => !d.sup || o.sup === d.sup).map(o => ({ v: o.no, l: o.no + (d.sup ? '' : ' · ' + o.sup) }));
+    const linkFields = [{ label: 'Pedido de compra (opcional)', wrap: 'display:flex;flex-direction:column;gap:5px;min-width:0', value: d.po, options: sel(poOpts, d.po, 'Sem pedido — fatura direta'), on: e => this.onPo(inp(e)), style: this.fieldStyle(false) }, { label: 'Orçamento de origem (opcional)', wrap: 'display:flex;flex-direction:column;gap:5px;min-width:0', value: d.orc, options: sel(orcOpts, d.orc, 'Sem orçamento'), on: e => this.setDoc({ orc: inp(e) }), style: this.fieldStyle(false) }];
+    const recAvail = this.RECS.filter(r => (!d.po || r.po === d.po) && (!d.sup || r.sup === d.sup));
+    const recChoices = recAvail.map(r => { const on = d.recs.indexOf(r.no) >= 0; return { no: r.no, sub: this.fmtD(r.date) + ' · ' + (r.po || 'sem pedido') + ' · ' + this.eur(this.recVal(r)) + ' (ref.)', on, mark: on ? '✓' : '', toggle: () => this.toggleRec(r.no), style: 'display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:13px;border:1px solid ' + (on ? '#6D5DFB' : '#E2E8F0') + ';background:' + (on ? '#F5F4FF' : '#fff') + ';min-height:52px;text-align:left', box: 'width:22px;height:22px;border-radius:7px;border:2px solid ' + (on ? '#6D5DFB' : '#94A3B8') + ';background:' + (on ? '#6D5DFB' : '#fff') + ';color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto' }; });
+    const canImport = !!d.po || d.recs.length > 0;
+    const lines = d.lines.map((l, i) => {
+      const x = c.L[i], err = s.lerr[i], inpStyle = this.fieldStyle(false), monoStyle = this.fieldStyle(false, true);
+      return {
+        n: i, num: i + 1, d: l.d, code: l.code, un: l.un, q: l.q, p: l.p, disc: l.disc, dt: l.dt, tax: l.tax, total: this.eur(x.total),
+        cardStyle: 'padding:' + (!phone && W >= 700 ? '16px 18px' : '14px') + ';border-top:1px solid #E2E8F0;display:flex;flex-direction:column;gap:12px',
+        dStyle: this.fieldStyle(err && /descreva/.test(err)) + ';flex:1 1 220px;width:auto;font-weight:600', inpStyle, monoStyle, qStyle: this.fieldStyle(err && /quantidade/.test(err), true),
+        totS: 'display:flex;align-items:center;height:46px;padding:0 13px;border-radius:11px;background:#F1F5F9;font-size:13.5px;font-weight:700;' + mono,
+        dtStyle: 'height:46px;min-width:46px;padding:0 10px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13px;font-weight:700;color:#4338CA;flex:0 0 auto',
+        units: sel(this.UNITS, l.un), rates: sel(this.TAXES.map(t => ({ v: t, l: t + '%' })), l.tax),
+        setD: e => this.pickProd(i, inp(e)), setCode: e => { const v = inp(e); this.setLine(i, () => ({ code: v })); }, setUn: e => { const v = inp(e); this.setLine(i, () => ({ un: v })); }, setQ: e => { const v = inp(e); this.setLine(i, () => ({ q: v })); }, setP: e => { const v = inp(e); this.setLine(i, () => ({ p: v })); }, setDisc: e => { const v = inp(e); this.setLine(i, () => ({ disc: v })); }, setTax: e => { const v = inp(e); this.setLine(i, () => ({ tax: v })); },
+        toggleDisc: () => this.setLine(i, ln => ({ dt: ln.dt === '%' ? '€' : '%' })),
+        dup: () => this.setState(x2 => ({ doc: Object.assign({}, x2.doc, { lines: x2.doc.lines.flatMap((ln, n) => n === i ? [ln, Object.assign({}, ln)] : [ln]) }), dirty: true, lerr: {} })),
+        remove: () => this.setState(x2 => ({ doc: Object.assign({}, x2.doc, { lines: x2.doc.lines.filter((_, n) => n !== i) }), dirty: true, lerr: {} })),
+        hasErr: !!err, err: err || ''
+      };
+    });
+    const row = (label, value, strong) => ({ label, value, lblStyle: 'font-size:13px;color:' + (strong ? '#0F172A' : '#475569') + ';font-weight:' + (strong ? 600 : 500), valStyle: mono + 'font-size:13.5px;font-weight:600' });
+    const sumRows = [row('Subtotal', this.eur(c.sub)), row('Descontos', c.disc ? '− ' + this.eur(c.disc) : this.eur(0)), row('Impostos', this.eur(c.tax))];
+    const parSumV = this.r2(d.pars.reduce((a, p) => a + this.num(p.val), 0)), parPaid = this.r2(d.pars.reduce((a, p) => a + this.num(p.paid), 0)), diff = this.r2(parSumV - c.total);
+    const parSum = [row('Total das parcelas', this.eur(parSumV)), row('Total da fatura', this.eur(c.total)), row('Valor já pago (demo)', this.eur(parPaid)), row('Saldo restante', this.eur(Math.max(this.r2(c.total - parPaid), 0)))];
+    const pars = d.pars.map((p, i) => { const stt = this.parState(p); return { n: i + 1, val: p.val, due: p.due, paid: p.paid, state: stt, pill: 'padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;background:' + this.SC[stt][0] + ';color:' + this.SC[stt][1], setVal: e => { const v = inp(e); this.setPar(i, { val: v }); }, setDue: e => { const v = inp(e); this.setPar(i, { due: v }); }, setPaid: e => { const v = inp(e); this.setPar(i, { paid: v }); }, remove: () => this.setState(x => ({ doc: Object.assign({}, x.doc, { pars: x.doc.pars.filter((_, n) => n !== i) }), dirty: true, perr: {} })), hasErr: !!s.perr[i], err: s.perr[i] || '' }; });
+    const stName = d.status || 'Rascunho';
+    return {
+      docMode: !!s.doc, listMode: !s.doc,
+      ghostS: 'height:44px;padding:0 14px;border-radius:11px;border:1px solid #E2E8F0;background:#fff;font-size:13.5px;font-weight:700;white-space:nowrap',
+      saveStyle: isDraft ? 'height:44px;padding:0 16px;border-radius:11px;border:1px solid #C7C3FB;background:#EEF0FE;color:#4338CA;font-size:13.5px;font-weight:700;white-space:nowrap' : 'height:44px;padding:0 18px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700;white-space:nowrap',
+      finStyle: 'height:44px;padding:0 18px;border-radius:11px;background:linear-gradient(135deg,#6D5DFB,#5145CD);color:#fff;font-size:13.5px;font-weight:700;white-space:nowrap',
+      saveLabel: isDraft ? 'Salvar rascunho' : 'Salvar alterações', showFin: isDraft,
+      title: (d.id ? 'Fatura ' : 'Nova fatura ') + d.no, st: stName, stPill: 'padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;background:' + this.SC[stName][0] + ';color:' + this.SC[stName][1],
+      isDirty: s.dirty, showErr: !!s.banner, errText: s.banner,
+      doBack: () => this.doBack(), doSave: () => this.doSave(), doConfirm: () => this.doConfirm(),
+      panelS: 'border:1px solid #E2E8F0;border-radius:16px;background:#fff;padding:clamp(12px,1.4vw,16px);display:flex;flex-direction:column;gap:12px',
+      fieldGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px 14px',
+      qGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,128px),1fr));gap:10px', lblS: 'display:flex;flex-direction:column;gap:5px;min-width:0', capS: 'font-size:11.5px;font-weight:600;color:#64748B',
+      fields, linkFields, recChoices, noRecChoices: recChoices.length === 0, canImport, importNote: (d.recs.length ? 'Importar as quantidades dos ' + this.pl(d.recs.length, 'recebimento selecionado', 'recebimentos selecionados') : 'Importar as quantidades do pedido ' + d.po) + ' com os preços de referência. A fatura do fornecedor prevalece — ajuste conforme o documento; nada é alterado nos originais.', doImport: () => this.doImport(),
+      catOpts: Object.keys(this.CAT).map(k => this.CAT[k][0]),
+      itemsCount: String(d.lines.length), noLines: d.lines.length === 0, lines,
+      addLine: () => this.setState(x => ({ doc: Object.assign({}, x.doc, { lines: x.doc.lines.concat([this.blankLine()]) }), dirty: true })),
+      addStyle: 'height:44px;padding:0 16px;border-radius:11px;background:#EEF0FE;color:#4338CA;font-size:13.5px;font-weight:700;white-space:nowrap',
+      sumRows, frete: d.frete, onFrete: e => this.setDoc({ frete: inp(e) }), freteStyle: this.fieldStyle(false, true) + ';width:130px;height:40px;text-align:right', grand: this.eur(c.total),
+      cmpE: cm,
+      cond: d.cond, condOpts: sel(Object.keys(this.CONDS), d.cond), onCond: e => this.setDoc({ cond: inp(e) }), inpS: this.fieldStyle(false), monoS: this.fieldStyle(false, true),
+      genPars: () => this.genPars(), addPar: () => this.setState(x => ({ doc: Object.assign({}, x.doc, { pars: x.doc.pars.concat([{ val: '', due: '', paid: '' }]) }), dirty: true })),
+      noPars: pars.length === 0, pars, parSum, parWarn: Math.abs(diff) > 0.005 && (pars.length > 0 || c.total > 0), parWarnText: pars.length ? 'A soma das parcelas (' + this.eur(parSumV) + ') ' + (diff > 0 ? 'excede' : 'é inferior a') + ' o total da fatura (' + this.eur(c.total) + ') em ' + this.eur(Math.abs(diff)) + '. Nada foi ajustado automaticamente.' : 'Nenhuma parcela definida para o total de ' + this.eur(c.total) + '.',
+      tileGrid: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px'
+    };
+  }
+}
+</script>
+</body>
+</html>
